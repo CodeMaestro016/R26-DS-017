@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+SUMO Route File: Four-Vehicle Dynamic Priority Intent Negotiation
+Defines four vehicles approaching a four-way unsignalized intersection from different directions.
+-->
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/routes_file.xsd">
+
+    <!-- Vehicle type definition for passenger vehicles -->
+    <vType id="passenger" accel="2.6" decel="4.5" sigma="0.0" length="5.0" minGap="2.5" maxSpeed="13.9" speedFactor="1.0" speedDev="0.0"/>
+    
+    <!-- Vehicle A: Starting from West, going East -->
+    <!-- This vehicle will approach from the west direction -->
+    <vehicle id="vehicle_A" type="passenger" depart="0.0" departLane="0" departPos="0.0" departSpeed="13.9">
+        <route edges="W_to_center center_to_E"/>
+    </vehicle>
+    
+    <!-- Vehicle B: Starting from South, going North -->
+    <!-- This vehicle will approach from the south direction -->
+    <vehicle id="vehicle_B" type="passenger" depart="0.2" departLane="0" departPos="0.0" departSpeed="13.9">
+        <route edges="S_to_center center_to_N"/>
+    </vehicle>
+    
+    <!-- Vehicle C: Starting from East, going West -->
+    <!-- This vehicle will approach from the east direction -->
+    <vehicle id="vehicle_C" type="passenger" depart="0.4" departLane="0" departPos="0.0" departSpeed="13.9">
+        <route edges="E_to_center center_to_W"/>
+    </vehicle>
+    
+    <!-- Vehicle D: Starting from North, going South -->
+    <!-- This vehicle will approach from the north direction -->
+    <vehicle id="vehicle_D" type="passenger" depart="0.6" departLane="0" departPos="0.0" departSpeed="13.9">
+        <route edges="N_to_center center_to_S"/>
+    </vehicle>
+
+</routes>

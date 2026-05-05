@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+SUMO Network File: Four-way Unsignalized Intersection
+Created for autonomous vehicle right-of-way negotiation research
+No traffic lights - vehicles must negotiate right-of-way
+-->
+<net version="1.16" junctionCornerDetails="5" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/net_file.xsd">
+
+    <!-- Location information for the network -->
+    <location netOffset="0.0,0.0" convBoundary="-50.0,-50.0,50.0,50.0" origBoundary="-1000000.0,-1000000.0,1000000.0,1000000.0" projParameter="!"/>
+
+    <!-- Edge definitions: roads connecting junctions -->
+    <!-- West to Center (incoming from west) -->
+    <edge id="W_to_center" from="W_junction" to="center_junction" priority="1" numLanes="1" speed="13.9" length="50.0" shape="0.0,0.0 50.0,0.0">
+        <lane id="W_to_center_0" index="0" speed="13.9" length="50.0" shape="0.0,1.65 50.0,1.65"/>
+    </edge>
+
+    <!-- Center to East (outgoing to east) -->
+    <edge id="center_to_E" from="center_junction" to="E_junction" priority="1" numLanes="1" speed="13.9" length="50.0" shape="0.0,0.0 -50.0,0.0">
+        <lane id="center_to_E_0" index="0" speed="13.9" length="50.0" shape="0.0,-1.65 -50.0,-1.65"/>
+    </edge>
+
+    <!-- South to Center (incoming from south) -->
+    <edge id="S_to_center" from="S_junction" to="center_junction" priority="1" numLanes="1" speed="13.9" length="50.0" shape="0.0,0.0 0.0,50.0">
+        <lane id="S_to_center_0" index="0" speed="13.9" length="50.0" shape="-1.65,0.0 -1.65,50.0"/>
+    </edge>
+
+    <!-- Center to North (outgoing to north) -->
+    <edge id="center_to_N" from="center_junction" to="N_junction" priority="1" numLanes="1" speed="13.9" length="50.0" shape="0.0,0.0 0.0,-50.0">
+        <lane id="center_to_N_0" index="0" speed="13.9" length="50.0" shape="1.65,0.0 1.65,-50.0"/>
+    </edge>
+
+    <!-- East to Center (incoming from east) -->
+    <edge id="E_to_center" from="E_junction" to="center_junction" priority="1" numLanes="1" speed="13.9" length="50.0" shape="0.0,0.0 -50.0,0.0">
+        <lane id="E_to_center_0" index="0" speed="13.9" length="50.0" shape="0.0,-1.65 -50.0,-1.65"/>
+    </edge>
+
+    <!-- Center to West (outgoing to west) -->
+    <edge id="center_to_W" from="center_junction" to="W_junction" priority="1" numLanes="1" speed="13.9" length="50.0" shape="0.0,0.0 50.0,0.0">
+        <lane id="center_to_W_0" index="0" speed="13.9" length="50.0" shape="0.0,1.65 50.0,1.65"/>
+    </edge>
+
+    <!-- North to Center (incoming from north) -->
+    <edge id="N_to_center" from="N_junction" to="center_junction" priority="1" numLanes="1" speed="13.9" length="50.0" shape="0.0,0.0 0.0,-50.0">
+        <lane id="N_to_center_0" index="0" speed="13.9" length="50.0" shape="1.65,0.0 1.65,-50.0"/>
+    </edge>
+
+    <!-- Center to South (outgoing to south) -->
+    <edge id="center_to_S" from="center_junction" to="S_junction" priority="1" numLanes="1" speed="13.9" length="50.0" shape="0.0,0.0 0.0,50.0">
+        <lane id="center_to_S_0" index="0" speed="13.9" length="50.0" shape="-1.65,0.0 -1.65,50.0"/>
+    </edge>
+
+    <!-- Junction definitions: intersection points -->
+    <!-- Center junction - the main unsignalized intersection -->
+    <junction id="center_junction" type="priority" x="0.0" y="0.0" incLanes="W_to_center_0 S_to_center_0 E_to_center_0 N_to_center_0" intLanes="" shape="0.0,0.0">
+        <request index="0" response="00000000" foes="00000000" cont="0"/>
+        <request index="1" response="00000000" foes="00000000" cont="0"/>
+        <request index="2" response="00000000" foes="00000000" cont="0"/>
+        <request index="3" response="00000000" foes="00000000" cont="0"/>
+        <request index="4" response="00000000" foes="00000000" cont="0"/>
+        <request index="5" response="00000000" foes="00000000" cont="0"/>
+        <request index="6" response="00000000" foes="00000000" cont="0"/>
+        <request index="7" response="00000000" foes="00000000" cont="0"/>
+    </junction>
+
+    <!-- Peripheral junctions (entry/exit points) -->
+    <junction id="W_junction" type="dead_end" x="-50.0" y="0.0" incLanes="center_to_W_0" intLanes="" shape="0.0,0.0"/>
+    <junction id="E_junction" type="dead_end" x="50.0" y="0.0" incLanes="center_to_E_0" intLanes="" shape="0.0,0.0"/>
+    <junction id="S_junction" type="dead_end" x="0.0" y="-50.0" incLanes="center_to_S_0" intLanes="" shape="0.0,0.0"/>
+    <junction id="N_junction" type="dead_end" x="0.0" y="50.0" incLanes="center_to_N_0" intLanes="" shape="0.0,0.0"/>
+
+    <!-- Connection definitions: how vehicles can turn at intersections -->
+    <!-- Straight movements through center junction -->
+    <connection from="W_to_center" to="center_to_E" fromLane="0" toLane="0" dir="s" state="M"/>
+    <connection from="E_to_center" to="center_to_W" fromLane="0" toLane="0" dir="s" state="M"/>
+    <connection from="S_to_center" to="center_to_N" fromLane="0" toLane="0" dir="s" state="M"/>
+    <connection from="N_to_center" to="center_to_S" fromLane="0" toLane="0" dir="s" state="M"/>
+    
+    <!-- East to West movement (vehicle_C) -->
+    <connection from="E_to_center" to="center_to_W" fromLane="0" toLane="0" dir="s" state="M"/>
+    
+    <!-- North to South movement (vehicle_D) -->
+    <connection from="N_to_center" to="center_to_S" fromLane="0" toLane="0" dir="s" state="M"/>
+
+</net>
