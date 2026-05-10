@@ -1,0 +1,33 @@
+# Core dependencies for autonomous vehicle negotiation system
+numpy>=1.21.0
+pandas>=1.3.0
+matplotlib>=3.5.0
+scikit-learn>=1.0.0
+joblib>=1.1.0
+
+# TFLite runtime for model inference (no TensorFlow dependency)
+tflite-runtime>=2.12.0
+
+# PyTorch for deep learning models
+torch>=1.9.0
+torchvision>=0.10.0
+
+# SUMO TraCI interface
+traci>=1.14.0
+
+# Logging and utilities
+colorlog>=6.7.0
+tqdm>=4.62.0
+
+# Data processing and analysis
+scipy>=1.7.0
+seaborn>=0.11.0
+
+# Optional: For enhanced visualization
+plotly>=5.0.0
+dash>=2.0.0
+
+# Development dependencies (optional)
+pytest>=6.2.0
+black>=21.0.0
+flake8>=3.9.0

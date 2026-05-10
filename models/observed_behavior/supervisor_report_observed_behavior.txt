@@ -1,0 +1,31 @@
+Professional V2V LSTM Observed-Behaviour Report
+================================================================================
+
+Why the previous 98% accuracy was suspicious:
+The previous dataset used deterministic rule-generated labels and included features directly related to those same rules. The model could therefore learn the rule rather than real driving behaviour.
+
+Main improvements in this notebook:
+1. All recordings 07-17 are processed.
+2. Parked/static/short tracks are removed.
+3. Intersection center is estimated after moving-vehicle filtering.
+4. Maneuver is inferred using trajectory segments, not only first/last frame.
+5. Labels are generated from future observed vehicle motion, not current V2V rule output.
+6. Leakage columns such as previous GO/YIELD counts are not used as model features.
+7. Recording-wise split keeps recordings 16-17 unseen for final testing.
+
+Recordings in all_df: [np.int64(7), np.int64(8), np.int64(9), np.int64(10), np.int64(11), np.int64(12), np.int64(13), np.int64(14), np.int64(15), np.int64(16), np.int64(17)]
+Processed frame rows: 545262
+V2V dataset rows: 95326
+Sequence shape: (73672, 10, 34)
+Train recordings: [np.int64(7), np.int64(8), np.int64(9), np.int64(10), np.int64(11), np.int64(12), np.int64(13), np.int64(14)]
+Validation recordings: [15]
+Test recordings: [16, 17]
+Label classes: ['GO', 'NEUTRAL', 'YIELD']
+
+Final test metrics:
+Normal accuracy: 0.9389221668243408
+Balanced accuracy: 0.9335106058142677
+Macro F1: 0.8950270189520807
+
+Important interpretation:
+If the model still achieves very high accuracy, compare it against the majority baseline and run the optional label-shuffle test. High accuracy is only meaningful if balanced accuracy, macro F1, and confusion matrix are also strong.

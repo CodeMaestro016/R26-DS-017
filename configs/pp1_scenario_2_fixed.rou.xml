@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- PP1 Scenario 2: Conflict - Multiple vehicles approaching simultaneously -->
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/routes_file.xsd">
+
+    <!-- Vehicle type definitions -->
+    <vType id="passenger" accel="2.6" decel="4.5" sigma="0.5" length="5.0" minGap="2.5" maxSpeed="13.9" color="1,1,0"/>
+
+    <!-- Vehicle A: North to South, starts early -->
+    <vehicle id="vehicle_A" type="passenger" depart="0" departLane="0" departPos="0" departSpeed="10.0">
+        <route edges="N_to_center center_to_S"/>
+    </vehicle>
+    
+    <!-- Vehicle B: East to West, starts at same time - creates conflict -->
+    <vehicle id="vehicle_B" type="passenger" depart="0" departLane="0" departPos="0" departSpeed="10.0">
+        <route edges="E_to_center center_to_W"/>
+    </vehicle>
+    
+    <!-- Vehicle C: West to East, starts slightly later - additional conflict -->
+    <vehicle id="vehicle_C" type="passenger" depart="1" departLane="0" departPos="0" departSpeed="9.0">
+        <route edges="W_to_center center_to_E"/>
+    </vehicle>
+    
+    <!-- Vehicle D: South to North, starts slightly later - additional conflict -->
+    <vehicle id="vehicle_D" type="passenger" depart="2" departLane="0" departPos="0" departSpeed="9.0">
+        <route edges="S_to_center center_to_N"/>
+    </vehicle>
+
+</routes>

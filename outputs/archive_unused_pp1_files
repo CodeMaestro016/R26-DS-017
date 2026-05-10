@@ -1,0 +1,2 @@
+time,scenario,vehicle_id,zone,nearest_vehicle_id,ego_speed,ego_distance_to_intersection,ego_eta,model_prediction,model_confidence,prob_GO,prob_NEUTRAL,prob_YIELD,context_vehicle_count,nearest_vehicle_distance,nearest_vehicle_rel_speed,min_eta_gap,conflict_count,right_side_vehicle_present,final_action,decision_reason,collision_count
+1.0,SCENARIO_1,vehicle_A,DECISION,,8.0,1.65,0.21,GO,0.6,0.6,0.2,0.2,0,100.0,0.0,100.0,0,0,GO,model_go_no_high_risk,0

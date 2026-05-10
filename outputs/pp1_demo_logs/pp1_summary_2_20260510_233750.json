@@ -1,0 +1,183 @@
+{
+  "simulation_summary": {
+    "scenario": "SCENARIO_2",
+    "total_simulation_time": 25.8,
+    "total_steps_processed": 129,
+    "total_unique_vehicles": 4,
+    "total_vehicles_processed": 129,
+    "total_predictions_made": 403,
+    "total_buffering_rows": 36,
+    "total_collisions": 0,
+    "csv_log_path": "outputs/pp1_demo_logs\\pp1_observed_behavior_demo_2_20260510_233750.csv"
+  },
+  "zone_counts": {
+    "DECISION": 249,
+    "THRESHOLD": 80,
+    "OUTSIDE": 74
+  },
+  "threshold_monitoring_summary": {
+    "threshold_rows_collected": 80,
+    "neutral_monitoring_rows": 80,
+    "local_awareness_rows_collected": 80,
+    "final_decisions_made_here": 0
+  },
+  "decision_stage_summary": {
+    "final_decision_events": 213,
+    "GO count": 91,
+    "YIELD count": 33,
+    "WAIT count": 89
+  },
+  "final_decision_snapshot": {
+    "critical_time": 13.2,
+    "vehicles": [
+      {
+        "vehicle_id": "vehicle_A",
+        "stage": "THRESHOLD_MONITORING",
+        "zone": "THRESHOLD",
+        "nearest_vehicle_id": "vehicle_D",
+        "conflict_vehicle_ids": "[]",
+        "merge_conflict": 0,
+        "crossing_conflict": 0,
+        "right_side_vehicle_present": 1,
+        "min_eta_gap": 0.08055427315234232,
+        "model_decision": "NEUTRAL",
+        "model_confidence": 0.9361834378013217,
+        "final_decision": "NEUTRAL",
+        "applied_action": "MAINTAIN_30KMH",
+        "decision_reason": "threshold_awareness_collection"
+      },
+      {
+        "vehicle_id": "vehicle_B",
+        "stage": "DECISION_FINAL",
+        "zone": "DECISION",
+        "nearest_vehicle_id": "vehicle_C",
+        "conflict_vehicle_ids": "[]",
+        "merge_conflict": 0,
+        "crossing_conflict": 0,
+        "right_side_vehicle_present": 0,
+        "min_eta_gap": 0.11334122352193399,
+        "model_decision": "GO",
+        "model_confidence": 0.7485567533381323,
+        "final_decision": "GO",
+        "applied_action": "GO",
+        "decision_reason": "decision_final_go"
+      },
+      {
+        "vehicle_id": "vehicle_C",
+        "stage": "THRESHOLD_MONITORING",
+        "zone": "THRESHOLD",
+        "nearest_vehicle_id": "vehicle_B",
+        "conflict_vehicle_ids": "[]",
+        "merge_conflict": 0,
+        "crossing_conflict": 0,
+        "right_side_vehicle_present": 0,
+        "min_eta_gap": 0.11334122352193399,
+        "model_decision": "NEUTRAL",
+        "model_confidence": 0.9627082693552518,
+        "final_decision": "NEUTRAL",
+        "applied_action": "MAINTAIN_30KMH",
+        "decision_reason": "threshold_awareness_collection"
+      },
+      {
+        "vehicle_id": "vehicle_D",
+        "stage": "DECISION_FINAL",
+        "zone": "DECISION",
+        "nearest_vehicle_id": "vehicle_A",
+        "conflict_vehicle_ids": "[]",
+        "merge_conflict": 0,
+        "crossing_conflict": 0,
+        "right_side_vehicle_present": 1,
+        "min_eta_gap": 1.7875894468164955,
+        "model_decision": "GO",
+        "model_confidence": 0.9850287322760923,
+        "final_decision": "GO",
+        "applied_action": "GO",
+        "decision_reason": "decision_final_go"
+      }
+    ]
+  },
+  "model_prediction_distribution": {
+    "BUFFERING": 36,
+    "YIELD": 33,
+    "GO": 245,
+    "NEUTRAL": 89
+  },
+  "per_vehicle_action_counts": {
+    "vehicle_A": {
+      "WAIT": 11,
+      "YIELD": 20,
+      "GO": 50,
+      "MAINTAIN_30KMH": 38
+    },
+    "vehicle_B": {
+      "WAIT": 13,
+      "YIELD": 18,
+      "GO": 52,
+      "MAINTAIN_30KMH": 38
+    },
+    "vehicle_C": {
+      "WAIT": 95,
+      "GO": 40,
+      "MAINTAIN_30KMH": 39,
+      "YIELD": 14
+    },
+    "vehicle_D": {
+      "WAIT": 95,
+      "GO": 40,
+      "MAINTAIN_30KMH": 39,
+      "YIELD": 14
+    }
+  },
+  "fairness_time_summary": {
+    "average_waiting_time": 3.0,
+    "maximum_waiting_time": 5.0,
+    "vehicle_with_max_waiting": "vehicle_C",
+    "overall_starvation_risk": false,
+    "per_vehicle": {
+      "vehicle_A": {
+        "waiting_time": 1.1,
+        "decision_delay": 0.0,
+        "GO": 25,
+        "WAIT": 1,
+        "YIELD": 10,
+        "MAINTAIN_30KMH": 20,
+        "starvation_risk": false
+      },
+      "vehicle_B": {
+        "waiting_time": 1.1,
+        "decision_delay": 0.0,
+        "GO": 26,
+        "WAIT": 2,
+        "YIELD": 9,
+        "MAINTAIN_30KMH": 20,
+        "starvation_risk": false
+      },
+      "vehicle_C": {
+        "waiting_time": 5.0,
+        "decision_delay": 0.0,
+        "GO": 20,
+        "WAIT": 43,
+        "YIELD": 7,
+        "MAINTAIN_30KMH": 20,
+        "starvation_risk": false
+      },
+      "vehicle_D": {
+        "waiting_time": 5.0,
+        "decision_delay": 0.0,
+        "GO": 20,
+        "WAIT": 43,
+        "YIELD": 7,
+        "MAINTAIN_30KMH": 20,
+        "starvation_risk": false
+      }
+    }
+  },
+  "runtime_note": {
+    "tensorflow_used": false,
+    "tflite_used": false,
+    "mock_model_used": false,
+    "runtime_mode": "NUMPY_EXACT_LSTM",
+    "scaler_fallback": false,
+    "label_encoder_fallback": false
+  }
+}

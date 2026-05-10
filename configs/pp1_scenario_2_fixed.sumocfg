@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
+
+    <!-- Input -->
+    <net-file value="unsignalized_intersection.net.xml"/>
+    <route-files value="pp1_scenario_2_fixed.rou.xml"/>
+    
+    <!-- Output -->
+    <!-- No output file specified - using default -->
+    
+    <!-- Time -->
+    <begin value="0"/>
+    <end value="120"/>
+    
+    <!-- Report -->
+    <no-step-log value="true"/>
+    <duration-log.statistics value="true"/>
+    <no-warnings value="false"/>
+    
+    <!-- Processing -->
+    <time-to-teleport value="-1"/>
+    <collision.check-junctions value="true"/>
+    <collision.action value="remove"/>
+    <collision.stoptime value="1.0"/>
+
+</configuration>

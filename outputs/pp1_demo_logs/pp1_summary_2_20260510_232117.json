@@ -1,0 +1,139 @@
+{
+  "simulation_summary": {
+    "scenario": "SCENARIO_2",
+    "total_simulation_time": 25.0,
+    "total_steps_processed": 125,
+    "total_unique_vehicles": 4,
+    "total_vehicles_processed": 125,
+    "total_predictions_made": 400,
+    "total_buffering_rows": 36,
+    "total_collisions": 0,
+    "csv_log_path": "outputs/pp1_demo_logs\\pp1_observed_behavior_demo_2_20260510_232117.csv"
+  },
+  "zone_counts": {
+    "DECISION": 249,
+    "THRESHOLD": 80,
+    "OUTSIDE": 71
+  },
+  "threshold_monitoring_summary": {
+    "threshold_rows_collected": 80,
+    "neutral_monitoring_rows": 80,
+    "local_awareness_rows_collected": 80,
+    "final_decisions_made_here": 0
+  },
+  "decision_stage_summary": {
+    "final_decision_events": 213,
+    "GO count": 91,
+    "YIELD count": 33,
+    "WAIT count": 89
+  },
+  "final_decision_snapshot": {
+    "critical_time": 13.2,
+    "vehicles": [
+      {
+        "vehicle_id": "vehicle_A",
+        "stage": "THRESHOLD_MONITORING",
+        "zone": "THRESHOLD",
+        "nearest_vehicle_id": "vehicle_D",
+        "conflict_vehicle_ids": "[]",
+        "merge_conflict": 0,
+        "crossing_conflict": 0,
+        "right_side_vehicle_present": 1,
+        "min_eta_gap": 0.08055427315234232,
+        "model_decision": "NEUTRAL",
+        "model_confidence": 0.9361834378013217,
+        "final_decision": "NEUTRAL",
+        "applied_action": "MAINTAIN_30KMH",
+        "decision_reason": "threshold_awareness_collection"
+      },
+      {
+        "vehicle_id": "vehicle_B",
+        "stage": "DECISION_FINAL",
+        "zone": "DECISION",
+        "nearest_vehicle_id": "vehicle_C",
+        "conflict_vehicle_ids": "[]",
+        "merge_conflict": 0,
+        "crossing_conflict": 0,
+        "right_side_vehicle_present": 0,
+        "min_eta_gap": 0.11334122352193399,
+        "model_decision": "GO",
+        "model_confidence": 0.7485567533381323,
+        "final_decision": "GO",
+        "applied_action": "GO",
+        "decision_reason": "decision_final_go"
+      },
+      {
+        "vehicle_id": "vehicle_C",
+        "stage": "THRESHOLD_MONITORING",
+        "zone": "THRESHOLD",
+        "nearest_vehicle_id": "vehicle_B",
+        "conflict_vehicle_ids": "[]",
+        "merge_conflict": 0,
+        "crossing_conflict": 0,
+        "right_side_vehicle_present": 0,
+        "min_eta_gap": 0.11334122352193399,
+        "model_decision": "NEUTRAL",
+        "model_confidence": 0.9627082693552518,
+        "final_decision": "NEUTRAL",
+        "applied_action": "MAINTAIN_30KMH",
+        "decision_reason": "threshold_awareness_collection"
+      },
+      {
+        "vehicle_id": "vehicle_D",
+        "stage": "DECISION_FINAL",
+        "zone": "DECISION",
+        "nearest_vehicle_id": "vehicle_A",
+        "conflict_vehicle_ids": "[]",
+        "merge_conflict": 0,
+        "crossing_conflict": 0,
+        "right_side_vehicle_present": 1,
+        "min_eta_gap": 1.7875894468164955,
+        "model_decision": "GO",
+        "model_confidence": 0.9850287322760923,
+        "final_decision": "GO",
+        "applied_action": "GO",
+        "decision_reason": "decision_final_go"
+      }
+    ]
+  },
+  "model_prediction_distribution": {
+    "BUFFERING": 36,
+    "YIELD": 33,
+    "GO": 242,
+    "NEUTRAL": 89
+  },
+  "per_vehicle_action_counts": {
+    "vehicle_A": {
+      "WAIT": 11,
+      "YIELD": 20,
+      "GO": 50,
+      "MAINTAIN_30KMH": 38
+    },
+    "vehicle_B": {
+      "WAIT": 13,
+      "YIELD": 18,
+      "GO": 52,
+      "MAINTAIN_30KMH": 38
+    },
+    "vehicle_C": {
+      "WAIT": 95,
+      "GO": 40,
+      "MAINTAIN_30KMH": 39,
+      "YIELD": 14
+    },
+    "vehicle_D": {
+      "WAIT": 95,
+      "GO": 40,
+      "MAINTAIN_30KMH": 36,
+      "YIELD": 14
+    }
+  },
+  "runtime_note": {
+    "tensorflow_used": false,
+    "tflite_used": false,
+    "mock_model_used": false,
+    "runtime_mode": "NUMPY_EXACT_LSTM",
+    "scaler_fallback": false,
+    "label_encoder_fallback": false
+  }
+}
