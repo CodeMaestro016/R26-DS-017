@@ -273,36 +273,35 @@ class RuleBasedAgent:
     """
 
     def __init__(self,
-                 medium_risk_threshold=None,
-                 high_risk_threshold=None,
-                 emergency_decel=8.0,
-                 frame_width_metres=20.0,
-                 X_data=None,
-                 y_data=None):
-        """
-        Args:
-            medium_risk_threshold : P33 of risk distribution.
-                                    If None, auto-calibrated from X_data/y_data.
-                                    Fallback default = 0.35
-            high_risk_threshold   : P66 of risk distribution.
-                                    If None, auto-calibrated from X_data/y_data.
-                                    Fallback default = 0.70
-            emergency_decel       : AV braking deceleration m/s².
-                                    ISO 22179 AEB standard = 8.0
-            frame_width_metres    : real-world width of PIE frame ≈ 20m.
-                                    Converts F[32] fraction → metres.
-            X_data                : np.array (N, 30, 36) — sequence data
-                                    for auto-calibration.
-            y_data                : np.array (N,) — matching labels.
-        """
+                k_distance = 0.3391,
+                k_speed    = 6.6076,
+                k_accel    = 3.0079,
+                k_lean     = 20.4451,
+                k_variance = 134.815,
+                # ── Decision thresholds ───────────────────────────────
+                medium_risk_threshold = 0.30,
+                high_risk_threshold   = 0.60,
+                emergency_decel       = 8.0,
+                frame_width_metres    = 20.0,
+                # ── Auto-calibration — pass UNSCALED data here ────────
+                X_data = None,
+                y_data = None):
+
         self.emergency_decel    = emergency_decel
         self.frame_width_metres = frame_width_metres
+
+        # Store k values
+        self.k_distance = k_distance
+        self.k_speed    = k_speed
+        self.k_accel    = k_accel
+        self.k_lean     = k_lean
+        self.k_variance = k_variance
 
         if X_data is not None and y_data is not None:
             medium, high = self._calibrate(X_data, y_data)
             self.medium_risk_threshold = medium
             self.high_risk_threshold   = high
-            self._thresholds_source    = 'calibrated from data'
+            self._thresholds_source    = 'calibrated from unscaled data'
         else:
             self.medium_risk_threshold = medium_risk_threshold if medium_risk_threshold is not None else 0.35
             self.high_risk_threshold   = high_risk_threshold   if high_risk_threshold   is not None else 0.70
@@ -313,15 +312,20 @@ class RuleBasedAgent:
         print(f'  Medium risk threshold : {self.medium_risk_threshold:.3f}  (→ SLOW DOWN)')
         print(f'  High risk threshold   : {self.high_risk_threshold:.3f}  (→ BRAKE/EVASIVE)')
         print(f'  Emergency decel       : {self.emergency_decel} m/s²  (ISO 22179)')
-   
+        print(f'  k_distance            : {self.k_distance}')
+        print(f'  k_speed               : {self.k_speed}')
+        print(f'  k_accel               : {self.k_accel}')
+        print(f'  k_lean                : {self.k_lean}')
+        print(f'  k_variance            : {self.k_variance}')
 
     def _calibrate(self, X_data, y_data):
-        """Compute P33 and P66 thresholds from actual data."""
+        """Compute P33 and P66 thresholds from UNSCALED data."""
         print('  Calibrating thresholds from data...')
         n = len(X_data)
 
+        # X_data must be UNSCALED — pass X_test_raw from run_demo.py
         risk_scores = np.array([
-            self.compute_risk(X_data[i, -1, :], int(y_data[i]))
+            self.compute_risk(X_data[i, -1, :])   # ← no mental_state
             for i in range(n)
         ])
 
@@ -329,28 +333,20 @@ class RuleBasedAgent:
         high   = float(np.percentile(risk_scores, 66))
 
         state_names = ['Waiting','Hesitant','Committed',
-                       'Distracted','Aggressive','Jaywalk']
+                    'Distracted','Aggressive','Jaywalk']
         print(f'  Risk scores — n={n}  '
-              f'min={risk_scores.min():.3f}  '
-              f'mean={risk_scores.mean():.3f}  '
-              f'max={risk_scores.max():.3f}')
+            f'min={risk_scores.min():.3f}  '
+            f'mean={risk_scores.mean():.3f}  '
+            f'max={risk_scores.max():.3f}')
         print(f'  Per-class mean risk:')
         for i, name in enumerate(state_names):
             mask = y_data == i
             if mask.sum() > 0:
                 print(f'    {name:<12} n={mask.sum():4d}  '
-                      f'mean={risk_scores[mask].mean():.3f}')
+                    f'mean={risk_scores[mask].mean():.3f}')
         print(f'  Thresholds → P33={medium:.3f}  P66={high:.3f}')
         return medium, high
-
-    def calibrate_thresholds(self, X_data, y_data):
-        medium, high = self._calibrate(X_data, y_data)
-        self.medium_risk_threshold = medium
-        self.high_risk_threshold   = high
-        self._thresholds_source    = 'calibrated from data'
-        print(f'  Updated → medium={medium:.3f}  high={high:.3f}')
-        return medium, high
-
+    
     def stopping_distance(self, speed_kmh):
         """s = v² / (2a)  — ISO 22179 AEB standard"""
         v = speed_kmh / 3.6
@@ -365,169 +361,51 @@ class RuleBasedAgent:
         if F31 == 1.0: return 'green'
         return 'none'
 
-    def compute_risk(self, F, mental_state):
-        """
-        Road-entry risk score 0.0-1.0.
+    def compute_risk(self, F, probs=None):
 
+        dist_change  = float(F[F_DISTANCE_CHANGE_RATE])
+        speed        = float(F[F_CURRENT_SPEED])
+        acceleration = float(F[F_ACCELERATION])
+        fwd_lean     = float(F[F_FORWARD_LEAN])
+        speed_var    = float(F[F_SPEED_VARIANCE])
+        vehicle_dist = float(F[F_VEHICLE_DISTANCE])
+        hesit        = float(F[F_HESITATION_CYCLES])
 
-        Base values are calibrated safety-risk scores informed by
-        PIE behavioural statistics and AV safety reasoning.
+        # ── Scale parameters computed from PIE training data ──
+        # Generated by compute_scale_params(X_train)
+        # At x=k_mean → probability = 1 - exp(-1) = 0.63
+        # i.e. average behaviour maps to 63% risk contribution
+        k_distance = self.k_distance
+        k_speed    = self.k_speed
+        k_accel    = self.k_accel
+        k_lean     = self.k_lean
+        k_variance = self.k_variance
 
-        Kinematic increments are derived from feature occurrence
-        rates measured in PIE (n=82,791 frames across 6 states).
+        # ── Probability functions ──
+        p_distance = np.exp(-vehicle_dist / k_distance)
+        p_toward   = (np.clip(dist_change, -1.0, 1.0) + 1.0) / 2.0
+        p_speed    = 1.0 - np.exp(-speed    / k_speed)
+        p_accel    = 1.0 - np.exp(-np.abs(acceleration) / k_accel)
+        p_lean     = 1.0 - np.exp(-fwd_lean / k_lean)
+        p_variance = 1.0 - np.exp(-speed_var / k_variance)
+        p_hesit    = float(np.clip(hesit, 0.0, 1.0))
 
-        Key empirical findings used:
-        - Committed: crosswalk presence = 100% of frames
-        - Aggressive: highest speed variance occurrence (68.1%)
-        - Jaywalk: crosswalk presence = 0% of frames
-        - Aggressive avg speed = 18.7 vs 3.2-7.7 for other states
-        """
+       
+        W = 1.0 / 7.0
+        p_kinematic = W * (p_distance + p_toward + p_speed +
+                        p_accel + p_lean + p_variance + p_hesit)
 
-        dist_change = float(F[F_DISTANCE_CHANGE_RATE])
-        speed       = float(F[F_CURRENT_SPEED])
-        crosswalk   = float(F[F_CROSSWALK])
-        speed_var   = float(F[F_SPEED_VARIANCE])
-        hesit       = float(F[F_HESITATION_CYCLES])
-        fwd_lean    = float(F[F_FORWARD_LEAN])
-
-        toward_road = dist_change > 0.0
-
-        state = int(mental_state)
-
-        # Base safety-risk values
-        BASE_RISK = {
-            0: 0.15,   # Waiting
-            1: 0.35,   # Hesitant
-            2: 0.80,   # Committed
-            3: 0.20,   # Distracted
-            4: 0.50,   # Aggressive
-            5: 0.70,   # Jaywalk
-        }
-
-        risk = BASE_RISK.get(state, 0.50)
-
-        # ─────────────────────────────────────────────
-        # Waiting
-        # ─────────────────────────────────────────────
-        if state == 0:
-
-            # toward_road: 50.1% of PIE Waiting frames
-            if toward_road:
-                risk += 0.10
-
-            # hesit>0.5: 73.1% of PIE Waiting frames
-            if hesit > 0.5:
-                risk += 0.10
-
-            # crosswalk: 11.3% of PIE Waiting frames
-            if crosswalk == 1.0:
-                risk += 0.05
-
-        # ─────────────────────────────────────────────
-        # Hesitant
-        # ─────────────────────────────────────────────
-        elif state == 1:
-
-            # toward_road: 51.9%
-            if toward_road:
-                risk += 0.12
-
-            # hesitation cycles common
-            if hesit > 0.5:
-                risk += 0.10
-
-            # near crossing point
-            if crosswalk == 1.0:
-                risk += 0.05
-
-        # ─────────────────────────────────────────────
-        # Committed
-        # ─────────────────────────────────────────────
-        elif state == 2:
-
-            # moving toward road
-            if toward_road:
-                risk += 0.10
-
-            # slowing before crossing
-            if hesit > 0.5:
-                risk += 0.08
-
-            # running to cross
-            if speed > 8.0:
-                risk += 0.04
-
-        # ─────────────────────────────────────────────
-        # Distracted
-        # ─────────────────────────────────────────────
-        elif state == 3:
-
-            # drifting toward road
-            if toward_road:
-                risk += 0.12
-
-            # leaning unintentionally
-            if fwd_lean > 10:
-                risk += 0.07
-
-            # moving while distracted
-            if speed > 2.0:
-                risk += 0.05
-
-        # ─────────────────────────────────────────────
-        # Aggressive
-        # ─────────────────────────────────────────────
-        elif state == 4:
-
-            # running toward road
-            if toward_road and speed > 8.0:
-
-                risk += 0.20
-
-                # strongest discriminator
-                if speed_var > 200:
-                    risk += 0.14
-
-            # walking toward road
-            elif toward_road:
-
-                risk += 0.10
-
-                if speed_var > 200:
-                    risk += 0.10
-
-            # away from road
-            else:
-
-                risk -= 0.20
-
-                if speed_var > 200:
-                    risk += 0.05
-
-        # ─────────────────────────────────────────────
-        # Jaywalk
-        # ─────────────────────────────────────────────
-        elif state == 5:
-
-            # approaching road
-            if toward_road:
-                risk += 0.10
-
-            # scanning before entry
-            if hesit > 0.5:
-                risk += 0.10
-
-            # running across
-            if speed > 8.0:
-                risk += 0.05
-
-            # erratic motion
-            if speed_var > 200:
-                risk += 0.03
+        if probs is not None:
+            # Crossing probability from LSTM+GRU ensemble
+            # crossing states = Committed(2) + Aggressive(4) + Jaywalk(5)
+            p_model = float(probs[2] + probs[4] + probs[5])
+            risk = 0.5 * p_kinematic + 0.5 * p_model
+        else:
+            risk = p_kinematic
 
         return float(np.clip(risk, 0.0, 1.0))
 
-    def decide(self, F, mental_state, confidence,
+    def decide(self, F, mental_state, confidence, probs=None,
                vehicle_speed_kmh=50.0):
         """
         Make AV action decision. Returns AgentDecision.
@@ -542,7 +420,7 @@ class RuleBasedAgent:
         stop_m     = self.stopping_distance(vehicle_speed_kmh)
         can_stop   = dist_m >= stop_m
         state_name = LABEL_NAMES.get(mental_state, 'Unknown')
-        risk       = self.compute_risk(F, mental_state)
+        risk = self.compute_risk(F, probs=probs)
 
         def make(action, reason):
             return AgentDecision(

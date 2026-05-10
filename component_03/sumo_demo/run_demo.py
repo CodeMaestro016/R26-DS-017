@@ -8,7 +8,10 @@ Uses REAL PIE test sequences from X_test.npy.
 Each run picks one random real sequence.
 ONE run = ONE pedestrian = ONE result.
 
-
+IMPORTANT:
+  LSTM uses SCALED features  (X_test.npy)
+  compute_risk() uses UNSCALED features (X_test_raw — inverse transformed)
+  Scale parameters k come from feature_stats.json original means.
 
 Run: python run_demo.py
 """
@@ -17,6 +20,7 @@ import os
 import sys
 import random
 import numpy as np
+import joblib
 
 # ── SUMO setup ────────────────────────────────────────────────
 os.environ['SUMO_HOME'] = r'C:\Program Files (x86)\Eclipse\Sumo'
@@ -36,11 +40,20 @@ from rule_based_agent import (
 )
 
 # ── CONFIG ────────────────────────────────────────────────────
-SUMO_CFG     = 'simulation.sumocfg'
-X_TEST_FILE  = 'X_test.npy'
-Y_TEST_FILE  = 'y_test.npy'
-AV_ID        = 'av_0'
-AV_MAX_SPEED = 13.89    # m/s = 50 km/h
+SUMO_CFG      = 'simulation.sumocfg'
+X_TEST_FILE   = 'X_test.npy'
+Y_TEST_FILE   = 'y_test.npy'
+SCALER_FILE   = 'feature_scaler.pkl'
+AV_ID         = 'av_0'
+AV_MAX_SPEED  = 13.89    # m/s = 50 km/h
+
+# Scale parameters from feature_stats.json original means
+# (PIE training data — raw unscaled values)
+K_DISTANCE = 0.3391    # mean vehicle_distance
+K_SPEED    = 6.6076    # mean current_speed (m/s)
+K_ACCEL    = 3.0079    # mean acceleration
+K_LEAN     = 20.4451   # mean forward_lean (degrees)
+K_VARIANCE = 134.815   # mean speed_variance
 
 LABEL_ICONS = {
     'Waiting':    '🧍',
@@ -94,7 +107,7 @@ def check_files():
     required = [
         'lstm_mental_state_best.h5',
         'gru_mental_state_best.h5',
-        'feature_scaler.pkl',
+        SCALER_FILE,
         X_TEST_FILE,
         Y_TEST_FILE,
     ]
@@ -109,11 +122,30 @@ def check_files():
 
 
 def load_test_data():
+    """
+    Load X_test (scaled) and unscale it for compute_risk().
+
+    LSTM prediction  → uses X_test        (scaled)
+    compute_risk()   → uses X_test_raw    (unscaled)
+    """
     X_test = np.load(X_TEST_FILE)
     y_test = np.load(Y_TEST_FILE)
-    print(f'✅ X_test : {X_test.shape}')
-    print(f'✅ y_test : {y_test.shape}')
-    return X_test, y_test
+    print(f'✅ X_test        : {X_test.shape}  (scaled — for LSTM)')
+    print(f'✅ y_test        : {y_test.shape}')
+
+    # Unscale features for compute_risk()
+    scaler = joblib.load(SCALER_FILE)
+    n, seq, feat = X_test.shape
+    X_test_raw = scaler.inverse_transform(
+        X_test.reshape(-1, feat)
+    ).reshape(n, seq, feat)
+
+    print(f'✅ X_test_raw    : {X_test_raw.shape}  (unscaled — for risk)')
+    print(f'   vehicle_dist mean : {X_test_raw[:,-1,32].mean():.4f}  (expect ≈0.34)')
+    print(f'   speed mean        : {X_test_raw[:,-1, 0].mean():.4f}  (expect ≈6.6)')
+    print(f'   forward_lean mean : {X_test_raw[:,-1,18].mean():.4f}  (expect ≈20)')
+
+    return X_test, X_test_raw, y_test
 
 
 # ── Result printer ────────────────────────────────────────────
@@ -153,13 +185,6 @@ def print_result(true_name, probs, model_detail, decision, ped_dist, idx):
         true_m = '  (true)' if name == true_name else ''
         print(f'     {sc2}{name:<13}{RESET}  {bar}  {p*100:5.1f}%{pred_m}{true_m}')
 
-    # print(f'\n  📊 Individual model breakdown:')
-    # for model_name in ['lstm', 'gru']:
-    #     mp     = model_detail[model_name]
-    #     mp_arr = np.array(mp)
-    #     top    = LABEL_NAMES[int(np.argmax(mp_arr))]
-    #     print(f'     {model_name.upper():<12} → {top:<12} ({max(mp_arr)*100:.1f}%)')
-
     print(f'\n  🚗 AV Decision:')
     print(f'     Action         : {ac}{BOLD}{action}{RESET}  {correct}')
     print(f'     Reason         : {decision.reason}')
@@ -178,40 +203,45 @@ ACTION_SPEED = {
 
 
 # ── Main run ──────────────────────────────────────────────────
-def run(X_test, y_test, agent):
+def run(X_test, X_test_raw, y_test, agent):
     """Pick one random real test sequence and run the full pipeline."""
 
     idx        = random.randint(0, len(X_test) - 1)
-    seq        = X_test[idx]               # (30, 36) — already scaled
     true_label = int(y_test[idx])
     true_name  = LABEL_NAMES[true_label]
     ped_dist   = random.uniform(15.0, 60.0)
+
+    # Scaled sequence — for LSTM
+    seq_scaled = X_test[idx]              # (30, 36) scaled
+
+    # Unscaled last frame — for compute_risk()
+    F_raw      = X_test_raw[idx, -1, :].copy()   # (36,) unscaled
 
     print(f'\n  Selected sequence  : #{idx}')
     print(f'  True label         : {LABEL_ICONS.get(true_name,"")} {true_name}')
     print(f'  Pedestrian dist    : {ped_dist:.1f} m')
 
-    # ── Ensemble inference ────────────────────────────────────
+    # ── Ensemble inference (scaled) ───────────────────────────
     mental_state, confidence, probs, model_detail = \
-        predict_from_scaled_sequence(seq)
+        predict_from_scaled_sequence(seq_scaled)
 
-    # ── Build feature vector for agent ───────────────────────
-    # Use last frame of the sequence as the feature vector F
-    # F[31] traffic light: simulate green (1.0) for demo
-    # F[32] vehicle distance: convert ped_dist to 0-1 fraction
-    F = seq[-1].copy()                     # last frame (36,)
-    F[31] = 1.0                            # green light
-    F[32] = ped_dist / agent.frame_width_metres   # dist as fraction
+    # ── Build raw feature vector for agent ───────────────────
+    # Override traffic light and vehicle distance with demo values
+    # F[31] = traffic light: green (1.0)
+    # F[32] = vehicle distance: convert ped_dist to 0-1 fraction
+    F_raw[31] = 1.0                                        # green light
+    F_raw[32] = np.clip(ped_dist / 60.0, 0.0, 1.0)       # dist fraction
 
-    # ── Agent decision ────────────────────────────────────────
+    # ── Agent decision (unscaled features) ───────────────────
     decision = agent.decide(
-        F                 = F,
+        F                 = F_raw,         # ← unscaled
         mental_state      = mental_state,
         confidence        = confidence,
+        probs             = probs, 
         vehicle_speed_kmh = AV_MAX_SPEED * 3.6,
     )
 
-    # Store target_speed_kmh on decision for printing
+    # Store target speed for printing
     speed_factor = ACTION_SPEED.get(decision.action, 0.6)
     decision.target_speed_kmh = AV_MAX_SPEED * 3.6 * speed_factor
     target_speed_ms = AV_MAX_SPEED * speed_factor
@@ -259,14 +289,24 @@ if __name__ == '__main__':
     # 2. Load ensemble models (once)
     load_ensemble()
 
-    # 3. Load test data
-    X_test, y_test = load_test_data()
+    # 3. Load test data — returns scaled + unscaled
+    X_test, X_test_raw, y_test = load_test_data()
 
-    # 4. Create agent — auto-calibrates thresholds from your data
+    # 4. Initialise agent with:
+    #    - k values from PIE feature_stats.json original means
+    #    - thresholds auto-calibrated from unscaled test data
     print('\nInitialising agent...')
-    agent = RuleBasedAgent(X_data=X_test, y_data=y_test)
+    agent = RuleBasedAgent(
+        k_distance = K_DISTANCE,
+        k_speed    = K_SPEED,
+        k_accel    = K_ACCEL,
+        k_lean     = K_LEAN,
+        k_variance = K_VARIANCE,
+        medium_risk_threshold = 0.30,
+        high_risk_threshold   = 0.60,
+    )
 
     # 5. Run one scenario
-    run(X_test, y_test, agent)
+    run(X_test, X_test_raw, y_test, agent)
 
     print('\n  Done. Run again for a different sequence.')
