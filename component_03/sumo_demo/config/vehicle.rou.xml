@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/routes_file.xsd">
+
+    <!-- AV vehicle type -->
+    <vType id="av_type"
+           vClass="passenger"
+           length="4.5"
+           width="1.8"
+           maxSpeed="13.89"
+           accel="2.0"
+           decel="4.5"
+           emergencyDecel="9.0"
+           sigma="0.0"
+           color="0,0,1"
+           guiShape="passenger"/>
+
+    <!-- AV starts at x=0, drives along road toward crosswalk -->
+    <!-- depart=0 means AV appears at t=0 seconds -->
+    <vehicle id="av_0" type="av_type" depart="0" color="0,0.5,1" departSpeed="13.89">
+        <route edges="road1 road2"/>
+    </vehicle>
+
+</routes>
