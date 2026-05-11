@@ -238,11 +238,11 @@ class RuleBasedAgent:
 
         if mental_state == 0:
             if ttc_level == "high":
-                action = "STOP"
-                reason = "Pedestrian is waiting but proximity is critical. Sudden step-off risk (Petzoldt 2014)."
+                action = "SLOW_DOWN"
+                reason = "Pedestrian is waiting but proximity is critical. Sudden step-off risk."
             elif ttc_level == "medium":
                 action = "SLOW_DOWN"
-                reason = "Pedestrian is waiting but within gap acceptance range (Petzoldt 2014)."
+                reason = "Pedestrian is waiting but within gap acceptance range."
             else:
                 action = "MAINTAIN"
                 reason = "Pedestrian is waiting, crossing risk is low."
@@ -283,7 +283,7 @@ class RuleBasedAgent:
                 reason = "Pedestrian is aggressive and very close."
             else:
                 action = "SLOW_DOWN"
-                reason = "Pedestrian movement is aggressive or unpredictable."
+                reason = "Pedestrian movement is aggressive. may step into the road."
 
         elif mental_state == 5:
             if ttc_level == "high":
@@ -295,7 +295,7 @@ class RuleBasedAgent:
 
         else:
             action = "SLOW_DOWN"
-            reason = "Unknown state, so AV chooses safe action."
+            reason = "Unpredictable, so AV chooses safe action."
 
         return {
             "action":       action,
