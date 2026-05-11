@@ -78,3 +78,4 @@ desktop.ini
 *.yml
 *.csv
 *.cache
+*.pth
