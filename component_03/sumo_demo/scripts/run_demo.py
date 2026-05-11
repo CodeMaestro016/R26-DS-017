@@ -215,7 +215,7 @@ def print_result(true_name, probs, decision, idx, inference_ms, av_speed_kmh):
 
     print(f'\n  ⏱  Runtime Measurement:')
     print(f'     Inference + decision time : {inference_ms:.2f} ms')
-    print(f'     Pipeline                 : scaled sequence → LSTM + GRU → average → agent')
+    #print(f'     Pipeline                 : scaled sequence → LSTM + GRU → average → agent')
 
     print(f'\n{"═" * 62}')
 
