@@ -58,7 +58,7 @@ LABELS = {
 }
 
 
-TTC_WARNING   = 3.0
+TTC_WARNING   = 2.5
 TTC_EMERGENCY = 1.5
 
 
@@ -196,8 +196,8 @@ class RuleBasedAgent:
         action, reason, TTC
     """
 
-    def __init__(self, frame_width_metres=20.0):
-        self.frame_width_metres = frame_width_metres
+    # def __init__(self, frame_width_metres=20.0):
+    #     self.frame_width_metres = frame_width_metres
 
     
 
