@@ -242,7 +242,7 @@ def run(X_test, X_test_raw, y_test, agent):
     # Raw last frame for rule-based agent
     F_raw = X_test_raw[idx, -1, :].copy()
 
-    # Optional: set traffic light if your feature uses it.
+
     F_raw[F_TRAFFIC_LIGHT] = 1.0
 
     ped_dist_px = float(F_raw[F_VEHICLE_DISTANCE]) * 1920.0
@@ -317,8 +317,6 @@ def run(X_test, X_test_raw, y_test, agent):
 if __name__ == '__main__':
     print(f'{"═" * 62}')
     print(f'  {BOLD}Proactive Social Compliance Modeling — SUMO Demo{RESET}')
-    print(f'  Ensemble: LSTM + GRU')
-    print(f'  Decision: Mental state + TTC rule-based agent')
     print(f'{"═" * 62}\n')
 
     check_files()
