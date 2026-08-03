@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<routes>
+    <vType id="AV" accel="2.0" decel="4.5" emergencyDecel="7.0"
+           length="5.0" minGap="2.5" maxSpeed="13.89"
+           sigma="0.0" color="0,0,255"/>
+
+    <route id="route_w_straight" edges="w_in e_out"/>
+    <route id="route_w_left" edges="w_in n_out"/>
+    <route id="route_w_right" edges="w_in s_out"/>
+
+    <route id="route_e_straight" edges="e_in w_out"/>
+    <route id="route_e_left" edges="e_in s_out"/>
+    <route id="route_e_right" edges="e_in n_out"/>
+
+    <route id="route_s_straight" edges="s_in n_out"/>
+    <route id="route_s_left" edges="s_in w_out"/>
+    <route id="route_s_right" edges="s_in e_out"/>
+
+    <route id="route_n_straight" edges="n_in s_out"/>
+    <route id="route_n_left" edges="n_in e_out"/>
+    <route id="route_n_right" edges="n_in w_out"/>
+</routes>
+

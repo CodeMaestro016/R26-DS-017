@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nodes>
+    <node id="center" x="300.0" y="100.0" type="priority"/>
+    <node id="west" x="0.0" y="100.0" type="priority"/>
+    <node id="east" x="600.0" y="100.0" type="priority"/>
+    <node id="south" x="300.0" y="-200.0" type="priority"/>
+    <node id="north" x="300.0" y="400.0" type="priority"/>
+</nodes>

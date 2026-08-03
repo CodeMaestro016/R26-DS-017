@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<connections>
+    <!-- West approach: straight east, left north, right south -->
+    <connection from="w_in" to="e_out"/>
+    <connection from="w_in" to="n_out"/>
+    <connection from="w_in" to="s_out"/>
+
+    <!-- East approach: straight west, left south, right north -->
+    <connection from="e_in" to="w_out"/>
+    <connection from="e_in" to="s_out"/>
+    <connection from="e_in" to="n_out"/>
+
+    <!-- South approach: straight north, left west, right east -->
+    <connection from="s_in" to="n_out"/>
+    <connection from="s_in" to="w_out"/>
+    <connection from="s_in" to="e_out"/>
+
+    <!-- North approach: straight south, left east, right west -->
+    <connection from="n_in" to="s_out"/>
+    <connection from="n_in" to="e_out"/>
+    <connection from="n_in" to="w_out"/>
+</connections>
+

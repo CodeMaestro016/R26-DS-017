@@ -1,0 +1,11 @@
+check,passed,details
+Both ONNX graphs pass ONNX checker,True,onnx.checker.check_model completed
+CPU-only ONNX Runtime loads both models,True,CPUExecutionProvider
+ONNX probabilities reproduce frozen Keras probabilities,True,"[{'lead_time_seconds': 1.0, 'maximum_probability_difference': 1.7881393432617188e-07}, {'lead_time_seconds': 0.5, 'maximum_probability_difference': 1.341104507446289e-07}]"
+Predicted classes reproduce Cells 20 and 21,True,all recording-17 predictions
+UNKNOWN policy reproduces Cell 22B,True,accepted flags and final labels match
+Dynamic single-sequence inference works,True,"batch size 1 returns shape (1, 3)"
+All ONNX probabilities are valid,True,finite and rows sum to one
+"No retraining, tuning or architecture change",True,Cell 24 exports the locked Cell 20/21 weights only
+SUMO requirements contain no TensorFlow package,True,"['numpy', 'onnxruntime']"
+No Keras or pickle model copied into CPU bundle,True,deployment models are ONNX files
