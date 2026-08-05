@@ -20,12 +20,11 @@ from tests.test_feature_builder import make_straight_history
 class ModelBundleTests(unittest.TestCase):
     def test_both_models_return_valid_probabilities(self):
         predictor = IntentionPredictor()
-        prediction = predictor.predict_history(
-            make_straight_history()
-        )
-
         for model_key in ("primary", "secondary"):
-            probabilities = prediction[model_key]["probabilities"]
+            prediction = predictor.predict_stage(
+                make_straight_history(), model_key
+            )
+            probabilities = prediction["probabilities"]
             self.assertEqual(
                 set(probabilities),
                 {"LEFT", "RIGHT", "STRAIGHT"},
@@ -39,4 +38,3 @@ class ModelBundleTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-

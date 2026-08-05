@@ -11,7 +11,11 @@ import pytest
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT))
 
-from config import APPROACH_ZONE_RADIUS, SENSOR_RANGE
+from config import (
+    APPROACH_ZONE_RADIUS,
+    DEFAULT_PERCEPTION_PROFILE,
+    SENSOR_RANGE,
+)
 from perception_interface import PerceptionInterface
 
 
@@ -176,3 +180,206 @@ def test_profiles_differ_when_occlusion_exists():
 def test_configured_radii_derivations():
     assert APPROACH_ZONE_RADIUS == pytest.approx(76.67)
     assert SENSOR_RANGE == pytest.approx(118.34)
+
+
+def diagnostic_by_target(interface, ego_id="ego"):
+    return {
+        item["target_id"]: item
+        for item in interface.get_last_diagnostics(ego_id)
+    }
+
+
+def test_bbox_edge_inside_fov_when_center_is_outside():
+    target = vehicle((-4.25, 20.0), width=4.0)
+    interface = PerceptionInterface(sensor_fov_degrees=20.0)
+    result = interface.generate_observations(
+        "ego", vehicle((0.0, 0.0)),
+        {"ego": vehicle((0.0, 0.0)), "target": target}, 0.0
+    )
+    assert "target" in result
+    assert 0.0 < result["target"]["fov_visible_fraction"] < 1.0
+
+
+def test_center_inside_fov_with_bbox_edge_outside_is_partial():
+    target = vehicle((-2.8, 20.0), width=5.0)
+    result = observe(target, sensor_fov_degrees=20.0)
+    assert "target" in result
+    assert 0.0 < result["target"]["fov_visible_fraction"] < 1.0
+    assert 0.0 < result["target"]["visible_fraction"] < 1.0
+
+
+def test_wrapped_object_interval_intersects_360_fov():
+    result = observe(
+        vehicle((0.0, -15.0), width=4.0), sensor_fov_degrees=360.0
+    )
+    assert result["target"]["fov_visible_fraction"] == pytest.approx(1.0)
+
+
+def test_ideal_profile_skips_geometry_and_accepts_missing_dimensions(monkeypatch):
+    ego = vehicle((0.0, 0.0))
+    target = {"position": (0.0, 10.0), "speed": 1.0,
+              "heading_radians": 0.0}
+    interface = PerceptionInterface(profile="IDEAL_BASELINE",
+                                    sensor_fov_degrees=1.0)
+    monkeypatch.setattr(
+        interface, "_calculate_bounding_box",
+        lambda *_: pytest.fail("ideal baseline calculated bounding-box geometry")
+    )
+    result = interface.generate_observations(
+        "ego", ego, {"ego": ego, "target": target}, 0.0
+    )
+    assert "target" in result
+    assert "length" not in result["target"]
+    assert "width" not in result["target"]
+    assert result["target"]["visible_fraction"] == 1.0
+
+
+def test_geometric_profile_requires_dimensions_and_logs_invalid_target():
+    ego = vehicle((0.0, 0.0))
+    target = {"position": (0.0, 10.0), "speed": 1.0,
+              "heading_radians": 0.0}
+    interface = PerceptionInterface()
+    result = interface.generate_observations(
+        "ego", ego, {"ego": ego, "target": target}, 0.0
+    )
+    assert "target" not in result
+    item = diagnostic_by_target(interface)["target"]
+    assert item["result"] == "REJECTED"
+    assert item["reason"] == "INVALID_TARGET_STATE"
+
+
+def test_diagnostics_cover_range_fov_detection_occlusion_and_partial():
+    ego = vehicle((0.0, 0.0))
+    states = {
+        "ego": ego,
+        "visible": vehicle((-10.0, 30.0)),
+        "out_range": vehicle((0.0, SENSOR_RANGE + 1.0)),
+        "out_fov": vehicle((30.0, 0.0)),
+        "near": vehicle((0.0, 10.0), width=3.0),
+        "hidden": vehicle((0.0, 25.0), width=2.0),
+        "partial": vehicle((-2.5, 25.0), width=4.0),
+        "bad": vehicle((1.0, 1.0), width=-1.0),
+    }
+    interface = PerceptionInterface(sensor_fov_degrees=60.0)
+    result = interface.generate_observations("ego", ego, states, 3.0)
+    details = diagnostic_by_target(interface)
+    repeated = interface.generate_observations("ego", ego, states, 3.0)
+    assert repeated == result
+    assert len(interface.get_last_diagnostics("ego")) == len(states) - 1
+    assert set(details) == set(states) - {"ego"}
+    assert details["visible"]["reason"] == "DETECTED"
+    assert details["out_range"]["reason"] == "OUT_OF_RANGE"
+    assert details["out_fov"]["reason"] == "OUT_OF_FOV"
+    assert details["hidden"]["reason"] == "FULLY_OCCLUDED"
+    assert details["partial"]["reason"] == "PARTIALLY_VISIBLE"
+    assert details["partial"]["result"] == "DETECTED"
+    assert details["bad"]["reason"] == "INVALID_TARGET_STATE"
+    assert "hidden" not in result and "partial" in result
+    assert all("route_id" not in detection for detection in result.values())
+
+    summary = interface.get_last_summary("ego")
+    assert summary["candidate_targets"] == len(states) - 1
+    assert summary["detected_targets"] == sum(
+        item["result"] == "DETECTED" for item in details.values()
+    )
+    for key, reason in {
+        "invalid_targets": "INVALID_TARGET_STATE",
+        "out_of_range_targets": "OUT_OF_RANGE",
+        "out_of_fov_targets": "OUT_OF_FOV",
+        "fully_occluded_targets": "FULLY_OCCLUDED",
+        "partially_visible_targets": "PARTIALLY_VISIBLE",
+    }.items():
+        assert summary[key] == sum(
+            item["reason"] == reason for item in details.values()
+        )
+
+
+def test_per_ego_diagnostics_are_independent_and_accessors_return_copies():
+    states = {
+        "a": vehicle((0.0, 0.0)),
+        "b": vehicle((0.0, 20.0)),
+        "c": vehicle((0.0, 200.0)),
+    }
+    interface = PerceptionInterface(profile="IDEAL_BASELINE")
+    interface.generate_observations("a", states["a"], states, 1.0)
+    a_before = interface.get_last_diagnostics("a")
+    interface.generate_observations("b", states["b"], states, 2.0)
+    assert interface.get_last_diagnostics("a") == a_before
+    assert interface.get_last_diagnostics("b") != a_before
+
+    returned = interface.get_last_diagnostics()
+    returned["a"][0]["reason"] = "MUTATED"
+    assert interface.get_last_diagnostics("a")[0]["reason"] != "MUTATED"
+    summary = interface.get_last_summary("a")
+    summary["detected_targets"] = 999
+    assert interface.get_last_summary("a")["detected_targets"] != 999
+
+
+def test_multiple_overlapping_occluders_do_not_double_count():
+    intervals = [(-0.2, 0.2)]
+    covered = [(-0.2, 0.05), (-0.05, 0.1)]
+    fraction = PerceptionInterface._calculate_visible_fraction(
+        intervals, covered
+    )
+    assert fraction == pytest.approx(0.25)
+
+
+def test_equal_range_objects_do_not_occlude_each_other_and_are_deterministic():
+    ego = vehicle((0.0, 0.0))
+    states = {
+        "ego": ego,
+        "a": vehicle((0.0, 20.0), width=3.0),
+        "b": vehicle((0.0, 20.0), width=3.0),
+    }
+    interface = PerceptionInterface()
+    first = interface.generate_observations("ego", ego, states, 0.0)
+    second = interface.generate_observations("ego", ego, states, 0.0)
+    assert set(first) == {"ego", "a", "b"}
+    assert first["a"]["visible_fraction"] == 1.0
+    assert first["b"]["visible_fraction"] == 1.0
+    assert first == second
+
+
+def test_all_geometric_visibility_fractions_are_clamped():
+    ego = vehicle((0.0, 0.0))
+    states = {
+        "ego": ego,
+        "near": vehicle((0.0, 10.0)),
+        "partial": vehicle((-2.0, 20.0), width=4.0),
+        "clear": vehicle((-10.0, 20.0)),
+    }
+    result = PerceptionInterface(sensor_fov_degrees=90.0).generate_observations(
+        "ego", ego, states, 0.0
+    )
+    for detection in result.values():
+        if detection["observation_type"] == "OBJECT_DETECTION":
+            for key in ("fov_visible_fraction",
+                        "occlusion_visible_fraction", "visible_fraction"):
+                assert 0.0 <= detection[key] <= 1.0
+
+
+def test_recursive_output_contains_no_route_or_manoeuvre_truth():
+    forbidden = {"route_id", "ground_truth_route_id", "future_edge_sequence",
+                 "future_trajectory", "intended_manoeuvre", "manoeuvre"}
+    target = vehicle(
+        (0.0, 10.0), route_id="route_n_left",
+        ground_truth_route_id="route_n_left", intended_manoeuvre="LEFT",
+        nested={"future_trajectory": [(0.0, 1.0)]},
+    )
+    result = observe(target)
+
+    def keys(value):
+        if isinstance(value, dict):
+            for key, nested in value.items():
+                yield key
+                yield from keys(nested)
+        elif isinstance(value, (list, tuple)):
+            for nested in value:
+                yield from keys(nested)
+
+    assert forbidden.isdisjoint(set(keys(result)))
+
+
+def test_default_profile_is_geometric_sensor():
+    assert DEFAULT_PERCEPTION_PROFILE == "GEOMETRIC_SENSOR"
+    assert PerceptionInterface().profile == "GEOMETRIC_SENSOR"

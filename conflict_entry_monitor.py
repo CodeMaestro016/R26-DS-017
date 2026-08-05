@@ -187,7 +187,15 @@ class ConflictEntryMonitor:
                 "secondary": event["secondary"], "fused_label": UNKNOWN_LABEL,
                 "status": "WAITING_FOR_FINALIZATION"}
 
-    def update_ldm(self, ldm, current_time, predictor):
+    def update_ldm(self, ldm, current_time, predictor,
+                   evaluation_route_truth=None):
+        """Update operational events with optional evaluation-only truth.
+
+        ``evaluation_route_truth`` is never written into an LDM track or sent
+        to the predictor. It is copied only to finalized shadow-evaluation
+        event records.
+        """
+        evaluation_route_truth = evaluation_route_truth or {}
         completed = []
         present_ids = set(ldm.tracks)
         # Finalize disappeared tracks before asking the LDM for currently
@@ -227,9 +235,9 @@ class ConflictEntryMonitor:
                         and target_id in relevant_ids and eta <= EVENT_ARMING_ETA_SECONDS):
                     continue
                 event = self._new_event(ldm.ego_id, target_id, track, current_time)
-                event["ground_truth_route_id"] = getattr(
-                    ldm, "evaluation_route_truth", {}
-                ).get(target_id, "")
+                event["ground_truth_route_id"] = evaluation_route_truth.get(
+                    target_id, ""
+                )
                 self.events[pair] = event
             count = len(track.get("position_history", ()))
             event["latest_estimated_eta"] = eta if math.isfinite(eta) else None

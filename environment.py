@@ -1,5 +1,6 @@
 """SUMO/TraCI environment wrapper."""
 
+import math
 import shutil
 
 import traci
@@ -52,6 +53,8 @@ class SUMOEnv:
         for vehicle_id in traci.vehicle.getIDList():
             try:
                 angle_degrees = float(traci.vehicle.getAngle(vehicle_id))
+                position = tuple(traci.vehicle.getPosition(vehicle_id))
+                speed = float(traci.vehicle.getSpeed(vehicle_id))
                 lane_id = traci.vehicle.getLaneID(vehicle_id)
                 lane_position = float(
                     traci.vehicle.getLanePosition(vehicle_id)
@@ -62,26 +65,28 @@ class SUMOEnv:
                     else 0.0
                 )
                 states[vehicle_id] = {
-                    "pos": tuple(traci.vehicle.getPosition(vehicle_id)),
-                    "vel": float(traci.vehicle.getSpeed(vehicle_id)),
+                    # Canonical current-state contract consumed by perception.
+                    "position": position,
+                    "speed": speed,
+                    "heading_radians": math.radians(angle_degrees),
+                    "length": float(traci.vehicle.getLength(vehicle_id)),
+                    "width": float(traci.vehicle.getWidth(vehicle_id)),
+                    # Temporary aliases retained for existing control/dashboard
+                    # callers while they migrate to the canonical names.
+                    "pos": position,
+                    "vel": speed,
                     "accel": float(
                         traci.vehicle.getAcceleration(vehicle_id)
                     ),
                     "angle_degrees": angle_degrees,
-                    "length": float(
-                        traci.vehicle.getLength(vehicle_id)
-                    ),
-                    "width": float(
-                        traci.vehicle.getWidth(vehicle_id)
-                    ),
                     "lane_id": lane_id,
                     "lane_position": lane_position,
                     "lane_length": lane_length,
                     "road_id": traci.vehicle.getRoadID(vehicle_id),
+                    # Evaluation-only truth. ObservationManager must not copy
+                    # these fields into perception or operational LDM tracks.
                     "route_id": traci.vehicle.getRouteID(vehicle_id),
-                    "route_index": int(
-                        traci.vehicle.getRouteIndex(vehicle_id)
-                    ),
+                    "route_index": int(traci.vehicle.getRouteIndex(vehicle_id)),
                     "type": traci.vehicle.getTypeID(vehicle_id),
                 }
             except traci.TraCIException:

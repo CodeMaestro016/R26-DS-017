@@ -34,7 +34,6 @@ class ObservationTests(unittest.TestCase):
             lane_position=0.0,
             lane_length=100.0,
             road_id="w_in",
-            ground_truth_route_id="route_w_straight",
             current_time=1.0,
         )
 

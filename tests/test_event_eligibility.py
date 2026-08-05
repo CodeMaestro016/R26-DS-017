@@ -19,12 +19,12 @@ def history(count=50, interval=0.04):
                   for i in range(count)), maxlen=50)
 
 
-def track(eta, count=50, observed=True, route="route_w_left"):
+def track(eta, count=50, observed=True):
     speed = 10.0
     return {"id": "target", "road_id": "w_in", "lane_position": 100.0 - eta * speed,
             "lane_length": 100.0, "speed": speed, "is_observed": observed,
             "last_observed_time": 0.0, "position_history": history(count),
-            "ground_truth_route_id": route, "position": (0.0, 0.0),
+            "position": (0.0, 0.0),
             "velocity_vector": (1.0, 0.0), "intention_prediction": None}
 
 
@@ -113,11 +113,23 @@ class EligibilityTests(unittest.TestCase):
         self.assertIsNone(completed[0]["primary_history_count_at_trigger"])
 
     def test_route_truth_does_not_change_timing_or_features(self):
-        left, right = track(3.0, route="route_w_left"), track(3.0, route="route_w_right")
+        left, right = track(3.0), track(3.0)
         self.assertEqual(ConflictEntryMonitor.distance_to_conflict_entry(left),
                          ConflictEntryMonitor.distance_to_conflict_entry(right))
         self.assertEqual(IntentionPredictor.build_causal_features(left["position_history"]).tolist(),
                          IntentionPredictor.build_causal_features(right["position_history"]).tolist())
+
+    def test_route_truth_is_supplied_only_through_evaluation_channel(self):
+        monitor = ConflictEntryMonitor()
+        ldm = FakeLDM(track(3.0))
+        monitor.update_ldm(
+            ldm, 0.0, FakePredictor(),
+            evaluation_route_truth={"target": "route_w_left"},
+        )
+        event = next(iter(monitor.events.values()))
+        self.assertEqual(event["ground_truth_route_id"], "route_w_left")
+        self.assertNotIn("route_id", ldm.tracks["target"])
+        self.assertNotIn("ground_truth_route_id", ldm.tracks["target"])
 
     def test_both_missing_fusion_status(self):
         self.assertEqual(IntentionPredictor.fuse_stage_results(None, None),

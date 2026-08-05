@@ -100,10 +100,6 @@ def build_dashboard_payload(
             ),
             "lane": state.get("lane_id", ""),
             "road": state.get("road_id", ""),
-            "route_ground_truth_debug": state.get(
-                "route_id",
-                "",
-            ),
             "is_av": vehicle_id.startswith("AV_"),
         }
 
@@ -218,6 +214,10 @@ def main():
         for _ in range(EPISODE_STEPS):
             observations = environment.step()
             current_time = environment.current_time
+            evaluation_route_truth = {
+                vehicle_id: state.get("route_id", "")
+                for vehicle_id, state in observations.items()
+            }
 
             observation_manager.update(
                 observations,
@@ -233,6 +233,7 @@ def main():
                             ldm,
                             current_time,
                             predictor,
+                            evaluation_route_truth,
                         )
                     )
             evaluator.record_prediction_events(
@@ -268,7 +269,13 @@ def main():
                             nearby_states.append(enhanced)
 
                         action = negotiation_manager.negotiate(
-                            state,
+                            {
+                                key: value for key, value in state.items()
+                                if key not in {
+                                    "route_id", "ground_truth_route_id",
+                                    "route_index",
+                                }
+                            },
                             nearby_states,
                             ldm,
                         )

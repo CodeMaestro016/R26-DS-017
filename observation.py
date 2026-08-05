@@ -24,9 +24,6 @@ class LocalDynamicMap:
     def __init__(self, ego_vehicle_id):
         self.ego_id = ego_vehicle_id
         self.tracks = {}
-        # Evaluation-only truth is deliberately separate from operational
-        # perception detections and tracks.
-        self.evaluation_route_truth = {}
         self.in_approach_zone = False
         self.last_update_time = 0.0
 
@@ -56,7 +53,6 @@ class LocalDynamicMap:
         lane_position,
         lane_length,
         road_id,
-        ground_truth_route_id,
         current_time,
     ):
         previous = self.tracks.get(vehicle_id)
@@ -236,18 +232,16 @@ class ObservationManager:
         vehicle_data = {}
 
         for vehicle_id, state in global_observations.items():
-            heading_radians = np.radians(state["angle_degrees"])
             vehicle_data[vehicle_id] = {
-                "position": state["pos"],
-                "speed": state["vel"],
-                "heading_radians": heading_radians,
+                "position": state["position"],
+                "speed": state["speed"],
+                "heading_radians": state["heading_radians"],
                 "length": state["length"],
                 "width": state["width"],
                 "lane_id": state.get("lane_id", ""),
                 "lane_position": state.get("lane_position", 0.0),
                 "lane_length": state.get("lane_length", 0.0),
                 "road_id": state.get("road_id", ""),
-                "route_id": state.get("route_id", ""),
             }
 
         active_ids = set(vehicle_data)
@@ -261,13 +255,10 @@ class ObservationManager:
         ]
         for vehicle_id in departed_ldms:
             del self.ldms[vehicle_id]
+            self.perception_interface.clear_ego_diagnostics(vehicle_id)
 
         for ego_id, ldm in list(self.ldms.items()):
             ego_data = vehicle_data[ego_id]
-            ldm.evaluation_route_truth = {
-                vehicle_id: state.get("route_id", "")
-                for vehicle_id, state in global_observations.items()
-            }
             ldm.in_approach_zone = self.is_in_approach_zone(
                 ego_data["position"]
             )
@@ -291,7 +282,6 @@ class ObservationManager:
                     ego_data["lane_position"],
                     ego_data["lane_length"],
                     ego_data["road_id"],
-                    ego_data["route_id"],
                     self.current_time,
                 )
                 continue
@@ -321,7 +311,6 @@ class ObservationManager:
                     observation["lane_position"],
                     observation["lane_length"],
                     observation["road_id"],
-                    "",
                     self.current_time,
                 )
 
@@ -340,6 +329,7 @@ class ObservationManager:
     def reset(self):
         self.ldms.clear()
         self.current_time = 0.0
+        self.perception_interface.clear_diagnostics()
 
 
 observation_manager = ObservationManager()
