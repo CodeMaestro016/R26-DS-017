@@ -7,9 +7,10 @@ are 0=north and 90 degrees=east.
 
 ``IDEAL_BASELINE`` applies range only and is an unrealistic perfect-object
 regression baseline. It does not need target dimensions. ``GEOMETRIC_SENSOR``
-also applies bounding-box field of view and vehicle occlusion, so positive
-finite dimensions are mandatory. The source remains perfect SUMO truth: this
-module adds no noise, latency, tracking, history, prediction, or confidence.
+applies bounding-box field of view and vehicle occlusion. The provisional
+``REALISTIC_OBJECT_SENSOR`` currently delegates to that same deterministic
+geometric layer; stochastic measurement errors and latency are future work.
+Positive finite dimensions are mandatory for both geometric profiles.
 
 Route and manoeuvre truth are deliberately excluded because they would leak
 future information downstream. Static occluders may later be supplied to the
@@ -21,13 +22,24 @@ import math
 
 import numpy as np
 
-from config import DEFAULT_PERCEPTION_PROFILE, SENSOR_FOV_DEGREES, SENSOR_RANGE
+from config import (
+    DEFAULT_PERCEPTION_PROFILE,
+    GEOMETRIC_SENSOR_PROFILE,
+    PERCEPTION_PROFILES,
+    REALISTIC_OBJECT_SENSOR_PROFILE,
+    SENSOR_FOV_DEGREES,
+    SENSOR_RANGE,
+)
 
 
 class PerceptionInterface:
     """Produce an independent deterministic perception frame for one ego AV."""
 
-    VALID_PROFILES = frozenset({"IDEAL_BASELINE", "GEOMETRIC_SENSOR"})
+    VALID_PROFILES = PERCEPTION_PROFILES
+    GEOMETRIC_PROFILES = frozenset({
+        GEOMETRIC_SENSOR_PROFILE,
+        REALISTIC_OBJECT_SENSOR_PROFILE,
+    })
     _EPSILON = 1e-12
 
     def __init__(self, profile=DEFAULT_PERCEPTION_PROFILE,
@@ -51,7 +63,14 @@ class PerceptionInterface:
 
     def generate_observations(self, ego_vehicle_id, ego_data,
                               all_vehicle_data, current_time):
-        """Return ego localization plus current geometrically detected objects."""
+        """Return ego localization plus current geometrically detected objects.
+
+        ``all_vehicle_data[ego_vehicle_id]`` is the authoritative ego state.
+        The separate ``ego_data`` parameter is retained temporarily for API
+        compatibility and is validation-only; contradictory values raise
+        ``ValueError``. Callers should plan to remove this redundant argument
+        in a future breaking API revision.
+        """
         timestamp = self._finite_number(current_time, "current_time")
         if timestamp < 0.0:
             raise ValueError("current_time must be non-negative")
@@ -60,13 +79,21 @@ class PerceptionInterface:
                 f"ego vehicle {ego_vehicle_id!r} is absent from all_vehicle_data"
             )
 
-        require_dimensions = self.profile == "GEOMETRIC_SENSOR"
+        applies_geometry = self._uses_geometric_visibility()
+        require_dimensions = applies_geometry
         ego = self._validate_vehicle_state(
             ego_vehicle_id, ego_data, require_dimensions=require_dimensions
         )
+        frame_ego = self._validate_vehicle_state(
+            ego_vehicle_id,
+            all_vehicle_data[ego_vehicle_id],
+            require_dimensions=require_dimensions,
+        )
+        self._validate_consistent_ego_state(ego_vehicle_id, ego, frame_ego)
+        ego = frame_ego
         observations = {
             ego_vehicle_id: self._make_ego_localization(
-                ego_vehicle_id, ego, timestamp
+                ego_vehicle_id, ego, timestamp, self.profile
             )
         }
         diagnostics = []
@@ -139,6 +166,7 @@ class PerceptionInterface:
                 "visible_intervals": clipped_intervals,
                 "fov_visible_fraction": fov_fraction,
                 "diagnostic": diagnostic,
+                "profile": self.profile,
             })
 
         candidates.sort(key=lambda item: (item["range"], str(item["object_id"])))
@@ -155,7 +183,7 @@ class PerceptionInterface:
             for candidate in group:
                 occlusion_fraction = 1.0
                 combined_fraction = 1.0
-                if require_dimensions:
+                if applies_geometry:
                     occlusion_fraction = self._calculate_visible_fraction(
                         candidate["visible_intervals"], covered
                     )
@@ -187,7 +215,7 @@ class PerceptionInterface:
                         )
                     )
                 diagnostics.append(diagnostic)
-            if require_dimensions:
+            if applies_geometry:
                 covered = self._merge_intervals(covered + group_intervals)
             index = group_end
 
@@ -195,6 +223,10 @@ class PerceptionInterface:
             ego_vehicle_id, timestamp, len(all_vehicle_data) - 1, diagnostics
         )
         return observations
+
+    def _uses_geometric_visibility(self):
+        """Whether this profile uses the shared deterministic geometry layer."""
+        return self.profile in self.GEOMETRIC_PROFILES
 
     def get_last_diagnostics(self, ego_vehicle_id=None):
         """Return copies of the latest detailed diagnostics per requested ego."""
@@ -305,6 +337,22 @@ class PerceptionInterface:
         validated.update(position=position.copy(), speed=speed,
                          heading_radians=heading, **dimensions)
         return validated
+
+    @classmethod
+    def _validate_consistent_ego_state(cls, vehicle_id, ego, frame_ego):
+        """Reject contradictory duplicate ego inputs before geometry is used."""
+        inconsistent = []
+        if not np.array_equal(ego["position"], frame_ego["position"]):
+            inconsistent.append("position")
+        for field in ("speed", "heading_radians", "length", "width"):
+            if ego.get(field) != frame_ego.get(field):
+                inconsistent.append(field)
+        if inconsistent:
+            raise ValueError(
+                f"ego vehicle {vehicle_id!r} state is inconsistent between "
+                f"ego_data and all_vehicle_data for fields: "
+                f"{', '.join(inconsistent)}"
+            )
 
     @staticmethod
     def _velocity_vector(speed, heading_radians):
@@ -447,7 +495,7 @@ class PerceptionInterface:
         ) if key in state}
 
     @classmethod
-    def _make_ego_localization(cls, object_id, state, timestamp):
+    def _make_ego_localization(cls, object_id, state, timestamp, profile):
         velocity = cls._velocity_vector(state["speed"], state["heading_radians"])
         result = {
             "object_id": object_id,
@@ -463,7 +511,8 @@ class PerceptionInterface:
             "measurement_timestamp": timestamp,
             "available_timestamp": timestamp, "timestamp": timestamp,
             "detection_status": "SELF_LOCALIZATION",
-            "perception_profile": "PERFECT_SUMO_LOCALIZATION",
+            "perception_profile": profile,
+            "localization_profile": "PERFECT_SUMO_LOCALIZATION",
         }
         for field in ("length", "width"):
             if state.get(field) is not None:
@@ -496,12 +545,8 @@ class PerceptionInterface:
             "measurement_timestamp": timestamp,
             "available_timestamp": timestamp, "timestamp": timestamp,
             "detection_status": "DETECTED",
-            "perception_profile": candidate.get("profile", None),
+            "perception_profile": candidate["profile"],
         }
-        result["perception_profile"] = (
-            "GEOMETRIC_SENSOR" if candidate["intervals"] is not None
-            else "IDEAL_BASELINE"
-        )
         for field in ("length", "width"):
             if state.get(field) is not None:
                 result[field] = state[field]

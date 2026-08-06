@@ -14,6 +14,7 @@ sys.path.insert(0, str(PROJECT_ROOT))
 from config import (
     APPROACH_ZONE_RADIUS,
     DEFAULT_PERCEPTION_PROFILE,
+    PERCEPTION_PROFILES,
     SENSOR_RANGE,
 )
 from perception_interface import PerceptionInterface
@@ -383,3 +384,168 @@ def test_recursive_output_contains_no_route_or_manoeuvre_truth():
 def test_default_profile_is_geometric_sensor():
     assert DEFAULT_PERCEPTION_PROFILE == "GEOMETRIC_SENSOR"
     assert PerceptionInterface().profile == "GEOMETRIC_SENSOR"
+
+
+@pytest.mark.parametrize(
+    ("field", "value", "message"),
+    [
+        ("speed", -0.01, "speed must be non-negative"),
+        ("heading_radians", math.nan, "heading_radians must be a finite number"),
+        ("length", 0.0, "length must be positive"),
+        ("width", math.inf, "width must be a finite number"),
+    ],
+)
+def test_invalid_geometric_ego_values_raise(field, value, message):
+    ego = vehicle((0.0, 0.0))
+    ego[field] = value
+    with pytest.raises(ValueError, match=message):
+        PerceptionInterface().generate_observations(
+            "ego", ego, {"ego": ego}, 0.0
+        )
+
+
+@pytest.mark.parametrize("field", ["length", "width"])
+def test_geometric_ego_missing_dimension_raises(field):
+    ego = vehicle((0.0, 0.0))
+    del ego[field]
+    with pytest.raises(ValueError, match=f"missing mandatory field '{field}'"):
+        PerceptionInterface().generate_observations(
+            "ego", ego, {"ego": ego}, 0.0
+        )
+
+
+@pytest.mark.parametrize(
+    ("field", "replacement"),
+    [
+        ("position", (1.0, 0.0)),
+        ("speed", 2.0),
+        ("heading_radians", 0.1),
+        ("length", 5.0),
+        ("width", 2.5),
+    ],
+)
+def test_inconsistent_duplicate_ego_state_raises(field, replacement):
+    ego = vehicle((0.0, 0.0), speed=1.0)
+    frame_ego = copy.deepcopy(ego)
+    frame_ego[field] = replacement
+    with pytest.raises(ValueError, match=f"inconsistent.*{field}"):
+        PerceptionInterface().generate_observations(
+            "ego", ego, {"ego": frame_ego}, 0.0
+        )
+
+
+def test_consistent_duplicate_ego_state_succeeds_without_mutation():
+    ego = vehicle((2.0, 3.0), heading=0.25, speed=1.5)
+    target = vehicle((2.0, 13.0))
+    states = {"ego": copy.deepcopy(ego), "target": target}
+    original_ego = copy.deepcopy(ego)
+    original_states = copy.deepcopy(states)
+
+    result = PerceptionInterface().generate_observations(
+        "ego", ego, states, 4.0
+    )
+
+    assert result["ego"]["position"] == pytest.approx((2.0, 3.0))
+    assert ego == original_ego
+    assert states == original_states
+
+
+def test_missing_ego_id_fails_clearly():
+    ego = vehicle((0.0, 0.0))
+    with pytest.raises(ValueError, match="ego.*absent from all_vehicle_data"):
+        PerceptionInterface().generate_observations(
+            "ego", ego, {"different_vehicle": ego}, 0.0
+        )
+
+
+def test_config_declares_all_three_perception_profiles():
+    assert PERCEPTION_PROFILES == {
+        "IDEAL_BASELINE",
+        "GEOMETRIC_SENSOR",
+        "REALISTIC_OBJECT_SENSOR",
+    }
+
+
+def test_invalid_profile_name_fails_clearly():
+    with pytest.raises(ValueError, match="Unsupported perception profile"):
+        PerceptionInterface(profile="UNKNOWN_SENSOR")
+
+
+def test_realistic_profile_currently_matches_geometric_visibility():
+    ego = vehicle((0.0, 0.0))
+    states = {
+        "ego": ego,
+        "near": vehicle((0.0, 10.0), width=2.0),
+        "partial": vehicle((-1.5, 20.0), width=4.0),
+        "hidden": vehicle((0.0, 25.0), width=1.0),
+        "outside_fov": vehicle((20.0, 0.0)),
+    }
+
+    def run(profile):
+        interface = PerceptionInterface(
+            profile=profile, sensor_fov_degrees=90.0
+        )
+        detections = interface.generate_observations(
+            "ego", ego, states, 1.0
+        )
+        diagnostics = interface.get_last_diagnostics("ego")
+        summary = interface.get_last_summary("ego")
+        return detections, diagnostics, summary
+
+    geometric, geometric_diagnostics, geometric_summary = run(
+        "GEOMETRIC_SENSOR"
+    )
+    realistic, realistic_diagnostics, realistic_summary = run(
+        "REALISTIC_OBJECT_SENSOR"
+    )
+
+    assert set(realistic) == set(geometric)
+    for object_id in geometric:
+        assert realistic[object_id]["perception_profile"] == (
+            "REALISTIC_OBJECT_SENSOR"
+        )
+        assert geometric[object_id]["perception_profile"] == (
+            "GEOMETRIC_SENSOR"
+        )
+        for field in geometric[object_id]:
+            if field != "perception_profile":
+                assert realistic[object_id][field] == pytest.approx(
+                    geometric[object_id][field]
+                ) if isinstance(geometric[object_id][field], float) else (
+                    realistic[object_id][field] == geometric[object_id][field]
+                )
+
+    def without_profile(items):
+        return [
+            {key: value for key, value in item.items() if key != "profile"}
+            for item in items
+        ]
+
+    assert without_profile(realistic_diagnostics) == without_profile(
+        geometric_diagnostics
+    )
+    assert {
+        key: value for key, value in realistic_summary.items()
+        if key != "profile"
+    } == {
+        key: value for key, value in geometric_summary.items()
+        if key != "profile"
+    }
+    assert realistic_summary["profile"] == "REALISTIC_OBJECT_SENSOR"
+
+
+def test_realistic_profile_requires_vehicle_dimensions():
+    ego = vehicle((0.0, 0.0))
+    target = {
+        "position": (0.0, 10.0),
+        "speed": 1.0,
+        "heading_radians": 0.0,
+    }
+    interface = PerceptionInterface(profile="REALISTIC_OBJECT_SENSOR")
+    result = interface.generate_observations(
+        "ego", ego, {"ego": ego, "target": target}, 0.0
+    )
+    assert "target" not in result
+    assert interface.get_last_diagnostics("ego")[0]["reason"] == (
+        "INVALID_TARGET_STATE"
+    )
