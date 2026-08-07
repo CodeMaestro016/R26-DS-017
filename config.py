@@ -56,6 +56,10 @@ ROUTE_IDS = (
 # ---------------------------------------------------------------------------
 # Decentralized observation and LDM
 # ---------------------------------------------------------------------------
+# Provisional conservative experiment parameter. This margin is supplied by
+# neither ASAM OSI nor the selected radar specification. It should be replaced
+# or justified using processing distance, stopping distance, braking capability,
+# uncertainty, and sensitivity testing.
 OBSERVATION_SAFETY_MARGIN = 35.0
 PRIMARY_PREDICTION_LEAD_TIME_SECONDS = 1.0
 SECONDARY_PREDICTION_LEAD_TIME_SECONDS = 0.5
@@ -72,13 +76,52 @@ APPROACH_ZONE_RADIUS = (
 # Experiment-specific conservative closing-speed bound. This is not a
 # universal real-world sensor specification.
 MAX_CLOSING_SPEED_MPS = 2.0 * MAX_APPROACH_SPEED
-SENSOR_RANGE = (
+MIN_REQUIRED_OBSERVATION_RANGE_METERS = (
     MAX_CLOSING_SPEED_MPS * REQUIRED_CONTEXT_SECONDS
     + OBSERVATION_SAFETY_MARGIN
 )
-# A fused surround-perception object list; narrower values model directional
-# sensor coverage centred on the ego vehicle's forward direction.
-SENSOR_FOV_DEGREES = 360.0
+
+# Official source (technical data: up to 160 m and +/-75 degrees horizontal):
+# Bosch Mobility, "Corner radar sensor for heavy commercial vehicles",
+# https://www.bosch-mobility.com/en/solutions/sensors/corner-radar-sensor-cv/
+REFERENCE_SENSOR_NAME = "Bosch corner radar reference profile"
+REFERENCE_CORNER_RADAR_RANGE_METERS = 160.0
+REFERENCE_CORNER_RADAR_HORIZONTAL_FOV_DEGREES = 150.0
+REFERENCE_CORNER_RADAR_COUNT = 4
+
+# Four overlapping virtual corner radars feed one fused object list. Complete
+# directional coverage is 360 degrees, not 4 x 150 degrees; overlaps cannot be
+# added directly. The reference values are not universal AV sensor values or
+# ASAM OSI/ISO requirements. "Up to 160 m" does not promise perfect detection.
+FUSED_SURROUND_FOV_DEGREES = 360.0
+SENSOR_RANGE = REFERENCE_CORNER_RADAR_RANGE_METERS
+SENSOR_FOV_DEGREES = FUSED_SURROUND_FOV_DEGREES
+
+
+def validate_sensor_range(sensor_range=SENSOR_RANGE,
+                          required_range=MIN_REQUIRED_OBSERVATION_RANGE_METERS):
+    """Validate selected physical capability against the project requirement."""
+    if sensor_range < required_range:
+        raise ValueError(
+            "The selected reference sensor range is shorter than the minimum "
+            "observation distance required by the project. "
+            f"Selected reference capability: {sensor_range:.2f} m. "
+            f"Current required observation distance: {required_range:.2f} m."
+        )
+
+
+validate_sensor_range()
+
+SENSOR_CONFIGURATION_SUMMARY = {
+    "reference_sensor_name": REFERENCE_SENSOR_NAME,
+    "individual_radar_range_meters": REFERENCE_CORNER_RADAR_RANGE_METERS,
+    "individual_radar_horizontal_fov_degrees": REFERENCE_CORNER_RADAR_HORIZONTAL_FOV_DEGREES,
+    "sensor_count": REFERENCE_CORNER_RADAR_COUNT,
+    "fused_fov_degrees": FUSED_SURROUND_FOV_DEGREES,
+    "minimum_required_observation_range_meters": MIN_REQUIRED_OBSERVATION_RANGE_METERS,
+    "selected_operational_sensor_range_meters": SENSOR_RANGE,
+    "range_requirement_satisfied": SENSOR_RANGE >= MIN_REQUIRED_OBSERVATION_RANGE_METERS,
+}
 IDEAL_BASELINE_PROFILE = "IDEAL_BASELINE"
 GEOMETRIC_SENSOR_PROFILE = "GEOMETRIC_SENSOR"
 REALISTIC_OBJECT_SENSOR_PROFILE = "REALISTIC_OBJECT_SENSOR"

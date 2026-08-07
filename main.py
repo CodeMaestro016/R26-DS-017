@@ -18,6 +18,7 @@ from config import (
     MAX_APPROACH_SPEED,
     ROUTE_IDS,
     SAFE_SUMO_SPEED_MODE,
+    SENSOR_CONFIGURATION_SUMMARY,
     SHADOW_MODE,
     SPAWN_BATCH_SIZE,
     SPAWN_INTERVAL_SECONDS,
@@ -175,6 +176,9 @@ def print_prediction_events(events):
 
 
 def main():
+    print("Sensor configuration:")
+    for name, value in SENSOR_CONFIGURATION_SUMMARY.items():
+        print(f"  {name}: {value}")
     if not SHADOW_MODE:
         raise RuntimeError(
             "This checkpoint is intentionally shadow-only. "

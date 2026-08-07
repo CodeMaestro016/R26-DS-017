@@ -5,16 +5,24 @@ sensor view and then into current-frame local object detections. Positive ego
 longitudinal is forward and positive lateral is left. SUMO navigation headings
 are 0=north and 90 degrees=east.
 
-``IDEAL_BASELINE`` applies range only and is an unrealistic perfect-object
-regression baseline. It does not need target dimensions. ``GEOMETRIC_SENSOR``
-applies bounding-box field of view and vehicle occlusion. The provisional
-``REALISTIC_OBJECT_SENSOR`` currently delegates to that same deterministic
-geometric layer; stochastic measurement errors and latency are future work.
+``IDEAL_BASELINE`` applies only the 160 m reference limit (no FOV or
+occlusion) to exact simulator values and is an unrealistic upper-performance
+baseline. ``GEOMETRIC_SENSOR`` applies the fused 360-degree FOV and dynamic
+vehicle-to-vehicle occlusion, retaining exact simulator values for visible
+targets; it remains an object-level geometric abstraction. The provisional
+``REALISTIC_OBJECT_SENSOR`` currently delegates to that same geometry: noise,
+missed detections, and latency are not yet implemented.
 Positive finite dimensions are mandatory for both geometric profiles.
 
 Route and manoeuvre truth are deliberately excluded because they would leak
 future information downstream. Static occluders may later be supplied to the
 geometric layer; none are invented here.
+
+``sensor_range`` is the selected reference sensor capability and
+``sensor_fov_degrees`` is fused object-list coverage, not one radar's FOV. The
+interface does not simulate separate radar returns; each reference radar has a
+150-degree horizontal FOV. ASAM OSI inspires the ground-truth-to-sensor-view
+structure but does not prescribe these numeric values.
 """
 
 import copy
@@ -27,6 +35,7 @@ from config import (
     GEOMETRIC_SENSOR_PROFILE,
     PERCEPTION_PROFILES,
     REALISTIC_OBJECT_SENSOR_PROFILE,
+    SENSOR_CONFIGURATION_SUMMARY,
     SENSOR_FOV_DEGREES,
     SENSOR_RANGE,
 )
@@ -276,6 +285,7 @@ class PerceptionInterface:
             "out_of_fov_targets": counts["OUT_OF_FOV"],
             "fully_occluded_targets": counts["FULLY_OCCLUDED"],
             "partially_visible_targets": counts["PARTIALLY_VISIBLE"],
+            "sensor_configuration": copy.deepcopy(SENSOR_CONFIGURATION_SUMMARY),
         }
 
     def _diagnostic_template(self, timestamp, ego_id, target_id):

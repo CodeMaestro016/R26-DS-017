@@ -9,7 +9,7 @@ sys.path.insert(0, str(PROJECT_ROOT))
 from config import (APPROACH_ZONE_RADIUS, EVENT_ARMING_ETA_SECONDS,
                     MAX_APPROACH_SPEED, MODEL_OBSERVATION_WINDOW_SECONDS,
                     OBSERVATION_SAFETY_MARGIN, PRIMARY_PREDICTION_LEAD_TIME_SECONDS,
-                    SENSOR_RANGE)
+                    MIN_REQUIRED_OBSERVATION_RANGE_METERS, SENSOR_RANGE)
 from conflict_entry_monitor import ConflictEntryMonitor
 from predictor import IntentionPredictor
 
@@ -59,7 +59,8 @@ class EligibilityTests(unittest.TestCase):
     def test_ranges_follow_contract(self):
         context = MODEL_OBSERVATION_WINDOW_SECONDS + PRIMARY_PREDICTION_LEAD_TIME_SECONDS
         self.assertAlmostEqual(APPROACH_ZONE_RADIUS, MAX_APPROACH_SPEED * context + OBSERVATION_SAFETY_MARGIN)
-        self.assertAlmostEqual(SENSOR_RANGE, 2 * MAX_APPROACH_SPEED * context + OBSERVATION_SAFETY_MARGIN)
+        self.assertAlmostEqual(MIN_REQUIRED_OBSERVATION_RANGE_METERS, 2 * MAX_APPROACH_SPEED * context + OBSERVATION_SAFETY_MARGIN)
+        self.assertEqual(SENSOR_RANGE, 160.0)
         self.assertEqual(EVENT_ARMING_ETA_SECONDS, 3.0)
 
     def test_event_not_created_before_arming_horizon(self):

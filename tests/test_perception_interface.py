@@ -14,8 +14,18 @@ sys.path.insert(0, str(PROJECT_ROOT))
 from config import (
     APPROACH_ZONE_RADIUS,
     DEFAULT_PERCEPTION_PROFILE,
+    FUSED_SURROUND_FOV_DEGREES,
+    MAX_CLOSING_SPEED_MPS,
+    MIN_REQUIRED_OBSERVATION_RANGE_METERS,
+    OBSERVATION_SAFETY_MARGIN,
     PERCEPTION_PROFILES,
+    REFERENCE_CORNER_RADAR_COUNT,
+    REFERENCE_CORNER_RADAR_HORIZONTAL_FOV_DEGREES,
+    REFERENCE_CORNER_RADAR_RANGE_METERS,
+    REQUIRED_CONTEXT_SECONDS,
+    SENSOR_FOV_DEGREES,
     SENSOR_RANGE,
+    validate_sensor_range,
 )
 from perception_interface import PerceptionInterface
 
@@ -180,7 +190,52 @@ def test_profiles_differ_when_occlusion_exists():
 
 def test_configured_radii_derivations():
     assert APPROACH_ZONE_RADIUS == pytest.approx(76.67)
-    assert SENSOR_RANGE == pytest.approx(118.34)
+    assert REFERENCE_CORNER_RADAR_RANGE_METERS == pytest.approx(160.0)
+    assert REFERENCE_CORNER_RADAR_HORIZONTAL_FOV_DEGREES == pytest.approx(150.0)
+    assert REFERENCE_CORNER_RADAR_COUNT == 4
+    assert FUSED_SURROUND_FOV_DEGREES == pytest.approx(360.0)
+    assert SENSOR_FOV_DEGREES == pytest.approx(360.0)
+    assert SENSOR_RANGE == pytest.approx(160.0)
+    assert MIN_REQUIRED_OBSERVATION_RANGE_METERS == pytest.approx(
+        MAX_CLOSING_SPEED_MPS * REQUIRED_CONTEXT_SECONDS
+        + OBSERVATION_SAFETY_MARGIN
+    )
+    assert MIN_REQUIRED_OBSERVATION_RANGE_METERS == pytest.approx(118.34)
+    assert SENSOR_RANGE >= MIN_REQUIRED_OBSERVATION_RANGE_METERS
+
+
+def test_short_reference_range_fails_startup_validation():
+    with pytest.raises(ValueError, match=r"100\.00 m.*118\.34 m"):
+        validate_sensor_range(100.0)
+
+
+def test_sensor_configuration_is_summary_metadata_not_an_observation():
+    interface = PerceptionInterface()
+    result = interface.generate_observations(
+        "ego", vehicle((0.0, 0.0)),
+        {"ego": vehicle((0.0, 0.0)), "target": vehicle((0.0, 10.0))}, 0.0
+    )
+    metadata = interface.get_last_summary("ego")["sensor_configuration"]
+    assert metadata == {
+        "reference_sensor_name": "Bosch corner radar reference profile",
+        "individual_radar_range_meters": 160.0,
+        "individual_radar_horizontal_fov_degrees": 150.0,
+        "sensor_count": 4,
+        "fused_fov_degrees": 360.0,
+        "minimum_required_observation_range_meters": pytest.approx(118.34),
+        "selected_operational_sensor_range_meters": 160.0,
+        "range_requirement_satisfied": True,
+    }
+    assert all("sensor_configuration" not in observation
+               for observation in result.values())
+
+
+def test_ideal_detects_beyond_old_limit_and_geometry_stops_at_160m():
+    target = vehicle((0.0, MIN_REQUIRED_OBSERVATION_RANGE_METERS + 10.0))
+    assert "target" in observe(target, profile="IDEAL_BASELINE")
+    assert "target" not in observe(
+        vehicle((0.0, SENSOR_RANGE + 0.01)), profile="GEOMETRIC_SENSOR"
+    )
 
 
 def diagnostic_by_target(interface, ego_id="ego"):
