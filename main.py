@@ -8,6 +8,7 @@ import traci
 from config import (
     AV_TYPE_ID,
     CONTROL_UPDATE_INTERVAL_SECONDS,
+    CONFLICT_DEBUG_OUTPUT,
     DASHBOARD_API_URL,
     DASHBOARD_ENABLED,
     DASHBOARD_TIMEOUT_SECONDS,
@@ -16,6 +17,7 @@ from config import (
     EPISODE_STEPS,
     INITIAL_VEHICLE_COUNT,
     MAX_APPROACH_SPEED,
+    OUTPUT_DIR,
     ROUTE_IDS,
     SAFE_SUMO_SPEED_MODE,
     SENSOR_CONFIGURATION_SUMMARY,
@@ -27,6 +29,10 @@ from config import (
     VALIDATION_SPAWN_SCHEDULE,
 )
 from conflict_entry_monitor import conflict_entry_monitor
+from conflict import (
+    ConflictGraphManager, ConflictZoneManager, MapPathManager,
+    write_conflict_catalogues,
+)
 from environment import SUMOEnv
 from evaluation import evaluator
 from negotiation import NegotiationManager
@@ -130,6 +136,16 @@ def build_dashboard_payload(
             for vehicle_id in observations
         },
         "intention_predictions": prediction_data,
+        "local_conflict_graphs": {
+            vehicle_id: observation_manager.get_ldm(
+                vehicle_id
+            ).get_current_conflict_graph()
+            for vehicle_id in observations
+            if observation_manager.get_ldm(vehicle_id) is not None
+            and observation_manager.get_ldm(
+                vehicle_id
+            ).get_current_conflict_graph() is not None
+        },
         "prediction_mode": "SHADOW" if SHADOW_MODE else "ACTIVE",
     }
 
@@ -186,6 +202,22 @@ def main():
         )
 
     predictor = IntentionPredictor()
+    map_path_manager = MapPathManager()
+    conflict_zone_manager = ConflictZoneManager(map_path_manager)
+    conflict_graph_manager = ConflictGraphManager(
+        map_path_manager, conflict_zone_manager
+    )
+    write_conflict_catalogues(
+        map_path_manager, conflict_zone_manager, OUTPUT_DIR
+    )
+    if CONFLICT_DEBUG_OUTPUT:
+        print("Conflict map loaded:")
+        print(f"  movement paths: {len(map_path_manager.paths)}")
+        print(
+            "  crossing/merging conflict relationships: "
+            f"{len(conflict_zone_manager.zone_geometries)}"
+        )
+        print(f"  conflict zones: {len(conflict_zone_manager.zone_geometries)}")
     negotiation_manager = NegotiationManager()
     route_cycle = cycle(ROUTE_IDS)
     validation_schedule = deque(VALIDATION_SPAWN_SCHEDULE)
@@ -244,6 +276,20 @@ def main():
                 prediction_events
             )
             print_prediction_events(prediction_events)
+
+            # Shadow-only spatial validation. Each graph consumes only its
+            # owner's LDM and cannot affect risk, negotiation, or control.
+            for ego_id in observations:
+                ldm = observation_manager.get_ldm(ego_id)
+                if ldm is not None and ldm.in_approach_zone:
+                    ldm.current_conflict_graph = (
+                        conflict_graph_manager.build_local_graph(
+                            ldm, current_time
+                        )
+                    )
+                elif ldm is not None:
+                    ldm.current_conflict_graph = None
+                    conflict_graph_manager.reset(ego_id)
 
             if current_time + 1e-9 >= next_control_time:
                 for ego_id in observations:
@@ -341,10 +387,32 @@ def main():
         evaluator.save_prediction_log()
 
     finally:
+        conflict_summary = conflict_graph_manager.validation_summary()
+        print("\nConflict Graph validation")
+        print(f"  Discovered movement paths: {len(map_path_manager.paths)}")
+        print(f"  Map conflict zones: {len(conflict_zone_manager.zone_geometries)}")
+        print(f"  Graphs built: {conflict_summary['graphs_built']}")
+        print(
+            "  Spatial conflict edges observed: "
+            f"{conflict_summary['spatial_conflict_edges_observed']}"
+        )
+        print(
+            "  Unknown-intention conservative edges: "
+            f"{conflict_summary['unknown_intention_conservative_edges']}"
+        )
+        print(
+            "  Prediction-unavailable conservative edges: "
+            f"{conflict_summary['prediction_unavailable_conservative_edges']}"
+        )
+        print(
+            "  Non-conflicting targets filtered: "
+            f"{conflict_summary['non_conflicting_targets_filtered']}"
+        )
         environment.close()
         observation_manager.reset()
         conflict_entry_monitor.reset()
         risk_assessor.reset()
+        conflict_graph_manager.reset()
 
 
 if __name__ == "__main__":

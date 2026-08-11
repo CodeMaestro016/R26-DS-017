@@ -8,6 +8,12 @@ updated_sumo_intention_project/
 |-- observation.py
 |-- perception_interface.py
 |-- conflict_entry_monitor.py
+|-- conflict/
+|   |-- map_path_manager.py
+|   |-- conflict_zone_manager.py
+|   |-- conflict_graph_manager.py
+|   |-- validation.py
+|   `-- models.py
 |-- predictor.py
 |-- risk_assessment.py
 |-- negotiation.py

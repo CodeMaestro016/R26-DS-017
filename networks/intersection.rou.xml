@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <routes>
     <vType id="AV" accel="2.0" decel="4.5" emergencyDecel="7.0"
-           length="5.0" minGap="2.5" maxSpeed="13.89"
+           length="5.0" width="1.8" minGap="2.5" maxSpeed="13.89"
            sigma="0.0" color="0,0,255"/>
 
     <route id="route_w_straight" edges="w_in e_out"/>
@@ -20,4 +20,3 @@
     <route id="route_n_left" edges="n_in e_out"/>
     <route id="route_n_right" edges="n_in w_out"/>
 </routes>
-

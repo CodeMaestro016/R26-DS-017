@@ -26,6 +26,7 @@ class LocalDynamicMap:
         self.tracks = {}
         self.in_approach_zone = False
         self.last_update_time = 0.0
+        self.current_conflict_graph = None
 
     @staticmethod
     def _velocity_vector(speed, heading_radians):
@@ -54,6 +55,9 @@ class LocalDynamicMap:
         lane_length,
         road_id,
         current_time,
+        length=None,
+        width=None,
+        self_planned_manoeuvre=None,
     ):
         previous = self.tracks.get(vehicle_id)
         if previous is None:
@@ -93,6 +97,12 @@ class LocalDynamicMap:
             "lane_position": float(lane_position),
             "lane_length": float(lane_length),
             "road_id": road_id,
+            "length": float(length) if length is not None else (
+                previous.get("length") if previous else None
+            ),
+            "width": float(width) if width is not None else (
+                previous.get("width") if previous else None
+            ),
             "distance_to_conflict": self._distance_to_center(
                 position
             ),
@@ -108,6 +118,10 @@ class LocalDynamicMap:
             "position_history": history,
             "intention_prediction": intention_prediction,
         }
+        if vehicle_id == self.ego_id and self_planned_manoeuvre is not None:
+            self.tracks[vehicle_id]["self_planned_manoeuvre"] = (
+                self_planned_manoeuvre
+            )
 
     def propagate_track(self, vehicle_id, current_time):
         track = self.tracks.get(vehicle_id)
@@ -154,12 +168,8 @@ class LocalDynamicMap:
             del self.tracks[vehicle_id]
         return len(stale_ids)
 
-    def get_conflict_relevant_vehicles(self):
-        """Provisional centre-approach filter.
-
-        The later conflict-manager stage must replace this with lane-path and
-        conflict-zone reasoning.
-        """
+    def get_legacy_center_conflict_relevant_vehicles(self):
+        """Legacy centre-approach filter retained for baseline compatibility."""
         ego_track = self.tracks.get(self.ego_id)
         if ego_track is None:
             return {}
@@ -192,6 +202,17 @@ class LocalDynamicMap:
 
         return relevant
 
+    def get_conflict_relevant_vehicles(self):
+        """Compatibility alias used only by prediction timing/legacy modules.
+
+        New spatial-conflict consumers must use ``get_current_conflict_graph``.
+        """
+        return self.get_legacy_center_conflict_relevant_vehicles()
+
+    def get_current_conflict_graph(self):
+        """Preferred map-aware graph snapshot; legacy filters remain separate."""
+        return self.current_conflict_graph
+
     def prediction_snapshot(self):
         return {
             vehicle_id: track["intention_prediction"]
@@ -216,6 +237,14 @@ class ObservationManager:
 
     def get_ldm(self, vehicle_id):
         return self.ldms.get(vehicle_id)
+
+    @staticmethod
+    def get_ego_planned_manoeuvre(ego_id, ego_state):
+        """Expose only an ego's own navigation intent, never target route truth."""
+        del ego_id
+        route_id = ego_state.get("route_id", "")
+        suffix = route_id.rsplit("_", 1)[-1].upper()
+        return suffix if suffix in {"LEFT", "RIGHT", "STRAIGHT"} else None
 
     @staticmethod
     def is_in_approach_zone(position):
@@ -283,6 +312,11 @@ class ObservationManager:
                     ego_data["lane_length"],
                     ego_data["road_id"],
                     self.current_time,
+                    length=ego_data["length"],
+                    width=ego_data["width"],
+                    self_planned_manoeuvre=self.get_ego_planned_manoeuvre(
+                        ego_id, global_observations[ego_id]
+                    ),
                 )
                 continue
 
@@ -312,6 +346,13 @@ class ObservationManager:
                     observation["lane_length"],
                     observation["road_id"],
                     self.current_time,
+                    length=observation.get("length"),
+                    width=observation.get("width"),
+                    self_planned_manoeuvre=(
+                        self.get_ego_planned_manoeuvre(
+                            ego_id, global_observations[ego_id]
+                        ) if observed_id == ego_id else None
+                    ),
                 )
 
             for track_id, track in list(ldm.tracks.items()):

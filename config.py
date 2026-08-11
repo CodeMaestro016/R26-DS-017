@@ -200,6 +200,12 @@ CONFIDENCE_RISK_WEIGHT = 0.3
 # Evaluation and dashboard
 # ---------------------------------------------------------------------------
 OUTPUT_DIR = PROJECT_ROOT / "results"
+# Logging-only switch; it does not affect conflict geometry or decisions.
+CONFLICT_DEBUG_OUTPUT = False
+# Physical width declared explicitly for the project's AV type and used only
+# to build the startup/static map catalogue. Online graph decisions use each
+# LDM track's actual width returned by SUMO.
+AV_WIDTH_METERS = 1.8
 DEADLOCK_DURATION_SECONDS = 15.0
 STOPPED_SPEED_THRESHOLD_MPS = 0.5
 

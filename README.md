@@ -166,15 +166,72 @@ The GRUs were trained using the inD Bendplatz cohort. This synthetic SUMO cross
 is a deployment and robustness test, not proof that the original test accuracy
 transfers unchanged to a new map.
 
-## Next stage after this checkpoint passes
+## Intention-aware local conflict graph
 
-Create a map-aware `conflict_manager.py` that:
+Conflict detection now runs in shadow/read-only mode after prediction. At
+startup, `MapPathManager` reads the compiled SUMO network and discovers legal
+LEFT, RIGHT, and STRAIGHT connection paths for each incoming lane.
+`ConflictZoneManager` precomputes stable path-pair relationships and uses
+Shapely swept envelopes based on each vehicle's actual width. It adds no fixed
+safety or uncertainty buffer. `ConflictGraphManager` then independently builds
+an ego-centred graph from each AV's own LDM.
 
-1. builds legal candidate paths from lane geometry and predicted intentions;
-2. identifies actual path intersections or conflict zones;
-3. calculates ego and target distances to each zone;
-4. estimates zone-entry and exit times;
-5. reports arrival-time gaps and occupancy overlap.
+Path IDs include the exact incoming lane (for example,
+`W_IN_0_STRAIGHT`) so multi-lane approaches cannot overwrite movements with
+the same manoeuvre. Duplicate IDs fail initialization explicitly.
 
-Only after that should the conflict output be connected to priority,
-negotiation, scheduling and the independent safety shield.
+Topology and occupied geometry are separate. Lane connectivity identifies
+SAME_PATH, DIVERGING, MERGING, or POTENTIAL_CROSSING relationships. A
+POTENTIAL_CROSSING becomes CROSSING, and a coordinated zone ID is assigned,
+only when the actual width-buffered envelopes have a non-empty intersection:
+`Z_ij = P_i intersection P_j`. Centreline intersection is not required.
+SAME_PATH and DIVERGING relationships receive no high-level conflict-zone ID.
+Flat buffer end caps stop at map-path endpoints and round joins form continuous
+offsets around bends; neither adds metres beyond half the physical width.
+
+The static manager retains each complete Polygon, MultiPolygon, or
+GeometryCollection and distance-along-path intervals for both paths. Runtime
+decisions use LDM widths; the startup catalogue uses the explicit 1.8 m width
+of the project's SUMO AV type. Startup writes network-derived validation data
+to `results/conflict_map_paths.csv` and
+`results/conflict_zone_catalogue.csv`. `CONFLICT_DEBUG_OUTPUT` optionally
+prints one startup summary and is disabled by default.
+
+An ego obtains only its own navigation manoeuvre. A target path comes from its
+current lane plus the authoritative fused intention result. UNKNOWN, unavailable,
+or map-infeasible predictions conservatively retain every legal movement from
+the target lane. Target route ID, route index, and ground-truth manoeuvre are
+not consumed. When valid manoeuvre probabilities are available, the reported
+spatial-conflict probability is exactly the probability mass of map-conflicting
+classes; it is not collision risk and has no additional threshold or weight.
+
+The operational graph contains only CROSSING and MERGING relationships.
+DIVERGING and SAME_PATH relationships remain map diagnostics for later
+lane-following/safety layers. This module makes no TTC, arrival-time,
+right-of-way, priority, negotiation, or control decision.
+
+The design adopts conflict-zone/local-distributed reasoning from Liu et al.,
+“Distributed Conflict Resolution for Connected Autonomous Vehicles” (2018),
+DOI `10.1109/TIV.2017.2788209`; graph representation principles from Chen et
+al., “Conflict-Free Cooperation Method for Connected and Automated Vehicles at
+Unsignalized Intersections” (2022), DOI `10.1109/TITS.2022.3182403`; and broad
+architectural support from Zhong, Nejad, and Lee, “Autonomous and
+Semi-Autonomous Intersection Management: A Survey” (2020). The intention-aware,
+ego-local integration is project-specific; it is not claimed as those papers'
+exact method or as a globally novel first implementation.
+
+`ConflictEntryMonitor` remains separate and controls prediction timing and
+eligibility. The conflict graph performs only spatial path-conflict detection.
+
+When covariance-backed tracking is added later, envelopes can be expanded by
+statistically derived position uncertainty rather than a guessed distance.
+
+Existing safety score, collision, throughput, and travel-time outputs do not
+validate this graph: it remains shadow-only. Geometry is validated separately
+through actual-map and synthetic envelope-intersection tests.
+
+## Future stages
+
+Temporal zone-entry/exit reasoning, arrival-time overlap, risk assessment,
+right-of-way negotiation, scheduling, and an independent safety shield remain
+future work. The shadow conflict graph is not connected to vehicle control.
