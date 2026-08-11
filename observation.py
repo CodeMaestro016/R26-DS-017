@@ -114,7 +114,9 @@ class LocalDynamicMap:
                 speed,
                 heading_radians,
             ),
-            # Only genuine observations are added to this history.
+            # Only genuine front-bumper observations are added to this
+            # history. Do not convert these model inputs to geometric centers
+            # until the original training-pipeline reference is verified.
             "position_history": history,
             "intention_prediction": intention_prediction,
         }

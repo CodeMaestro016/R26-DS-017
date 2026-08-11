@@ -5,6 +5,11 @@ sensor view and then into current-frame local object detections. Positive ego
 longitudinal is forward and positive lateral is left. SUMO navigation headings
 are 0=north and 90 degrees=east.
 
+SUMO ``position`` and ``lane_position`` use the center of the front bumper as
+their vehicle reference. Geometric footprints derive the vehicle center from
+that position and actual length. The virtual ego sensor origin remains the
+project's SUMO reference point; no physical radar mounting offset is modelled.
+
 ``IDEAL_BASELINE`` applies only the 160 m reference limit (no FOV or
 occlusion) to exact simulator values and is an unrealistic upper-performance
 baseline. ``GEOMETRIC_SENSOR`` applies the fused 360-degree FOV and dynamic
@@ -385,17 +390,24 @@ class PerceptionInterface:
 
     @staticmethod
     def _calculate_bounding_box(state):
+        """Return footprint corners from SUMO's front-bumper reference.
+
+        If p_f is the front-bumper position, L the actual vehicle length, and
+        u the heading unit vector, the geometric center is
+        p_c = p_f - (L / 2) u. The footprint is then constructed around p_c.
+        """
         heading = state["heading_radians"]
         forward = np.asarray([math.sin(heading), math.cos(heading)])
         left = np.asarray([-math.cos(heading), math.sin(heading)])
         longitudinal = 0.5 * state["length"] * forward
         lateral = 0.5 * state["width"] * left
-        center = state["position"]
+        front_bumper_position = np.asarray(state["position"], dtype=float)
+        geometric_center = front_bumper_position - longitudinal
         return np.asarray([
-            center + longitudinal + lateral,
-            center + longitudinal - lateral,
-            center - longitudinal - lateral,
-            center - longitudinal + lateral,
+            geometric_center + longitudinal + lateral,
+            geometric_center + longitudinal - lateral,
+            geometric_center - longitudinal - lateral,
+            geometric_center - longitudinal + lateral,
         ])
 
     @classmethod

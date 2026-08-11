@@ -130,6 +130,36 @@ def test_vehicle_dimensions_affect_occlusion():
     assert "far" not in frame(6.0)
 
 
+@pytest.mark.parametrize(
+    ("front_bumper", "heading", "expected_center", "longitudinal_axis",
+     "expected_longitudinal_limits", "lateral_axis", "expected_lateral_limits"),
+    [
+        ((0.0, 10.0), 0.0, (0.0, 8.0), 1, (6.0, 10.0), 0, (-1.0, 1.0)),
+        ((10.0, 0.0), math.pi / 2.0, (8.0, 0.0), 0, (6.0, 10.0), 1, (-1.0, 1.0)),
+    ],
+)
+def test_bounding_box_uses_sumo_front_bumper_reference(
+        front_bumper, heading, expected_center, longitudinal_axis,
+        expected_longitudinal_limits, lateral_axis, expected_lateral_limits):
+    state = vehicle(front_bumper, heading=heading, length=4.0, width=2.0)
+    original = copy.deepcopy(state)
+    corners = PerceptionInterface._calculate_bounding_box(state)
+
+    assert corners.mean(axis=0) == pytest.approx(expected_center)
+    assert (corners[:, longitudinal_axis].min(),
+            corners[:, longitudinal_axis].max()) == pytest.approx(
+                expected_longitudinal_limits
+            )
+    assert (corners[:, lateral_axis].min(),
+            corners[:, lateral_axis].max()) == pytest.approx(
+                expected_lateral_limits
+            )
+    # The supplied SUMO reference lies on the forward face of the box.
+    forward_face = corners[:2].mean(axis=0)
+    assert forward_face == pytest.approx(front_bumper)
+    assert state == original
+
+
 def test_each_ego_receives_a_different_local_set():
     states = {"a": vehicle((0.0, 0.0)), "b": vehicle((0.0, 100.0)),
               "c": vehicle((0.0, 150.0))}
@@ -313,7 +343,7 @@ def test_diagnostics_cover_range_fov_detection_occlusion_and_partial():
         "out_fov": vehicle((30.0, 0.0)),
         "near": vehicle((0.0, 10.0), width=3.0),
         "hidden": vehicle((0.0, 25.0), width=2.0),
-        "partial": vehicle((-2.5, 25.0), width=4.0),
+        "partial": vehicle((-3.5, 25.0), width=4.0),
         "bad": vehicle((1.0, 1.0), width=-1.0),
     }
     interface = PerceptionInterface(sensor_fov_degrees=60.0)

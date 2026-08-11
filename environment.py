@@ -53,9 +53,14 @@ class SUMOEnv:
         for vehicle_id in traci.vehicle.getIDList():
             try:
                 angle_degrees = float(traci.vehicle.getAngle(vehicle_id))
+                # SUMO defines this world position at the center of the
+                # vehicle's front bumper. Keep that canonical reference;
+                # geometry consumers derive a vehicle center when required.
                 position = tuple(traci.vehicle.getPosition(vehicle_id))
                 speed = float(traci.vehicle.getSpeed(vehicle_id))
                 lane_id = traci.vehicle.getLaneID(vehicle_id)
+                # Longitudinal lane position uses the same front-bumper
+                # reference, measured along the current SUMO lane.
                 lane_position = float(
                     traci.vehicle.getLanePosition(vehicle_id)
                 )
@@ -65,7 +70,7 @@ class SUMOEnv:
                     else 0.0
                 )
                 states[vehicle_id] = {
-                    # Canonical current-state contract consumed by perception.
+                    # Canonical front-bumper state consumed by perception.
                     "position": position,
                     "speed": speed,
                     "heading_radians": math.radians(angle_degrees),
