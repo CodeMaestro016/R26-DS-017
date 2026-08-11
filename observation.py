@@ -59,6 +59,10 @@ class LocalDynamicMap:
         length=None,
         width=None,
         self_planned_manoeuvre=None,
+        max_acceleration_mps2=None,
+        comfortable_deceleration_mps2=None,
+        emergency_deceleration_mps2=None,
+        max_speed_mps=None,
     ):
         previous = self.tracks.get(vehicle_id)
         if previous is None:
@@ -120,6 +124,26 @@ class LocalDynamicMap:
             # until the original training-pipeline reference is verified.
             "position_history": history,
             "intention_prediction": intention_prediction,
+            "max_acceleration_mps2": (
+                max_acceleration_mps2 if max_acceleration_mps2 is not None
+                else previous.get("max_acceleration_mps2") if previous else None
+            ),
+            "comfortable_deceleration_mps2": (
+                comfortable_deceleration_mps2
+                if comfortable_deceleration_mps2 is not None
+                else previous.get("comfortable_deceleration_mps2")
+                if previous else None
+            ),
+            "emergency_deceleration_mps2": (
+                emergency_deceleration_mps2
+                if emergency_deceleration_mps2 is not None
+                else previous.get("emergency_deceleration_mps2")
+                if previous else None
+            ),
+            "max_speed_mps": (
+                max_speed_mps if max_speed_mps is not None
+                else previous.get("max_speed_mps") if previous else None
+            ),
         }
         if vehicle_id == self.ego_id and self_planned_manoeuvre is not None:
             self.tracks[vehicle_id]["self_planned_manoeuvre"] = (
@@ -278,6 +302,14 @@ class ObservationManager:
                 "lane_position": state.get("lane_position", 0.0),
                 "lane_length": state.get("lane_length", 0.0),
                 "road_id": state.get("road_id", ""),
+                "max_acceleration_mps2": state.get("max_acceleration_mps2"),
+                "comfortable_deceleration_mps2": state.get(
+                    "comfortable_deceleration_mps2"
+                ),
+                "emergency_deceleration_mps2": state.get(
+                    "emergency_deceleration_mps2"
+                ),
+                "max_speed_mps": state.get("max_speed_mps"),
             }
 
         active_ids = set(vehicle_data)
@@ -324,6 +356,14 @@ class ObservationManager:
                     self_planned_manoeuvre=self.get_ego_planned_manoeuvre(
                         ego_id, global_observations[ego_id]
                     ),
+                    max_acceleration_mps2=ego_data["max_acceleration_mps2"],
+                    comfortable_deceleration_mps2=ego_data[
+                        "comfortable_deceleration_mps2"
+                    ],
+                    emergency_deceleration_mps2=ego_data[
+                        "emergency_deceleration_mps2"
+                    ],
+                    max_speed_mps=ego_data["max_speed_mps"],
                 )
                 continue
 
@@ -360,6 +400,16 @@ class ObservationManager:
                             ego_id, global_observations[ego_id]
                         ) if observed_id == ego_id else None
                     ),
+                    max_acceleration_mps2=observation.get(
+                        "max_acceleration_mps2"
+                    ),
+                    comfortable_deceleration_mps2=observation.get(
+                        "comfortable_deceleration_mps2"
+                    ),
+                    emergency_deceleration_mps2=observation.get(
+                        "emergency_deceleration_mps2"
+                    ),
+                    max_speed_mps=observation.get("max_speed_mps"),
                 )
 
             for track_id, track in list(ldm.tracks.items()):

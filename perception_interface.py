@@ -513,7 +513,9 @@ class PerceptionInterface:
     @staticmethod
     def _context_fields(state):
         return {key: state[key] for key in (
-            "lane_id", "lane_position", "lane_length", "road_id"
+            "lane_id", "lane_position", "lane_length", "road_id",
+            "max_acceleration_mps2", "comfortable_deceleration_mps2",
+            "emergency_deceleration_mps2", "max_speed_mps",
         ) if key in state}
 
     @classmethod

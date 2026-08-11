@@ -165,19 +165,21 @@ class ConflictGraphManager:
                 candidate_paths = feasible
 
             conflicting, zones, types = [], set(), set()
-            for manoeuvre, target_paths in candidate_paths.items():
-                manoeuvre_conflicts = False
+            spatially_conflicting_paths = {}
+            for manoeuvre, target_paths in feasible.items():
+                path_matches = []
                 for target_path in target_paths:
                     relationship, zone = self.zone_manager.coordinated_conflict(
                         ego_path.path_id, ego.get("width"),
                         target_path.path_id, target.get("width"),
                     )
                     if zone is not None:
-                        manoeuvre_conflicts = True
+                        path_matches.append(target_path)
                         zones.add(relationship.conflict_zone_id)
                         types.add(relationship.conflict_type)
-                if manoeuvre_conflicts:
+                if path_matches:
                     conflicting.append(manoeuvre)
+                    spatially_conflicting_paths[manoeuvre] = tuple(path_matches)
 
             probability = None
             if probabilities is not None:
@@ -195,9 +197,17 @@ class ConflictGraphManager:
             possible = bool(conflicting)
             if reason is None:
                 if possible:
-                    reason = ("CONFLICTING_PREDICTED_PATH"
-                              if prediction_status == "PREDICTED"
-                              else "CONFLICTING_UNKNOWN_PATH_SET")
+                    selected_conflicts = any(
+                        name in spatially_conflicting_paths
+                        for name in candidate_paths
+                    )
+                    reason = (
+                        "CONFLICTING_PREDICTED_PATH"
+                        if prediction_status == "PREDICTED" and selected_conflicts
+                        else "CONFLICTING_FEASIBLE_PATH_SET"
+                        if prediction_status == "PREDICTED"
+                        else "CONFLICTING_UNKNOWN_PATH_SET"
+                    )
                 else:
                     reason = "NO_SHARED_CONFLICT_ZONE"
             diagnostic = {
@@ -212,6 +222,17 @@ class ConflictGraphManager:
                         path.path_id for path in paths
                     )) for name, paths in sorted(candidate_paths.items())
                 },
+                "spatially_conflicting_candidate_paths": {
+                    name: (paths[0].path_id if len(paths) == 1 else tuple(
+                        path.path_id for path in paths
+                    )) for name, paths in sorted(
+                        spatially_conflicting_paths.items()
+                    )
+                },
+                "non_conflicting_candidate_path_count": (
+                    sum(len(paths) for paths in feasible.values())
+                    - sum(len(paths) for paths in spatially_conflicting_paths.values())
+                ),
                 "conflicting_manoeuvres": tuple(sorted(conflicting)),
                 "shared_conflict_zone_ids": tuple(sorted(zones)),
                 "conflict_types": tuple(sorted(types)),

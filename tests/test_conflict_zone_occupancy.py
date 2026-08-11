@@ -29,6 +29,8 @@ class FakePathManager:
 
     @staticmethod
     def resolve_front_bumper_path_progress(track, path):
+        if "path_progress" in track:
+            return track["path_progress"], "INTERNAL_PATH_GEOMETRY", None
         if track["lane_id"] == path.incoming_lane_id:
             return -(track["lane_length"] - track["lane_position"]), (
                 "INCOMING_LANE"
@@ -60,12 +62,20 @@ class LDM:
                 "lane_id": "ego_in_0", "lane_position": 100.0,
                 "lane_length": 100.0, "length": 2.0, "width": 1.8,
                 "speed": ego_speed,
+                "max_acceleration_mps2": 2.0,
+                "comfortable_deceleration_mps2": 4.5,
+                "emergency_deceleration_mps2": 7.0,
+                "max_speed_mps": 13.89,
             },
             "target": {
                 "lane_id": "target_in_0", "lane_position": 100.0,
                 "lane_length": 100.0, "length": 2.0, "width": 1.8,
                 "speed": target_speed, "route_id": truth,
                 "route_index": 99, "ground_truth_route_id": truth,
+                "max_acceleration_mps2": 2.0,
+                "comfortable_deceleration_mps2": 4.5,
+                "emergency_deceleration_mps2": 7.0,
+                "max_speed_mps": 13.89,
             },
         }
         self.current_conflict_graph = {
@@ -194,6 +204,39 @@ def test_zero_speed_current_occupancy_remains_explicit():
     assert error == "UNRESOLVED_SPEED"
 
 
+def test_earliest_reachability_from_rest_is_finite():
+    result = ConflictZoneOccupancyAssessor.earliest_reachable_time(
+        distance=8.0, initial_speed=0.0,
+        max_acceleration=2.0, max_speed=100.0,
+    )
+    assert result == pytest.approx(math.sqrt(32.0) / 2.0)
+
+
+def test_earliest_reachability_before_max_speed():
+    result = ConflictZoneOccupancyAssessor.earliest_reachable_time(
+        distance=8.0, initial_speed=2.0,
+        max_acceleration=2.0, max_speed=100.0,
+    )
+    assert result == pytest.approx(2.0)
+
+
+def test_earliest_reachability_with_acceleration_and_speed_cap_phases():
+    result = ConflictZoneOccupancyAssessor.earliest_reachable_time(
+        distance=12.0, initial_speed=0.0,
+        max_acceleration=2.0, max_speed=4.0,
+    )
+    assert result == pytest.approx(4.0)
+
+
+def test_stopping_distance_and_exact_equality_feasibility():
+    distance = ConflictZoneOccupancyAssessor.stopping_distance(
+        speed=4.0, comfortable_deceleration=2.0
+    )
+    assert distance == pytest.approx(4.0)
+    assert distance <= 4.0
+    assert not distance <= 3.999
+
+
 @pytest.mark.parametrize("speed", [0.0, -1.0, math.nan, math.inf, None])
 def test_unusable_speed_is_unresolved_without_substitution(speed):
     timing, error = ConflictZoneOccupancyAssessor._kinematics(
@@ -228,6 +271,28 @@ def test_stopped_candidate_makes_aggregate_unresolved():
     assert edge["status"] == "UNRESOLVED_TIMING"
     assert all(item["status"] == "UNRESOLVED_SPEED"
                for item in edge["evaluations"])
+    assert all(item["target_earliest_reachable_entry_time_s"] is not None
+               for item in edge["evaluations"])
+    assert all(item["target_entry_time_upper_bound_status"] == (
+        "UNBOUNDED_CAN_STOP"
+    ) for item in edge["evaluations"])
+
+
+def test_both_stopped_while_occupying_remain_current_conflict():
+    assessor = ConflictZoneOccupancyAssessor(
+        FakePathManager(), FakeZoneManager()
+    )
+    ldm = LDM(ego_speed=0.0, target_speed=0.0)
+    ldm.tracks["ego"]["path_progress"] = 10.0
+    ldm.tracks["target"]["path_progress"] = 11.0
+    edge = assessor.assess_ldm(ldm, 5.0)["edges"][0]
+    assert edge["temporal_conflict_possible"] is True
+    assert edge["status"] == "TEMPORAL_CONFLICT"
+    first = edge["evaluations"][0]
+    assert first["ego_zone_occupancy_state"] == "CURRENTLY_OCCUPYING"
+    assert first["target_zone_occupancy_state"] == "CURRENTLY_OCCUPYING"
+    assert first["reachability_interpretation"] == "CURRENTLY_OCCUPYING"
+    assert first["ego_nominal_constant_speed_clear_time_s"] is None
 
 
 def test_target_route_truth_cannot_change_temporal_result():

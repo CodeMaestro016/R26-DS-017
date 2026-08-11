@@ -272,6 +272,34 @@ The result is stored per ego and exposed for shadow diagnostics only. It is not
 used by the legacy risk assessor, negotiation manager, speed controller, or
 SUMO safety settings. No scalar weighted risk score is produced.
 
+### Physically bounded reachability
+
+The environment reads each active vehicle's runtime `accel`, normal `decel`,
+`emergencyDecel`, and `maxSpeed` limits through TraCI and propagates them
+through perception into every ego-local track. The current AV type explicitly
+configures these as 2.0 m/s², 4.5 m/s², 7.0 m/s², and 13.89 m/s respectively;
+they are simulation properties, not duplicated assessor parameters.
+
+The assessor retains nominal constant-speed timing and separately computes the
+earliest physically reachable entry and clearance time under maximum forward
+acceleration capped by the runtime maximum speed. A stopped vehicle therefore
+has a finite earliest reachability bound without a speed floor. Normal stop
+feasibility uses `d_stop = v² / (2 * comfortable_deceleration)`. Emergency
+deceleration is recorded for later safety-shield work but is not used as normal
+negotiation behavior.
+
+If normal braking can stop the vehicle before zone entry, the future arrival
+upper bound is explicitly `UNBOUNDED_CAN_STOP`; no finite latest arrival is
+fabricated. Reachability output distinguishes current occupancy, uncommitted
+future motion, physical possibility, and unresolved dynamics from the nominal
+constant-speed prediction.
+
+Conflict Graph edges expose both the complete feasible candidate set and a
+`spatially_conflicting_candidate_paths` subset proven by physical geometry.
+Temporal assessment consumes only that subset. Learned prediction probability
+does not remove a feasible spatially conflicting path at this safety-validation
+stage, and target route truth remains excluded.
+
 Acceleration-aware or uncertainty-aware timing, decision-facing risk
 assessment, right-of-way negotiation, scheduling, and an independent safety
 shield remain future work. The shadow outputs are not connected to control.

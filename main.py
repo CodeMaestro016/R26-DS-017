@@ -428,21 +428,21 @@ def main():
             f"{conflict_summary['non_conflicting_targets_filtered']}"
         )
         temporal_summary = occupancy_assessor.validation_summary()
-        print("\nTemporal Conflict validation")
+        print("\nTemporal Reachability validation")
         print(
             "  Spatial edges evaluated: "
             f"{temporal_summary['spatial_edges_evaluated']}"
         )
         print(
-            "  Candidate path-zone evaluations: "
+            "  Spatially-conflicting candidate path evaluations: "
             f"{temporal_summary['candidate_path_zone_evaluations']}"
         )
         print(
-            "  Temporal conflicts observed: "
+            "  Nominal constant-speed temporal conflicts: "
             f"{temporal_summary['temporal_conflicts_observed']}"
         )
         print(
-            "  Spatial-only temporal separations: "
+            "  Nominal temporal separations: "
             f"{temporal_summary['spatial_only_temporal_separations']}"
         )
         print(
@@ -480,6 +480,34 @@ def main():
         print(
             "  Candidate paths without an applicable zone: "
             f"{temporal_summary['no_applicable_zone']}"
+        )
+        print(
+            "  Nominal timing unavailable due to zero speed: "
+            f"{temporal_summary['nominal_timing_unavailable_due_to_zero_speed']}"
+        )
+        print(
+            "  Earliest-reachability calculations: "
+            f"{temporal_summary['earliest_reachability_calculations']}"
+        )
+        print(
+            "  Stopped vehicles with finite earliest arrival: "
+            f"{temporal_summary['stopped_vehicles_with_finite_earliest_arrival']}"
+        )
+        print(
+            "  Vehicles able to stop before zone: "
+            f"{temporal_summary['vehicles_able_to_stop_before_zone']}"
+        )
+        print(
+            "  Vehicles unable to stop before zone: "
+            f"{temporal_summary['vehicles_unable_to_stop_before_zone']}"
+        )
+        print(
+            "  Physical state/dynamics unresolved: "
+            f"{temporal_summary['physical_state_or_dynamics_unresolved']}"
+        )
+        print(
+            "  Non-conflicting candidate paths excluded: "
+            f"{temporal_summary['non_conflicting_candidate_paths_excluded']}"
         )
         print(
             "  Unique ego-target pairs with temporal conflict: "

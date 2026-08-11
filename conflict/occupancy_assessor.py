@@ -47,6 +47,13 @@ class ConflictZoneOccupancyAssessor:
             "no_applicable_zone": 0,
             "unresolved_no_applicable_evaluation": 0,
             "candidate_paths_rejected_by_observed_lane": 0,
+            "nominal_timing_unavailable_due_to_zero_speed": 0,
+            "earliest_reachability_calculations": 0,
+            "stopped_vehicles_with_finite_earliest_arrival": 0,
+            "vehicles_able_to_stop_before_zone": 0,
+            "vehicles_unable_to_stop_before_zone": 0,
+            "physical_state_or_dynamics_unresolved": 0,
+            "non_conflicting_candidate_paths_excluded": 0,
         }
 
     @staticmethod
@@ -123,6 +130,112 @@ class ConflictZoneOccupancyAssessor:
         })
         return timing, state, None
 
+    @staticmethod
+    def earliest_reachable_time(distance, initial_speed, max_acceleration,
+                                max_speed):
+        """Earliest time under maximum acceleration and a maximum-speed cap."""
+        distance = float(distance)
+        initial_speed = float(initial_speed)
+        max_acceleration = float(max_acceleration)
+        max_speed = float(max_speed)
+        if not all(math.isfinite(value) for value in (
+                distance, initial_speed, max_acceleration, max_speed)):
+            raise ValueError("reachability inputs must be finite")
+        if distance < 0.0 or initial_speed < 0.0:
+            raise ValueError("distance and initial speed must be non-negative")
+        if distance == 0.0:
+            return 0.0
+        if max_acceleration <= 0.0 or max_speed <= 0.0:
+            raise ValueError("acceleration and maximum speed must be positive")
+        if initial_speed >= max_speed:
+            return distance / initial_speed
+        acceleration_distance = (
+            (max_speed ** 2 - initial_speed ** 2)
+            / (2.0 * max_acceleration)
+        )
+        if distance <= acceleration_distance:
+            return (
+                -initial_speed + math.sqrt(
+                    initial_speed ** 2
+                    + 2.0 * max_acceleration * distance
+                )
+            ) / max_acceleration
+        acceleration_time = (
+            (max_speed - initial_speed) / max_acceleration
+        )
+        return (
+            acceleration_time
+            + (distance - acceleration_distance) / max_speed
+        )
+
+    @staticmethod
+    def stopping_distance(speed, comfortable_deceleration):
+        speed = float(speed)
+        deceleration = float(comfortable_deceleration)
+        if not math.isfinite(speed) or speed < 0.0:
+            raise ValueError("speed must be finite and non-negative")
+        if not math.isfinite(deceleration) or deceleration <= 0.0:
+            raise ValueError("comfortable deceleration must be positive")
+        return speed ** 2 / (2.0 * deceleration)
+
+    def _add_reachability_fields(self, record, prefix, track, timing,
+                                 current_time):
+        dynamics = {
+            "max_acceleration_mps2": track.get("max_acceleration_mps2"),
+            "comfortable_deceleration_mps2": track.get(
+                "comfortable_deceleration_mps2"
+            ),
+            "emergency_deceleration_mps2": track.get(
+                "emergency_deceleration_mps2"
+            ),
+            "max_speed_mps": track.get("max_speed_mps"),
+        }
+        for name, value in dynamics.items():
+            record[f"{prefix}_{name}"] = value
+        if timing is None:
+            record[f"{prefix}_reachability_status"] = "UNRESOLVED_DYNAMICS"
+            return "UNRESOLVED_DYNAMICS"
+        try:
+            speed = float(track.get("speed"))
+            acceleration = float(dynamics["max_acceleration_mps2"])
+            deceleration = float(dynamics["comfortable_deceleration_mps2"])
+            max_speed = float(dynamics["max_speed_mps"])
+            earliest_entry = self.earliest_reachable_time(
+                timing["distance_to_zone_entry_m"], speed,
+                acceleration, max_speed,
+            )
+            earliest_clear = self.earliest_reachable_time(
+                timing["distance_to_zone_clear_m"], speed,
+                acceleration, max_speed,
+            )
+            stop_distance = self.stopping_distance(speed, deceleration)
+        except (TypeError, ValueError):
+            record[f"{prefix}_reachability_status"] = "UNRESOLVED_DYNAMICS"
+            return "UNRESOLVED_DYNAMICS"
+        can_stop = stop_distance <= timing["distance_to_zone_entry_m"]
+        state = timing["zone_occupancy_state"]
+        upper_status = (
+            "CLEARED_ZONE" if state == "CLEARED_ZONE"
+            else "CURRENTLY_OCCUPYING" if state == "CURRENTLY_OCCUPYING"
+            else "UNBOUNDED_CAN_STOP" if can_stop
+            else "CAN_NOT_STOP_BEFORE_ZONE"
+        )
+        record.update({
+            f"{prefix}_earliest_reachable_entry_time_s": earliest_entry,
+            f"{prefix}_earliest_reachable_clear_time_s": earliest_clear,
+            f"{prefix}_earliest_predicted_entry_time_s": (
+                float(current_time) + earliest_entry
+            ),
+            f"{prefix}_earliest_predicted_clear_time_s": (
+                float(current_time) + earliest_clear
+            ),
+            f"{prefix}_stopping_distance_m": stop_distance,
+            f"{prefix}_can_stop_before_zone": can_stop,
+            f"{prefix}_entry_time_upper_bound_status": upper_status,
+            f"{prefix}_reachability_status": "RESOLVED",
+        })
+        return "RESOLVED"
+
     # Compatibility helper retained for focused tests of the original
     # pre-junction formulation. General assessment uses path progress above.
     @staticmethod
@@ -146,7 +259,10 @@ class ConflictZoneOccupancyAssessor:
 
     @staticmethod
     def _candidate_path_ids(edge):
-        for manoeuvre, value in edge.get("target_candidate_paths", {}).items():
+        candidates = edge.get("spatially_conflicting_candidate_paths")
+        if candidates is None:
+            candidates = edge.get("target_candidate_paths", {})
+        for manoeuvre, value in candidates.items():
             for path_id in value if isinstance(value, (tuple, list)) else (value,):
                 yield manoeuvre, path_id
 
@@ -161,6 +277,18 @@ class ConflictZoneOccupancyAssessor:
             "predicted_clear_time_s",
         ):
             record[f"{prefix}_{field}"] = timing.get(field)
+        record[f"{prefix}_nominal_constant_speed_time_to_entry_s"] = timing.get(
+            "time_to_entry_s"
+        )
+        record[f"{prefix}_nominal_constant_speed_time_to_clear_s"] = timing.get(
+            "time_to_clear_s"
+        )
+        record[f"{prefix}_nominal_constant_speed_entry_time_s"] = timing.get(
+            "predicted_entry_time_s"
+        )
+        record[f"{prefix}_nominal_constant_speed_clear_time_s"] = timing.get(
+            "predicted_clear_time_s"
+        )
 
     def _base_record(self, ldm, edge, target_id, manoeuvre, target_path_id,
                      current_time):
@@ -228,6 +356,23 @@ class ConflictZoneOccupancyAssessor:
         )
         self._add_timing_fields(record, "ego", ego_timing, ego_source)
         self._add_timing_fields(record, "target", target_timing, target_source)
+        ego_reachability = self._add_reachability_fields(
+            record, "ego", ego, ego_timing, current_time
+        )
+        target_reachability = self._add_reachability_fields(
+            record, "target", target, target_timing, current_time
+        )
+        if "CURRENTLY_OCCUPYING" in {ego_state, target_state}:
+            reachability_interpretation = "CURRENTLY_OCCUPYING"
+        elif "UNRESOLVED_DYNAMICS" in {
+                ego_reachability, target_reachability}:
+            reachability_interpretation = "UNRESOLVED_PHYSICAL_DYNAMICS"
+        elif (record.get("ego_can_stop_before_zone")
+              or record.get("target_can_stop_before_zone")):
+            reachability_interpretation = "UNCOMMITTED_CAN_STOP"
+        else:
+            reachability_interpretation = "POTENTIAL_CONFLICT_REACHABLE"
+        record["reachability_interpretation"] = reachability_interpretation
 
         if "CLEARED_ZONE" in {ego_state, target_state}:
             record.update({
@@ -287,6 +432,23 @@ class ConflictZoneOccupancyAssessor:
             self._totals["currently_occupied_zone_evaluations"] += 1
         if "CLEARED_ZONE" in states:
             self._totals["cleared_zone_evaluations"] += 1
+        for prefix in ("ego", "target"):
+            if record.get(f"{prefix}_reachability_status") == "RESOLVED":
+                self._totals["earliest_reachability_calculations"] += 1
+                if (record.get(f"{prefix}_speed_mps") == 0.0
+                        and record.get(
+                            f"{prefix}_earliest_reachable_entry_time_s"
+                        ) is not None):
+                    self._totals[
+                        "stopped_vehicles_with_finite_earliest_arrival"
+                    ] += 1
+                if record.get(f"{prefix}_can_stop_before_zone"):
+                    self._totals["vehicles_able_to_stop_before_zone"] += 1
+                else:
+                    self._totals["vehicles_unable_to_stop_before_zone"] += 1
+        if record.get("reachability_interpretation") == (
+                "UNRESOLVED_PHYSICAL_DYNAMICS"):
+            self._totals["physical_state_or_dynamics_unresolved"] += 1
         if status == "TEMPORAL_CONFLICT":
             self._totals["temporal_conflicts_observed"] += 1
         elif status in {"SPATIAL_ONLY", "CLEARED_ZONE"}:
@@ -300,12 +462,21 @@ class ConflictZoneOccupancyAssessor:
             }.get(status)
             if key:
                 self._totals[key] += 1
+            if (status == "UNRESOLVED_SPEED"
+                    and (record.get("ego_speed_mps") == 0.0
+                         or record.get("target_speed_mps") == 0.0)):
+                self._totals[
+                    "nominal_timing_unavailable_due_to_zero_speed"
+                ] += 1
 
     def assess_ldm(self, ldm, current_time):
         graph = ldm.current_conflict_graph or {}
         edge_results = []
         for edge in graph.get("edges", ()):
             self._totals["spatial_edges_evaluated"] += 1
+            self._totals["non_conflicting_candidate_paths_excluded"] += int(
+                edge.get("non_conflicting_candidate_path_count", 0)
+            )
             target_id = edge["target_track_id"]
             records = []
             if target_id in ldm.tracks:

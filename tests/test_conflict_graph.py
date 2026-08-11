@@ -196,7 +196,7 @@ def test_accepted_prediction_selects_only_matching_legal_path(managers, label):
     assert candidates == {label: f"S_IN_0_{label}"}
 
 
-def test_predicted_conflicting_and_nonconflicting_graph_results(managers):
+def test_prediction_does_not_remove_feasible_spatial_conflicts(managers):
     _, _, manager = managers
     conflicting = graph(
         manager, target_lane="n_in_0", intent=prediction("STRAIGHT")
@@ -205,12 +205,14 @@ def test_predicted_conflicting_and_nonconflicting_graph_results(managers):
     assert conflicting["diagnostics"][0]["reason"] == (
         "CONFLICTING_PREDICTED_PATH"
     )
-    nonconflicting = graph(
+    predicted_nonconflicting = graph(
         manager, target_lane="n_in_0", intent=prediction("RIGHT")
     )
-    assert nonconflicting["edges"] == ()
-    assert nonconflicting["diagnostics"][0]["reason"] == (
-        "NO_SHARED_CONFLICT_ZONE"
+    assert len(predicted_nonconflicting["edges"]) == 1
+    diagnostic = predicted_nonconflicting["diagnostics"][0]
+    assert diagnostic["reason"] == "CONFLICTING_FEASIBLE_PATH_SET"
+    assert set(diagnostic["spatially_conflicting_candidate_paths"]) == (
+        {"LEFT", "STRAIGHT"}
     )
 
 
@@ -340,7 +342,7 @@ def test_graph_changes_report_prediction_and_edge_transitions(managers):
     ldm.tracks["target"]["intention_prediction"] = prediction("RIGHT")
     second = manager.build_local_graph(ldm, 2.0)
     change_types = {item["change_type"] for item in second["changes"]}
-    assert "EDGE_REMOVED" in change_types
+    assert "EDGE_REMOVED" not in change_types
     assert "PREDICTION_STATUS_CHANGED" in change_types
     assert "CANDIDATE_PATHS_CHANGED" in change_types
 

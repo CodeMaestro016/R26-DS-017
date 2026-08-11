@@ -1,10 +1,12 @@
 """Integration tests for SUMO state collection, perception, and the LDM."""
 
 import math
+import xml.etree.ElementTree as ET
 
 import pytest
 
 import environment
+from config import PROJECT_ROOT
 from environment import SUMOEnv
 from observation import ObservationManager
 
@@ -25,6 +27,10 @@ def sumo_state(position, route_id="route_w_left"):
         "road_id": "w_in",
         "route_id": route_id,
         "route_index": 0,
+        "max_acceleration_mps2": 2.0,
+        "comfortable_deceleration_mps2": 4.5,
+        "emergency_deceleration_mps2": 7.0,
+        "max_speed_mps": 13.89,
     }
 
 
@@ -98,6 +104,10 @@ def test_environment_collects_canonical_perception_fields(monkeypatch):
     monkeypatch.setattr(vehicle, "getPosition", lambda _: (12.0, 34.0))
     monkeypatch.setattr(vehicle, "getSpeed", lambda _: 7.5)
     monkeypatch.setattr(vehicle, "getAcceleration", lambda _: 0.2)
+    monkeypatch.setattr(vehicle, "getAccel", lambda _: 2.0)
+    monkeypatch.setattr(vehicle, "getDecel", lambda _: 4.5)
+    monkeypatch.setattr(vehicle, "getEmergencyDecel", lambda _: 7.0)
+    monkeypatch.setattr(vehicle, "getMaxSpeed", lambda _: 13.89)
     monkeypatch.setattr(vehicle, "getLength", lambda _: 4.7)
     monkeypatch.setattr(vehicle, "getWidth", lambda _: 1.9)
     monkeypatch.setattr(vehicle, "getLaneID", lambda _: "w_in_0")
@@ -114,6 +124,35 @@ def test_environment_collects_canonical_perception_fields(monkeypatch):
     assert state["heading_radians"] == pytest.approx(math.pi / 2.0)
     assert state["length"] == 4.7
     assert state["width"] == 1.9
+    assert state["max_acceleration_mps2"] == 2.0
+    assert state["comfortable_deceleration_mps2"] == 4.5
+    assert state["emergency_deceleration_mps2"] == 7.0
+    assert state["max_speed_mps"] == 13.89
+
+
+def test_actual_sumo_dynamics_reach_each_local_track():
+    manager = ObservationManager()
+    states = {
+        "ego": sumo_state((300.0, 90.0)),
+        "target": sumo_state((300.0, 110.0), "route_n_right"),
+    }
+    manager.update(states, 0.04)
+    for track in manager.get_ldm("ego").tracks.values():
+        assert track["max_acceleration_mps2"] == 2.0
+        assert track["comfortable_deceleration_mps2"] == 4.5
+        assert track["emergency_deceleration_mps2"] == 7.0
+        assert track["max_speed_mps"] == 13.89
+
+
+def test_propagated_dynamics_match_explicit_av_vtype():
+    av_type = ET.parse(
+        PROJECT_ROOT / "networks" / "intersection.rou.xml"
+    ).getroot().find("vType[@id='AV']")
+    assert av_type is not None
+    assert float(av_type.attrib["accel"]) == 2.0
+    assert float(av_type.attrib["decel"]) == 4.5
+    assert float(av_type.attrib["emergencyDecel"]) == 7.0
+    assert float(av_type.attrib["maxSpeed"]) == 13.89
 
 
 def test_environment_start_and_first_observation_update_have_no_contract_error(

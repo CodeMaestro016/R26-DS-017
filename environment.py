@@ -83,6 +83,20 @@ class SUMOEnv:
                     "accel": float(
                         traci.vehicle.getAcceleration(vehicle_id)
                     ),
+                    # Runtime limits come from the active SUMO vehicle/type,
+                    # not duplicated research constants.
+                    "max_acceleration_mps2": float(
+                        traci.vehicle.getAccel(vehicle_id)
+                    ),
+                    "comfortable_deceleration_mps2": float(
+                        traci.vehicle.getDecel(vehicle_id)
+                    ),
+                    "emergency_deceleration_mps2": float(
+                        traci.vehicle.getEmergencyDecel(vehicle_id)
+                    ),
+                    "max_speed_mps": float(
+                        traci.vehicle.getMaxSpeed(vehicle_id)
+                    ),
                     "angle_degrees": angle_degrees,
                     "lane_id": lane_id,
                     "lane_position": lane_position,
