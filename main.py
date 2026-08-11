@@ -446,8 +446,40 @@ def main():
             f"{temporal_summary['spatial_only_temporal_separations']}"
         )
         print(
+            "  Currently-occupied-zone evaluations: "
+            f"{temporal_summary['currently_occupied_zone_evaluations']}"
+        )
+        print(
+            "  Cleared-zone evaluations: "
+            f"{temporal_summary['cleared_zone_evaluations']}"
+        )
+        print(
             "  Unresolved timing evaluations: "
             f"{temporal_summary['unresolved_timing_evaluations']}"
+        )
+        print(
+            "    Path progress unresolved: "
+            f"{temporal_summary['unresolved_path_progress']}"
+        )
+        print(
+            "    Speed unresolved: "
+            f"{temporal_summary['unresolved_speed']}"
+        )
+        print(
+            "    Vehicle state unresolved: "
+            f"{temporal_summary['unresolved_vehicle_state']}"
+        )
+        print(
+            "    No applicable evaluation: "
+            f"{temporal_summary['unresolved_no_applicable_evaluation']}"
+        )
+        print(
+            "  Candidate paths rejected by observed lane: "
+            f"{temporal_summary['candidate_paths_rejected_by_observed_lane']}"
+        )
+        print(
+            "  Candidate paths without an applicable zone: "
+            f"{temporal_summary['no_applicable_zone']}"
         )
         print(
             "  Unique ego-target pairs with temporal conflict: "

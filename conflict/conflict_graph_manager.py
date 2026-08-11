@@ -105,6 +105,18 @@ class ConflictGraphManager:
             ego.get("lane_id", ""), ego_manoeuvre
         )
         if ego_path is None:
+            previous = self._graphs.get(ego_id)
+            previous_path = (
+                self.path_manager.paths.get(previous.ego_path_id)
+                if previous is not None and previous.ego_path_id else None
+            )
+            if (previous_path is not None
+                    and previous_path.manoeuvre == ego_manoeuvre
+                    and self.path_manager.lane_belongs_to_path(
+                        ego.get("lane_id", ""), previous_path
+                    )):
+                ego_path = previous_path
+        if ego_path is None:
             ego_options = self.path_manager.feasible_paths(
                 ego.get("lane_id", "")
             ).get(ego_manoeuvre, ())
@@ -131,6 +143,10 @@ class ConflictGraphManager:
             target = ldm.tracks[target_id]
             label, prediction_status, probabilities = extract_operational_intention(target)
             feasible = self.path_manager.feasible_paths(target.get("lane_id", ""))
+            if not feasible:
+                feasible = self.path_manager.paths_compatible_with_observed_lane(
+                    target.get("lane_id", "")
+                )
             reason = None
             if not feasible:
                 candidate_paths = {}

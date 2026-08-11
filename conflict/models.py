@@ -11,6 +11,7 @@ class MovementPath:
     outgoing_lane_id: str
     manoeuvre: str
     centerline_geometry: Tuple[Tuple[float, float], ...]
+    internal_lane_ids: Tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)

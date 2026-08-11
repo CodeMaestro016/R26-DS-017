@@ -3,6 +3,7 @@
 import math
 
 import pytest
+from shapely.geometry import LineString
 
 from conflict.models import MovementPath
 from conflict.occupancy_assessor import ConflictZoneOccupancyAssessor
@@ -25,6 +26,14 @@ class FakePathManager:
                 ((0.0, 0.0), (20.0, 0.0)),
             ),
         }
+
+    @staticmethod
+    def resolve_front_bumper_path_progress(track, path):
+        if track["lane_id"] == path.incoming_lane_id:
+            return -(track["lane_length"] - track["lane_position"]), (
+                "INCOMING_LANE"
+            ), None
+        return None, None, "INCOMPATIBLE_WITH_OBSERVED_LANE"
 
 
 class FakeZoneManager:
@@ -102,6 +111,87 @@ def test_front_bumper_distance_and_vehicle_length_clearance():
     assert timing["time_to_clear_s"] == pytest.approx(21.5)
     assert timing["predicted_entry_time_s"] == pytest.approx(37.5)
     assert timing["predicted_clear_time_s"] == pytest.approx(41.5)
+
+
+def test_actual_map_incoming_internal_and_outgoing_path_progress():
+    paths = MapPathManager()
+    path = paths.paths["N_IN_0_LEFT"]
+
+    incoming = {
+        "lane_id": path.incoming_lane_id, "lane_position": 272.8,
+        "lane_length": 292.8,
+    }
+    progress, source, error = paths.resolve_front_bumper_path_progress(
+        incoming, path
+    )
+    assert error is None and source == "INCOMING_LANE"
+    assert progress == pytest.approx(-20.0)
+
+    line = LineString(path.centerline_geometry)
+    expected_internal_progress = 5.0
+    point = line.interpolate(expected_internal_progress)
+    internal = {
+        "lane_id": path.internal_lane_ids[0],
+        "position": (point.x, point.y),
+    }
+    progress, source, error = paths.resolve_front_bumper_path_progress(
+        internal, path
+    )
+    assert error is None and source == "INTERNAL_PATH_GEOMETRY"
+    assert progress == pytest.approx(expected_internal_progress)
+
+    outgoing = {"lane_id": path.outgoing_lane_id, "lane_position": 7.0}
+    progress, source, error = paths.resolve_front_bumper_path_progress(
+        outgoing, path
+    )
+    assert error is None and source == "OUTGOING_LANE"
+    assert progress == pytest.approx(line.length + 7.0)
+
+
+def test_actual_multi_internal_lane_path_projects_in_one_coordinate():
+    paths = MapPathManager()
+    path = paths.paths["N_IN_0_LEFT"]
+    assert len(path.internal_lane_ids) == 2
+    line = LineString(path.centerline_geometry)
+    expected = line.length - 1.0
+    point = line.interpolate(expected)
+    progress, source, error = paths.resolve_front_bumper_path_progress({
+        "lane_id": path.internal_lane_ids[-1],
+        "position": (point.x, point.y),
+    }, path)
+    assert error is None and source == "INTERNAL_PATH_GEOMETRY"
+    assert progress == pytest.approx(expected)
+
+
+def test_currently_occupying_and_cleared_distance_states():
+    current, state, error = ConflictZoneOccupancyAssessor._timing_from_progress(
+        progress=11.0, path_interval=(10.0, 12.0), length=4.0,
+        speed=2.0, current_time=5.0,
+    )
+    assert error is None and state == "CURRENTLY_OCCUPYING"
+    assert current["distance_to_zone_entry_m"] == 0.0
+    assert current["distance_to_zone_clear_m"] == pytest.approx(5.0)
+    assert current["time_to_entry_s"] == 0.0
+
+    cleared, state, error = ConflictZoneOccupancyAssessor._timing_from_progress(
+        progress=16.0, path_interval=(10.0, 12.0), length=4.0,
+        speed=2.0, current_time=5.0,
+    )
+    assert error is None and state == "CLEARED_ZONE"
+    assert cleared["distance_to_zone_entry_m"] == 0.0
+    assert cleared["distance_to_zone_clear_m"] == 0.0
+
+
+def test_zero_speed_current_occupancy_remains_explicit():
+    timing, state, error = ConflictZoneOccupancyAssessor._timing_from_progress(
+        progress=11.0, path_interval=(10.0, 12.0), length=4.0,
+        speed=0.0, current_time=5.0,
+    )
+    assert state == "CURRENTLY_OCCUPYING"
+    assert timing["zone_occupancy_state"] == "CURRENTLY_OCCUPYING"
+    assert timing["time_to_entry_s"] == 0.0
+    assert timing.get("time_to_clear_s") is None
+    assert error == "UNRESOLVED_SPEED"
 
 
 @pytest.mark.parametrize("speed", [0.0, -1.0, math.nan, math.inf, None])
@@ -189,5 +279,69 @@ def test_actual_map_graph_and_zone_records_integrate():
     ldm.current_conflict_graph = graph_manager.build_local_graph(ldm, 0.0)
     result = assessor.assess_ldm(ldm, 0.0)
     assert result["edges"][0]["evaluations"]
+    applicable = [item for item in result["edges"][0]["evaluations"]
+                  if item["status"] != "NO_APPLICABLE_ZONE"]
+    assert applicable
     assert all(item["conflict_zone_id"].startswith("CZ_")
-               for item in result["edges"][0]["evaluations"])
+               for item in applicable)
+    assert result["edges"][0]["status"] == "TEMPORAL_CONFLICT"
+
+    # Software fixture: move the target farther back to produce exact temporal
+    # separation without introducing an operational threshold.
+    ldm.tracks["target"]["lane_position"] = 200.0
+    ldm.current_conflict_graph = graph_manager.build_local_graph(ldm, 0.0)
+    separated = assessor.assess_ldm(ldm, 0.0)
+    assert separated["edges"][0]["status"] == "SPATIAL_ONLY"
+
+
+def test_observed_internal_lane_rejects_incompatible_unknown_candidates():
+    paths = MapPathManager()
+    zones = ConflictZoneManager(paths)
+    assessor = ConflictZoneOccupancyAssessor(paths, zones)
+    target_path = paths.paths["N_IN_0_LEFT"]
+    point = LineString(target_path.centerline_geometry).interpolate(5.0)
+    ldm = LDM()
+    ldm.tracks = {
+        "ego": {
+            "lane_id": "w_in_0", "lane_position": 282.8,
+            "lane_length": 292.8, "position": (282.8, 298.4),
+            "length": 5.0, "width": 1.8, "speed": 10.0,
+        },
+        "target": {
+            "lane_id": target_path.internal_lane_ids[0],
+            "lane_position": 0.0, "lane_length": 1.0,
+            "position": (point.x, point.y), "length": 5.0,
+            "width": 1.8, "speed": 10.0,
+        },
+    }
+    ldm.current_conflict_graph = {"edges": ({
+        "ego_path_id": "W_IN_0_STRAIGHT", "target_track_id": "target",
+        "target_candidate_paths": {
+            "LEFT": "N_IN_0_LEFT", "RIGHT": "N_IN_0_RIGHT",
+            "STRAIGHT": "N_IN_0_STRAIGHT",
+        },
+        "prediction_status": "UNKNOWN", "observation_age_seconds": 0.0,
+    },)}
+    edge = assessor.assess_ldm(ldm, 0.0)["edges"][0]
+    statuses = {item["target_manoeuvre"]: item["status"]
+                for item in edge["evaluations"]}
+    assert statuses["RIGHT"] == "INCOMPATIBLE_WITH_OBSERVED_LANE"
+    assert statuses["STRAIGHT"] == "INCOMPATIBLE_WITH_OBSERVED_LANE"
+    assert statuses["LEFT"] != "INCOMPATIBLE_WITH_OBSERVED_LANE"
+    assert assessor.validation_summary()[
+        "candidate_paths_rejected_by_observed_lane"
+    ] == 2
+
+
+def test_empty_applicable_evaluation_is_unresolved_not_spatial_only():
+    class NoZoneManager:
+        @staticmethod
+        def zone_record(*args):
+            return None
+
+    assessor = ConflictZoneOccupancyAssessor(FakePathManager(), NoZoneManager())
+    edge = assessor.assess_ldm(LDM(), 0.0)["edges"][0]
+    assert edge["temporal_conflict_possible"] is None
+    assert edge["status"] == "UNRESOLVED_NO_APPLICABLE_EVALUATION"
+    assert all(item["status"] == "NO_APPLICABLE_ZONE"
+               for item in edge["evaluations"])

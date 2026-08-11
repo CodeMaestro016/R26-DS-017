@@ -239,12 +239,21 @@ Graph and evaluates only its spatial edges. It uses front-bumper lane progress,
 actual vehicle length, current speed, and the width-specific projected zone
 interval for each explicit ego-path/target-path pair.
 
-For incoming distance `d_in = max(0, lane_length - lane_position)` and zone
-interval `[s_start, s_end]`, the front bumper reaches the zone after
-`d_entry = d_in + s_start` and completely clears it after
-`d_clear = d_in + s_end + vehicle_length`. Strictly positive finite current
-speed is held constant to calculate relative and absolute entry/clear times.
-Stopped or otherwise unusable speeds remain unresolved; no minimum-speed
+Movement progress uses one front-bumper coordinate whose origin is the end of
+the incoming lane. On an incoming lane,
+`s_vehicle = -max(0, lane_length - lane_position)`. On any internal lane owned
+by the movement, the observed world point is projected onto the exact movement
+centerline used for zone intervals. On the known outgoing lane,
+`s_vehicle = path_length + lane_position`. Multi-internal-lane movements use
+the same continuous centerline coordinate throughout.
+
+For zone interval `[s_start, s_end]`, remaining front-bumper distances are
+`d_entry = max(0, s_start - s_vehicle)` and
+`d_clear = max(0, s_end + vehicle_length - s_vehicle)`. This distinguishes
+BEFORE_ZONE, CURRENTLY_OCCUPYING, and CLEARED_ZONE without a threshold.
+Strictly positive finite current speed is held constant to calculate relative
+and absolute entry/clear times. Stopped or otherwise unusable speeds remain
+unresolved; current physical occupancy is still reported and no minimum-speed
 substitution is used.
 
 Occupancy intervals are closed: boundary contact counts as overlap. A separated
@@ -253,6 +262,11 @@ later entry time, without a safe/unsafe threshold. UNKNOWN and unavailable
 intentions retain all conflicting candidate paths; any overlapping candidate
 makes temporal conflict possible, while unresolved candidates prevent a false
 no-conflict conclusion when no overlap is established.
+
+Once an observed internal or outgoing lane belongs to only a subset of UNKNOWN
+candidate movements, incompatible paths are rejected using current map
+localization—not route truth. An edge with no applicable calculation is
+explicitly unresolved and is never treated as temporal separation.
 
 The result is stored per ego and exposed for shadow diagnostics only. It is not
 used by the legacy risk assessor, negotiation manager, speed controller, or

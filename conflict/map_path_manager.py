@@ -2,6 +2,8 @@
 
 import math
 
+from shapely.geometry import LineString, Point
+
 try:
     import sumolib
 except ImportError as error:  # pragma: no cover - installation failure path
@@ -37,12 +39,14 @@ class MapPathManager:
     def _stable_path_id(incoming_lane_id, manoeuvre):
         return f"{incoming_lane_id.upper()}_{manoeuvre}"
 
-    def _connection_shape(self, connection):
+    def _connection_geometry(self, connection):
         lane_id = connection.getViaLaneID()
         points = []
+        internal_lane_ids = []
         visited = set()
         while lane_id and lane_id not in visited:
             visited.add(lane_id)
+            internal_lane_ids.append(lane_id)
             lane = self.network.getLane(lane_id)
             shape = lane.getShape()
             points.extend(shape if not points else shape[1:])
@@ -54,7 +58,10 @@ class MapPathManager:
                 lane_id = next_connection.getViaLaneID()
             else:
                 break
-        return tuple((float(x), float(y)) for x, y in points)
+        return (
+            tuple((float(x), float(y)) for x, y in points),
+            tuple(internal_lane_ids),
+        )
 
     def _build_paths(self):
         discovered = {}
@@ -68,7 +75,9 @@ class MapPathManager:
                     )
                     if manoeuvre is None or not connection.getViaLaneID():
                         continue
-                    geometry = self._connection_shape(connection)
+                    geometry, internal_lane_ids = self._connection_geometry(
+                        connection
+                    )
                     if len(geometry) < 2 or not all(
                         math.isfinite(value) for point in geometry for value in point
                     ):
@@ -76,7 +85,7 @@ class MapPathManager:
                     path_id = self._stable_path_id(lane.getID(), manoeuvre)
                     path = MovementPath(
                         path_id, lane.getID(), connection.getToLane().getID(),
-                        manoeuvre, geometry,
+                        manoeuvre, geometry, internal_lane_ids,
                     )
                     self._register_path(discovered, path)
         return dict(sorted(discovered.items()))
@@ -111,3 +120,73 @@ class MapPathManager:
     def resolve_path(self, lane_id, manoeuvre):
         paths = self.paths_by_lane.get(lane_id, {}).get(manoeuvre, ())
         return paths[0] if len(paths) == 1 else None
+
+    def paths_compatible_with_observed_lane(self, lane_id):
+        """Group paths supported by current lane membership, without routes."""
+        compatible = {}
+        for path in self.paths.values():
+            if (lane_id == path.incoming_lane_id
+                    or lane_id in path.internal_lane_ids
+                    or lane_id == path.outgoing_lane_id):
+                compatible.setdefault(path.manoeuvre, []).append(path)
+        return {
+            manoeuvre: tuple(sorted(paths, key=lambda item: item.path_id))
+            for manoeuvre, paths in compatible.items()
+        }
+
+    @staticmethod
+    def lane_belongs_to_path(lane_id, path):
+        return (lane_id == path.incoming_lane_id
+                or lane_id in path.internal_lane_ids
+                or lane_id == path.outgoing_lane_id)
+
+    def resolve_front_bumper_path_progress(self, track, path):
+        """Resolve observed front-bumper progress in a movement coordinate.
+
+        ``s=0`` is the incoming-lane end and the first point of the internal
+        movement centerline. Incoming progress is negative. Internal progress
+        is projection onto that exact centerline. Outgoing progress continues
+        from centerline length using SUMO's front-bumper lane position.
+        """
+        if isinstance(path, str):
+            path = self.paths[path]
+        lane_id = track.get("lane_id")
+        if lane_id == path.incoming_lane_id:
+            try:
+                lane_position = float(track["lane_position"])
+                lane_length = float(track["lane_length"])
+            except (KeyError, TypeError, ValueError):
+                return None, None, "UNRESOLVED_PATH_PROGRESS"
+            if not math.isfinite(lane_position) or not math.isfinite(lane_length):
+                return None, None, "UNRESOLVED_PATH_PROGRESS"
+            remaining = max(0.0, lane_length - lane_position)
+            return -remaining, "INCOMING_LANE", None
+        if lane_id in path.internal_lane_ids:
+            try:
+                x, y = map(float, track["position"])
+            except (KeyError, TypeError, ValueError):
+                return None, None, "UNRESOLVED_PATH_PROGRESS"
+            if not math.isfinite(x) or not math.isfinite(y):
+                return None, None, "UNRESOLVED_PATH_PROGRESS"
+            progress = LineString(path.centerline_geometry).project(Point(x, y))
+            return float(progress), "INTERNAL_PATH_GEOMETRY", None
+        if lane_id == path.outgoing_lane_id:
+            try:
+                lane_position = float(track["lane_position"])
+            except (KeyError, TypeError, ValueError):
+                return None, None, "UNRESOLVED_PATH_PROGRESS"
+            if not math.isfinite(lane_position):
+                return None, None, "UNRESOLVED_PATH_PROGRESS"
+            path_length = LineString(path.centerline_geometry).length
+            return path_length + max(0.0, lane_position), "OUTGOING_LANE", None
+
+        known_internal = {
+            member for candidate in self.paths.values()
+            for member in candidate.internal_lane_ids
+        }
+        known_outgoing = {
+            candidate.outgoing_lane_id for candidate in self.paths.values()
+        }
+        if lane_id in known_internal or lane_id in known_outgoing:
+            return None, None, "INCOMPATIBLE_WITH_OBSERVED_LANE"
+        return None, None, "UNRESOLVED_PATH_PROGRESS"

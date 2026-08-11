@@ -345,6 +345,30 @@ def test_graph_changes_report_prediction_and_edge_transitions(managers):
     assert "CANDIDATE_PATHS_CHANGED" in change_types
 
 
+def test_graph_paths_persist_and_narrow_from_observed_internal_lanes(managers):
+    paths, zones, _ = managers
+    manager = ConflictGraphManager(paths, zones)
+    ldm = LDM("ego", {
+        "ego": track("w_in_0", plan="STRAIGHT"),
+        "target": track("n_in_0", intent=None),
+    })
+    initial = manager.build_local_graph(ldm, 0.0)
+    assert initial["ego_path_id"] == "W_IN_0_STRAIGHT"
+
+    ego_path = paths.paths["W_IN_0_STRAIGHT"]
+    target_path = paths.paths["N_IN_0_STRAIGHT"]
+    ldm.tracks["ego"].update(
+        lane_id=ego_path.internal_lane_ids[0], position=(300.0, 298.4)
+    )
+    ldm.tracks["target"].update(
+        lane_id=target_path.internal_lane_ids[0], position=(298.4, 300.0)
+    )
+    current = manager.build_local_graph(ldm, 1.0)
+    assert current["ego_path_id"] == "W_IN_0_STRAIGHT"
+    candidates = current["diagnostics"][0]["target_candidate_paths"]
+    assert candidates == {"STRAIGHT": "N_IN_0_STRAIGHT"}
+
+
 def test_adapter_consumes_fused_contract_not_stage_reinterpretation():
     value = prediction("LEFT")
     value["primary"]["label"] = "RIGHT"
