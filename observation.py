@@ -27,6 +27,7 @@ class LocalDynamicMap:
         self.in_approach_zone = False
         self.last_update_time = 0.0
         self.current_conflict_graph = None
+        self.current_temporal_assessment = None
 
     @staticmethod
     def _velocity_vector(speed, heading_radians):
@@ -214,6 +215,10 @@ class LocalDynamicMap:
     def get_current_conflict_graph(self):
         """Preferred map-aware graph snapshot; legacy filters remain separate."""
         return self.current_conflict_graph
+
+    def get_current_temporal_assessment(self):
+        """Return shadow conflict-zone occupancy evidence for this ego."""
+        return self.current_temporal_assessment
 
     def prediction_snapshot(self):
         return {

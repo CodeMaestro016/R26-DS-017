@@ -12,6 +12,7 @@ updated_sumo_intention_project/
 |   |-- map_path_manager.py
 |   |-- conflict_zone_manager.py
 |   |-- conflict_graph_manager.py
+|   |-- occupancy_assessor.py
 |   |-- validation.py
 |   `-- models.py
 |-- predictor.py

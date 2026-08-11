@@ -232,6 +232,32 @@ through actual-map and synthetic envelope-intersection tests.
 
 ## Future stages
 
-Temporal zone-entry/exit reasoning, arrival-time overlap, risk assessment,
-right-of-way negotiation, scheduling, and an independent safety shield remain
-future work. The shadow conflict graph is not connected to vehicle control.
+## Shadow conflict-zone temporal occupancy
+
+`ConflictZoneOccupancyAssessor` runs immediately after each ego-local Conflict
+Graph and evaluates only its spatial edges. It uses front-bumper lane progress,
+actual vehicle length, current speed, and the width-specific projected zone
+interval for each explicit ego-path/target-path pair.
+
+For incoming distance `d_in = max(0, lane_length - lane_position)` and zone
+interval `[s_start, s_end]`, the front bumper reaches the zone after
+`d_entry = d_in + s_start` and completely clears it after
+`d_clear = d_in + s_end + vehicle_length`. Strictly positive finite current
+speed is held constant to calculate relative and absolute entry/clear times.
+Stopped or otherwise unusable speeds remain unresolved; no minimum-speed
+substitution is used.
+
+Occupancy intervals are closed: boundary contact counts as overlap. A separated
+result reports the exact non-negative time between the earlier clear time and
+later entry time, without a safe/unsafe threshold. UNKNOWN and unavailable
+intentions retain all conflicting candidate paths; any overlapping candidate
+makes temporal conflict possible, while unresolved candidates prevent a false
+no-conflict conclusion when no overlap is established.
+
+The result is stored per ego and exposed for shadow diagnostics only. It is not
+used by the legacy risk assessor, negotiation manager, speed controller, or
+SUMO safety settings. No scalar weighted risk score is produced.
+
+Acceleration-aware or uncertainty-aware timing, decision-facing risk
+assessment, right-of-way negotiation, scheduling, and an independent safety
+shield remain future work. The shadow outputs are not connected to control.

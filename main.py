@@ -31,6 +31,7 @@ from config import (
 from conflict_entry_monitor import conflict_entry_monitor
 from conflict import (
     ConflictGraphManager, ConflictZoneManager, MapPathManager,
+    ConflictZoneOccupancyAssessor,
     write_conflict_catalogues,
 )
 from environment import SUMOEnv
@@ -146,6 +147,16 @@ def build_dashboard_payload(
                 vehicle_id
             ).get_current_conflict_graph() is not None
         },
+        "temporal_conflict_assessments": {
+            vehicle_id: observation_manager.get_ldm(
+                vehicle_id
+            ).get_current_temporal_assessment()
+            for vehicle_id in observations
+            if observation_manager.get_ldm(vehicle_id) is not None
+            and observation_manager.get_ldm(
+                vehicle_id
+            ).get_current_temporal_assessment() is not None
+        },
         "prediction_mode": "SHADOW" if SHADOW_MODE else "ACTIVE",
     }
 
@@ -205,6 +216,9 @@ def main():
     map_path_manager = MapPathManager()
     conflict_zone_manager = ConflictZoneManager(map_path_manager)
     conflict_graph_manager = ConflictGraphManager(
+        map_path_manager, conflict_zone_manager
+    )
+    occupancy_assessor = ConflictZoneOccupancyAssessor(
         map_path_manager, conflict_zone_manager
     )
     write_conflict_catalogues(
@@ -287,9 +301,14 @@ def main():
                             ldm, current_time
                         )
                     )
+                    ldm.current_temporal_assessment = (
+                        occupancy_assessor.assess_ldm(ldm, current_time)
+                    )
                 elif ldm is not None:
                     ldm.current_conflict_graph = None
+                    ldm.current_temporal_assessment = None
                     conflict_graph_manager.reset(ego_id)
+                    occupancy_assessor.reset(ego_id)
 
             if current_time + 1e-9 >= next_control_time:
                 for ego_id in observations:
@@ -408,11 +427,38 @@ def main():
             "  Non-conflicting targets filtered: "
             f"{conflict_summary['non_conflicting_targets_filtered']}"
         )
+        temporal_summary = occupancy_assessor.validation_summary()
+        print("\nTemporal Conflict validation")
+        print(
+            "  Spatial edges evaluated: "
+            f"{temporal_summary['spatial_edges_evaluated']}"
+        )
+        print(
+            "  Candidate path-zone evaluations: "
+            f"{temporal_summary['candidate_path_zone_evaluations']}"
+        )
+        print(
+            "  Temporal conflicts observed: "
+            f"{temporal_summary['temporal_conflicts_observed']}"
+        )
+        print(
+            "  Spatial-only temporal separations: "
+            f"{temporal_summary['spatial_only_temporal_separations']}"
+        )
+        print(
+            "  Unresolved timing evaluations: "
+            f"{temporal_summary['unresolved_timing_evaluations']}"
+        )
+        print(
+            "  Unique ego-target pairs with temporal conflict: "
+            f"{temporal_summary['unique_ego_target_pairs_with_temporal_conflict']}"
+        )
         environment.close()
         observation_manager.reset()
         conflict_entry_monitor.reset()
         risk_assessor.reset()
         conflict_graph_manager.reset()
+        occupancy_assessor.reset()
 
 
 if __name__ == "__main__":

@@ -1,8 +1,8 @@
 """Provisional approach-timing risk used by the legacy baseline.
 
-This is no longer called TTC because it does not yet use map-defined path
-conflict zones. The next project stage should replace this module with a true
-map-aware conflict manager.
+This is no longer called TTC because it does not use map-defined path conflict
+zones. It remains the control-facing legacy baseline while the separate
+ConflictZoneOccupancyAssessor runs in shadow mode.
 """
 
 import math
