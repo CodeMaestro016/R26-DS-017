@@ -343,6 +343,10 @@ There is no optimizer, training, reward, MAPPO, checkpoint, normalization fit,
 CUDA requirement, PyTorch Geometric, TensorFlow, or connection to control.
 Run `python validate_gnn_forward.py` for the test-only validation report.
 
+Research status: Step 5C NumPy graph tensor encoding is implemented; Step 5D
+CPU PyTorch MPNN forward/gradient validation is implemented. GNN training,
+MAPPO, reward design, and active control are not implemented or connected.
+
 ## German StVO traffic-rule engine (shadow)
 
 The fixed `DE_STVO_UNCONTROLLED_4WAY_V1` profile covers one unsignalized,

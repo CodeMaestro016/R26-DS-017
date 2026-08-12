@@ -7,6 +7,7 @@ import pytest
 import torch
 
 from negotiation_learning.gnn import EdgeAwareMPNNEncoder, to_torch_graph
+from negotiation_learning.gnn.message_passing import EdgeAwareMessagePassingLayer
 from negotiation_learning.tensor_encoding.models import EncodedGraphObservation
 from negotiation_learning.tensor_encoding.schemas import (
     CATEGORICAL_ENCODING_METADATA, EDGE_NUMERIC_SCHEMA, NODE_NUMERIC_SCHEMA,
@@ -162,3 +163,33 @@ def test_gnn_source_has_no_tensorflow_geometric_traci_or_policy_dependencies():
     forbidden = ("tensorflow", "keras", "torch_geometric", "torch_scatter",
                  "torch_sparse", "traci", "apply_action", "negotiationmanager")
     assert not any(name in source for name in forbidden)
+
+
+def test_messages_use_source_target_edge_and_sum_at_priority_target():
+    layer = EdgeAwareMessagePassingLayer(hidden_dim=1)
+
+    class CaptureMessage(torch.nn.Module):
+        def __init__(self):
+            super().__init__(); self.received = None
+
+        def forward(self, values):
+            self.received = values.detach().clone()
+            return values[:, :1] + values[:, 1:2] + values[:, 2:3]
+
+    class CaptureUpdate(torch.nn.Module):
+        def __init__(self):
+            super().__init__(); self.received = None
+
+        def forward(self, values):
+            self.received = values.detach().clone()
+            return values[:, :1]
+
+    message, update = CaptureMessage(), CaptureUpdate()
+    layer.message_function, layer.update_function = message, update
+    nodes = torch.tensor([[2.0], [5.0], [7.0]])
+    edge_state = torch.tensor([[11.0]])
+    layer(nodes, edge_state, torch.tensor([[0], [1]], dtype=torch.long))
+    assert message.received.tolist() == [[2.0, 5.0, 11.0]]
+    # Edge 0->1 aggregates only at priority target 1. Nodes 0 and 2 have no
+    # incoming messages and therefore receive SUM's exact additive identity.
+    assert update.received[:, 1].tolist() == [0.0, 18.0, 0.0]

@@ -1,5 +1,12 @@
-"""TEST-ONLY UNTRAINED MODEL -- NOT A NEGOTIATION POLICY."""
+"""TEST-ONLY UNTRAINED GNN VALIDATION.
 
+NOT A NEGOTIATION POLICY. NOT CONNECTED TO SUMO CONTROL.
+"""
+
+from pathlib import Path
+import platform
+from dataclasses import replace
+import traceback
 import numpy as np
 import torch
 
@@ -47,6 +54,62 @@ def main():
         ),
     }
     outputs = {name: model(to_torch_graph(graph)) for name, graph in cases.items()}
+    for name, output in outputs.items():
+        expected_nodes = cases[name].node_features.shape[0]
+        assert output.node_embeddings.shape == (
+            expected_nodes, TEST_ONLY_NON_OPERATIONAL_HIDDEN_DIM
+        ), name
+        assert output.ego_embedding.shape == (
+            TEST_ONLY_NON_OPERATIONAL_HIDDEN_DIM,
+        ), name
+        assert output.graph_embedding.shape == (
+            TEST_ONLY_NON_OPERATIONAL_HIDDEN_DIM,
+        ), name
+        assert torch.isfinite(output.node_embeddings).all(), name
+        assert torch.isfinite(output.ego_embedding).all(), name
+        assert torch.isfinite(output.graph_embedding).all(), name
+    assert cases["One-node zero-edge forward pass"].edge_index.shape == (2, 0)
+    assert cases["Two-node directed-edge forward pass"].edge_index.tolist() == [[0], [1]]
+    assert cases["Four-node cycle forward pass"].edge_index.tolist() == [
+        [0, 1, 2, 3], [1, 2, 3, 0]
+    ]
+
+    speed_column = NODE_NUMERIC_SCHEMA.index("speed_mps")
+    mask_fixture = fixture(2, ())
+    mask_values = mask_fixture.node_features.copy()
+    mask_available = mask_fixture.node_feature_mask.copy()
+    mask_values[:, speed_column] = 0.0
+    mask_available[1, speed_column] = False
+    mask_fixture = replace(
+        mask_fixture, node_features=mask_values,
+        node_feature_mask=mask_available,
+    )
+    torch_mask_fixture = to_torch_graph(mask_fixture)
+    combined_nodes = torch.cat((
+        torch_mask_fixture.node_features,
+        torch_mask_fixture.node_feature_mask.float(),
+    ), dim=-1)
+    assert combined_nodes[0, speed_column] == combined_nodes[1, speed_column] == 0
+    assert combined_nodes[0, speed_column + len(NODE_NUMERIC_SCHEMA)] == 1
+    assert combined_nodes[1, speed_column + len(NODE_NUMERIC_SCHEMA)] == 0
+
+    temporal_column = EDGE_NUMERIC_SCHEMA.index("temporal_conflict_possible")
+    edge_mask_fixture = fixture(2, ((0, 1),))
+    edge_values = edge_mask_fixture.edge_features.copy()
+    edge_available = edge_mask_fixture.edge_feature_mask.copy()
+    edge_values[0, temporal_column] = 0.0
+    edge_available[0, temporal_column] = False
+    edge_mask_fixture = replace(
+        edge_mask_fixture, edge_features=edge_values,
+        edge_feature_mask=edge_available,
+    )
+    torch_edge_fixture = to_torch_graph(edge_mask_fixture)
+    combined_edges = torch.cat((
+        torch_edge_fixture.edge_features,
+        torch_edge_fixture.edge_feature_mask.float(),
+    ), dim=-1)
+    assert combined_edges[0, temporal_column] == 0
+    assert combined_edges[0, temporal_column + len(EDGE_NUMERIC_SCHEMA)] == 0
     original_graph = cases["Two-node directed-edge forward pass"]
     node_permuted = EncodedGraphObservation(
         "A", ("B", "A"), original_graph.node_features[[1, 0]].copy(),
@@ -96,9 +159,35 @@ def main():
         and torch.isfinite(output.graph_embedding).all()
         for output in outputs.values()
     )
+    assert permuted_two.ego_node_index == 1
+    torch.testing.assert_close(
+        permuted_two.ego_embedding, permuted_two.node_embeddings[1]
+    )
+    assert next(model.parameters()).device.type == "cpu"
+    assert all(tensor.device.type == "cpu" for output in outputs.values()
+               for tensor in (output.node_embeddings, output.ego_embedding,
+                              output.graph_embedding))
+    assert finite_embeddings
+    assert finite_gradients
+    gnn_dir = Path(__file__).parent / "negotiation_learning" / "gnn"
+    gnn_source = "\n".join(
+        path.read_text(encoding="utf-8").lower()
+        for path in gnn_dir.glob("*.py")
+    )
+    forbidden = ("tensorflow", "keras", "torch_geometric", "torch_scatter",
+                 "torch_sparse", "dgl", "traci", "apply_action",
+                 "negotiationmanager", "route_id", "route_index",
+                 "ground_truth_route_id", "to(\"cuda\")", "cuda:0")
+    assert not any(value in gnn_source for value in forbidden)
+
     print("GNN Forward-Pass Validation")
+    print("\nEnvironment")
+    print(f"  Python version: {platform.python_version()}")
+    print(f"  PyTorch version: {torch.__version__}")
+    print("  PyTorch import success: True")
     print("  Backend: PyTorch")
     print("  Device: CPU")
+    print("\nArchitecture")
     print(f"  Node semantic input dimension: {len(NODE_NUMERIC_SCHEMA)}")
     print(f"  Node mask dimension: {len(NODE_NUMERIC_SCHEMA)}")
     print(f"  Effective node model-input dimension: {2 * len(NODE_NUMERIC_SCHEMA)}")
@@ -107,25 +196,42 @@ def main():
     print(f"  Effective edge model-input dimension: {2 * len(EDGE_NUMERIC_SCHEMA)}")
     print(f"  Test-only hidden dimension: {TEST_ONLY_NON_OPERATIONAL_HIDDEN_DIM}")
     print(f"  Test-only message-passing layers: {TEST_ONLY_NON_OPERATIONAL_MESSAGE_LAYERS}")
+    print("  Final architecture hyperparameters selected: False")
+    print("\nTests")
     for name in cases:
         print(f"  {name}: PASS")
     print("  Variable graph sizes supported: PASS")
-    print("  Node-order permutation test: PASS")
-    print("  Edge-order permutation test: PASS")
+    print("  Node-order permutation invariance: PASS")
+    print("  Edge-order permutation invariance: PASS")
     print("  Missing-value masks preserved: PASS")
     print("  Real-zero vs unavailable-zero distinction: PASS")
     print("  Ego extraction independent of node order: PASS")
-    print("  Finite node/ego/graph embeddings: " + ("PASS" if finite_embeddings else "FAIL"))
-    print("  Backpropagation finite gradients: " + ("PASS" if finite_gradients else "FAIL"))
+    print("  Missing edge evidence mask preserved: PASS")
+    print("  Finite node embeddings: PASS")
+    print("  Finite ego embedding: PASS")
+    print("  Finite graph embedding: PASS")
+    print("  Finite backpropagation gradients: PASS")
+    print("\nSafety / dependency boundaries")
+    print("  CPU-only execution: PASS")
     print("  TensorFlow imports introduced: 0")
     print("  PyTorch Geometric dependencies introduced: 0")
     print("  CUDA required: False")
+    print("  Route-truth fields consumed by GNN: 0")
+    print("  Artificial self-loops added: 0")
     print("  Control actions issued by GNN: 0")
+    print("\nResearch status")
     print("  Training performed: False")
+    print("  Optimizer implemented: False")
+    print("  Reward implemented: False")
+    print("  MAPPO implemented: False")
     print("  Model checkpoint produced: False")
-    if not finite_gradients or not finite_embeddings:
-        raise RuntimeError("GNN forward validation failed")
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except Exception as error:
+        print("GNN Forward-Pass Validation: FAIL")
+        print(f"  Failing check/error: {error}")
+        traceback.print_exc()
+        raise SystemExit(1) from error
