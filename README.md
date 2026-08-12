@@ -347,6 +347,34 @@ Research status: Step 5C NumPy graph tensor encoding is implemented; Step 5D
 CPU PyTorch MPNN forward/gradient validation is implemented. GNN training,
 MAPPO, reward design, and active control are not implemented or connected.
 
+### Hardware-safe optional neural runtime
+
+TensorFlow is not part of this project. The mandatory local runtime remains
+lightweight: SUMO/TraCI, NumPy, and ONNX Runtime CPU. The intention predictor
+continues to use ONNX Runtime's CPU execution provider. Importing
+`negotiation_learning` and running `main.py` do not import PyTorch.
+
+PyTorch is an optional development/training dependency listed separately in
+`requirements-training.txt`. Use `python check_ml_runtime.py` before neural
+validation. `validate_gnn_forward.py` also performs this guarded check before
+importing PyTorch; when PyTorch is absent or its binary cannot load, it reports
+`PYTORCH_RUNTIME_VALIDATION_BLOCKED` without affecting SUMO or the NumPy graph
+interface.
+
+If local CPU PyTorch is unsuitable, future GNN/MAPPO development may run in
+Google Colab using the same framework-independent NumPy graph contract. After
+training and separate compatibility validation, the deployment goal is ONNX
+export and ONNX Runtime CPU inference locally. This checkpoint neither trains
+nor exports a neural model and does not claim future MAPPO ONNX compatibility.
+
+Hardware-safe commands:
+
+```powershell
+python check_ml_runtime.py
+python validate_gnn_forward.py
+python main.py
+```
+
 ## German StVO traffic-rule engine (shadow)
 
 The fixed `DE_STVO_UNCONTROLLED_4WAY_V1` profile covers one unsignalized,

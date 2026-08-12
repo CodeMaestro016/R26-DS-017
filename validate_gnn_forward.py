@@ -4,17 +4,15 @@ NOT A NEGOTIATION POLICY. NOT CONNECTED TO SUMO CONTROL.
 """
 
 from pathlib import Path
-import platform
 from dataclasses import replace
 import traceback
 import numpy as np
-import torch
 
-from negotiation_learning.gnn import EdgeAwareMPNNEncoder, to_torch_graph
 from negotiation_learning.tensor_encoding.models import EncodedGraphObservation
 from negotiation_learning.tensor_encoding.schemas import (
     CATEGORICAL_ENCODING_METADATA, EDGE_NUMERIC_SCHEMA, NODE_NUMERIC_SCHEMA,
 )
+from ml_runtime_capability import detect_ml_runtime
 
 
 TEST_REPRODUCIBILITY_SEED = 20260812  # Software fixture, not traffic semantics.
@@ -39,7 +37,42 @@ def fixture(node_count, edges, ego_index=0):
     )
 
 
-def main():
+def _print_blocked(capability):
+    print("GNN Forward-Pass Validation")
+    print("\nStatus:")
+    print("PYTORCH_RUNTIME_VALIDATION_BLOCKED")
+    print("\nReason:")
+    reason = (
+        "PyTorch is not installed in this local environment."
+        if not capability.pytorch_installed else
+        "PyTorch could not complete a local CPU import/execution check."
+    )
+    print(reason)
+    if capability.pytorch_error:
+        print(f"Detected error: {capability.pytorch_error}")
+    print("\nTensorFlow required: False")
+    print("CUDA required: False")
+    print("SUMO runtime affected: False")
+    print("NumPy GNN input encoder affected: False")
+    print("\nRecommended next option:")
+    print("Train/validate the neural model in a PyTorch-capable environment")
+    print("such as Google Colab and later export the trained model for")
+    print("ONNX Runtime CPU deployment.")
+
+
+def main(capability=None):
+    capability = capability or detect_ml_runtime()
+    if not (capability.pytorch_import_successful
+            and capability.pytorch_cpu_test == "PASS"):
+        _print_blocked(capability)
+        return "PYTORCH_RUNTIME_VALIDATION_BLOCKED"
+
+    # Optional dependency imports occur only after the guarded capability
+    # check. Importing this script or the base negotiation package needs no
+    # PyTorch installation.
+    import torch
+    from negotiation_learning.gnn import EdgeAwareMPNNEncoder, to_torch_graph
+
     torch.manual_seed(TEST_REPRODUCIBILITY_SEED)
     model = EdgeAwareMPNNEncoder(
         len(NODE_NUMERIC_SCHEMA), len(EDGE_NUMERIC_SCHEMA),
@@ -182,8 +215,8 @@ def main():
 
     print("GNN Forward-Pass Validation")
     print("\nEnvironment")
-    print(f"  Python version: {platform.python_version()}")
-    print(f"  PyTorch version: {torch.__version__}")
+    print(f"  Python version: {capability.python_version}")
+    print(f"  PyTorch version: {capability.pytorch_version}")
     print("  PyTorch import success: True")
     print("  Backend: PyTorch")
     print("  Device: CPU")
@@ -225,6 +258,7 @@ def main():
     print("  Reward implemented: False")
     print("  MAPPO implemented: False")
     print("  Model checkpoint produced: False")
+    return "PASS"
 
 
 if __name__ == "__main__":
