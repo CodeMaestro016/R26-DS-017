@@ -2,6 +2,8 @@
 
 import heapq
 
+from .message_models import PrecedenceClaimMessage
+
 
 class RegulatoryPrecedenceGraphBuilder:
     """Build directed yield obligations from one ego's local evidence.
@@ -84,6 +86,27 @@ class RegulatoryPrecedenceGraphBuilder:
             )), **analysis,
         }
 
+    @staticmethod
+    def claim_messages(ldm, local_graph, current_time):
+        """Publish only precedence edges derived from this sender's own LDM."""
+        conflict = ldm.get_current_conflict_graph() or {}
+        regulatory = ldm.get_current_regulatory_assessment() or {}
+        return tuple(PrecedenceClaimMessage(
+            sender_id=ldm.ego_id,
+            timestamp=float(current_time),
+            yielding_vehicle_id=edge["yielding_vehicle_id"],
+            priority_vehicle_id=edge["priority_vehicle_id"],
+            applicable_rule_ids=tuple(edge.get("applicable_rule_ids", ())),
+            source_sections=tuple(edge.get("source_sections", ())),
+            regulatory_profile=edge.get("regulatory_profile"),
+            shared_conflict_zone_ids=tuple(edge.get("shared_conflict_zone_ids", ())),
+            conflict_types=tuple(edge.get("conflict_types", ())),
+            target_candidate_path_ids=tuple(edge.get("target_candidate_path_ids", ())),
+            source_conflict_graph_timestamp=float(conflict["timestamp"]),
+            source_regulatory_assessment_timestamp=float(regulatory["timestamp"]),
+            source_observation_age_seconds=edge.get("source_observation_age_seconds"),
+        ) for edge in local_graph["precedence_edges"])
+
     @classmethod
     def _edge_record(cls, yielding, priority, conflict, temporal, rule):
         candidates = tuple(rule.get("candidate_assessments", ()))
@@ -107,6 +130,7 @@ class RegulatoryPrecedenceGraphBuilder:
                 "physical_candidate_conflict": True,
             },
             "physical_reachability_evidence": cls._reachability(temporal),
+            "source_observation_age_seconds": conflict.get("observation_age_seconds"),
         }
 
     @classmethod

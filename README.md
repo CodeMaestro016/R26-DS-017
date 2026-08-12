@@ -237,7 +237,7 @@ through actual-map and synthetic envelope-intersection tests.
 
 The current staged architecture is:
 
-`SUMO → Perception Interface → Local Dynamic Map → GRU Intention Prediction → Map-Aware Conflict Graph → Temporal/Kinematic Reachability → German StVO Traffic Rule Engine → Regulatory Precedence Graph → MARL Negotiation Problem Builder [SHADOW] → Future GNN Encoder → Future MAPPO Negotiation Policy → Future Safety Shield → Future Trajectory Controller`
+`SUMO → Perception Interface → Local Dynamic Map → GRU Intention Prediction [ONNX CPU] → Map-Aware Conflict Graph → Temporal/Kinematic Reachability → German StVO Traffic Rule Engine → Local Regulatory Precedence Claims → Ideal V2V Regulatory-Claim Exchange [SHADOW] → Joint Local Precedence Graph [SHADOW] → Semantic GraphObservation → GNN-Ready NumPy Tensor Encoder [SHADOW] → CPU PyTorch Edge-Aware MPNN [FORWARD VALIDATION ONLY] → Future MAPPO Actor → Future Centralized Critic → Future Safety Shield → Future Trajectory Controller`
 
 The existing `Legacy NegotiationManager` remains the control-facing baseline.
 The StVO engine is read-only shadow diagnostics and cannot issue actions or
@@ -266,6 +266,82 @@ from optional future efficiency features. Its proposed messages are
 only an unresolved/deferred interface in Step 5A, and no scalar reward exists.
 Future learned policies must remain subordinate to hard regulatory and safety
 constraints.
+
+### Ideal same-step V2V claim exchange
+
+Communication is an ideal deterministic same-simulation-step V2V baseline. It
+exists to validate decentralized reasoning independently of wireless
+impairments. It has no communication radius, packet loss, latency, bandwidth,
+timeout, retransmission rule, or hop limit. Delay and loss remain future
+sensitivity experiments.
+
+The simulation uses two phases. First every eligible AV completes its own
+conflict, reachability, StVO, and local precedence reasoning and publishes only
+the directed claims derived from its own LDM. The message set is then frozen.
+Second, every AV independently assembles a joint local graph from the same-step
+claims. This prevents Python iteration order from changing information
+availability.
+
+Assembly begins with the ego's local participant nodes. A communicated edge is
+adopted when either endpoint is already relevant, both endpoints are added, and
+the operation repeats to a mathematical fixed point. Disconnected broadcasts
+remain excluded. Duplicate directed claims become one edge with all supporting
+senders. Opposite directed claims are both retained and diagnosed as
+`COMMUNICATED_PRECEDENCE_DISAGREEMENT`; they are never voted away. Claims with
+another regulatory profile or inconsistent source timestamps are non-authoritative
+and explicitly diagnosed when connected to the local component.
+
+The GNN observation now represents this joint local graph while retaining the
+original local and communicated edge sets for explanation. GNN tensor encoding,
+GNN layers, MAPPO, reward design, active messages, and vehicle control remain
+not implemented.
+
+### GNN-ready NumPy tensor encoding
+
+The heterogeneous semantic graph is converted deterministically into read-only
+NumPy arrays before learning is introduced. TensorFlow is not used, PyTorch is
+not yet required, and no neural GNN or MAPPO component exists in this checkpoint.
+The encoder is representation-only and shadow-only.
+
+Node physical and observational scalars remain in their original SI/semantic
+units. No guessed normalization divisor is applied. Statistical normalization
+is marked `NOT_FITTED_TRAINING_STATISTICS_REQUIRED` and will later be fitted
+from training rollouts only, then reused unchanged for validation and testing.
+
+Every scalar has a corresponding availability mask. Missing information uses a
+masked storage placeholder of `0.0`; that placeholder is not a physical zero.
+Thus an observed stopped vehicle has speed value `0.0`, mask `1`, while unknown
+speed has value `0.0`, mask `0`. Non-finite available values are rejected.
+
+Relative approach uses multi-hot membership over `RIGHT`, `LEFT`, `ONCOMING`,
+and `SAME_APPROACH`. Edge origin uses one-hot membership over `LOCAL`,
+`COMMUNICATED`, and `LOCAL_AND_COMMUNICATED`. Column order identifies tensor
+fields and implies no ordinal relationship. Rule, route, vehicle, path, lane,
+and conflict-zone IDs are not numeric learning features. Detailed multi-zone
+reachability evidence remains metadata because selecting or aggregating one
+zone would require a separately justified semantic rule.
+
+### CPU edge-aware MPNN forward validation
+
+The untrained `EdgeAwareMPNNEncoder` consumes only `EncodedGraphObservation`
+through a CPU tensor adapter; it does not query an LDM or SUMO. Node and edge
+availability masks are concatenated with their values before learnable
+projections, preserving observed zero versus missing information.
+
+Edges retain yielding-to-priority direction. Each message concatenates source
+node, target node, and edge embeddings. Incoming messages are combined at the
+priority node by permutation-invariant SUM, and node updates concatenate the
+current state with that aggregate. Nodes without incoming edges receive SUM's
+zero-vector identity; no self-loop is fabricated. Mean pooling over final node
+states produces the graph embedding, while ego identity metadata selects the
+ego embedding independently of node order.
+
+This checkpoint validates CPU forward passes and finite gradients only. Hidden
+dimension, message-passing depth, and activation are marked
+`REQUIRES_VALIDATION_EXPERIMENT`; test fixture values are not final choices.
+There is no optimizer, training, reward, MAPPO, checkpoint, normalization fit,
+CUDA requirement, PyTorch Geometric, TensorFlow, or connection to control.
+Run `python validate_gnn_forward.py` for the test-only validation report.
 
 ## German StVO traffic-rule engine (shadow)
 

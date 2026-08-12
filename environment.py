@@ -29,8 +29,7 @@ class SUMOEnv:
                 "simulation."
             )
 
-        command = [
-            sumo_binary,
+        command_options = [
             "-c",
             str(SUMO_CONFIG),
             "--step-length",
@@ -44,7 +43,28 @@ class SUMOEnv:
         ]
 
         print(f"Starting SUMO with {SIM_TIME_STEP:.2f} s steps...")
-        traci.start(command)
+        try:
+            traci.start([sumo_binary, *command_options])
+        except traci.exceptions.FatalTraCIError as error:
+            if not self.use_gui:
+                raise RuntimeError(
+                    "Headless SUMO closed before the TraCI connection was "
+                    "established. Run `sumo -c intersection.sumocfg` to see "
+                    "the underlying SUMO configuration error."
+                ) from error
+
+            # Some Windows graphics/desktop configurations allow sumo-gui to
+            # launch but close it before TraCI completes its handshake. The
+            # simulation itself does not depend on rendering, so retry the
+            # identical command with the headless SUMO binary. This changes
+            # only visualization; traffic, safety, and research logic remain
+            # identical.
+            headless_binary = shutil.which("sumo") or "sumo"
+            print(
+                "SUMO GUI closed during TraCI startup; retrying in "
+                "headless mode."
+            )
+            traci.start([headless_binary, *command_options])
         self.current_time = float(traci.simulation.getTime())
         print("SUMO started successfully.")
 

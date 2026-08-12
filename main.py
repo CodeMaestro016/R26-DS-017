@@ -37,7 +37,9 @@ from conflict import (
 from environment import SUMOEnv
 from evaluation import evaluator
 from negotiation import NegotiationManager
-from negotiation_learning import NegotiationEnvironment
+from negotiation_learning import (
+    GraphTensorEncoder, NegotiationEnvironment, V2VPrecedenceClaimBus,
+)
 from observation import observation_manager
 from predictor import IntentionPredictor
 from risk_assessment import risk_assessor
@@ -180,6 +182,16 @@ def build_dashboard_payload(
                 vehicle_id
             ).get_current_negotiation_problem() is not None
         },
+        "gnn_input_encoding_diagnostics": {
+            vehicle_id: observation_manager.get_ldm(
+                vehicle_id
+            ).get_current_encoded_graph_observation().dashboard_summary()
+            for vehicle_id in observations
+            if observation_manager.get_ldm(vehicle_id) is not None
+            and observation_manager.get_ldm(
+                vehicle_id
+            ).get_current_encoded_graph_observation() is not None
+        },
         "prediction_mode": "SHADOW" if SHADOW_MODE else "ACTIVE",
     }
 
@@ -246,6 +258,8 @@ def main():
     )
     traffic_rule_engine = TrafficRuleEngine(map_path_manager)
     negotiation_environment = NegotiationEnvironment()
+    v2v_claim_bus = V2VPrecedenceClaimBus()
+    graph_tensor_encoder = GraphTensorEncoder()
     network_odd = validate_network_odd(SUMO_NETWORK_FILE)
     if not network_odd["passed"]:
         raise RuntimeError(
@@ -322,8 +336,10 @@ def main():
             )
             print_prediction_events(prediction_events)
 
-            # Shadow-only spatial validation. Each graph consumes only its
-            # owner's LDM and cannot affect risk, negotiation, or control.
+            # Phase 1: every AV completes sender-local reasoning and publishes
+            # only claims derived from its own LDM. No joint graph exists yet.
+            v2v_claim_bus.begin_step(current_time)
+            local_precedence_graphs = {}
             for ego_id in observations:
                 ldm = observation_manager.get_ldm(ego_id)
                 if ldm is not None and ldm.in_approach_zone:
@@ -340,16 +356,44 @@ def main():
                     ldm.current_regulatory_assessment = (
                         traffic_rule_engine.assess_ldm(ldm, current_time)
                     )
-                    ldm.current_negotiation_problem = (
-                        negotiation_environment.build_snapshot(ldm, current_time)
+                    local_graph, claim_messages = (
+                        negotiation_environment.build_local_claims(
+                            ldm, current_time
+                        )
                     )
+                    local_precedence_graphs[ego_id] = local_graph
+                    for claim_message in claim_messages:
+                        v2v_claim_bus.publish(claim_message)
                 elif ldm is not None:
                     ldm.current_conflict_graph = None
                     ldm.current_temporal_assessment = None
                     ldm.current_regulatory_assessment = None
                     ldm.current_negotiation_problem = None
+                    ldm.current_encoded_graph_observation = None
                     conflict_graph_manager.reset(ego_id)
                     occupancy_assessor.reset(ego_id)
+
+            # Phase 2 starts only after every sender has published. Each AV
+            # independently expands its own connected component from the same
+            # immutable current-step message set, so iteration order is inert.
+            v2v_claim_bus.freeze_step(current_time)
+            for ego_id in observations:
+                ldm = observation_manager.get_ldm(ego_id)
+                if ldm is not None and ego_id in local_precedence_graphs:
+                    ldm.current_negotiation_problem = (
+                        negotiation_environment.build_snapshot(
+                            ldm, current_time,
+                            v2v_claim_bus.current_messages(
+                                current_time, receiver_id=ego_id
+                            ),
+                            local_precedence_graphs[ego_id],
+                        )
+                    )
+                    ldm.current_encoded_graph_observation = (
+                        graph_tensor_encoder.encode(
+                            ldm.current_negotiation_problem["graph_observation"]
+                        )
+                    )
 
             if current_time + 1e-9 >= next_control_time:
                 for ego_id in observations:
@@ -578,23 +622,57 @@ def main():
         for label, key in labels:
             print(f"  {label}: {rule_summary[key]}")
         negotiation_summary = negotiation_environment.validation_summary()
-        print("\nNegotiation Problem validation")
+        print("\nV2V Negotiation Graph validation")
+        bus_summary = v2v_claim_bus.validation_summary()
         negotiation_labels = (
-            ("Local negotiation snapshots built", "local_negotiation_snapshots_built"),
+            ("Local precedence claims published", "local_precedence_claims_published"),
+            ("Current-step V2V messages created", "current_step_v2v_messages_created"),
+            ("Joint local negotiation snapshots built", "joint_local_negotiation_snapshots_built"),
             ("Snapshots with active conflict participants", "snapshots_with_active_conflict_participants"),
-            ("Total precedence edges", "total_precedence_edges"),
-            ("Regulatory-order-resolved snapshots", "regulatory_order_resolved_snapshots"),
-            ("Regulatory-cycle snapshots", "regulatory_cycle_snapshots"),
+            ("Messages received by local agents", "messages_received_by_local_agents"),
+            ("Messages adopted into connected components", "messages_adopted_into_connected_components"),
+            ("Unconnected messages ignored", "unconnected_messages_ignored"),
+            ("Duplicate claims merged", "duplicate_claims_merged"),
+            ("Communicated precedence disagreements", "communicated_precedence_disagreements"),
+            ("Joint precedence edges", "joint_precedence_edges"),
+            ("Joint graphs with expanded participant sets", "joint_graphs_with_expanded_participant_sets"),
+            ("Regulatory-order-resolved joint graphs", "regulatory_order_resolved_snapshots"),
+            ("Regulatory-cycle joint graphs", "regulatory_cycle_snapshots"),
             ("Unresolved-precedence snapshots", "unresolved_precedence_snapshots"),
             ("No-active-conflict snapshots", "no_active_conflict_snapshots"),
             ("Strongly connected cyclic components observed", "strongly_connected_cyclic_components_observed"),
-            ("Maximum participants in one local negotiation problem", "maximum_participants_in_one_local_negotiation_problem"),
+            ("Maximum local participants before V2V expansion", "maximum_local_participants_before_v2v_expansion"),
+            ("Maximum joint participants after V2V expansion", "maximum_joint_participants_after_v2v_expansion"),
             ("Source snapshot mismatches", "source_snapshot_mismatches"),
+            ("Regulatory-profile mismatches", "regulatory_profile_mismatches"),
             ("Target route-truth fields consumed", "target_route_truth_fields_consumed"),
             ("Control actions issued by negotiation environment", "control_actions_issued_by_negotiation_environment"),
         )
         for label, key in negotiation_labels:
-            print(f"  {label}: {negotiation_summary[key]}")
+            source = bus_summary if key in bus_summary else negotiation_summary
+            print(f"  {label}: {source[key]}")
+        encoding_summary = graph_tensor_encoder.validation_summary()
+        print("\nGNN Input Encoding validation")
+        encoding_labels = (
+            ("Encoded graph observations built", "encoded_graph_observations_built"),
+            ("NumPy tensor backend confirmed", "numpy_tensor_backend_confirmed"),
+            ("Maximum encoded nodes", "maximum_encoded_nodes"),
+            ("Maximum encoded directed edges", "maximum_encoded_directed_edges"),
+            ("Node feature dimension", "node_feature_dimension"),
+            ("Edge feature dimension", "edge_feature_dimension"),
+            ("Encoded graphs with zero edges", "encoded_graphs_with_zero_edges"),
+            ("Encoded graphs with communicated-only participants", "encoded_graphs_with_communicated_only_participants"),
+            ("Missing node scalar values masked", "missing_node_scalar_values_masked"),
+            ("Missing edge scalar values masked", "missing_edge_scalar_values_masked"),
+            ("Non-finite available feature errors", "nonfinite_available_feature_errors"),
+            ("Route-truth fields consumed", "route_truth_fields_consumed"),
+            ("Arbitrary ordinal categorical encodings", "arbitrary_ordinal_categorical_encodings"),
+            ("TensorFlow dependencies introduced", "tensorflow_dependencies_introduced"),
+            ("PyTorch dependencies introduced", "pytorch_dependencies_introduced"),
+            ("Control actions issued by tensor encoder", "control_actions_issued_by_tensor_encoder"),
+        )
+        for label, key in encoding_labels:
+            print(f"  {label}: {encoding_summary[key]}")
         environment.close()
         observation_manager.reset()
         conflict_entry_monitor.reset()
@@ -603,6 +681,8 @@ def main():
         occupancy_assessor.reset()
         traffic_rule_engine.reset()
         negotiation_environment.reset()
+        v2v_claim_bus.reset()
+        graph_tensor_encoder.reset()
 
 
 if __name__ == "__main__":

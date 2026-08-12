@@ -30,6 +30,7 @@ class LocalDynamicMap:
         self.current_temporal_assessment = None
         self.current_regulatory_assessment = None
         self.current_negotiation_problem = None
+        self.current_encoded_graph_observation = None
 
     @staticmethod
     def _velocity_vector(speed, heading_radians):
@@ -254,6 +255,10 @@ class LocalDynamicMap:
         """Return the current shadow-only local MARL problem snapshot."""
         return self.current_negotiation_problem
 
+    def get_current_encoded_graph_observation(self):
+        """Return the read-only NumPy GNN input built in shadow mode."""
+        return self.current_encoded_graph_observation
+
     def prediction_snapshot(self):
         return {
             vehicle_id: track["intention_prediction"]
@@ -353,6 +358,7 @@ class ObservationManager:
                 )
                 ldm.current_regulatory_assessment = None
                 ldm.current_negotiation_problem = None
+                ldm.current_encoded_graph_observation = None
                 ldm.add_or_update_track(
                     ego_id,
                     ego_data["position"],

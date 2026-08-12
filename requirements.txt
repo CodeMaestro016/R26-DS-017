@@ -3,3 +3,4 @@ onnxruntime
 requests
 traci
 shapely>=2.0
+torch
