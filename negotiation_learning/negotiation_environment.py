@@ -3,6 +3,7 @@
 import math
 
 from .models import NegotiationAction, NegotiationProblemSnapshot, NegotiationStatus
+from .claim_semantics import NegotiationClaimBuilder
 from .observation_builder import GraphObservationBuilder
 from .precedence_graph import RegulatoryPrecedenceGraphBuilder
 from .joint_graph_assembler import JointLocalPrecedenceGraphAssembler
@@ -83,17 +84,30 @@ class NegotiationEnvironment:
         active = len(graph["joint_node_ids"]) > 1
         status = self.classify_status(graph, consistent, active)
         observation = self.observation_builder.build(ldm, current_time, graph)
-        ego_yields = any(
-            edge["yielding_vehicle_id"] == ldm.ego_id
-            for edge in graph["joint_precedence_edges"]
+        claim_set = NegotiationClaimBuilder().build(
+            ldm.ego_id, graph, status.value,
+            status in {
+                NegotiationStatus.NEGOTIATION_REQUIRED_REGULATORY_CYCLE,
+                NegotiationStatus.NEGOTIATION_REQUIRED_UNRESOLVED_PRECEDENCE,
+            }, consistent,
         )
         action_evidence = {
-            NegotiationAction.KEEP_CLAIM.value: (
-                "PROHIBITED_BY_MANDATORY_YIELD" if ego_yields
-                else "DEFERRED_PROTOCOL_SEMANTICS"
+            "mask_scope": "CLAIM_LEVEL",
+            "mask_type": "BOOLEAN_DETERMINISTIC",
+            "policy_authority": claim_set.policy_authority.value,
+            "policy_authority_reason": (
+                claim_set.policy_authority_reason.value
+                if claim_set.policy_authority_reason else None
             ),
-            NegotiationAction.RELINQUISH_CLAIM.value: "DEFERRED_PROTOCOL_SEMANTICS",
-            "active_mask_status": "NOT_ACTIVATED_STEP_5B",
+            "mandatory_yield_obligations": tuple(
+                (item.yielding_vehicle_id, item.priority_vehicle_id)
+                for item in claim_set.mandatory_yield_obligations
+            ),
+            "ego_precedence_claims": tuple(
+                (item.yielding_vehicle_id, item.priority_vehicle_id)
+                for item in claim_set.ego_precedence_claims
+            ),
+            "protocol_completion_status": claim_set.protocol_completion_status,
         }
         snapshot = NegotiationProblemSnapshot(
             ldm.ego_id, float(current_time), graph["joint_node_ids"],

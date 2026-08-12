@@ -237,15 +237,17 @@ through actual-map and synthetic envelope-intersection tests.
 
 The current staged architecture is:
 
-`SUMO → Perception Interface → Local Dynamic Map → GRU Intention Prediction [ONNX CPU] → Map-Aware Conflict Graph → Temporal/Kinematic Reachability → German StVO Traffic Rule Engine → Local Regulatory Precedence Claims → Ideal V2V Regulatory-Claim Exchange [SHADOW] → Joint Local Precedence Graph [SHADOW] → Semantic GraphObservation → GNN-Ready NumPy Tensor Encoder [SHADOW] → CPU PyTorch Edge-Aware MPNN [FORWARD VALIDATION ONLY] → Future MAPPO Actor → Future Centralized Critic → Future Safety Shield → Future Trajectory Controller`
+`SUMO → Perception Interface → Local Dynamic Map → GRU Intention Prediction [ONNX CPU] → Map-Aware Conflict Graph → Temporal/Kinematic Reachability → German StVO Traffic Rule Engine → Local Regulatory Precedence Claims → Ideal V2V Regulatory-Claim Exchange [SHADOW] → Joint Local Precedence Graph [SHADOW] → Semantic GraphObservation → GNN-Ready NumPy Tensor Encoder [SHADOW] → CPU PyTorch Edge-Aware MPNN [FORWARD VALIDATION ONLY] → Claim-Level Negotiation Candidate Builder [SHADOW] → Hard Regulatory Action Mask [SHADOW] → Decentralized Actor Interface [UNTRAINED] → Centralized Critic Interface [TRAINING ONLY, UNTRAINED] → Future MAPPO Optimization → Future Reward/Objective Design → Future Training → Future Safety Shield → Future Negotiated Controller`
 
 The existing `Legacy NegotiationManager` remains the control-facing baseline.
 The StVO engine is read-only shadow diagnostics and cannot issue actions or
 speed commands.
 
-The new negotiation environment is also shadow-only. GNN layers, MAPPO,
+The new negotiation environment is also shadow-only. The GNN forward path and
+untrained claim-level actor/critic interfaces exist, but MAPPO optimization,
 MARL training, reward design, active negotiation, and learned control are not
-implemented.
+implemented. Step 5E's basis and unselected parameters are documented in
+`docs/research_basis/negotiation_learning.md`.
 
 ### Shadow MARL negotiation problem
 
@@ -261,11 +263,14 @@ from its reverse, the regulatory service order. Vehicle IDs only make equivalent
 graph serializations deterministic and never determine traffic priority.
 
 The semantic graph observation keeps hard legal/conflict evidence separate
-from optional future efficiency features. Its proposed messages are
-`KEEP_CLAIM` and `RELINQUISH_CLAIM`, not driving commands. The action mask is
-only an unresolved/deferred interface in Step 5A, and no scalar reward exists.
-Future learned policies must remain subordinate to hard regulatory and safety
-constraints.
+from optional future efficiency features. `KEEP_CLAIM` and
+`RELINQUISH_CLAIM` now apply to one explicit incoming `other → ego` claim and
+are not driving commands. Outgoing `ego → other` edges remain mandatory yield
+obligations and cannot be deleted by learning. Exact Boolean masks block policy
+authority when regulatory inputs disagree or are unresolved. No scalar reward
+exists. The two actions express a preference/proposal but lack counterparty
+acceptance/acknowledgement, so the binding protocol remains explicitly
+`ACTION_PROTOCOL_INCOMPLETE`.
 
 ### Ideal same-step V2V claim exchange
 
