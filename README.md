@@ -237,11 +237,35 @@ through actual-map and synthetic envelope-intersection tests.
 
 The current staged architecture is:
 
-`Perception → Local Dynamic Map → Intention Prediction → Map-Aware Conflict Graph → Temporal/Kinematic Reachability → Traffic Rule Engine [German StVO, SHADOW] → Future Decentralized Negotiation → Future Safety Shield → Future Trajectory Control`
+`SUMO → Perception Interface → Local Dynamic Map → GRU Intention Prediction → Map-Aware Conflict Graph → Temporal/Kinematic Reachability → German StVO Traffic Rule Engine → Regulatory Precedence Graph → MARL Negotiation Problem Builder [SHADOW] → Future GNN Encoder → Future MAPPO Negotiation Policy → Future Safety Shield → Future Trajectory Controller`
 
 The existing `Legacy NegotiationManager` remains the control-facing baseline.
 The StVO engine is read-only shadow diagnostics and cannot issue actions or
 speed commands.
+
+The new negotiation environment is also shadow-only. GNN layers, MAPPO,
+MARL training, reward design, active negotiation, and learned control are not
+implemented.
+
+### Shadow MARL negotiation problem
+
+Each AV independently integrates only its own LDM snapshots. Conflict geometry
+selects physically relevant participants; kinematic output supplies nominal and
+physical reachability evidence; and StVO output supplies regulatory obligations.
+The precedence edge convention is `A → B` meaning A must yield to B.
+
+Standard strongly connected components expose directed regulatory cycles where
+pairwise duties do not yield an immediately executable order. For acyclic
+graphs, the normal yield-dependency topological order is reported separately
+from its reverse, the regulatory service order. Vehicle IDs only make equivalent
+graph serializations deterministic and never determine traffic priority.
+
+The semantic graph observation keeps hard legal/conflict evidence separate
+from optional future efficiency features. Its proposed messages are
+`KEEP_CLAIM` and `RELINQUISH_CLAIM`, not driving commands. The action mask is
+only an unresolved/deferred interface in Step 5A, and no scalar reward exists.
+Future learned policies must remain subordinate to hard regulatory and safety
+constraints.
 
 ## German StVO traffic-rule engine (shadow)
 

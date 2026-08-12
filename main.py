@@ -37,6 +37,7 @@ from conflict import (
 from environment import SUMOEnv
 from evaluation import evaluator
 from negotiation import NegotiationManager
+from negotiation_learning import NegotiationEnvironment
 from observation import observation_manager
 from predictor import IntentionPredictor
 from risk_assessment import risk_assessor
@@ -169,6 +170,16 @@ def build_dashboard_payload(
                 vehicle_id
             ).get_current_regulatory_assessment() is not None
         },
+        "negotiation_problem_snapshots": {
+            vehicle_id: observation_manager.get_ldm(
+                vehicle_id
+            ).get_current_negotiation_problem()
+            for vehicle_id in observations
+            if observation_manager.get_ldm(vehicle_id) is not None
+            and observation_manager.get_ldm(
+                vehicle_id
+            ).get_current_negotiation_problem() is not None
+        },
         "prediction_mode": "SHADOW" if SHADOW_MODE else "ACTIVE",
     }
 
@@ -234,6 +245,7 @@ def main():
         map_path_manager, conflict_zone_manager
     )
     traffic_rule_engine = TrafficRuleEngine(map_path_manager)
+    negotiation_environment = NegotiationEnvironment()
     network_odd = validate_network_odd(SUMO_NETWORK_FILE)
     if not network_odd["passed"]:
         raise RuntimeError(
@@ -328,10 +340,14 @@ def main():
                     ldm.current_regulatory_assessment = (
                         traffic_rule_engine.assess_ldm(ldm, current_time)
                     )
+                    ldm.current_negotiation_problem = (
+                        negotiation_environment.build_snapshot(ldm, current_time)
+                    )
                 elif ldm is not None:
                     ldm.current_conflict_graph = None
                     ldm.current_temporal_assessment = None
                     ldm.current_regulatory_assessment = None
+                    ldm.current_negotiation_problem = None
                     conflict_graph_manager.reset(ego_id)
                     occupancy_assessor.reset(ego_id)
 
@@ -561,6 +577,24 @@ def main():
         )
         for label, key in labels:
             print(f"  {label}: {rule_summary[key]}")
+        negotiation_summary = negotiation_environment.validation_summary()
+        print("\nNegotiation Problem validation")
+        negotiation_labels = (
+            ("Local negotiation snapshots built", "local_negotiation_snapshots_built"),
+            ("Snapshots with active conflict participants", "snapshots_with_active_conflict_participants"),
+            ("Total precedence edges", "total_precedence_edges"),
+            ("Regulatory-order-resolved snapshots", "regulatory_order_resolved_snapshots"),
+            ("Regulatory-cycle snapshots", "regulatory_cycle_snapshots"),
+            ("Unresolved-precedence snapshots", "unresolved_precedence_snapshots"),
+            ("No-active-conflict snapshots", "no_active_conflict_snapshots"),
+            ("Strongly connected cyclic components observed", "strongly_connected_cyclic_components_observed"),
+            ("Maximum participants in one local negotiation problem", "maximum_participants_in_one_local_negotiation_problem"),
+            ("Source snapshot mismatches", "source_snapshot_mismatches"),
+            ("Target route-truth fields consumed", "target_route_truth_fields_consumed"),
+            ("Control actions issued by negotiation environment", "control_actions_issued_by_negotiation_environment"),
+        )
+        for label, key in negotiation_labels:
+            print(f"  {label}: {negotiation_summary[key]}")
         environment.close()
         observation_manager.reset()
         conflict_entry_monitor.reset()
@@ -568,6 +602,7 @@ def main():
         conflict_graph_manager.reset()
         occupancy_assessor.reset()
         traffic_rule_engine.reset()
+        negotiation_environment.reset()
 
 
 if __name__ == "__main__":
