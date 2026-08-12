@@ -121,6 +121,42 @@ class MapPathManager:
         paths = self.paths_by_lane.get(lane_id, {}).get(manoeuvre, ())
         return paths[0] if len(paths) == 1 else None
 
+    def approach_relation(self, ego_path_id, target_path_id):
+        """Classify source approaches from exact static incoming geometry.
+
+        Incoming direction vectors point toward their common junction. For
+        this validated four-leg topology, parallel vectors mean the same
+        approach, antiparallel vectors mean oncoming, and the sign of their
+        2-D cross product distinguishes right from left. No angular threshold
+        or live vehicle position participates in the classification.
+        """
+        ego = self.paths.get(ego_path_id)
+        target = self.paths.get(target_path_id)
+        if ego is None or target is None:
+            return None
+        if ego.incoming_lane_id == target.incoming_lane_id:
+            return "SAME_APPROACH"
+
+        ego_vector = self._incoming_direction(ego.incoming_lane_id)
+        target_vector = self._incoming_direction(target.incoming_lane_id)
+        cross = ego_vector[0] * target_vector[1] - ego_vector[1] * target_vector[0]
+        dot = ego_vector[0] * target_vector[0] + ego_vector[1] * target_vector[1]
+        tolerance = math.ulp(max(1.0, *(abs(value) for value in (*ego_vector, *target_vector)))) * 16
+        if abs(cross) <= tolerance:
+            return "SAME_APPROACH" if dot > 0.0 else "ONCOMING"
+        return "RIGHT" if cross > 0.0 else "LEFT"
+
+    def _incoming_direction(self, lane_id):
+        shape = self.network.getLane(lane_id).getShape()
+        if len(shape) < 2:
+            raise ValueError(f"Incoming lane {lane_id!r} lacks direction geometry")
+        start, end = shape[0], shape[-1]
+        vector = (float(end[0] - start[0]), float(end[1] - start[1]))
+        magnitude = math.hypot(*vector)
+        if magnitude == 0.0:
+            raise ValueError(f"Incoming lane {lane_id!r} has zero-length direction")
+        return vector[0] / magnitude, vector[1] / magnitude
+
     def paths_compatible_with_observed_lane(self, lane_id):
         """Group paths supported by current lane membership, without routes."""
         compatible = {}

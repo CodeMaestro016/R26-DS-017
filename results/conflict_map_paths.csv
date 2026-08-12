@@ -2,10 +2,10 @@ path_id,incoming_lane,outgoing_lane,manoeuvre,geometry_point_count
 E_IN_0_LEFT,e_in_0,s_out_0,LEFT,5
 E_IN_0_RIGHT,e_in_0,n_out_0,RIGHT,5
 E_IN_0_STRAIGHT,e_in_0,w_out_0,STRAIGHT,2
-N_IN_0_LEFT,n_in_0,e_out_0,LEFT,6
+N_IN_0_LEFT,n_in_0,e_out_0,LEFT,5
 N_IN_0_RIGHT,n_in_0,w_out_0,RIGHT,5
 N_IN_0_STRAIGHT,n_in_0,s_out_0,STRAIGHT,2
-S_IN_0_LEFT,s_in_0,w_out_0,LEFT,6
+S_IN_0_LEFT,s_in_0,w_out_0,LEFT,5
 S_IN_0_RIGHT,s_in_0,e_out_0,RIGHT,5
 S_IN_0_STRAIGHT,s_in_0,n_out_0,STRAIGHT,2
 W_IN_0_LEFT,w_in_0,n_out_0,LEFT,5

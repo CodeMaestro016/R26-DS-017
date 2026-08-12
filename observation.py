@@ -28,6 +28,7 @@ class LocalDynamicMap:
         self.last_update_time = 0.0
         self.current_conflict_graph = None
         self.current_temporal_assessment = None
+        self.current_regulatory_assessment = None
 
     @staticmethod
     def _velocity_vector(speed, heading_radians):
@@ -244,6 +245,10 @@ class LocalDynamicMap:
         """Return shadow conflict-zone occupancy evidence for this ego."""
         return self.current_temporal_assessment
 
+    def get_current_regulatory_assessment(self):
+        """Return the current shadow German-StVO assessment for this ego."""
+        return self.current_regulatory_assessment
+
     def prediction_snapshot(self):
         return {
             vehicle_id: track["intention_prediction"]
@@ -341,6 +346,7 @@ class ObservationManager:
                     if ego_track is not None
                     else {}
                 )
+                ldm.current_regulatory_assessment = None
                 ldm.add_or_update_track(
                     ego_id,
                     ego_data["position"],

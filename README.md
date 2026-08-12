@@ -160,6 +160,9 @@ The source network provides all 12 approach/maneuver combinations:
 The included source files must be compiled with `netconvert` before the first
 run.
 
+The central source junction is `right_before_left`; the generated network is
+right-hand traffic and retains SUMO junction safety behavior.
+
 ### Generalization
 
 The GRUs were trained using the inD Bendplatz cohort. This synthetic SUMO cross
@@ -229,6 +232,39 @@ statistically derived position uncertainty rather than a guessed distance.
 Existing safety score, collision, throughput, and travel-time outputs do not
 validate this graph: it remains shadow-only. Geometry is validated separately
 through actual-map and synthetic envelope-intersection tests.
+
+## Research architecture
+
+The current staged architecture is:
+
+`Perception → Local Dynamic Map → Intention Prediction → Map-Aware Conflict Graph → Temporal/Kinematic Reachability → Traffic Rule Engine [German StVO, SHADOW] → Future Decentralized Negotiation → Future Safety Shield → Future Trajectory Control`
+
+The existing `Legacy NegotiationManager` remains the control-facing baseline.
+The StVO engine is read-only shadow diagnostics and cannot issue actions or
+speed commands.
+
+## German StVO traffic-rule engine (shadow)
+
+The fixed `DE_STVO_UNCONTROLLED_4WAY_V1` profile covers one unsignalized,
+equal-road, four-leg, right-hand-traffic intersection with autonomous passenger
+vehicles. Pedestrians, cyclists, trams, special bus lanes, emergency vehicles,
+rail crossings, roundabouts, field/forest roads, priority roads, signals, and
+priority signs are outside this experiment's ODD.
+
+The archived official XML and its SHA-256 provenance are under
+`docs/regulatory_sources/de_stvo/2026-08-11`. Runtime logic loads only the
+reviewed JSON catalogue. Active pairwise rules are StVO § 8(1), § 9(3), and
+§ 9(4). Section 8(2) and § 1 remain qualitative normative constraints; § 2 is
+an ODD validation source; § 11(1) is deferred until exit clearance is available;
+and § 11(3) only records that relinquishment requires explicit coordination.
+
+Approach relation uses normalized static incoming-lane direction vectors.
+Parallel means `SAME_APPROACH`, antiparallel means `ONCOMING`, and the exact
+2-D cross-product sign distinguishes `RIGHT` from `LEFT`. Only a floating-point
+roundoff tolerance based on machine ULP is used; there is no angle parameter.
+Every spatially conflicting feasible target path is assessed independently and
+aggregated without prediction probabilities. Divergent candidate results are
+`UNRESOLVED_DUE_TO_TARGET_MANOEUVRE`. Priority is never safety permission.
 
 ## Future stages
 

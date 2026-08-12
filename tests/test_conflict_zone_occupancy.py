@@ -1,6 +1,7 @@
 """Deterministic tests for shadow conflict-zone temporal occupancy."""
 
 import math
+from dataclasses import replace
 
 import pytest
 from shapely.geometry import LineString
@@ -160,7 +161,13 @@ def test_actual_map_incoming_internal_and_outgoing_path_progress():
 
 def test_actual_multi_internal_lane_path_projects_in_one_coordinate():
     paths = MapPathManager()
-    path = paths.paths["N_IN_0_LEFT"]
+    # right_before_left compilation currently emits one internal lane per
+    # movement, so retain this coordinate-continuity regression with an
+    # explicit two-segment path instead of depending on netconvert internals.
+    path = replace(
+        paths.paths["N_IN_0_LEFT"],
+        internal_lane_ids=(":synthetic_first", ":synthetic_second"),
+    )
     assert len(path.internal_lane_ids) == 2
     line = LineString(path.centerline_geometry)
     expected = line.length - 1.0

@@ -40,6 +40,8 @@ from negotiation import NegotiationManager
 from observation import observation_manager
 from predictor import IntentionPredictor
 from risk_assessment import risk_assessor
+from traffic_rules import TrafficRuleEngine, validate_network_odd
+from config import SUMO_NETWORK_FILE
 
 try:
     import requests
@@ -157,6 +159,16 @@ def build_dashboard_payload(
                 vehicle_id
             ).get_current_temporal_assessment() is not None
         },
+        "traffic_rule_assessments": {
+            vehicle_id: observation_manager.get_ldm(
+                vehicle_id
+            ).get_current_regulatory_assessment()
+            for vehicle_id in observations
+            if observation_manager.get_ldm(vehicle_id) is not None
+            and observation_manager.get_ldm(
+                vehicle_id
+            ).get_current_regulatory_assessment() is not None
+        },
         "prediction_mode": "SHADOW" if SHADOW_MODE else "ACTIVE",
     }
 
@@ -221,6 +233,13 @@ def main():
     occupancy_assessor = ConflictZoneOccupancyAssessor(
         map_path_manager, conflict_zone_manager
     )
+    traffic_rule_engine = TrafficRuleEngine(map_path_manager)
+    network_odd = validate_network_odd(SUMO_NETWORK_FILE)
+    if not network_odd["passed"]:
+        raise RuntimeError(
+            "Compiled SUMO network is incompatible with the regulatory ODD: "
+            + ", ".join(network_odd["errors"])
+        )
     write_conflict_catalogues(
         map_path_manager, conflict_zone_manager, OUTPUT_DIR
     )
@@ -304,9 +323,15 @@ def main():
                     ldm.current_temporal_assessment = (
                         occupancy_assessor.assess_ldm(ldm, current_time)
                     )
+                    # German-StVO reasoning is deliberately shadow-only. Its
+                    # output is not passed to risk, negotiation, or control.
+                    ldm.current_regulatory_assessment = (
+                        traffic_rule_engine.assess_ldm(ldm, current_time)
+                    )
                 elif ldm is not None:
                     ldm.current_conflict_graph = None
                     ldm.current_temporal_assessment = None
+                    ldm.current_regulatory_assessment = None
                     conflict_graph_manager.reset(ego_id)
                     occupancy_assessor.reset(ego_id)
 
@@ -513,12 +538,36 @@ def main():
             "  Unique ego-target pairs with temporal conflict: "
             f"{temporal_summary['unique_ego_target_pairs_with_temporal_conflict']}"
         )
+        rule_summary = traffic_rule_engine.validation_summary()
+        print("\nTraffic Rule validation")
+        print(f"  Regulatory profile: {traffic_rule_engine.context.profile_id}")
+        print(f"  ODD validation passed: {network_odd['passed']}")
+        print(f"  Central SUMO junction type: {network_odd['junction_type']}")
+        print(
+            "  Right-hand network confirmed: "
+            f"{network_odd['right_hand_network_confirmed']}"
+        )
+        labels = (
+            ("Local regulatory assessments built", "local_regulatory_assessments_built"),
+            ("Spatial conflict pairs assessed", "spatial_conflict_pairs_assessed"),
+            ("StVO §8 right-before-left obligations", "stvo_8_right_before_left_obligations"),
+            ("StVO §9 turning/oncoming obligations", "stvo_9_turning_oncoming_obligations"),
+            ("StVO §9(4) left-vs-oncoming-right obligations", "stvo_9_4_left_oncoming_right_obligations"),
+            ("Ego mandatory-yield assessments", "ego_mandatory_yield_assessments"),
+            ("Ego precedence-under-rule assessments", "ego_precedence_under_rule_assessments"),
+            ("Manoeuvre-dependent unresolved assessments", "manoeuvre_dependent_unresolved_assessments"),
+            ("Regulatory input unresolved", "regulatory_input_unresolved"),
+            ("Target route-truth fields consumed", "target_route_truth_fields_consumed"),
+        )
+        for label, key in labels:
+            print(f"  {label}: {rule_summary[key]}")
         environment.close()
         observation_manager.reset()
         conflict_entry_monitor.reset()
         risk_assessor.reset()
         conflict_graph_manager.reset()
         occupancy_assessor.reset()
+        traffic_rule_engine.reset()
 
 
 if __name__ == "__main__":
