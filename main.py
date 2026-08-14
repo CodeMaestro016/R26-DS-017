@@ -44,6 +44,11 @@ from observation import observation_manager
 from predictor import IntentionPredictor
 from risk_assessment import risk_assessor
 from traffic_rules import TrafficRuleEngine, validate_network_odd
+from traffic_accounting import DemandScheduleSource, demand_ledger
+from negotiation_objective import (
+    compute_objective_diagnostics, measure_vehicle_travel_times,
+    raw_team_reward, total_team_travel_time_seconds,
+)
 from config import SUMO_NETWORK_FILE
 
 try:
@@ -52,7 +57,13 @@ except ImportError:
     requests = None
 
 
-def add_autonomous_vehicle(vehicle_id, route_id):
+def add_autonomous_vehicle(vehicle_id, route_id, scheduled_spawn_time,
+                           schedule_source):
+    demand_ledger.register_scheduled_vehicle(
+        vehicle_id, scheduled_spawn_time, schedule_source,
+        route_metadata={"route_id": route_id},
+        provenance={"registration": "BEFORE_TRACI_VEHICLE_ADD"},
+    )
     traci.vehicle.add(
         vehID=vehicle_id,
         routeID=route_id,
@@ -285,6 +296,7 @@ def main():
     observation_manager.reset()
     conflict_entry_monitor.reset()
     risk_assessor.reset()
+    demand_ledger.reset()
 
     environment = SUMOEnv(use_gui=USE_SUMO_GUI)
     current_actions = {}
@@ -298,17 +310,25 @@ def main():
 
         if VALIDATION_SCENARIO_ENABLED:
             while validation_schedule and validation_schedule[0][0] <= 0.0:
-                _, route_id = validation_schedule.popleft()
-                add_autonomous_vehicle(f"AV_{vehicle_counter}", route_id)
+                scheduled_time, route_id = validation_schedule.popleft()
+                add_autonomous_vehicle(
+                    f"AV_{vehicle_counter}", route_id, scheduled_time,
+                    DemandScheduleSource.VALIDATION_SPAWN_SCHEDULE,
+                )
                 vehicle_counter += 1
         else:
             for _ in range(INITIAL_VEHICLE_COUNT):
-                add_autonomous_vehicle(f"AV_{vehicle_counter}", next(route_cycle))
+                add_autonomous_vehicle(
+                    f"AV_{vehicle_counter}", next(route_cycle),
+                    environment.current_time,
+                    DemandScheduleSource.INITIAL_SIMULATION_DEMAND,
+                )
                 vehicle_counter += 1
 
         for _ in range(EPISODE_STEPS):
             observations = environment.step()
             current_time = environment.current_time
+            demand_ledger.record_lifecycle_events(environment.lifecycle_events)
             evaluation_route_truth = {
                 vehicle_id: state.get("route_id", "")
                 for vehicle_id, state in observations.items()
@@ -410,6 +430,22 @@ def main():
                         "semantic_encoding_status": "COMPLETE_STEP_5F_1",
                         "transition_semantics_status":
                             "IMPLEMENTED_SHADOW_ONLY_STEP_5G",
+                        "scheduled_demand_accounting_status":
+                            "IMPLEMENTED_STEP_5H_0",
+                        "objective_formulation_status":
+                            "IMPLEMENTED_SHADOW_ONLY_STEP_5H",
+                        "baseline_reward_definition":
+                            "NEGATIVE_TEAM_TRAVEL_TIME_INCREMENT",
+                        "return_semantics_status":
+                            "EXACT_UNDISCOUNTED_EPISODIC_TEAM_RETURN",
+                        "advantage_semantics_status":
+                            "MONTE_CARLO_RETURN_MINUS_CENTRALIZED_VALUE",
+                        "ppo_math_status":
+                            "INTERFACE_ONLY_NO_OPTIMIZATION",
+                        "experimental_selection_framework_status":
+                            "IMPLEMENTED_STEP_5J_1",
+                        "selected_empirical_parameters": 0,
+                        "training_status": "NOT_STARTED",
                         "control_actions_issued": 0,
                     }
                     ldm.current_negotiated_precedence_overlay = None
@@ -469,8 +505,11 @@ def main():
 
             if VALIDATION_SCENARIO_ENABLED:
                 while validation_schedule and validation_schedule[0][0] <= current_time + 1e-9:
-                    _, route_id = validation_schedule.popleft()
-                    add_autonomous_vehicle(f"AV_{vehicle_counter}", route_id)
+                    scheduled_time, route_id = validation_schedule.popleft()
+                    add_autonomous_vehicle(
+                        f"AV_{vehicle_counter}", route_id, scheduled_time,
+                        DemandScheduleSource.VALIDATION_SPAWN_SCHEDULE,
+                    )
                     vehicle_counter += 1
             elif (
                 current_time + 1e-9 >= next_spawn_time
@@ -482,11 +521,13 @@ def main():
                     add_autonomous_vehicle(
                         vehicle_id,
                         next(route_cycle),
+                        next_spawn_time,
+                        DemandScheduleSource.PERIODIC_SPAWN_SCHEDULE,
                     )
                     vehicle_counter += 1
                 next_spawn_time += SPAWN_INTERVAL_SECONDS
 
-            evaluator.update(current_time, observations)
+            evaluator.update(current_time, observations, environment.lifecycle_events)
 
             if current_time + 1e-9 >= next_dashboard_time:
                 send_to_dashboard(
@@ -510,6 +551,31 @@ def main():
         evaluator.save_prediction_log()
 
     finally:
+        demand_ledger.finalize_episode(environment.current_time)
+        demand_summary = demand_ledger.validation_summary()
+        print("\nDemand Ledger validation")
+        for label, key in (
+            ("Scheduled vehicles", "scheduled_vehicles"),
+            ("Actual departures recorded", "actual_departures_recorded"),
+            ("Service completions recorded", "service_completions_recorded"),
+            ("Scheduled but not departed at episode end", "scheduled_not_departed_at_episode_end"),
+            ("Departed but unfinished at episode end", "departed_not_completed_at_episode_end"),
+            ("Completed services", "completed_services"),
+            ("Accounting errors", "accounting_errors"),
+        ):
+            print(f"  {label}: {demand_summary[key]}")
+        travel_measurements = measure_vehicle_travel_times(
+            demand_ledger.get_all_records(), environment.current_time,
+        )
+        team_cost = total_team_travel_time_seconds(travel_measurements)
+        objective_diagnostics = compute_objective_diagnostics(travel_measurements)
+        print("\nNegotiation Objective validation")
+        print("  Baseline definition: NEGATIVE_TEAM_TRAVEL_TIME_INCREMENT")
+        print(f"  Team travel-time cost (vehicle-seconds): {team_cost}")
+        print(f"  Raw shared team reward (negative vehicle-seconds): {raw_team_reward(team_cost)}")
+        print(f"  Vehicles measured: {objective_diagnostics.vehicles_measured}")
+        print(f"  Completed services diagnostic: {objective_diagnostics.completed_services}")
+        print("  Learned policy actions issued: 0")
         conflict_summary = conflict_graph_manager.validation_summary()
         print("\nConflict Graph validation")
         print(f"  Discovered movement paths: {len(map_path_manager.paths)}")

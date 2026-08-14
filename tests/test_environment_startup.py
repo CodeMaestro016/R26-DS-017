@@ -36,3 +36,20 @@ def test_headless_handshake_failure_reports_actionable_error():
         pytest.raises(RuntimeError, match="Headless SUMO closed"),
     ):
         environment.start()
+
+
+def test_step_captures_authoritative_lifecycle_events_before_observations():
+    environment = SUMOEnv()
+    calls = []
+    with (
+        patch("environment.traci.simulationStep", side_effect=lambda: calls.append("step")),
+        patch("environment.traci.simulation.getTime", side_effect=lambda: (calls.append("time"), 1.0)[1]),
+        patch("environment.traci.simulation.getDepartedIDList", side_effect=lambda: (calls.append("departed"), ("AV_0",))[1]),
+        patch("environment.traci.simulation.getArrivedIDList", side_effect=lambda: (calls.append("arrived"), ("AV_1",))[1]),
+        patch.object(environment, "get_vehicles", side_effect=lambda: (calls.append("observations"), {})[1]),
+    ):
+        assert environment.step() == {}
+    assert calls == ["step", "time", "departed", "arrived", "observations"]
+    assert environment.lifecycle_events.timestamp == 1.0
+    assert environment.lifecycle_events.departed_vehicle_ids == ("AV_0",)
+    assert environment.lifecycle_events.arrived_vehicle_ids == ("AV_1",)

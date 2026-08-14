@@ -107,7 +107,7 @@ class Evaluator:
             if traci.simulation.getCollidingVehiclesNumber() > 0:
                 self.collision_events += 1
 
-    def update(self, current_time, observations):
+    def update(self, current_time, observations, lifecycle_events=None):
         self.step_count += 1
         self._update_collisions()
         active = set(observations)
@@ -125,7 +125,10 @@ class Evaluator:
         self.av_speeds_history.extend(state.get("vel", 0.0) for vid, state in observations.items() if vid.startswith("AV_"))
         for vid in traci.vehicle.getIDList():
             self.vehicle_departure_times.setdefault(vid, float(current_time))
-        for vid in traci.simulation.getArrivedIDList():
+        arrived_ids = (lifecycle_events.arrived_vehicle_ids
+                       if lifecycle_events is not None else
+                       traci.simulation.getArrivedIDList())
+        for vid in arrived_ids:
             departure = self.vehicle_departure_times.pop(vid, None)
             if departure is not None:
                 self.total_travel_time += float(current_time) - departure

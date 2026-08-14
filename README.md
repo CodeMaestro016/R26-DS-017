@@ -493,3 +493,37 @@ they contain no reward, timeout, discount, optimizer, training, or vehicle-contr
 operation. Unchanged semantic opportunities are deduplicated independently of
 SUMO frame timestamps, while lifecycle identity permits a genuinely new claim
 instance to emit a new decision.
+
+## Step 5H.0 scheduled-demand accounting
+
+The project preserves three separate clocks: exogenous scheduled demand,
+authoritative SUMO network departure, and authoritative SUMO route arrival.
+Schedules are registered before `traci.vehicle.add`; departure and arrival are
+captured once from the same completed simulation step. This environment-level
+ledger is not an actor or critic observation and does not calculate reward.
+
+## Step 5H physical team objective
+
+The baseline cooperative objective minimizes exact total vehicle travel-time
+exposure from scheduled demand until SUMO arrival or episode-end censoring.
+The raw reward is its mathematical negative, in negative vehicle-seconds. It
+contains no action bonus, collision or regulatory penalty, fairness weight,
+throughput bonus, clipping, normalization, or learned parameter.
+
+## Step 5I return and MAPPO mathematics
+
+Complete episodes use the exact undiscounted suffix sum of Step 5H team
+rewards. This preserves the physical total-travel-time objective without a
+discount factor. The centralized value target is that exact return and the raw
+advantage is return minus centralized value. Per-policy-factor importance
+ratios are available, but GAE, PPO clipping configuration, loss aggregation,
+optimization, and parameter updates remain disabled.
+
+## Step 5J.1 experimental selection framework
+
+Choices fixed by mathematics, schemas, regulatory authority, and project
+semantics are separated from unresolved architecture and training-method
+choices. The framework records scenario roles, candidate provenance, seeds,
+metrics, hard validity gates, run identity, and selection evidence without
+assigning numerical candidates or executing training. Validation data may
+support future selection; held-out test data is structurally excluded.

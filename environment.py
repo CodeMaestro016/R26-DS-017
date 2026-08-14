@@ -6,6 +6,7 @@ import shutil
 import traci
 
 from config import SIM_TIME_STEP, SUMO_CONFIG, SUMO_NETWORK_FILE
+from traffic_accounting import SimulationLifecycleEvents
 
 
 class SUMOEnv:
@@ -13,6 +14,7 @@ class SUMOEnv:
         self.use_gui = use_gui
         self.step_count = 0
         self.current_time = 0.0
+        self.lifecycle_events = SimulationLifecycleEvents(0.0, (), ())
 
     def start(self):
         binary_name = "sumo-gui" if self.use_gui else "sumo"
@@ -137,6 +139,13 @@ class SUMOEnv:
         traci.simulationStep()
         self.step_count += 1
         self.current_time = float(traci.simulation.getTime())
+        # Same-step authoritative lifecycle events are captured once directly
+        # after simulationStep, before observations or downstream accounting.
+        self.lifecycle_events = SimulationLifecycleEvents(
+            self.current_time,
+            tuple(traci.simulation.getDepartedIDList()),
+            tuple(traci.simulation.getArrivedIDList()),
+        )
         return self.get_vehicles()
 
     def close(self):

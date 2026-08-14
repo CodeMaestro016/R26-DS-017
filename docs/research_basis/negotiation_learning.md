@@ -257,3 +257,65 @@ decision_timestamp`, including valid zero-duration same-step outcomes.
 Formal Dec-POMDP proof: not claimed. Formal SMDP proof: not claimed.
 Event-driven variable-duration timing is supported for future semi-Markov
 formulation. Reward and bootstrap semantics remain undefined at Step 5G.
+
+## Step 5H.0 demand, departure, and service clocks
+
+`scheduled_spawn_time` is sourced from the existing exogenous demand schedule,
+`actual_departure_time` from `traci.simulation.getDepartedIDList()`, and
+`service_completion_time` from `traci.simulation.getArrivedIDList()`. The
+scheduled record is created before submitting the vehicle to SUMO. Consequently
+future objective accounting can retain congestion that delays network insertion
+instead of silently measuring only arrival minus actual departure.
+
+The ledger is training/objective/evaluation bookkeeping only. It is excluded
+from actor and current critic inputs, preserves route metadata solely for demand
+audit, introduces no threshold or timeout, and calculates no reward.
+
+## Step 5H objective formulation
+
+The primary baseline asks whether decentralized negotiation reduces total
+traffic-time cost while regulatory legality remains enforced through hard masks
+and safety remains a separate future shield responsibility. For vehicle `i`,
+`T_i = service_completion_or_episode_end_i - scheduled_spawn_time_i`; team cost
+is `C_team = sum_i T_i`. Over an interval, each vehicle contributes the exact
+overlap of that interval with its scheduled-to-service-end exposure window.
+
+The shared scalar signal is `r_team = -C_interval`. The minus sign is the exact
+minimization-to-maximization transformation, not an empirical coefficient.
+Throughput and travel-time distribution statistics remain diagnostics. Yan et
+al. supports efficiency/equity as relevant objectives, but its heuristic numeric
+coefficients are not transferred. Fairness scalarization and an unimpeded
+additional-delay baseline require future research or measurement.
+
+## Step 5I exact episodic training-target mathematics
+
+For complete finite episodes, the batch return is the undiscounted suffix
+`G_k = sum_{j=k}^{K-1} r_j`. Since Step 5H proves `sum_j r_j = -C_team`, adding
+discounting would change rather than preserve the stated physical objective.
+The terminal boundary is an action-free episode-termination batch and the
+terminal future-reward suffix is the empty sum.
+
+The centralized critic target is `G_k`, raw value error is `V_k - G_k`, and
+Monte Carlo advantage is `A_k = G_k - V_k`. The PPO per-factor ratio is
+`exp(current_log_probability - behavior_log_probability)`. These equations
+follow PPO, GAE, cooperative MAPPO/CTDE, and variable-duration decision research,
+while numerical clipping, GAE lambda, optimization coefficients, rollout design,
+and multi-factor loss aggregation remain experimental choices rather than
+project constants.
+
+## Step 5J.1 experimental methodology
+
+Parameters not determined by the problem definition, physical model,
+regulatory rules, mathematical objective, or network schema are empirical
+design choices. They receive no arbitrary defaults. Future values must be
+reported with candidate origin, scenario manifests, replication provenance,
+validation comparison method, hard-gate outcomes, and exact code/configuration
+identity.
+
+Training data supports parameter updates, validation data supports declared
+selection, and held-out test data is reserved until selection is frozen. Hard
+regulatory, protocol, leakage, causal-integrity, and finite-computation gates
+reject invalid runs before metric comparison. Total team travel time is the
+unweighted primary metric; throughput, fairness, collision, complexity, and
+stability remain separate diagnostics. Published hyperparameters demonstrate
+use in another experiment but do not establish correct values for this project.
