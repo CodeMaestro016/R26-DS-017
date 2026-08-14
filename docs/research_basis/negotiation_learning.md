@@ -85,6 +85,50 @@ A numerical hyperparameter used in MAPPO/PPO literature is an experimental
 configuration unless a general theoretical requirement establishes that exact
 value. Step 5F intentionally copies no paper-specific numerical setting.
 
+## Step 5F.1 deterministic policy semantic encoding
+
+Status: `COMPLETE_STEP_5F_1`.
+
+The prior opaque `claim_or_proposal_representation` is now defined as the exact
+counterparty node row followed by the exact directed claim-edge row from the
+validated `EncodedGraphObservation`. Its availability mask uses the identical
+column order, and the actor model input concatenates semantic values with the
+mask converted to exact Boolean identity values. The schema is derived from
+`NODE_NUMERIC_SCHEMA` and `EDGE_NUMERIC_SCHEMA`; no parallel feature vocabulary
+or selected model dimension is introduced.
+
+The exact directed lookup preserves `yielding -> priority`, selects the
+counterparty by vehicle ID metadata, and rejects missing or ambiguous nodes and
+edges. Vehicle, proposal, rule, source-section, and conflict-zone identifiers
+remain provenance only. `REGULATORY_RULE_ID_FEATURE_STATUS` is
+`NOT_INCLUDED_BASELINE_AVOIDS_REDUNDANT_ARBITRARY_VOCABULARY`.
+
+`protocol_state_representation` is an exhaustive one-hot identity encoding of
+the live `ProtocolState` enum with a parallel availability mask. Known states
+have one active category and all columns available. A genuinely unavailable
+proposer state is all-zero with all masks false; a responder without a known
+state raises `RESPONDER_PROTOCOL_STATE_REQUIRED`. State column indices imply no
+ordering, severity, progress, priority, confidence, or utility.
+
+The base encoder is NumPy-only, immutable, stateless, and has no learned
+parameters or normalization constants. Schema dimensions are
+`DERIVED_SCHEMA_DIMENSIONS`, not architecture hyperparameters. Claim role is
+not duplicated numerically because `NegotiationDecisionRole` is already an
+explicit categorical input to the role-aware policy.
+
+Classifications:
+
+- Reuse of graph node/edge semantics: `PROJECT CONSISTENCY REQUIREMENT`.
+- Exact directed claim lookup: `MATHEMATICAL / SEMANTIC REQUIREMENT`.
+- Protocol one-hot representation: `NON-ORDINAL IDENTITY ENCODING`.
+- Availability masks: `PROJECT PARTIAL-OBSERVABILITY REPRESENTATION`.
+- IDs excluded from numeric inputs: `ANTI-LEAKAGE / NON-ORDINAL DESIGN`.
+- Rule IDs retained only as provenance: `BASELINE SCOPE CHOICE`.
+
+The exact 0/1 categorical and availability values are identities and Boolean
+facts, not empirical behavioral constants. Step 5F.1 selects no actor, critic,
+or GNN capacity and introduces no reward or PPO parameter.
+
 Protocol states and transitions are categorical:
 
 - `NO_PROPOSAL -> PROPOSAL_CREATED` only when a priority holder selects

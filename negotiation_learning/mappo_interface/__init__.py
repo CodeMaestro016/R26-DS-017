@@ -10,5 +10,6 @@ from .policy import (
     FINAL_POLICY_ARCHITECTURE, PROPOSER_ACTION_ORDER, RESPONDER_ACTION_ORDER,
     MaskedCategoricalPolicy, PolicySemanticError, RoleAwareNegotiationPolicy,
 )
+from .context_builder import NegotiationPolicyContextBuilder
 
 __all__ = [name for name in globals() if not name.startswith("_")]

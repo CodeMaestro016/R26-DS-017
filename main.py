@@ -407,6 +407,7 @@ def main():
                             "RESPONSE_POLICY_INTERFACE_IMPLEMENTED_UNTRAINED",
                         "response_policy_learning": "PENDING_MAPPO_INTEGRATION",
                         "role_aware_policy_interface": "IMPLEMENTED_UNTRAINED_STEP_5F",
+                        "semantic_encoding_status": "COMPLETE_STEP_5F_1",
                         "control_actions_issued": 0,
                     }
                     ldm.current_negotiated_precedence_overlay = None
