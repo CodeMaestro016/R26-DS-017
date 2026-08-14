@@ -237,7 +237,7 @@ through actual-map and synthetic envelope-intersection tests.
 
 The current staged architecture is:
 
-`SUMO → Perception Interface → Local Dynamic Map → GRU Intention Prediction [ONNX CPU] → Map-Aware Conflict Graph → Temporal/Kinematic Reachability → German StVO Traffic Rule Engine → Local Regulatory Precedence Claims → Ideal V2V Regulatory-Claim Exchange [SHADOW] → Joint Local Precedence Graph [SHADOW] → Semantic GraphObservation → GNN-Ready NumPy Tensor Encoder [SHADOW] → CPU PyTorch Edge-Aware MPNN [FORWARD VALIDATION ONLY] → Claim-Level Negotiation Candidate Builder [SHADOW] → Hard Regulatory Action Mask [SHADOW] → Decentralized Actor Interface [UNTRAINED] → Centralized Critic Interface [TRAINING ONLY, UNTRAINED] → Future MAPPO Optimization → Future Reward/Objective Design → Future Training → Future Safety Shield → Future Negotiated Controller`
+`SUMO → Perception Interface → Local Dynamic Map → GRU Intention Prediction [ONNX CPU] → Map-Aware Conflict Graph → Temporal/Kinematic Reachability → German StVO Traffic Rule Engine → Local Regulatory Precedence Claims → Ideal V2V Regulatory-Claim Exchange [SHADOW] → Joint Local Precedence Graph [SHADOW] → Semantic GraphObservation → GNN-Ready NumPy Tensor Encoder [SHADOW] → CPU PyTorch Edge-Aware MPNN [FORWARD VALIDATION ONLY] → Claim-Level Negotiation Candidate Builder [SHADOW] → Hard Regulatory Action Mask [SHADOW] → Decentralized Proposal Actor Interface [UNTRAINED] → Decentralized Response Actor Interface [UNTRAINED] → Role-Aware Masked Categorical Policy [UNTRAINED] → Rollout Data Contract [SCHEMA ONLY] → Centralized Critic Interface [TRAINING ONLY, UNTRAINED] → Multi-Proposal Per-Claim Agreement Protocol [SHADOW] → Negotiated Precedence Overlays [SHADOW] → Future Reward Design → Future MAPPO Optimization → Future Training → Future Safety Shield → Future Negotiated Controller`
 
 The existing `Legacy NegotiationManager` remains the control-facing baseline.
 The StVO engine is read-only shadow diagnostics and cannot issue actions or
@@ -269,8 +269,17 @@ are not driving commands. Outgoing `ego → other` edges remain mandatory yield
 obligations and cannot be deleted by learning. Exact Boolean masks block policy
 authority when regulatory inputs disagree or are unresolved. No scalar reward
 exists. The two actions express a preference/proposal but lack counterparty
-acceptance/acknowledgement, so the binding protocol remains explicitly
-`ACTION_PROTOCOL_INCOMPLETE`.
+acceptance evidence. Step 5E.1 now formalizes proposal plus explicit matching
+`ACCEPT`/`REJECT` under the ideal same-step message model. The response-choice
+policy remains `RESPONSE_POLICY_SEMANTICS_REQUIRE_RESEARCH_DECISION`; the
+runtime does not fabricate a response or execute an agreement.
+
+The proposal/response format is an engineering research abstraction, not a
+claim that German law mandates these V2V packets. The original StVO-derived
+graph remains immutable for audit; completed agreements appear in a separate
+claim-specific overlay and effective coordination graph. No timeout, retry,
+range, loss, latency, safety authorization, scheduler, or speed action is part
+of this protocol checkpoint.
 
 ### Ideal same-step V2V claim exchange
 

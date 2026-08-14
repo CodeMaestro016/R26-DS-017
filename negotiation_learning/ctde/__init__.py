@@ -4,6 +4,8 @@ from .interfaces import (
     ActorForwardInput,
     ActorForwardOutput,
     ActorInputProvenance,
+    DecentralizedNegotiationResponseActor,
+    ResponseActorForwardInput,
     CentralizedCriticInputBuilder,
     CentralizedNegotiationCritic,
     DecentralizedNegotiationActor,
@@ -11,6 +13,7 @@ from .interfaces import (
 
 __all__ = [
     "ActorForwardInput", "ActorForwardOutput", "ActorInputProvenance",
+    "DecentralizedNegotiationResponseActor", "ResponseActorForwardInput",
     "CentralizedCriticInputBuilder",
     "CentralizedNegotiationCritic", "DecentralizedNegotiationActor",
 ]

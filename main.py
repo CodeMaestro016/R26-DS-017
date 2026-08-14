@@ -370,6 +370,8 @@ def main():
                     ldm.current_regulatory_assessment = None
                     ldm.current_negotiation_problem = None
                     ldm.current_encoded_graph_observation = None
+                    ldm.current_negotiation_protocol_state = None
+                    ldm.current_negotiated_precedence_overlay = None
                     conflict_graph_manager.reset(ego_id)
                     occupancy_assessor.reset(ego_id)
 
@@ -394,6 +396,20 @@ def main():
                             ldm.current_negotiation_problem["graph_observation"]
                         )
                     )
+                    # Step 5F shadow readiness only. Untrained role-aware policy
+                    # interfaces do not fabricate protocol messages or act.
+                    ldm.current_negotiation_protocol_state = {
+                        "communication_model": "IDEAL_SAME_STEP_V2V",
+                        "state": "NO_PROPOSAL",
+                        "protocol_status":
+                            "MULTI_PROPOSAL_PER_CLAIM_PROTOCOL_AVAILABLE_STEP_5E_2",
+                        "response_policy_interface":
+                            "RESPONSE_POLICY_INTERFACE_IMPLEMENTED_UNTRAINED",
+                        "response_policy_learning": "PENDING_MAPPO_INTEGRATION",
+                        "role_aware_policy_interface": "IMPLEMENTED_UNTRAINED_STEP_5F",
+                        "control_actions_issued": 0,
+                    }
+                    ldm.current_negotiated_precedence_overlay = None
 
             if current_time + 1e-9 >= next_control_time:
                 for ego_id in observations:

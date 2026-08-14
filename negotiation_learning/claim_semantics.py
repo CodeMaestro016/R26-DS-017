@@ -97,7 +97,7 @@ class EgoClaimSet:
     action_candidates: Tuple[NegotiationActionCandidate, ...]
     policy_authority: PolicyAuthority
     policy_authority_reason: Optional[InfeasibilityReason]
-    protocol_completion_status: str = "ACTION_PROTOCOL_INCOMPLETE"
+    protocol_completion_status: str = "EXPLICIT_AGREEMENT_PROTOCOL_AVAILABLE_STEP_5E_1"
 
 
 class NegotiationClaimBuilder:

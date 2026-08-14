@@ -20,12 +20,91 @@ The simulated V2V mechanism is not asserted to be legally equivalent to human
 understanding or communication under German traffic law. Regulatory semantics
 remain derived from the project's curated official StVO source.
 
-The two-action vocabulary is insufficient to complete a binding multi-agent
-coordination protocol: it does not represent counterparty receipt,
-acknowledgement, or acceptance of a relinquishment proposal. Step 5E therefore
-records `ACTION_PROTOCOL_INCOMPLETE`. The actor produces preferences only; no
-action is sampled, made authoritative, transmitted, or executed. A later
-protocol-design checkpoint must define the missing agreement state.
+Step 5E.1 supplies a deterministic two-message agreement formalization:
+`RELINQUISH_CLAIM` creates a proposal and the correct counterparty supplies an
+explicit `ACCEPT` or `REJECT` response naming that proposal. A proposal alone
+never changes precedence. Under the immutable `IDEAL_SAME_STEP_V2V` snapshot,
+an accepted response is evidence visible to every consumer, so a third network
+acknowledgement would add no agreement fact and is not introduced.
+
+The source of the response choice remains intentionally unresolved:
+`RESPONSE_POLICY_SEMANTICS_REQUIRE_RESEARCH_DECISION`. Neither automatic
+acceptance nor a learned response policy is implemented.
+
+Step 5E.2 groups the frozen message set by exact deterministic `ProposalId`
+`(timestamp, yielding vehicle, priority vehicle, sender, receiver)` and retains
+the underlying claim key `(yielding vehicle, priority vehicle)`. Every group is
+evaluated independently and collected in an immutable
+`JointNegotiationProtocolSnapshot`. Thus simultaneous proposals for different
+claims are independent, while contradictory `ACCEPT` and `REJECT` evidence for
+the same proposal remains `PROTOCOL_DISAGREEMENT`. Mixed completed, pending,
+rejected, blocked, and disputed outcomes coexist without a global score.
+
+The response decision vocabulary is `ACCEPT_RELINQUISHMENT` and
+`REJECT_RELINQUISHMENT`. These are negotiation semantics, never motion
+commands. An untrained decentralized response-logit interface is available,
+but cannot create a response. Whether proposal and response decisions share a
+network, use separate heads, or use separate actors is
+`REQUIRES_EXPERIMENTAL_SELECTION`.
+
+## Step 5F role-aware masked MAPPO policy interface
+
+Status: `IMPLEMENTED_UNTRAINED`.
+
+`NegotiationDecisionRole` distinguishes `PROPOSER` from `RESPONDER` without
+ordinal meaning. Proposer action order remains `KEEP_CLAIM`,
+`RELINQUISH_CLAIM`; responder order remains `ACCEPT_RELINQUISHMENT`,
+`REJECT_RELINQUISHMENT`. Every decision remains bound to one claim and, for a
+response, one proposal.
+
+The reusable masked categorical distribution accepts actor logits plus the
+existing deterministic Boolean mask. Invalid logits are replaced by negative
+infinity, not an arbitrary finite sentinel, before constructing PyTorch's
+categorical distribution. An all-invalid mask raises
+`NO_FEASIBLE_POLICY_ACTION`. The interface exposes semantic selection,
+behavior-policy log probability, and raw entropy for future collection, but it
+does not publish a protocol message or execute an action.
+
+The immutable `NegotiationRolloutStep` stores deterministic event identity,
+local observation provenance, role, claim/proposal identity, Boolean mask,
+semantic action, behavior-policy log probability, and training-only critic
+value at collection. It has no numeric reward, advantage, return, PPO ratio,
+loss, or termination assumption. Reward status is
+`NOT_IMPLEMENTED_STEP_5F`.
+
+MAPPO/CTDE are research-supported by Yu et al. (2021); later old-policy log
+probability and PPO-ratio concepts are methodologically motivated by Schulman
+et al. (2017), arXiv:1707.06347, but no ratio or objective is implemented here.
+State-dependent masking follows Huang and Ontañón (2020). Role-specific action
+meanings are a project semantic requirement. Exact actor/critic architecture,
+gamma, GAE lambda, PPO clipping, learning rate, entropy coefficient, and every
+other optimization setting remain `REQUIRES_EXPERIMENTAL_SELECTION`; reward is
+`NOT DESIGNED`.
+
+A numerical hyperparameter used in MAPPO/PPO literature is an experimental
+configuration unless a general theoretical requirement establishes that exact
+value. Step 5F intentionally copies no paper-specific numerical setting.
+
+Protocol states and transitions are categorical:
+
+- `NO_PROPOSAL -> PROPOSAL_CREATED` only when a priority holder selects
+  `RELINQUISH_CLAIM` for its valid incoming claim.
+- `PROPOSAL_CREATED -> PROPOSAL_PENDING` when that valid proposal is present in
+  the frozen protocol snapshot without a response.
+- `PROPOSAL_PENDING -> AGREEMENT_ESTABLISHED` on one matching `ACCEPT`.
+- `PROPOSAL_PENDING -> PROPOSAL_REJECTED` on one matching `REJECT`.
+- Any authority-dependent nonterminal evidence becomes `PROTOCOL_BLOCKED` on
+  source/profile/authority mismatch.
+- A disappeared or timestamp-inconsistent claim becomes
+  `SOURCE_CLAIM_INVALID`.
+- Conflicting responses or proposals become `PROTOCOL_DISAGREEMENT`; no vote,
+  order rule, score, or vehicle-ID priority resolves them.
+
+The original regulatory graph is immutable audit evidence. A
+`NegotiatedPrecedenceOverlay` records the proposal, response, agreement,
+participants, sources, and `CLAIM_VOLUNTARILY_RELINQUISHED_BY_AGREEMENT`.
+A separate effective coordination graph omits only a claim with a completed
+agreement. Agreement is not physical safety or crossing authorization.
 
 ## Research-supported choices versus unselected parameters
 
@@ -37,6 +116,15 @@ protocol-design checkpoint must define the missing agreement state.
 | Permutation-invariant SUM over agent representations | Zaheer et al. (2017) | RESEARCH-SUPPORTED METHOD |
 | Cooperative MARL at mixed-traffic unsignalized intersections | Zhuang et al. (2023) | DOMAIN EVIDENCE ONLY |
 | Learned right-of-way relinquishment behavior | Yan et al. (2021) | DOMAIN EVIDENCE ONLY; NOT LEGAL EQUIVALENCE |
+| StVO precedence and explicit-understanding basis | Curated official StVO source | OFFICIAL_REGULATORY_REQUIREMENT |
+| Two-message proposal/response state machine | Project digital agreement model | ENGINEERING_FORMALIZATION |
+| Exact claim/proposal identity matching | Logical agreement consistency | MATHEMATICAL_REQUIREMENT |
+| Ideal same-step immutable message snapshot | Isolates protocol semantics from networking | EXPERIMENTAL_BASELINE_ASSUMPTION |
+| No timeout/retry/range/loss parameters | Step 5E.1 scope avoids unsupported values | SCOPE CHOICE |
+| Future ACCEPT/REJECT decision policy | No established deterministic rule | REQUIRES_FUTURE_EXPERIMENT |
+| Per-claim ProposalId grouping | Independent semantic claims must remain distinguishable | MATHEMATICAL / SEMANTIC REQUIREMENT |
+| Learned ACCEPT/REJECT interface | Multi-agent negotiation research design | RESEARCH DESIGN CHOICE |
+| Response network sharing, heads, layers, activation, and dimensions | No project ablation yet | REQUIRES_EXPERIMENTAL_SELECTION |
 | Shared actor parameters for homogeneous AVs | Homogeneous-agent option | ARCHITECTURE_CHOICE_REQUIRES_ABLATION |
 | SUM versus MEAN aggregation | Baseline SUM; comparison untested | ARCHITECTURE_CHOICE_REQUIRES_ABLATION |
 | PPO clip epsilon | No project experiment yet | REQUIRES_EXPERIMENTAL_SELECTION |
@@ -101,3 +189,9 @@ sharing is compatible with homogeneous AVs but requires ablation.
    Unsignalized Intersections via Reinforcement Learning” (2021),
    arXiv:2106.06369. Relinquishment as learned coordination evidence, not
    German legal equivalence. <https://arxiv.org/abs/2106.06369>
+
+The German StVO supplies the project's regulatory basis for precedence and
+voluntary relinquishment with explicit understanding. The exact digital
+proposal/response schema is an engineering research abstraction, not a legally
+mandated V2V message format. Ideal same-step communication intentionally
+isolates negotiation logic from communication-network performance.

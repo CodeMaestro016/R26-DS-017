@@ -31,6 +31,8 @@ class LocalDynamicMap:
         self.current_regulatory_assessment = None
         self.current_negotiation_problem = None
         self.current_encoded_graph_observation = None
+        self.current_negotiation_protocol_state = None
+        self.current_negotiated_precedence_overlay = None
 
     @staticmethod
     def _velocity_vector(speed, heading_radians):
@@ -259,6 +261,14 @@ class LocalDynamicMap:
         """Return the read-only NumPy GNN input built in shadow mode."""
         return self.current_encoded_graph_observation
 
+    def get_current_negotiation_protocol_state(self):
+        """Return shadow protocol readiness/evidence for the current snapshot."""
+        return self.current_negotiation_protocol_state
+
+    def get_current_negotiated_precedence_overlay(self):
+        """Return a claim-specific overlay; never a mutated regulatory graph."""
+        return self.current_negotiated_precedence_overlay
+
     def prediction_snapshot(self):
         return {
             vehicle_id: track["intention_prediction"]
@@ -359,6 +369,8 @@ class ObservationManager:
                 ldm.current_regulatory_assessment = None
                 ldm.current_negotiation_problem = None
                 ldm.current_encoded_graph_observation = None
+                ldm.current_negotiation_protocol_state = None
+                ldm.current_negotiated_precedence_overlay = None
                 ldm.add_or_update_track(
                     ego_id,
                     ego_data["position"],

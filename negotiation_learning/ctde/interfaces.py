@@ -17,6 +17,7 @@ from torch import nn
 TRAINING_ONLY = "TRAINING_ONLY"
 NOT_AVAILABLE_TO_DEPLOYED_ACTOR = "NOT_AVAILABLE_TO_DEPLOYED_ACTOR"
 PARAMETER_SHARING_STATUS = "ARCHITECTURE_CHOICE_REQUIRES_ABLATION"
+RESPONSE_ACTOR_ARCHITECTURE = "REQUIRES_EXPERIMENTAL_SELECTION"
 
 
 @dataclass(frozen=True)
@@ -43,6 +44,19 @@ class ActorForwardOutput:
     unmasked_action_logits: torch.Tensor
     action_feasibility_mask: torch.Tensor
     masked_action_distribution_inputs: Tuple[torch.Tensor, torch.Tensor]
+
+
+@dataclass(frozen=True)
+class ResponseActorForwardInput:
+    ego_id: str
+    proposal_id: tuple
+    ego_embedding: torch.Tensor
+    local_graph_embedding: torch.Tensor
+    proposal_claim_representation: torch.Tensor
+    protocol_state_representation: torch.Tensor
+    responder_role_one_hot: torch.Tensor
+    action_feasibility_mask: torch.Tensor
+    provenance: "ActorInputProvenance"
 
 
 class DecentralizedNegotiationActor(nn.Module):
@@ -77,6 +91,45 @@ class DecentralizedNegotiationActor(nn.Module):
         logits = self.logit_head(combined)
         # The future distribution owns framework-specific masking. Step 5E
         # deliberately carries exact logits and Boolean feasibility separately.
+        return ActorForwardOutput(logits, mask, (logits, mask))
+
+
+class DecentralizedNegotiationResponseActor(nn.Module):
+    """Untrained local ACCEPT/REJECT logit head; never executes a response."""
+
+    ROLE_COLUMNS = ("PROPOSER", "RESPONDER")
+
+    def __init__(self, input_dim, action_count):
+        super().__init__()
+        if not isinstance(input_dim, int) or input_dim <= 0:
+            raise ValueError("input_dim must be an explicit positive integer")
+        if action_count != 2:
+            raise ValueError("RESPONSE_ACTION_COUNT_MUST_MATCH_VOCABULARY")
+        self.input_dim, self.action_count = input_dim, action_count
+        self.logit_head = nn.Linear(input_dim, action_count)
+        self.to(torch.device("cpu"))
+
+    def forward(self, actor_input):
+        if not isinstance(actor_input.provenance, ActorInputProvenance):
+            raise TypeError("ACTOR_INPUT_PROVENANCE_REQUIRED")
+        tensors = (
+            actor_input.ego_embedding, actor_input.local_graph_embedding,
+            actor_input.proposal_claim_representation,
+            actor_input.protocol_state_representation,
+            actor_input.responder_role_one_hot,
+        )
+        if any(item.device.type != "cpu" for item in tensors):
+            raise ValueError("CPU_DEVICE_REQUIRED")
+        combined = torch.cat(tensors, dim=-1)
+        if combined.shape[-1] != self.input_dim:
+            raise ValueError("RESPONSE_ACTOR_INPUT_DIMENSION_MISMATCH")
+        if not torch.equal(actor_input.responder_role_one_hot,
+                           torch.tensor([0.0, 1.0])):
+            raise ValueError("RESPONDER_ROLE_ONE_HOT_REQUIRED")
+        mask = actor_input.action_feasibility_mask
+        if mask.dtype is not torch.bool or mask.shape[-1] != self.action_count:
+            raise ValueError("BOOLEAN_ACTION_MASK_REQUIRED")
+        logits = self.logit_head(combined)
         return ActorForwardOutput(logits, mask, (logits, mask))
 
 
