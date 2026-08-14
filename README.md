@@ -485,3 +485,11 @@ stage, and target route truth remains excluded.
 Acceleration-aware or uncertainty-aware timing, decision-facing risk
 assessment, right-of-way negotiation, scheduling, and an independent safety
 shield remain future work. The shadow outputs are not connected to control.
+# Step 5G event-driven transition semantics
+
+Step 5G adds event-driven, per-claim negotiation decision epochs and causal,
+replayable actor/critic transition snapshots. These interfaces are shadow-only:
+they contain no reward, timeout, discount, optimizer, training, or vehicle-control
+operation. Unchanged semantic opportunities are deduplicated independently of
+SUMO frame timestamps, while lifecycle identity permits a genuinely new claim
+instance to emit a new decision.

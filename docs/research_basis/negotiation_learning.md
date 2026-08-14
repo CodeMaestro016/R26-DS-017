@@ -239,3 +239,21 @@ voluntary relinquishment with explicit understanding. The exact digital
 proposal/response schema is an engineering research abstraction, not a legally
 mandated V2V message format. Ideal same-step communication intentionally
 isolates negotiation logic from communication-network performance.
+
+## Step 5G event and transition semantics
+
+Decisions are emitted on categorical semantic changes, not every simulator
+step. A claim lifecycle is identified by its authoritative source-snapshot
+identity; no elapsed-time threshold is used. `KEEP_CLAIM` resolves immediately
+because `CLAIM_RETAINED` is its complete semantic consequence. Leaving it open
+would require an undefined waiting boundary. Relinquishment transitions remain
+open until the exact proposal receives a deterministic protocol outcome.
+
+Raw immutable NumPy graph tensors—not only detached embeddings—are retained for
+replay. Actor reconstruction remains local; centralized participant snapshots
+are training-only. Exact elapsed time is `resolution_timestamp -
+decision_timestamp`, including valid zero-duration same-step outcomes.
+
+Formal Dec-POMDP proof: not claimed. Formal SMDP proof: not claimed.
+Event-driven variable-duration timing is supported for future semi-Markov
+formulation. Reward and bootstrap semantics remain undefined at Step 5G.
