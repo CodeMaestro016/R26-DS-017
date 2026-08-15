@@ -346,3 +346,21 @@ causality. Although real SUMO scenarios now provide proposer and responder
 decisions, MAPPO training remains disabled until validated negotiation outcomes
 causally modify future physical conflict-zone execution and therefore the
 shared team travel-time reward.
+
+## Precedence execution checkpoint
+
+Negotiation determines the effective precedence relation; it does not directly
+select acceleration. The execution planner maps each yielding-to-priority edge
+to the existing map-derived shared conflict zone and creates per-zone entry
+permissions. A yielding vehicle can be held using the front-bumper path-entry
+distance and its actual comfortable deceleration through
+`v_cap = sqrt(2 b d_entry)`, with no action-specific speed increment or added
+stopping margin. Physical clearance releases the dependency without a time
+delay. This is an environment-causality layer, not the independent safety
+shield.
+
+The first frozen TRAINING KEEP/REJECT branch preserves a regulatory precedence
+cycle. The execution contract therefore blocks before issuing motion commands;
+it does not invent a winner. This is consistent with reservation and
+hierarchical intersection-management literature that separates crossing order
+from low-level motion execution, without claiming identical implementation.
