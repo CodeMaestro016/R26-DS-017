@@ -6,13 +6,17 @@ integration is being validated.
 
 import numpy as np
 
-from config import INTERSECTION_CENTER
+from map_geometry import get_intersection_geometry
 
 
 class NegotiationManager:
+    def __init__(self, intersection_geometry=None):
+        self.intersection_geometry = (
+            intersection_geometry or get_intersection_geometry())
+
     def calculate_urgency(self, ego_state):
         position = np.asarray(ego_state["pos"], dtype=float)
-        center = np.asarray(INTERSECTION_CENTER, dtype=float)
+        center = np.asarray(self.intersection_geometry.center_xy, dtype=float)
         center_distance = float(np.linalg.norm(position - center))
         return max(0.0, 1.0 - center_distance / 250.0)
 
@@ -36,4 +40,3 @@ class NegotiationManager:
         ):
             return "YIELD"
         return "MAINTAIN"
-

@@ -3,6 +3,8 @@
 - Legal movement paths: 12
 - Enumerated combinations: 243
 - Rule-derived cycle candidates: 108
-- Synchronization status: NEGOTIATION_SCENARIO_SYNCHRONIZATION_EVENT_UNDEFINED
+- Synchronization status: PASS
 
-Discovery is map/rule-derived. Live scenario specifications are not created while synchronization is blocked.
+- Scenario specifications: 108
+- Real SUMO episodes: 3
+- Next blocker: NEGOTIATION_ACTION_TO_TRAFFIC_OUTCOME_COUPLING_INCOMPLETE

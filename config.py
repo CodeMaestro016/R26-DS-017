@@ -135,7 +135,12 @@ EVENT_ARMING_ETA_SECONDS = (
     MODEL_OBSERVATION_WINDOW_SECONDS
     + PRIMARY_PREDICTION_LEAD_TIME_SECONDS
 )
-INTERSECTION_CENTER = (300.0, 100.0)
+# Operational junction coordinates are intentionally absent here. They are
+# derived from the compiled SUMO network by ``map_geometry`` so source-network
+# coordinates cannot become stale after net conversion.
+INTERSECTION_GEOMETRY_STATUS = "DERIVED_FROM_COMPILED_SUMO_NETWORK"
+MANUAL_INTERSECTION_CENTER_CONFIGURED = False
+MANUAL_NET_OFFSET_APPLICATION = False
 
 TRACK_TIMEOUT_SECONDS = 5.0
 CONFIDENCE_DECAY_RATE_PER_SECOND = 0.1

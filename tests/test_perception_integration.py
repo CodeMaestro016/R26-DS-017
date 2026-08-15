@@ -9,6 +9,7 @@ import environment
 from config import PROJECT_ROOT
 from environment import SUMOEnv
 from observation import ObservationManager
+from map_geometry import get_intersection_geometry
 
 
 def sumo_state(position, route_id="route_w_left"):
@@ -36,9 +37,10 @@ def sumo_state(position, route_id="route_w_left"):
 
 def test_geometric_sensor_dimensions_and_detections_reach_ldm():
     manager = ObservationManager()
+    cx, cy = get_intersection_geometry().center_xy
     states = {
-        "ego": sumo_state((300.0, 90.0)),
-        "target": sumo_state((300.0, 110.0), "route_n_right"),
+        "ego": sumo_state((cx, cy - 10.0)),
+        "target": sumo_state((cx, cy + 10.0), "route_n_right"),
     }
     manager.update(states, 0.04)
 
@@ -66,9 +68,10 @@ def test_geometric_sensor_dimensions_and_detections_reach_ldm():
 
 def test_route_truth_does_not_enter_perception_or_ldm_tracks():
     manager = ObservationManager()
+    cx, cy = get_intersection_geometry().center_xy
     states = {
-        "ego": sumo_state((300.0, 90.0)),
-        "target": sumo_state((300.0, 110.0), "route_n_right"),
+        "ego": sumo_state((cx, cy - 10.0)),
+        "target": sumo_state((cx, cy + 10.0), "route_n_right"),
     }
     manager.update(states, 0.04)
     forbidden = {"route_id", "ground_truth_route_id", "route_index"}
@@ -80,9 +83,10 @@ def test_route_truth_does_not_enter_perception_or_ldm_tracks():
 
 def test_departure_and_reset_clear_perception_diagnostics():
     manager = ObservationManager()
+    cx, cy = get_intersection_geometry().center_xy
     states = {
-        "ego": sumo_state((300.0, 90.0)),
-        "target": sumo_state((300.0, 110.0)),
+        "ego": sumo_state((cx, cy - 10.0)),
+        "target": sumo_state((cx, cy + 10.0)),
     }
     manager.update(states, 0.04)
     assert set(manager.perception_interface.get_last_diagnostics()) == {
@@ -132,9 +136,10 @@ def test_environment_collects_canonical_perception_fields(monkeypatch):
 
 def test_actual_sumo_dynamics_reach_each_local_track():
     manager = ObservationManager()
+    cx, cy = get_intersection_geometry().center_xy
     states = {
-        "ego": sumo_state((300.0, 90.0)),
-        "target": sumo_state((300.0, 110.0), "route_n_right"),
+        "ego": sumo_state((cx, cy - 10.0)),
+        "target": sumo_state((cx, cy + 10.0), "route_n_right"),
     }
     manager.update(states, 0.04)
     for track in manager.get_ldm("ego").tracks.values():
@@ -166,7 +171,8 @@ def test_environment_start_and_first_observation_update_have_no_contract_error(
     env.start()
 
     manager = ObservationManager()
+    cx, cy = get_intersection_geometry().center_xy
     try:
-        manager.update({"ego": sumo_state((300.0, 90.0))}, 0.0)
+        manager.update({"ego": sumo_state((cx, cy - 10.0))}, 0.0)
     except (KeyError, ValueError) as error:
         pytest.fail(f"canonical environment/perception contract failed: {error}")

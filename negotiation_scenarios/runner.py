@@ -35,6 +35,17 @@ def derive_route_edges(path_manager, movement_path_id):
     return incoming, outgoing
 
 
+def derive_existing_route_id(path_manager, movement_path_id):
+    """Resolve, rather than name-assume, the loaded route for a map path."""
+    required_edges = tuple(derive_route_edges(path_manager, movement_path_id))
+    matches = tuple(sorted(
+        route_id for route_id in traci.route.getIDList()
+        if tuple(traci.route.getEdges(route_id)) == required_edges))
+    if len(matches) != 1:
+        raise RuntimeError("MOVEMENT_PATH_ROUTE_IDENTITY_UNRESOLVED")
+    return matches[0]
+
+
 def _add_vehicle(vehicle_id, route_id):
     traci.vehicle.add(vehicle_id, route_id, AV_TYPE_ID, departSpeed="max",
                       departLane="free", departPos="base")
@@ -99,11 +110,10 @@ class RealSumoNegotiationScenarioRunner:
         seen_snapshots = set()
         try:
             environment.start()
-            route_by_path = {}
-            for index, path_id in enumerate(specification.movement_path_ids):
-                route_id = f"SCENARIO_ROUTE_{index}"
-                traci.route.add(route_id, derive_route_edges(self.paths, path_id))
-                route_by_path[path_id] = route_id
+            route_by_path = {
+                path_id: derive_existing_route_id(self.paths, path_id)
+                for path_id in specification.movement_path_ids
+            }
             while pending or traci.simulation.getMinExpectedNumber() > 0:
                 due = [item for item in pending if item[0] <= environment.step_count]
                 for _, path_id in due:
@@ -170,16 +180,19 @@ class RealSumoNegotiationScenarioRunner:
             snapshot["explicit_coordination_permitted_or_required"],
             snapshot["source_snapshot_consistent"],
         )
-        masks = tuple(item.feasibility for item in claim_set.claim_action_masks)
         proposer_ids, responder_ids, response_masks, proposal_ids = [], [], [], []
         outcomes, traces = [], []
         original = tuple((item["yielding_vehicle_id"], item["priority_vehicle_id"])
                          for item in snapshot["joint_precedence_edges"])
         protocol = ClaimRelinquishmentProtocol()
         for position, (claim, mask) in enumerate(zip(
-                claim_set.ego_precedence_claims, claim_set.claim_action_masks)):
+                claim_set.ego_precedence_claims, claim_set.action_masks)):
             event_id = (snapshot_id, "PROPOSER", position, claim.yielding_vehicle_id,
                         claim.priority_vehicle_id)
+            # A claim is not a decision opportunity unless the authoritative
+            # Boolean mask permits at least one action in this live context.
+            if not any(mask.feasibility):
+                continue
             proposer_ids.append(event_id)
             if mask.feasibility[0]:
                 traces.append(NegotiationScenarioProtocolTrace(
@@ -219,14 +232,17 @@ class RealSumoNegotiationScenarioRunner:
                     response_event,
                     ("ACCEPT_RELINQUISHMENT" if response_action is ProposalResponse.ACCEPT
                      else "REJECT_RELINQUISHMENT"), state, original,
-                    evaluation.effective_precedence_edges,
+                    evaluation.effective_coordination_graph,
                     (snapshot["timestamp"],), DETERMINISTIC_COVERAGE_ENUMERATION,
                     {"source_context": "LIVE_SUMO_DECISION_CONTEXT",
                      "branch_isolation": "FRESH_PROTOCOL_EVALUATION"}))
+        eligible_masks = tuple(
+            item.feasibility for item in claim_set.action_masks
+            if any(item.feasibility))
         live = LiveNegotiationCoverageRecord(
             scenario_id, snapshot_id, snapshot["timestamp"],
             snapshot["negotiation_status"], tuple(snapshot["participant_ids"]),
-            tuple(proposer_ids), masks, tuple(responder_ids), tuple(response_masks),
+            tuple(proposer_ids), eligible_masks, tuple(responder_ids), tuple(response_masks),
             tuple(proposal_ids), tuple(outcomes),
             provenance={"context": "LIVE_SUMO_DECISION_CONTEXT",
                         "protocol_paths": "DETERMINISTIC_PROTOCOL_BRANCH_FROM_LIVE_CONTEXT",

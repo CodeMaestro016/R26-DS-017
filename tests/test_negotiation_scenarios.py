@@ -67,8 +67,8 @@ def test_calibration_record_is_immutable_and_integer_timed():
             "A", "route", .04, 0, 1, 2, 1.0, .04, "AV", "network", {})
 
 
-def test_existing_approach_event_reports_compiled_geometry_mismatch():
+def test_existing_approach_event_uses_compiled_geometry():
     result = validate_synchronization_event_geometry(MapPathManager())
     assert result["event"] == "ObservationManager.is_in_approach_zone(position)"
-    assert result["status"] == "NEGOTIATION_SCENARIO_SYNCHRONIZATION_EVENT_UNDEFINED"
-    assert not result["centers_match"]
+    assert result["status"] == "PASS"
+    assert result["centers_match"]

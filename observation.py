@@ -8,7 +8,6 @@ from config import (
     APPROACH_ZONE_RADIUS,
     CONFIDENCE_DECAY_RATE_PER_SECOND,
     CONFIDENCE_OBSERVED_BOOST,
-    INTERSECTION_CENTER,
     MAX_CONFIDENCE,
     MIN_CONFIDENCE,
     MODEL_HISTORY_LENGTH,
@@ -16,6 +15,12 @@ from config import (
     TRACK_TIMEOUT_SECONDS,
 )
 from perception_interface import PerceptionInterface
+from map_geometry import (
+    get_intersection_geometry, is_position_in_approach_zone,
+)
+
+
+INTERSECTION_GEOMETRY = get_intersection_geometry()
 
 
 class LocalDynamicMap:
@@ -46,7 +51,7 @@ class LocalDynamicMap:
         return float(
             np.linalg.norm(
                 np.asarray(position, dtype=float)
-                - np.asarray(INTERSECTION_CENTER, dtype=float)
+                - np.asarray(INTERSECTION_GEOMETRY.center_xy, dtype=float)
             )
         )
 
@@ -210,7 +215,7 @@ class LocalDynamicMap:
             ego_track["position"],
             dtype=float,
         )
-        center = np.asarray(INTERSECTION_CENTER, dtype=float)
+        center = np.asarray(INTERSECTION_GEOMETRY.center_xy, dtype=float)
         relevant = {}
 
         for vehicle_id, track in self.tracks.items():
@@ -304,13 +309,8 @@ class ObservationManager:
 
     @staticmethod
     def is_in_approach_zone(position):
-        return (
-            np.linalg.norm(
-                np.asarray(position, dtype=float)
-                - np.asarray(INTERSECTION_CENTER, dtype=float)
-            )
-            <= APPROACH_ZONE_RADIUS
-        )
+        return is_position_in_approach_zone(
+            position, INTERSECTION_GEOMETRY, APPROACH_ZONE_RADIUS)
 
     def update(self, global_observations, current_time):
         self.current_time = float(current_time)
