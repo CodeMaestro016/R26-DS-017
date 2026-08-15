@@ -319,3 +319,30 @@ reject invalid runs before metric comparison. Total team travel time is the
 unweighted primary metric; throughput, fairness, collision, complexity, and
 stability remain separate diagnostics. Published hyperparameters demonstrate
 use in another experiment but do not establish correct values for this project.
+# Frozen controlled-pilot design (Step 5J.2)
+
+The scenario-coverage prerequisite is satisfied using concrete map-derived
+SUMO negotiation scenarios. Experimental manifests are partitioned using
+deterministic semantic scenario identities rather than arbitrary percentages.
+Published hyperparameter settings are used only as candidate evidence where
+verified; project-specific values are not selected until controlled validation
+experiments are executed.
+
+Training, validation, and held-out-test identities are disjoint. Structural
+strata include participant count, manoeuvre multiset, regulatory SCC structure,
+and exact rotation-equivalence metadata. Held-out performance cannot contribute
+to selection. Competing configurations use paired scenario, seed-procedure, and
+budget identities; replication count awaits pilot variance evidence and the
+training budget awaits measurement in a causally coupled environment.
+
+Policy-factor aggregation remains a controlled ablation between a mean over
+all policy factors and a nested mean that first aggregates within each joint
+batch. A factorized joint-policy ratio is not supported by the current
+event-driven proposer/responder semantics. No proposer or responder weights are
+introduced.
+
+Negotiation protocol validity alone does not establish reinforcement-learning
+causality. Although real SUMO scenarios now provide proposer and responder
+decisions, MAPPO training remains disabled until validated negotiation outcomes
+causally modify future physical conflict-zone execution and therefore the
+shared team travel-time reward.

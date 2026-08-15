@@ -444,6 +444,10 @@ def main():
                             "INTERFACE_ONLY_NO_OPTIMIZATION",
                         "experimental_selection_framework_status":
                             "IMPLEMENTED_STEP_5J_1",
+                        "controlled_pilot_design_status": "FROZEN_STEP_5J_2",
+                        "pilot_training_status": "NOT_STARTED",
+                        "negotiation_action_to_traffic_outcome_status":
+                            "NEGOTIATION_ACTION_TO_TRAFFIC_OUTCOME_COUPLING_INCOMPLETE",
                         "selected_empirical_parameters": 0,
                         "training_status": "NOT_STARTED",
                         "control_actions_issued": 0,
