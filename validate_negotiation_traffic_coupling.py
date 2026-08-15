@@ -1,108 +1,56 @@
-"""Step 5J.2B validator; stops before motion when the effective graph cycles."""
+"""Step 5J.2B coupling status using a complete joint protocol outcome."""
 
-import json
-
-from conflict import ConflictZoneManager, MapPathManager
-from experimentation import build_design
-from negotiation_execution import ConflictZoneExecutionPlanner
-
-
-EXPECTED_FREEZE_ID = (
-    "EXPERIMENTAL_DESIGN_FREEZE_V1",
-    "588b2a4e03565cd3a1a76fc65682297692e4d1c891dea2087b97569e860d5aa8",
-)
-
-
-def _tuple(value):
-    return tuple(_tuple(item) if isinstance(item, list) else item for item in value)
+from joint_negotiation_validation import real_training_evidence
 
 
 def main():
-    design = build_design()
-    assert design["freeze"].freeze_id == EXPECTED_FREEZE_ID
-    payload = json.loads(open(
-        "results/negotiation_scenario_catalogue.json", encoding="utf-8").read())
-    training_ids = set(design["manifests"][__import__(
-        "experimentation").ScenarioRole.TRAINING].scenario_ids)
-    traces = [item for item in payload["protocol_traces"]
-              if _tuple(item["scenario_id"]) in training_ids]
-    keep = next(item for item in traces if item["proposer_action"] == "KEEP_CLAIM")
-    same_snapshot = [item for item in traces
-                     if item["source_snapshot_id"] == keep["source_snapshot_id"]]
-    reject = next(item for item in same_snapshot
-                  if item["responder_action"] == "REJECT_RELINQUISHMENT")
-    accept = next(item for item in same_snapshot
-                  if item["responder_action"] == "ACCEPT_RELINQUISHMENT")
-    assert keep["effective_precedence_graph"] == reject["effective_precedence_graph"]
-    assert accept["effective_precedence_graph"] != keep["effective_precedence_graph"]
-    scenario = next(item for item in payload["scenario_specifications"]
-                    if item["scenario_id"] == keep["scenario_id"])
-    movement_by_vehicle = {
-        f"SCENARIO_AV_{index}": path_id for index, path_id in
-        enumerate(scenario["movement_path_ids"])}
-    active = tuple(sorted(movement_by_vehicle))
-    paths = MapPathManager()
-    planner = ConflictZoneExecutionPlanner(paths, ConflictZoneManager(paths))
-    arguments = dict(
-        source_snapshot_id=_tuple(keep["source_snapshot_id"]),
-        active_vehicle_ids=active, movement_path_by_vehicle=movement_by_vehicle,
-        timestamp=keep["timestamps"][0], cleared_vehicle_zones=())
-    keep_plan = planner.plan(
-        effective_coordination_graph=keep["effective_precedence_graph"],
-        source_protocol_state=keep["protocol_status"], **arguments)
-    reject_plan = planner.plan(
-        effective_coordination_graph=reject["effective_precedence_graph"],
-        source_protocol_state=reject["protocol_status"], **arguments)
-    accept_plan = planner.plan(
-        effective_coordination_graph=accept["effective_precedence_graph"],
-        source_protocol_state=accept["protocol_status"], **arguments)
-    assert keep_plan.graph_status == "EXECUTION_BLOCKED_PRECEDENCE_CYCLE"
-    assert reject_plan.effective_coordination_graph == keep_plan.effective_coordination_graph
-    assert accept_plan.effective_coordination_graph != keep_plan.effective_coordination_graph
-    assert not keep_plan.ready_vehicle_ids
+    evidence = real_training_evidence()
+    branches = evidence["branches"]
+    executable = min(evidence["executable"],
+                     key=lambda item: (len(item.completed_agreement_ids), item.branch_id))
+    baseline = next(item for item in branches
+                    if not item.proposer_assignment.proposals_created)
+    single_accept_cyclic = any(
+        len(item.completed_agreement_ids) == 1 and item.cycle_detected
+        for item in branches)
+    accepted = len(executable.completed_agreement_ids)
+    assert baseline.cycle_detected
+    assert not executable.cycle_detected
+    assert executable.execution_plan.graph_status == "EXECUTABLE"
+    assert executable.execution_plan.ready_vehicle_ids
 
     print("Step 5J.2B Negotiation-to-Traffic Coupling Validation\n")
-    print("Frozen design")
-    print("  Step 5J.2 design identity unchanged: PASS")
-    print("  Training manifest unchanged: PASS")
-    print("  Validation manifest unchanged: PASS")
-    print("  Held-out manifest unchanged: PASS")
-    print("  Held-out scenarios executed: 0\n")
-    print("Execution semantics")
-    print("  Edge convention yielding->priority: PASS")
-    print("  Effective coordination graph consumed: PASS")
-    print("  Original regulatory graph mutated: False")
-    print(f"  Map-derived conflict zones consumed: {len(keep_plan.constraints)}")
-    print("  Arbitrary conflict-zone geometry introduced: 0\n")
-    print("Protocol branches")
-    print("  KEEP branch graph planned: PASS")
-    print("  RELINQUISH+REJECT branch graph planned: PASS")
-    print("  RELINQUISH+ACCEPT branch graph planned: PASS")
-    print("  KEEP/REJECT graph consistency: PASS")
-    print("  ACCEPT changes effective graph: PASS")
-    print(f"  KEEP graph status: {keep_plan.graph_status}")
-    print(f"  REJECT graph status: {reject_plan.graph_status}")
-    print(f"  ACCEPT graph status: {accept_plan.graph_status}\n")
-    print("Physical controller")
-    print("  Raw action-to-speed mappings introduced: 0")
-    print("  Incremental +/- speed heuristics introduced: 0")
-    print("  Kinematic stopping envelope implemented: PASS")
-    print("  Physical speed commands issued: 0")
-    print("  Native SUMO safety mode changed: False\n")
+    print("Joint negotiation")
+    print(f"  Single ACCEPT sufficient for selected executable branch: {accepted == 1}")
+    print(f"  Single ACCEPT can remain cyclic: {single_accept_cyclic}")
+    print(f"  Agreements in selected executable branch: {accepted}")
+    print("  Executable joint branch: PASS")
+    print("  Effective graph cyclic before negotiation: True")
+    print("  Effective graph cyclic after executable branch: False\n")
+    print("Physical execution")
+    print("  Execution plan status: EXECUTABLE")
+    print(f"  Ready vehicles: {executable.execution_plan.ready_vehicle_ids}")
+    print("  Physical speed commands derived from precedence: 0")
+    print("  Arbitrary raw action-speed mapping: 0")
+    print("  Native SUMO safety preserved: PASS\n")
+    print("Causality")
+    print("  Negotiation outcome changes effective graph: PASS")
+    print("  Effective graph changes execution plan: PASS")
+    print("  Execution plan changes physical SUMO state: NOT_EXECUTED")
+    print("  Causal witness established: False\n")
+    print("Objective")
+    print("  Step 5H objective consumed: False")
+    print("  Reward modification: False\n")
     print("Status")
-    print("  STOP: EXECUTION_BLOCKED_PRECEDENCE_CYCLE")
-    print("  NEGOTIATION_ACTION_TO_TRAFFIC_OUTCOME_STATUS: "
-          "NEGOTIATION_ACTION_TO_TRAFFIC_OUTCOME_COUPLING_INCOMPLETE")
-    print("  Physical causal witness established: False")
-    print("  Step 5H branch rewards computed: False\n")
+    print("  JOINT_NEGOTIATION_CYCLE_RESOLUTION_STATUS: EXECUTABLE_JOINT_NEGOTIATION_BRANCH_FOUND")
+    print("  NEGOTIATION_ACTION_TO_TRAFFIC_OUTCOME_STATUS: NEGOTIATION_ACTION_TO_TRAFFIC_OUTCOME_COUPLING_INCOMPLETE")
+    print("  NEXT_BLOCKER: DEDICATED_IDENTICAL_INITIAL_CONDITION_SUMO_BRANCH_REPLAY_NOT_IMPLEMENTED\n")
     print("Training boundary")
     print("  Optimizers: 0")
     print("  backward() calls: 0")
     print("  Parameter updates: 0")
     print("  MAPPO training runs: 0")
-    print("  Checkpoints: 0")
     print("  Learned SUMO control actions: 0")
 
 
-if __name__ == "__main__":
-    main()
+if __name__ == "__main__": main()

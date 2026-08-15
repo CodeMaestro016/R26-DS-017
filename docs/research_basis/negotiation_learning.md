@@ -364,3 +364,19 @@ cycle. The execution contract therefore blocks before issuing motion commands;
 it does not invent a winner. This is consistent with reservation and
 hierarchical intersection-management literature that separates crossing order
 from low-level motion execution, without claiming identical implementation.
+
+## Joint multi-claim composition checkpoint
+
+One decision epoch is represented as the Cartesian product of every
+hard-feasible claim-owner action and, after all proposals are created from the
+same immutable graph, every hard-feasible responder action. The complete
+message set is evaluated once by the existing multi-proposal protocol. Branch
+enumeration classifies outcomes; it is not a winner rule, feedback-edge
+optimizer, reward term, or learned action.
+
+The first frozen TRAINING-manifest real-SUMO snapshot has four claim factors,
+16 proposer assignments, and 81 complete proposer/responder branches. Both
+cycle-preserving valid outcomes and acyclic planner-executable outcomes exist.
+Identical-initial-condition physical SUMO branch replay remains unresolved, so
+this structural result does not claim a physical causal witness or Step 5H
+branch reward.

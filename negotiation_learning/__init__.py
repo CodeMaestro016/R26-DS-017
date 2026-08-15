@@ -13,6 +13,11 @@ from .claim_semantics import (
     MandatoryYieldObligation, NegotiationActionCandidate,
     NegotiationClaimBuilder, PolicyAuthority, PrecedenceClaim,
 )
+from .joint_negotiation import (
+    ACTION_SOURCE, JointNegotiationBranchEnumerator,
+    JointNegotiationBranchResult, JointProposerActionAssignment,
+    JointResponderActionAssignment,
+)
 
 __all__ = [
     "GraphObservationBuilder", "NegotiationAction", "NegotiationEnvironment",
@@ -23,4 +28,7 @@ __all__ = [
     "ClaimActionMask", "ClaimRole", "EgoClaimSet", "InfeasibilityReason",
     "MandatoryYieldObligation", "NegotiationActionCandidate",
     "NegotiationClaimBuilder", "PolicyAuthority", "PrecedenceClaim",
+    "ACTION_SOURCE", "JointNegotiationBranchEnumerator",
+    "JointNegotiationBranchResult", "JointProposerActionAssignment",
+    "JointResponderActionAssignment",
 ]
