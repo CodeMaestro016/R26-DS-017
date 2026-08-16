@@ -64,6 +64,16 @@ class SpeedConstraintRecord:
     requested_speed_cap_mps: float
     physically_feasible: bool
     provenance: Mapping[str, str]
+    simulation_step_seconds: Optional[float] = None
+    action_step_length_seconds: Optional[float] = None
+    continuous_reference_cap_mps: Optional[float] = None
+    discrete_euler_brake_gap_m: Optional[float] = None
+    sumo_stop_speed_mps: Optional[float] = None
+    comfortable_min_next_speed_mps: Optional[float] = None
+    native_sumo_speed_without_traci_mps: Optional[float] = None
+    requested_precedence_speed_mps: Optional[float] = None
+    comfortable_feasible: Optional[bool] = None
+    integration_method: Optional[str] = None
 
     def __post_init__(self):
         object.__setattr__(self, "provenance", _freeze(self.provenance))
@@ -90,4 +100,3 @@ class NegotiationTrafficCausalTrace:
 
     def __post_init__(self):
         object.__setattr__(self, "provenance", _freeze(self.provenance))
-

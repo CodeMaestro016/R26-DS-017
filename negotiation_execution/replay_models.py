@@ -74,6 +74,7 @@ class PhysicalNegotiationBranchReplayTrace:
     execution_plan_history: Tuple[tuple, ...]
     speed_constraint_records: tuple
     speed_command_records: Tuple[tuple, ...]
+    realized_deceleration_records: Tuple[tuple, ...]
     ready_vehicle_transitions: Tuple[tuple, ...]
     blocked_vehicle_transitions: Tuple[tuple, ...]
     conflict_zone_entry_events: Tuple[tuple, ...]

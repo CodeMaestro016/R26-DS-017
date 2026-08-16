@@ -3,5 +3,7 @@
 from .models import *
 from .planner import ConflictZoneExecutionPlanner, ExecutionSemanticError
 from .controller import (ExecutionConstraintError, build_speed_constraint,
-                         stopping_speed_cap)
+    build_sumo_native_speed_constraint, comfortable_minimum_next_speed,
+    continuous_kinematic_reference_cap, stopping_speed_cap,
+    sumo_euler_comfortable_brake_gap)
 from .replay_models import *

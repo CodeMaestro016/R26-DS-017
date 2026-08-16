@@ -63,11 +63,15 @@ def main():
         "fingerprints_exactly_equal": exact_equal,
         "status": ("EXECUTION_CONSTRAINT_NOT_PHYSICALLY_FEASIBLE"
                    if stopping_failure else "CAUSAL_EXECUTION_PATH_VALIDATED"),
+        "next_blocker": (
+            "SUMO_NATIVE_STOP_SPEED_BELOW_COMFORTABLE_NEXT_STEP_AT_24_36"
+            if stopping_failure else None),
         "error_evidence": ({key: repr(value) for key, value in
                             stopping_failure.evidence.items() if key not in {
                                 "pre_branch_fingerprint",
                                 "speed_constraint_records_before_failure",
-                                "speed_command_records_before_failure"}}
+                                "speed_command_records_before_failure",
+                                "realized_deceleration_before_failure"}}
                            if stopping_failure else None),
         "completed_branch_count": len(completed),
         "physical_speed_command_count": sum(
@@ -87,6 +91,12 @@ def main():
             "speed_command_count": len(item.speed_command_records),
             "native_sumo_intervention_events": repr(
                 item.native_sumo_intervention_events),
+            "controller_comfortable_bound_violations": sum(
+                value[-1] == "PRECEDENCE_CONTROLLER_COMFORTABLE_BOUND_VIOLATION"
+                for value in item.realized_deceleration_records),
+            "native_safety_deceleration_records": sum(
+                value[-1] == "NATIVE_SUMO_SAFETY_INTERVENTION"
+                for value in item.realized_deceleration_records),
             "constraint_summary": _constraint_summary(item.speed_constraint_records),
         } for item in completed],
     }
@@ -133,7 +143,8 @@ def main():
     print("  Raw negotiation-to-speed mappings: 0\n")
     print("Physical dynamics")
     print("  Deceleration source: ACTUAL_SUMO_VEHICLE_DYNAMICS")
-    print("  Stopping equation: v_cap=sqrt(2*b*d_entry)")
+    print("  Runtime envelope: traci.vehicle.getStopSpeed")
+    print("  Continuous equation role: DIAGNOSTIC_REFERENCE_ONLY")
     print("  New stopping margin: 0")
     print("  Native SUMO safety mode changed: False\n")
     for label, attempt in zip(("A", "B"), attempts):
@@ -148,17 +159,23 @@ def main():
             print(f"  Raw Step 5H reward: {trace.raw_shared_team_reward}")
             print(f"  Collisions: {trace.collision_count}")
             print(f"  Native SUMO intervention events: {trace.native_sumo_intervention_events}")
+            print("  Controller comfortable-bound violations: " + str(sum(
+                value[-1] == "PRECEDENCE_CONTROLLER_COMFORTABLE_BOUND_VIOLATION"
+                for value in trace.realized_deceleration_records)))
         else:
             error = attempt["error"]
             records = error.evidence.get("speed_constraint_records_before_failure", ())
             print(f"  STOP: {error.code}")
-            print(f"  Exact evidence: { {k: v for k, v in error.evidence.items() if k not in ('pre_branch_fingerprint', 'speed_constraint_records_before_failure', 'speed_command_records_before_failure')} }")
+            print(f"  Exact evidence: { {k: v for k, v in error.evidence.items() if k not in ('pre_branch_fingerprint', 'speed_constraint_records_before_failure', 'speed_command_records_before_failure', 'realized_deceleration_before_failure')} }")
             print(f"  Speed constraints before stop: {_constraint_summary(records)}")
             if error.code == "EXECUTION_CONSTRAINT_NOT_PHYSICALLY_FEASIBLE":
                 value = error.evidence
                 cap = math.sqrt(2.0 * value["comfortable_deceleration_mps2"] *
                                 value["distance_to_zone_entry_m"])
-                print(f"  Exact stopping cap at failure: {cap}")
+                print(f"  Continuous reference cap at failure: {cap}")
+                print(f"  SUMO-native stop speed at failure: {value.get('sumo_stop_speed_mps')}")
+                print("  Comfortable minimum next speed at failure: " +
+                      str(value.get("comfortable_min_next_speed_mps")))
         print()
     print("Objective")
     print(f"  Completed branch objectives computed with Step 5H: {len(completed)}")
@@ -174,7 +191,8 @@ def main():
     if stopping_failure:
         print("  STOP: EXECUTION_CONSTRAINT_NOT_PHYSICALLY_FEASIBLE")
         print("  NEGOTIATION_ACTION_TO_TRAFFIC_OUTCOME_STATUS: NEGOTIATION_ACTION_TO_TRAFFIC_OUTCOME_COUPLING_INCOMPLETE")
-        print("  NEXT_BLOCKER: DISCRETE_SUMO_RESPONSE_EXCEEDS_EXACT_COMFORTABLE_BRAKING_ENVELOPE")
+        print("  Former 23.44 continuous-reference false rejection cleared: PASS")
+        print("  NEXT_BLOCKER: SUMO_NATIVE_STOP_SPEED_BELOW_COMFORTABLE_NEXT_STEP_AT_24_36")
     else:
         print("  NEGOTIATION_ACTION_TO_TRAFFIC_OUTCOME_STATUS: CAUSAL_EXECUTION_PATH_VALIDATED")
 

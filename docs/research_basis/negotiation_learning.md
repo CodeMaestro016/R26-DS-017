@@ -381,6 +381,26 @@ Identical-initial-condition physical SUMO branch replay remains unresolved, so
 this structural result does not claim a physical causal witness or Step 5H
 branch reward.
 
+## SUMO-native discrete braking checkpoint
+
+Live precedence control now uses the active vehicle model's
+`traci.vehicle.getStopSpeed` result and caps it by
+`getSpeedWithoutTraCI`. The continuous `sqrt(2 b d)` equation is retained only
+as a diagnostic reference. A separate audit reproduces SUMO's semi-implicit
+Euler brake gap from the actual simulation step, while the comfortable
+next-step bound is derived from the actual vehicle deceleration. No numerical
+tolerance, distance/time margin, or emergency-deceleration substitution is
+used.
+
+This clears the former false continuous-time rejection at 23.44 seconds.
+During the unchanged branch A replay, a later state at 24.36 seconds produced
+a SUMO-native stop speed of `3.87473868489288 m/s`, directly below the
+comfortable next-step minimum `3.8747675412749003 m/s`. Under the required
+direct comparison this is a new genuine physical-feasibility blocker. Branch B
+still completes with Step 5H accounting, but the causal coupling status remains
+incomplete until that exact simulator/controller boundary is resolved without
+a tolerance or heuristic.
+
 ## Identical-condition physical replay checkpoint
 
 The dedicated replay restarts a fresh SUMO process and fresh Python-side state

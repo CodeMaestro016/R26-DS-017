@@ -59,7 +59,7 @@ def main():
           ("CAUSAL_EXECUTION_PATH_VALIDATED" if physical_validated else
            "NEGOTIATION_ACTION_TO_TRAFFIC_OUTCOME_COUPLING_INCOMPLETE"))
     if not physical_validated:
-        blocker = (replay["status"] if replay else
+        blocker = (replay.get("next_blocker") or replay["status"] if replay else
                    "DEDICATED_IDENTICAL_INITIAL_CONDITION_SUMO_BRANCH_REPLAY_NOT_EXECUTED")
         print(f"  NEXT_BLOCKER: {blocker}")
     print()

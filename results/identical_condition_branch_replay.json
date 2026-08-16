@@ -13,16 +13,22 @@
   ],
   "fingerprints_exactly_equal": true,
   "status": "EXECUTION_CONSTRAINT_NOT_PHYSICALLY_FEASIBLE",
+  "next_blocker": "SUMO_NATIVE_STOP_SPEED_BELOW_COMFORTABLE_NEXT_STEP_AT_24_36",
   "error_evidence": {
-    "timestamp": "23.44",
+    "timestamp": "24.36",
     "vehicle_id": "'SCENARIO_AV_1'",
     "conflict_zone_id": "'CZ_016'",
-    "current_speed_mps": "6.327762945206484",
-    "distance_to_zone_entry_m": "4.410609013325224",
+    "current_speed_mps": "4.0547675412749005",
+    "distance_to_zone_entry_m": "1.7475700427057346",
     "comfortable_deceleration_mps2": "4.5",
     "emergency_deceleration_mps2": "7.0",
     "max_acceleration_mps2": "2.0",
     "max_speed_mps": "13.89",
+    "simulation_step_seconds": "0.04",
+    "action_step_length_seconds": "0.04",
+    "sumo_stop_speed_mps": "3.87473868489288",
+    "native_sumo_speed_without_traci_mps": "4.0547675412749005",
+    "comfortable_min_next_speed_mps": "3.8747675412749003",
     "branch_id": "('JOINT_NEGOTIATION_BRANCH_V1', (('NEGOTIATION_SCENARIO_V1', 'intersection.net.xml:9316', 'REGULATORY_CYCLE', ('E_IN_0_LEFT', 'N_IN_0_LEFT', 'S_IN_0_LEFT'), 'ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT', 'AV', 'DE_STVO_UNCONTROLLED_4WAY_V1'), 16.8, 'JOINT_NEGOTIATION_CONTEXT'), ((('SCENARIO_AV_0', 'SCENARIO_AV_1'), 'KEEP_CLAIM'), (('SCENARIO_AV_1', 'SCENARIO_AV_2'), 'KEEP_CLAIM'), (('SCENARIO_AV_2', 'SCENARIO_AV_0'), 'RELINQUISH_CLAIM'), (('SCENARIO_AV_2', 'SCENARIO_AV_1'), 'RELINQUISH_CLAIM')), (((16.8, 'SCENARIO_AV_2', 'SCENARIO_AV_0', 'SCENARIO_AV_0', 'SCENARIO_AV_2'), 'ACCEPT_RELINQUISHMENT'), ((16.8, 'SCENARIO_AV_2', 'SCENARIO_AV_1', 'SCENARIO_AV_1', 'SCENARIO_AV_2'), 'ACCEPT_RELINQUISHMENT')), 'DE_STVO_UNCONTROLLED_4WAY_V1')",
     "effective_precedence_graph": "(('SCENARIO_AV_0', 'SCENARIO_AV_1'), ('SCENARIO_AV_1', 'SCENARIO_AV_2'))",
     "initial_ready_vehicle_ids": "('SCENARIO_AV_2',)",
@@ -31,28 +37,30 @@
     "native_sumo_interventions_before_failure": "()"
   },
   "completed_branch_count": 1,
-  "physical_speed_command_count": 832,
+  "physical_speed_command_count": 875,
   "blocked_zone_entry_violation_count": 0,
   "completed_branch_summaries": [
     {
       "branch_id": "('JOINT_NEGOTIATION_BRANCH_V1', (('NEGOTIATION_SCENARIO_V1', 'intersection.net.xml:9316', 'REGULATORY_CYCLE', ('E_IN_0_LEFT', 'N_IN_0_LEFT', 'S_IN_0_LEFT'), 'ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT', 'AV', 'DE_STVO_UNCONTROLLED_4WAY_V1'), 16.8, 'JOINT_NEGOTIATION_CONTEXT'), ((('SCENARIO_AV_0', 'SCENARIO_AV_1'), 'KEEP_CLAIM'), (('SCENARIO_AV_1', 'SCENARIO_AV_2'), 'RELINQUISH_CLAIM'), (('SCENARIO_AV_2', 'SCENARIO_AV_0'), 'KEEP_CLAIM'), (('SCENARIO_AV_2', 'SCENARIO_AV_1'), 'KEEP_CLAIM')), (((16.8, 'SCENARIO_AV_1', 'SCENARIO_AV_2', 'SCENARIO_AV_2', 'SCENARIO_AV_1'), 'ACCEPT_RELINQUISHMENT'),), 'DE_STVO_UNCONTROLLED_4WAY_V1')",
-      "entry_events": "((24.24, 'SCENARIO_AV_1', 'CZ_016', 7.1822271371385344), (24.28, 'SCENARIO_AV_1', 'CZ_001', 7.474238461754896), (26.8, 'SCENARIO_AV_0', 'CZ_001', 5.018193520727229), (27.28, 'SCENARIO_AV_0', 'CZ_003', 7.266639709435164), (30.0, 'SCENARIO_AV_2', 'CZ_003', 5.000421406905609), (30.44, 'SCENARIO_AV_2', 'CZ_016', 7.067408228265464))",
-      "clear_events": "((24.92, 'SCENARIO_AV_1', 'CZ_016', 12.272104754088138), (25.2, 'SCENARIO_AV_1', 'CZ_001', 14.374197332844297), (28.08, 'SCENARIO_AV_0', 'CZ_001', 12.038210347954035), (28.4, 'SCENARIO_AV_0', 'CZ_003', 14.305277016094832), (31.28, 'SCENARIO_AV_2', 'CZ_003', 12.088842318339985), (31.32, 'SCENARIO_AV_2', 'CZ_016', 12.3631637385289))",
-      "completion_events": "(('SCENARIO_AV_1', 48.24), ('SCENARIO_AV_0', 50.24), ('SCENARIO_AV_2', 53.44))",
-      "team_travel_time_seconds": 151.92000000000002,
-      "raw_shared_team_reward": -151.92000000000002,
+      "entry_events": "((23.84, 'SCENARIO_AV_1', 'CZ_016', 7.051059643825084), (23.88, 'SCENARIO_AV_1', 'CZ_001', 7.351362653829606), (27.08, 'SCENARIO_AV_0', 'CZ_001', 5.006983802770284), (27.56, 'SCENARIO_AV_0', 'CZ_003', 7.407359562158292), (30.88, 'SCENARIO_AV_2', 'CZ_003', 5.006983802770284), (31.32, 'SCENARIO_AV_2', 'CZ_016', 7.189725493307107))",
+      "clear_events": "((24.56, 'SCENARIO_AV_1', 'CZ_016', 12.45651382390625), (24.84, 'SCENARIO_AV_1', 'CZ_001', 14.561777534915763), (28.32, 'SCENARIO_AV_0', 'CZ_001', 12.15050206270909), (28.64, 'SCENARIO_AV_0', 'CZ_003', 14.493221677381909), (32.12, 'SCENARIO_AV_2', 'CZ_003', 12.15050206270909), (32.16, 'SCENARIO_AV_2', 'CZ_016', 12.432146151810631))",
+      "completion_events": "(('SCENARIO_AV_1', 47.84), ('SCENARIO_AV_0', 50.4), ('SCENARIO_AV_2', 54.2))",
+      "team_travel_time_seconds": 152.44,
+      "raw_shared_team_reward": -152.44,
       "collision_count": 0,
-      "speed_command_count": 2538,
-      "native_sumo_intervention_events": "((22.68, 'ACTUAL_EMERGENCY_DECELERATION_REACHED', 'SCENARIO_AV_1', -7.000000000000006, 4.5, 7.0), (22.76, 'ACTUAL_EMERGENCY_DECELERATION_REACHED', 'SCENARIO_AV_1', -7.000000000000006, 4.5, 7.0))",
+      "speed_command_count": 2551,
+      "native_sumo_intervention_events": "()",
+      "controller_comfortable_bound_violations": 0,
+      "native_safety_deceleration_records": 44,
       "constraint_summary": {
-        "count": 703,
-        "first": "SpeedConstraintRecord(vehicle_id='SCENARIO_AV_0', conflict_zone_id='CZ_001', distance_to_zone_entry=59.813520459722504, comfortable_deceleration_mps2=4.5, current_speed_mps=13.89, requested_speed_cap_mps=23.201760367211417, physically_feasible=True, provenance=mappingproxy({'equation': 'v_cap=sqrt(2*b*d_entry)', 'distance_reference': 'FRONT_BUMPER_PATH_PROGRESS', 'arbitrary_margin_meters': '0', 'timestamp': '16.8'}))",
-        "last": "SpeedConstraintRecord(vehicle_id='SCENARIO_AV_2', conflict_zone_id='CZ_003', distance_to_zone_entry=4.2048755825313755, comfortable_deceleration_mps2=4.5, current_speed_mps=1.0154272290960695, requested_speed_cap_mps=6.15173798554379, physically_feasible=True, provenance=mappingproxy({'equation': 'v_cap=sqrt(2*b*d_entry)', 'distance_reference': 'FRONT_BUMPER_PATH_PROGRESS', 'arbitrary_margin_meters': '0', 'timestamp': '28.36'}))",
+        "count": 691,
+        "first": "SpeedConstraintRecord(vehicle_id='SCENARIO_AV_0', conflict_zone_id='CZ_001', distance_to_zone_entry=59.813520459722504, comfortable_deceleration_mps2=4.5, current_speed_mps=13.89, requested_speed_cap_mps=13.89, physically_feasible=True, provenance=mappingproxy({'feasibility_model': 'SUMO_NATIVE_CAR_FOLLOWING_STOP_SPEED', 'integration_model': 'SUMO_SEMI_IMPLICIT_EULER', 'continuous_equation_role': 'DIAGNOSTIC_REFERENCE_ONLY', 'emergency_deceleration_used_for_precedence': 'False', 'arbitrary_margin_meters': '0', 'arbitrary_time_margin_seconds': '0', 'numeric_tolerance': '0', 'timestamp': '16.8'}), simulation_step_seconds=0.04, action_step_length_seconds=0.04, continuous_reference_cap_mps=23.201760367211417, discrete_euler_brake_gap_m=21.1596, sumo_stop_speed_mps=13.89, comfortable_min_next_speed_mps=13.71, native_sumo_speed_without_traci_mps=13.89, requested_precedence_speed_mps=13.89, comfortable_feasible=True, integration_method='SUMO_SEMI_IMPLICIT_EULER')",
+        "last": "SpeedConstraintRecord(vehicle_id='SCENARIO_AV_2', conflict_zone_id='CZ_003', distance_to_zone_entry=5.010920459721779, comfortable_deceleration_mps2=4.5, current_speed_mps=0.0, requested_speed_cap_mps=0.0, physically_feasible=True, provenance=mappingproxy({'feasibility_model': 'SUMO_NATIVE_CAR_FOLLOWING_STOP_SPEED', 'integration_model': 'SUMO_SEMI_IMPLICIT_EULER', 'continuous_equation_role': 'DIAGNOSTIC_REFERENCE_ONLY', 'emergency_deceleration_used_for_precedence': 'False', 'arbitrary_margin_meters': '0', 'arbitrary_time_margin_seconds': '0', 'numeric_tolerance': '0', 'timestamp': '28.6'}), simulation_step_seconds=0.04, action_step_length_seconds=0.04, continuous_reference_cap_mps=6.7155256039639974, discrete_euler_brake_gap_m=0.0, sumo_stop_speed_mps=0.08, comfortable_min_next_speed_mps=0.0, native_sumo_speed_without_traci_mps=0.0, requested_precedence_speed_mps=0.0, comfortable_feasible=True, integration_method='SUMO_SEMI_IMPLICIT_EULER')",
         "comfortable_decelerations": [
           4.5
         ],
-        "minimum_distance_to_entry": 4.102875875021265,
-        "minimum_requested_cap": 6.076667086091799
+        "minimum_distance_to_entry": 5.010920459721779,
+        "minimum_requested_cap": 0.0
       }
     }
   ]

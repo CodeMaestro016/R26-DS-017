@@ -74,7 +74,7 @@ def test_replay_command_has_no_random_or_seed_and_preserves_safety():
     source = inspect.getsource(PhysicalBranchReplayRunner)
     assert "setSpeedMode(vehicle_id, SAFE_SUMO_SPEED_MODE)" in source
     assert "setSpeed(vehicle_id, -1.0)" in source
-    assert "build_speed_constraint" in source
+    assert "build_sumo_native_speed_constraint" in source
     assert "distance_to_entry" in source
 
 
@@ -98,4 +98,3 @@ def test_planner_and_protocol_are_not_cycle_breakers():
     assert "remove_edge" not in planner + replay
     assert "winner" not in planner + replay
     assert "evaluate_all_claims" not in replay  # delegated to authoritative enumerator
-
