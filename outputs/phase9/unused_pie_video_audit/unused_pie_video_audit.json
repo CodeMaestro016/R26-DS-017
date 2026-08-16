@@ -1,0 +1,44 @@
+{
+  "intent_train_videos": [
+    "video_0001",
+    "video_0002",
+    "video_0003",
+    "video_0004"
+  ],
+  "intent_val_videos": [
+    "video_0001",
+    "video_0002",
+    "video_0003",
+    "video_0004"
+  ],
+  "intent_test_videos": [
+    "video_0001",
+    "video_0002",
+    "video_0003"
+  ],
+  "annotation_videos": [
+    "video_0001",
+    "video_0002",
+    "video_0003",
+    "video_0004"
+  ],
+  "extracted_frame_videos": [
+    "video_0001",
+    "video_0002",
+    "video_0003",
+    "video_0004"
+  ],
+  "available_videos": [
+    "video_0001",
+    "video_0002",
+    "video_0003",
+    "video_0004"
+  ],
+  "completely_unused_by_intent_splits": [],
+  "unseen_to_intent_train": [],
+  "recommended_interpretation": "A video can only be called completely unseen to the frozen intent system if it was not used in intent train, validation, or test during development. If no such local PIE video exists, a new PIE video/set or external real-world video must be added for a clean post-freeze generalization demonstration.",
+  "outputs": {
+    "all_available_pie_videos": "outputs\\phase9\\unused_pie_video_audit\\all_available_pie_videos.csv",
+    "completely_unused_pie_videos": "outputs\\phase9\\unused_pie_video_audit\\completely_unused_pie_videos.csv"
+  }
+}

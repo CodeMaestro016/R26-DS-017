@@ -1,0 +1,457 @@
+{
+  "phase": "9.2",
+  "sequence_index": 463,
+  "sequence_id": "2042",
+  "video": "video_0002",
+  "pedestrian_id": "1_2_39",
+  "source_frames": [
+    12391,
+    12392,
+    12393,
+    12394,
+    12395,
+    12396,
+    12397,
+    12398,
+    12399,
+    12400,
+    12401,
+    12402,
+    12403,
+    12404,
+    12405,
+    12406,
+    12407,
+    12408,
+    12409,
+    12410,
+    12411,
+    12412,
+    12413,
+    12414,
+    12415,
+    12416,
+    12417,
+    12418,
+    12419,
+    12420
+  ],
+  "ground_truth_diagnostic_only": 1,
+  "maximum_occlusion": "high",
+  "feature_compatibility": {
+    "runtime_shape": [
+      30,
+      525
+    ],
+    "saved_shape": [
+      30,
+      525
+    ],
+    "mean_absolute_error": 0.0,
+    "maximum_absolute_error": 0.0,
+    "raw_522_max_error": 0.0,
+    "reliability_max_error": 0.0,
+    "passed": true
+  },
+  "frame_diagnostics": [
+    {
+      "time_step": 1,
+      "source_frame": 12391,
+      "source_occlusion": "full",
+      "normalized_occlusion": "high",
+      "motion_state": "static",
+      "horizontal_state": "left",
+      "vertical_state": "bottom"
+    },
+    {
+      "time_step": 2,
+      "source_frame": 12392,
+      "source_occlusion": "full",
+      "normalized_occlusion": "high",
+      "motion_state": "static",
+      "horizontal_state": "left",
+      "vertical_state": "bottom"
+    },
+    {
+      "time_step": 3,
+      "source_frame": 12393,
+      "source_occlusion": "full",
+      "normalized_occlusion": "high",
+      "motion_state": "static",
+      "horizontal_state": "left",
+      "vertical_state": "bottom"
+    },
+    {
+      "time_step": 4,
+      "source_frame": 12394,
+      "source_occlusion": "full",
+      "normalized_occlusion": "high",
+      "motion_state": "static",
+      "horizontal_state": "left",
+      "vertical_state": "bottom"
+    },
+    {
+      "time_step": 5,
+      "source_frame": 12395,
+      "source_occlusion": "full",
+      "normalized_occlusion": "high",
+      "motion_state": "static",
+      "horizontal_state": "left",
+      "vertical_state": "bottom"
+    },
+    {
+      "time_step": 6,
+      "source_frame": 12396,
+      "source_occlusion": "full",
+      "normalized_occlusion": "high",
+      "motion_state": "static",
+      "horizontal_state": "left",
+      "vertical_state": "bottom"
+    },
+    {
+      "time_step": 7,
+      "source_frame": 12397,
+      "source_occlusion": "full",
+      "normalized_occlusion": "high",
+      "motion_state": "static",
+      "horizontal_state": "left",
+      "vertical_state": "bottom"
+    },
+    {
+      "time_step": 8,
+      "source_frame": 12398,
+      "source_occlusion": "full",
+      "normalized_occlusion": "high",
+      "motion_state": "static",
+      "horizontal_state": "left",
+      "vertical_state": "bottom"
+    },
+    {
+      "time_step": 9,
+      "source_frame": 12399,
+      "source_occlusion": "full",
+      "normalized_occlusion": "high",
+      "motion_state": "static",
+      "horizontal_state": "left",
+      "vertical_state": "bottom"
+    },
+    {
+      "time_step": 10,
+      "source_frame": 12400,
+      "source_occlusion": "full",
+      "normalized_occlusion": "high",
+      "motion_state": "static",
+      "horizontal_state": "left",
+      "vertical_state": "bottom"
+    },
+    {
+      "time_step": 11,
+      "source_frame": 12401,
+      "source_occlusion": "full",
+      "normalized_occlusion": "high",
+      "motion_state": "static",
+      "horizontal_state": "left",
+      "vertical_state": "bottom"
+    },
+    {
+      "time_step": 12,
+      "source_frame": 12402,
+      "source_occlusion": "full",
+      "normalized_occlusion": "high",
+      "motion_state": "static",
+      "horizontal_state": "left",
+      "vertical_state": "bottom"
+    },
+    {
+      "time_step": 13,
+      "source_frame": 12403,
+      "source_occlusion": "full",
+      "normalized_occlusion": "high",
+      "motion_state": "static",
+      "horizontal_state": "left",
+      "vertical_state": "bottom"
+    },
+    {
+      "time_step": 14,
+      "source_frame": 12404,
+      "source_occlusion": "full",
+      "normalized_occlusion": "high",
+      "motion_state": "static",
+      "horizontal_state": "left",
+      "vertical_state": "bottom"
+    },
+    {
+      "time_step": 15,
+      "source_frame": 12405,
+      "source_occlusion": "full",
+      "normalized_occlusion": "high",
+      "motion_state": "static",
+      "horizontal_state": "left",
+      "vertical_state": "bottom"
+    },
+    {
+      "time_step": 16,
+      "source_frame": 12406,
+      "source_occlusion": "full",
+      "normalized_occlusion": "high",
+      "motion_state": "static",
+      "horizontal_state": "left",
+      "vertical_state": "bottom"
+    },
+    {
+      "time_step": 17,
+      "source_frame": 12407,
+      "source_occlusion": "full",
+      "normalized_occlusion": "high",
+      "motion_state": "static",
+      "horizontal_state": "left",
+      "vertical_state": "bottom"
+    },
+    {
+      "time_step": 18,
+      "source_frame": 12408,
+      "source_occlusion": "full",
+      "normalized_occlusion": "high",
+      "motion_state": "static",
+      "horizontal_state": "left",
+      "vertical_state": "bottom"
+    },
+    {
+      "time_step": 19,
+      "source_frame": 12409,
+      "source_occlusion": "full",
+      "normalized_occlusion": "high",
+      "motion_state": "static",
+      "horizontal_state": "left",
+      "vertical_state": "bottom"
+    },
+    {
+      "time_step": 20,
+      "source_frame": 12410,
+      "source_occlusion": "full",
+      "normalized_occlusion": "high",
+      "motion_state": "static",
+      "horizontal_state": "left",
+      "vertical_state": "bottom"
+    },
+    {
+      "time_step": 21,
+      "source_frame": 12411,
+      "source_occlusion": "full",
+      "normalized_occlusion": "high",
+      "motion_state": "static",
+      "horizontal_state": "left",
+      "vertical_state": "bottom"
+    },
+    {
+      "time_step": 22,
+      "source_frame": 12412,
+      "source_occlusion": "full",
+      "normalized_occlusion": "high",
+      "motion_state": "static",
+      "horizontal_state": "left",
+      "vertical_state": "bottom"
+    },
+    {
+      "time_step": 23,
+      "source_frame": 12413,
+      "source_occlusion": "full",
+      "normalized_occlusion": "high",
+      "motion_state": "static",
+      "horizontal_state": "left",
+      "vertical_state": "bottom"
+    },
+    {
+      "time_step": 24,
+      "source_frame": 12414,
+      "source_occlusion": "full",
+      "normalized_occlusion": "high",
+      "motion_state": "static",
+      "horizontal_state": "left",
+      "vertical_state": "bottom"
+    },
+    {
+      "time_step": 25,
+      "source_frame": 12415,
+      "source_occlusion": "full",
+      "normalized_occlusion": "high",
+      "motion_state": "static",
+      "horizontal_state": "left",
+      "vertical_state": "bottom"
+    },
+    {
+      "time_step": 26,
+      "source_frame": 12416,
+      "source_occlusion": "full",
+      "normalized_occlusion": "high",
+      "motion_state": "static",
+      "horizontal_state": "left",
+      "vertical_state": "bottom"
+    },
+    {
+      "time_step": 27,
+      "source_frame": 12417,
+      "source_occlusion": "full",
+      "normalized_occlusion": "high",
+      "motion_state": "static",
+      "horizontal_state": "left",
+      "vertical_state": "bottom"
+    },
+    {
+      "time_step": 28,
+      "source_frame": 12418,
+      "source_occlusion": "full",
+      "normalized_occlusion": "high",
+      "motion_state": "static",
+      "horizontal_state": "left",
+      "vertical_state": "bottom"
+    },
+    {
+      "time_step": 29,
+      "source_frame": 12419,
+      "source_occlusion": "full",
+      "normalized_occlusion": "high",
+      "motion_state": "static",
+      "horizontal_state": "left",
+      "vertical_state": "bottom"
+    },
+    {
+      "time_step": 30,
+      "source_frame": 12420,
+      "source_occlusion": "full",
+      "normalized_occlusion": "high",
+      "motion_state": "static",
+      "horizontal_state": "left",
+      "vertical_state": "bottom"
+    }
+  ],
+  "final_runtime_result": {
+    "feature_shape": [
+      30,
+      525
+    ],
+    "intent_prediction": "CROSSING",
+    "p_crossing": 0.9336060285568237,
+    "confidence": 0.9336060285568237,
+    "normalized_predictive_entropy": 0.3523201329132071,
+    "mutual_information": 0.00682753324508667,
+    "crossing_probability_variance": 0.001024392549879849,
+    "variation_ratio": 0.0,
+    "decision_margin_uncertainty": 0.13278794288635254,
+    "observation_reliability_mean": {
+      "low": 0.9999885559082031,
+      "medium": 5.724329184886301e-06,
+      "high": 5.724329184886301e-06
+    },
+    "observation_reliability_last": {
+      "low": 0.9999885559082031,
+      "medium": 5.724327820644248e-06,
+      "high": 5.724327820644248e-06
+    },
+    "mean_speed": 0.8057014346122742,
+    "last_speed": 0.5,
+    "agent_action_id": 1,
+    "agent_action_name": "COMMIT_NOT_CROSSING",
+    "agent_action_probability": 0.7307332158088684,
+    "agent_action_probabilities": {
+      "OBSERVE_MORE": 0.22561612725257874,
+      "COMMIT_NOT_CROSSING": 0.7307332158088684,
+      "COMMIT_CROSSING": 0.04365073889493942
+    },
+    "committed_intent": "NOT_CROSSING",
+    "av_interface_signal": "NOT_CROSSING_INTENT_AVAILABLE",
+    "maximum_occlusion": "high",
+    "dominant_explanation_group": "intent",
+    "explanation": "Decision: COMMIT_NOT_CROSSING (policy probability 0.731). Observed maximum occlusion: high. The strongest local evidence supporting this decision was mean low-reliability evidence (value=1.000, attribution=+1.137), latest high-reliability evidence (value=0.000, attribution=+0.690), and latest low-reliability evidence (value=1.000, attribution=+0.540). The strongest local evidence opposing the selected decision was crossing probability (value=0.934, attribution=-3.195). The dominant attribution group was intent. This explanation describes the learned policy's local model evidence for the current situation; it is not a causal claim about pedestrian behaviour.",
+    "top_supporting_evidence": [
+      {
+        "feature": "reliability_low_mean",
+        "label": "mean low-reliability evidence",
+        "state_value": 0.9999885559082031,
+        "attribution": 1.1373902559280396,
+        "absolute_share": 0.15801548957824707
+      },
+      {
+        "feature": "reliability_high_last",
+        "label": "latest high-reliability evidence",
+        "state_value": 5.724327820644248e-06,
+        "attribution": 0.6895068883895874,
+        "absolute_share": 0.09579189866781235
+      },
+      {
+        "feature": "reliability_low_last",
+        "label": "latest low-reliability evidence",
+        "state_value": 0.9999885559082031,
+        "attribution": 0.5399553775787354,
+        "absolute_share": 0.07501498609781265
+      }
+    ],
+    "top_opposing_evidence": [
+      {
+        "feature": "p_crossing",
+        "label": "crossing probability",
+        "state_value": 0.9336060285568237,
+        "attribution": -3.1952478885650635,
+        "absolute_share": 0.44390979409217834
+      },
+      {
+        "feature": "crossing_probability_variance",
+        "label": "crossing-probability variance",
+        "state_value": 0.001024392549879849,
+        "attribution": -0.06998200714588165,
+        "absolute_share": 0.009722469374537468
+      },
+      {
+        "feature": "reliability_medium_last",
+        "label": "latest medium-reliability evidence",
+        "state_value": 5.724327820644248e-06,
+        "attribution": -0.04069120064377785,
+        "absolute_share": 0.005653152242302895
+      }
+    ],
+    "agent_state": {
+      "p_crossing": 0.9336060285568237,
+      "confidence": 0.9336060285568237,
+      "normalized_predictive_entropy": 0.3523201329132071,
+      "mutual_information": 0.00682753324508667,
+      "crossing_probability_variance": 0.001024392549879849,
+      "variation_ratio": 0.0,
+      "decision_margin_uncertainty": 0.13278794288635254,
+      "reliability_low_mean": 0.9999885559082031,
+      "reliability_medium_mean": 5.724329184886301e-06,
+      "reliability_high_mean": 5.724329184886301e-06,
+      "reliability_low_last": 0.9999885559082031,
+      "reliability_medium_last": 5.724327820644248e-06,
+      "reliability_high_last": 5.724327820644248e-06,
+      "mean_speed": 0.8057014346122742,
+      "last_speed": 0.5
+    },
+    "raw_intent_output": {
+      "predicted_class_id": 1,
+      "predicted_intent": "crossing",
+      "not_crossing_probability": 0.06639391928911209,
+      "crossing_probability": 0.9336060285568237,
+      "decision_threshold": 0.47512510418891907,
+      "confidence": 0.9336060285568237,
+      "predictive_entropy": 0.24420970678329468,
+      "normalized_entropy": 0.3523201329132071,
+      "expected_entropy": 0.237382173538208,
+      "mutual_information": 0.00682753324508667,
+      "crossing_probability_variance": 0.001024392549879849,
+      "crossing_probability_std": 0.03200613334774971,
+      "crossing_probability_min": 0.8042687177658081,
+      "crossing_probability_max": 0.9652659296989441,
+      "temperature": 3.7721452713012695,
+      "mc_samples": 30,
+      "_unified_state_sources": {
+        "p_crossing": "crossing_probability",
+        "confidence": "confidence",
+        "normalized_predictive_entropy": "normalized_entropy",
+        "mutual_information": "mutual_information",
+        "crossing_probability_variance": "crossing_probability_variance",
+        "variation_ratio": "filled_zero",
+        "decision_margin_uncertainty": "derived_from_p_crossing"
+      }
+    }
+  }
+}

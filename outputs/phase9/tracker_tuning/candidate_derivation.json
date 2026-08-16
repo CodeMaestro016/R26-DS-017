@@ -1,0 +1,38 @@
+{
+  "matched_confidence_count": 526,
+  "confidence_quantiles": {
+    "q05": 0.0014181628357619047,
+    "q10": 0.0017200439469888806,
+    "q25": 0.0029982050182297826,
+    "q50": 0.00577653618529439
+  },
+  "full_occlusion_run_count": 4,
+  "full_occlusion_run_p90": 14,
+  "full_occlusion_run_max": 16,
+  "official_defaults": {
+    "track_high_thresh": 0.25,
+    "track_low_thresh": 0.1,
+    "new_track_thresh": 0.25,
+    "track_buffer": 30,
+    "match_thresh": 0.8
+  },
+  "high_candidates": [
+    0.003,
+    0.006,
+    0.25
+  ],
+  "low_candidates": [
+    0.001,
+    0.002,
+    0.1
+  ],
+  "new_candidates": [
+    0.003,
+    0.25
+  ],
+  "buffer_candidates": [
+    30
+  ],
+  "candidate_config_count": 13,
+  "selection_rule": "Lexicographic: highest IDF1, then highest visible/partial GT track recall, then highest dominant-ID consistency, then fewer ID switches."
+}

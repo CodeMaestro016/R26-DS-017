@@ -1,0 +1,10 @@
+{
+  "model": "outputs\\phase9\\yolo_pedestrian\\yolo11n_pie_occlusion_v1-2\\weights\\best.pt",
+  "data": "datasets\\processed\\yolo_pedestrian\\data.yaml",
+  "imgsz": 960,
+  "device": "0",
+  "precision": 0.4236411458072862,
+  "recall": 0.3970418105985638,
+  "map50": 0.2914934437107291,
+  "map50_95": 0.18381251750605665
+}

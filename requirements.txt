@@ -1,0 +1,51 @@
+# Adaptive Intent Prediction in Occluded Urban Scenarios
+# Recommended Python: 3.11.x
+#
+# IMPORTANT:
+# For an NVIDIA GPU machine, install the CUDA-enabled PyTorch build FIRST:
+#   python -m pip install torch==2.12.1 torchvision==0.27.1 --index-url https://download.pytorch.org/whl/cu130
+# Then install this file:
+#   python -m pip install -r requirements.txt
+#
+# For CPU-only:
+#   python -m pip install torch==2.12.1 torchvision==0.27.1 --index-url https://download.pytorch.org/whl/cpu
+#   python -m pip install -r requirements.txt
+
+# Core numerical / data
+numpy>=1.26,<3
+pandas>=2.2,<3
+scipy>=1.12,<2
+scikit-learn>=1.4,<2
+joblib>=1.3,<2
+
+# Computer vision / image handling
+opencv-python>=4.10,<5
+Pillow>=10,<13
+
+# Deep learning
+torch==2.12.1
+torchvision==0.27.1
+
+# Pedestrian detector + BoT-SORT tracking
+ultralytics==8.4.117
+lap>=0.5.12,<1
+
+# Bayesian / causal reliability layer
+pgmpy>=0.1.26,<2
+networkx>=3.2,<4
+
+# Explanation agent (Integrated Gradients)
+captum>=0.7,<1
+
+# Configuration / utilities
+PyYAML>=6,<7
+tqdm>=4.66,<5
+
+# Research plots / evaluation scripts
+matplotlib>=3.8,<4
+seaborn>=0.13,<1
+
+# NOTE ABOUT CARLA:
+# Do NOT pin/install CARLA here.
+# Install the CARLA Python client separately so its version matches
+# the CARLA simulator version installed on the target laptop.

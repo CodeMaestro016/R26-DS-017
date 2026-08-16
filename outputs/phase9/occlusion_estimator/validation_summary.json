@@ -1,0 +1,53 @@
+{
+  "model_type": "supervised 3-class MLP",
+  "input_features": "512 appearance + 6 spatial",
+  "input_dimension": 518,
+  "classes": [
+    "none",
+    "part",
+    "full"
+  ],
+  "best_epoch": 3,
+  "validation_loss": 0.9462711066007614,
+  "validation_accuracy": 0.58,
+  "validation_macro_f1": 0.5779448883722607,
+  "validation_per_class": {
+    "none": {
+      "precision": 0.5867052023121387,
+      "recall": 0.6766666666666666,
+      "f1": 0.628482972136223,
+      "support": 300
+    },
+    "part": {
+      "precision": 0.5588235294117647,
+      "recall": 0.5066666666666667,
+      "f1": 0.5314685314685315,
+      "support": 300
+    },
+    "full": {
+      "precision": 0.5921985815602837,
+      "recall": 0.5566666666666666,
+      "f1": 0.5738831615120276,
+      "support": 300
+    }
+  },
+  "confusion_matrix_rows_true_cols_pred": [
+    [
+      203,
+      66,
+      31
+    ],
+    [
+      64,
+      152,
+      84
+    ],
+    [
+      79,
+      54,
+      167
+    ]
+  ],
+  "checkpoint": "outputs\\phase9\\occlusion_estimator\\learned_occlusion_estimator_best.pt",
+  "important_note": "No manual occlusion threshold is used at runtime; the class is the learned softmax argmax."
+}

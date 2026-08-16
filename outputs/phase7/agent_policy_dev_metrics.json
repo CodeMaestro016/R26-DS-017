@@ -1,0 +1,66 @@
+{
+  "best_epoch": 15,
+  "action_accuracy": 0.847457627118644,
+  "action_macro_f1": 0.7749793582552743,
+  "confusion_matrix_action_order_0_1_2": [
+    [
+      14,
+      6,
+      7
+    ],
+    [
+      12,
+      94,
+      0
+    ],
+    [
+      2,
+      0,
+      42
+    ]
+  ],
+  "classification_report": {
+    "OBSERVE_MORE": {
+      "precision": 0.5,
+      "recall": 0.5185185185185185,
+      "f1-score": 0.509090909090909,
+      "support": 27.0
+    },
+    "COMMIT_NOT_CROSSING": {
+      "precision": 0.94,
+      "recall": 0.8867924528301887,
+      "f1-score": 0.912621359223301,
+      "support": 106.0
+    },
+    "COMMIT_CROSSING": {
+      "precision": 0.8571428571428571,
+      "recall": 0.9545454545454546,
+      "f1-score": 0.9032258064516129,
+      "support": 44.0
+    },
+    "accuracy": 0.847457627118644,
+    "macro avg": {
+      "precision": 0.7657142857142857,
+      "recall": 0.7866188086313873,
+      "f1-score": 0.7749793582552743,
+      "support": 177.0
+    },
+    "weighted avg": {
+      "precision": 0.8522841000807102,
+      "recall": 0.847457627118644,
+      "f1-score": 0.8487302491920646,
+      "support": 177.0
+    }
+  },
+  "selective_metrics": {
+    "baseline_frozen_intent_accuracy": 0.847457627118644,
+    "agent_commit_coverage": 0.8418079096045198,
+    "agent_deferral_rate": 0.15819209039548024,
+    "agent_committed_accuracy": 0.912751677852349,
+    "agent_unsafe_commit_rate_overall": 0.07344632768361582,
+    "agent_error_capture_recall": 0.5185185185185185,
+    "agent_unnecessary_deferral_rate": 0.09333333333333334,
+    "agent_correct_commit_rate_overall": 0.768361581920904
+  },
+  "official_test_used": false
+}

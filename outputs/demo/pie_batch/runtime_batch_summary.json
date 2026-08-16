@@ -1,0 +1,100 @@
+{
+    "evaluation_type": "PIE held-out balanced runtime batch diagnostic",
+    "selection": {
+        "selection_uses_model_outputs": false,
+        "seed": 42,
+        "requested_per_class": 10,
+        "explicit_sequence_indices": null,
+        "selected_sequences": 20
+    },
+    "runtime": {
+        "successful_sequences": 20,
+        "failed_sequences": 0,
+        "total_elapsed_seconds": 36.454423999995925,
+        "mean_seconds_per_successful_sequence": 1.8200111600075615
+    },
+    "feature_compatibility": {
+        "compatible_sequences": 20,
+        "compatibility_rate": 1.0,
+        "maximum_absolute_error": 0.0,
+        "mean_of_sequence_mae": 0.0
+    },
+    "classification": {
+        "samples": 20,
+        "accuracy": 0.7,
+        "precision": 0.8333333333333334,
+        "recall": 0.5,
+        "f1": 0.625,
+        "roc_auc": 0.84,
+        "average_precision": 0.8779418242576137,
+        "true_negative": 9,
+        "false_positive": 1,
+        "false_negative": 5,
+        "true_positive": 5
+    },
+    "by_occlusion": [
+        {
+            "maximum_occlusion": "low",
+            "samples": 8,
+            "accuracy": 0.5,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "roc_auc": 0.75,
+            "average_precision": 0.875,
+            "true_negative": 4,
+            "false_positive": 0,
+            "false_negative": 4,
+            "true_positive": 0,
+            "mean_confidence": 0.8564364537596703,
+            "mean_normalized_entropy": 0.5175431911026485,
+            "mean_probability_variance": 0.0024670444254297763,
+            "feature_compatibility_rate": 1.0
+        },
+        {
+            "maximum_occlusion": "medium",
+            "samples": 4,
+            "accuracy": 0.75,
+            "precision": 1.0,
+            "recall": 0.5,
+            "f1": 0.6666666666666666,
+            "roc_auc": 1.0,
+            "average_precision": 1.0,
+            "true_negative": 2,
+            "false_positive": 0,
+            "false_negative": 1,
+            "true_positive": 1,
+            "mean_confidence": 0.8731988966464996,
+            "mean_normalized_entropy": 0.5017422662440255,
+            "mean_probability_variance": 0.0023742288976791315,
+            "feature_compatibility_rate": 1.0
+        },
+        {
+            "maximum_occlusion": "high",
+            "samples": 8,
+            "accuracy": 0.875,
+            "precision": 0.8,
+            "recall": 1.0,
+            "f1": 0.8888888888888888,
+            "roc_auc": 1.0,
+            "average_precision": 1.0,
+            "true_negative": 3,
+            "false_positive": 1,
+            "false_negative": 0,
+            "true_positive": 4,
+            "mean_confidence": 0.8460247740149498,
+            "mean_normalized_entropy": 0.5795685325941514,
+            "mean_probability_variance": 0.0027171260735485703,
+            "feature_compatibility_rate": 1.0
+        }
+    ],
+    "important_note": "This balanced subset is a runtime diagnostic and viva demo. It does not replace the previously reported full 1152-sequence test evaluation.",
+    "test_data_used_for_tuning": false,
+    "output_files": {
+        "selected_sequences": "outputs\\demo\\pie_batch\\selected_sequences.csv",
+        "predictions": "outputs\\demo\\pie_batch\\runtime_batch_predictions.csv",
+        "failures": "outputs\\demo\\pie_batch\\runtime_batch_failures.csv",
+        "by_occlusion": "outputs\\demo\\pie_batch\\runtime_batch_by_occlusion.csv",
+        "summary": "outputs\\demo\\pie_batch\\runtime_batch_summary.json"
+    }
+}

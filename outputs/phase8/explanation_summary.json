@@ -1,0 +1,66 @@
+{
+  "phase": "8.1",
+  "method": "Integrated Gradients on learned Phase-7 policy logits",
+  "baseline": "zero in normalized policy-input space (Phase-7 training-feature mean)",
+  "integration_steps": 64,
+  "n_explanations": 1152,
+  "mean_absolute_group_attribution_share": {
+    "intent": 0.24888234645143184,
+    "uncertainty": 0.2738286976699355,
+    "reliability": 0.2891107125657484,
+    "motion": 0.18817824331288424
+  },
+  "top_mean_absolute_features": [
+    {
+      "feature": "p_crossing",
+      "display_name": "crossing probability",
+      "mean_absolute_share": 0.24888234571749812
+    },
+    {
+      "feature": "last_speed",
+      "display_name": "latest pedestrian speed",
+      "mean_absolute_share": 0.1191751629227061
+    },
+    {
+      "feature": "decision_margin_uncertainty",
+      "display_name": "decision-margin uncertainty",
+      "mean_absolute_share": 0.09712319473442063
+    },
+    {
+      "feature": "normalized_predictive_entropy",
+      "display_name": "predictive entropy",
+      "mean_absolute_share": 0.08377200816143689
+    },
+    {
+      "feature": "reliability_low_mean",
+      "display_name": "mean low-reliability evidence",
+      "mean_absolute_share": 0.07157084388781204
+    },
+    {
+      "feature": "reliability_high_last",
+      "display_name": "latest high-reliability evidence",
+      "mean_absolute_share": 0.07118302514409909
+    },
+    {
+      "feature": "mean_speed",
+      "display_name": "mean pedestrian speed",
+      "mean_absolute_share": 0.06900308032632868
+    },
+    {
+      "feature": "reliability_high_mean",
+      "display_name": "mean high-reliability evidence",
+      "mean_absolute_share": 0.054887759277322506
+    },
+    {
+      "feature": "confidence",
+      "display_name": "prediction confidence",
+      "mean_absolute_share": 0.03763775387629684
+    },
+    {
+      "feature": "reliability_low_last",
+      "display_name": "latest low-reliability evidence",
+      "mean_absolute_share": 0.036007265293685954
+    }
+  ],
+  "interpretation": "Local post-hoc attributions for the learned agent; not causal effects."
+}

@@ -1,0 +1,43 @@
+{
+  "phase": "7.1-v3",
+  "policy_type": "learned_supervised_selective_agent",
+  "probability_space": "temperature_calibrated_mc_mean",
+  "temperature": 3.7721452713012695,
+  "mc_threshold": 0.47512510418891907,
+  "temperature_source": "outputs\\phase6\\final_test\\uncertainty_deployment_config.json",
+  "threshold_source": "outputs\\phase6\\final_test\\uncertainty_deployment_config.json",
+  "raw_validation_probability_column": "mc_crossing_probability",
+  "state_features": [
+    "p_crossing",
+    "confidence",
+    "normalized_predictive_entropy",
+    "mutual_information",
+    "crossing_probability_variance",
+    "variation_ratio",
+    "decision_margin_uncertainty",
+    "reliability_low_mean",
+    "reliability_medium_mean",
+    "reliability_high_mean",
+    "reliability_low_last",
+    "reliability_medium_last",
+    "reliability_high_last",
+    "mean_speed",
+    "last_speed"
+  ],
+  "actions": {
+    "0": "OBSERVE_MORE",
+    "1": "COMMIT_NOT_CROSSING",
+    "2": "COMMIT_CROSSING"
+  },
+  "phase6_columns_used": {
+    "mutual_information": "mutual_information",
+    "variance": "crossing_probability_variance",
+    "variation_ratio": "variation_ratio"
+  },
+  "official_test_used": false,
+  "rows": 845,
+  "policy_train_rows": 668,
+  "policy_dev_rows": 177,
+  "policy_train_pedestrians": 24,
+  "policy_dev_pedestrians": 8
+}

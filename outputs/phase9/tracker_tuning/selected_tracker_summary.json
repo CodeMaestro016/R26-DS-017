@@ -1,0 +1,27 @@
+{
+  "selection_data": "detector validation videos only",
+  "validation_videos": [
+    "set01/video_0004",
+    "set02/video_0003"
+  ],
+  "selected_clips_csv": "outputs\\phase9\\tracker_tuning\\selected_validation_clips.csv",
+  "candidate_derivation": "outputs\\phase9\\tracker_tuning\\candidate_derivation.json",
+  "selection_rule": "Lexicographic: highest IDF1, then highest visible/partial GT track recall, then highest dominant-ID consistency, then fewer ID switches.",
+  "selected_config": {
+    "track_high_thresh": 0.006,
+    "track_low_thresh": 0.001,
+    "new_track_thresh": 0.003,
+    "track_buffer": 30,
+    "match_thresh": 0.8
+  },
+  "selected_metrics": {
+    "idf1": 0.14838709677419354,
+    "track_recall": 0.08829174664107485,
+    "id_consistency": 1.0,
+    "id_switches": 0,
+    "mean_matched_iou": 0.5871564760048722
+  },
+  "inference_conf_during_search": 0.001,
+  "iou_match_threshold_for_validation": 0.3,
+  "important_note": "The selected tracker parameters were derived and chosen on video-disjoint detector validation clips. They were not selected using sequence 28 or the final raw-video demo."
+}

@@ -1,0 +1,37 @@
+{
+    "model_name": "reliability_only",
+    "input_dimension": 525,
+    "best_epoch": 18,
+    "best_validation_average_precision": 0.7714785234164745,
+    "best_validation_metrics": {
+        "accuracy": 0.8757396449704142,
+        "precision": 0.7448979591836735,
+        "recall": 0.7263681592039801,
+        "f1": 0.7355163727959698,
+        "roc_auc": 0.8695188653008249,
+        "average_precision": 0.7714785234164745,
+        "loss": 1.169376780814629
+    },
+    "checkpoint_path": "outputs\\phase5\\reliability_only_transformer_best.pt",
+    "history_path": "outputs\\phase5\\reliability_only_training_history.csv",
+    "training_configuration": {
+        "sequence_length": 30,
+        "num_classes": 2,
+        "d_model": 128,
+        "num_heads": 4,
+        "num_layers": 2,
+        "dim_feedforward": 256,
+        "dropout": 0.2,
+        "batch_size": 64,
+        "maximum_epochs": 40,
+        "learning_rate": 0.0001,
+        "weight_decay": 0.0001,
+        "gradient_clip_norm": 1.0,
+        "scheduler_factor": 0.5,
+        "scheduler_patience": 3,
+        "early_stopping_patience": 7,
+        "minimum_improvement": 1e-05,
+        "random_seed": 42,
+        "num_workers": 0
+    }
+}

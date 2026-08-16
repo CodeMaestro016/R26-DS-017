@@ -1,0 +1,167 @@
+{
+    "checkpoint": "outputs\\phase5\\reliability_only_transformer_best.pt",
+    "validation_samples": 845,
+    "mc_samples": 30,
+    "deterministic_validation_threshold": 0.4687584340572357,
+    "mc_mean_validation_threshold": 0.4414483606815338,
+    "classification_metrics": {
+        "samples": 845,
+        "threshold": 0.4414483606815338,
+        "accuracy": 0.8769230769230769,
+        "precision": 0.7461928934010152,
+        "recall": 0.7313432835820896,
+        "f1": 0.7386934673366834,
+        "roc_auc": 0.8753515033528012,
+        "average_precision": 0.7779971014190533
+    },
+    "calibration_metrics": {
+        "brier_score": 0.10720159113407135,
+        "negative_log_likelihood": 0.607060432434082,
+        "expected_calibration_error": 0.09587434241713501,
+        "ece_bins": 15
+    },
+    "error_detection_metrics": [
+        {
+            "uncertainty_metric": "one_minus_confidence",
+            "errors": 104,
+            "correct_predictions": 741,
+            "error_prevalence": 0.12307692307692308,
+            "error_detection_roc_auc": 0.7310417315478045,
+            "error_detection_average_precision": 0.3075733326244935
+        },
+        {
+            "uncertainty_metric": "normalized_predictive_entropy",
+            "errors": 104,
+            "correct_predictions": 741,
+            "error_prevalence": 0.12307692307692308,
+            "error_detection_roc_auc": 0.7310287553202534,
+            "error_detection_average_precision": 0.307573238355982
+        },
+        {
+            "uncertainty_metric": "mutual_information",
+            "errors": 104,
+            "correct_predictions": 741,
+            "error_prevalence": 0.12307692307692308,
+            "error_detection_roc_auc": 0.7322485207100592,
+            "error_detection_average_precision": 0.3060477038404457
+        },
+        {
+            "uncertainty_metric": "crossing_probability_variance",
+            "errors": 104,
+            "correct_predictions": 741,
+            "error_prevalence": 0.12307692307692308,
+            "error_detection_roc_auc": 0.7331957853212914,
+            "error_detection_average_precision": 0.31085991975821864
+        },
+        {
+            "uncertainty_metric": "variation_ratio",
+            "errors": 104,
+            "correct_predictions": 741,
+            "error_prevalence": 0.12307692307692308,
+            "error_detection_roc_auc": 0.611336032388664,
+            "error_detection_average_precision": 0.20421538570863207
+        },
+        {
+            "uncertainty_metric": "decision_margin_uncertainty",
+            "errors": 104,
+            "correct_predictions": 741,
+            "error_prevalence": 0.12307692307692308,
+            "error_detection_roc_auc": 0.7292380359181979,
+            "error_detection_average_precision": 0.2861426492024241
+        }
+    ],
+    "correct_vs_incorrect_uncertainty": {
+        "one_minus_confidence": {
+            "correct": {
+                "samples": 741,
+                "mean": 0.027692364528775215,
+                "median": 0.0002752542495727539,
+                "standard_deviation": 0.08163022994995117
+            },
+            "incorrect": {
+                "samples": 104,
+                "mean": 0.10853005945682526,
+                "median": 0.02708759903907776,
+                "standard_deviation": 0.14546766877174377
+            }
+        },
+        "normalized_predictive_entropy": {
+            "correct": {
+                "samples": 741,
+                "mean": 0.09813452512025833,
+                "median": 0.0036516287364065647,
+                "standard_deviation": 0.23090772330760956
+            },
+            "incorrect": {
+                "samples": 104,
+                "mean": 0.34398311376571655,
+                "median": 0.17955267429351807,
+                "standard_deviation": 0.3653522729873657
+            }
+        },
+        "mutual_information": {
+            "correct": {
+                "samples": 741,
+                "mean": 0.01357407495379448,
+                "median": 0.0003094724379479885,
+                "standard_deviation": 0.0367010235786438
+            },
+            "incorrect": {
+                "samples": 104,
+                "mean": 0.05087172985076904,
+                "median": 0.014334406703710556,
+                "standard_deviation": 0.07016865909099579
+            }
+        },
+        "crossing_probability_variance": {
+            "correct": {
+                "samples": 741,
+                "mean": 0.004174765665084124,
+                "median": 3.184271122336213e-07,
+                "standard_deviation": 0.014134461060166359
+            },
+            "incorrect": {
+                "samples": 104,
+                "mean": 0.0177149698138237,
+                "median": 0.000797668588347733,
+                "standard_deviation": 0.028758961707353592
+            }
+        },
+        "variation_ratio": {
+            "correct": {
+                "samples": 741,
+                "mean": 0.015924425795674324,
+                "median": 0.0,
+                "standard_deviation": 0.0664287582039833
+            },
+            "incorrect": {
+                "samples": 104,
+                "mean": 0.06698718667030334,
+                "median": 0.0,
+                "standard_deviation": 0.12856000661849976
+            }
+        },
+        "decision_margin_uncertainty": {
+            "correct": {
+                "samples": 741,
+                "mean": 0.0567750409245491,
+                "median": 0.000611722469329834,
+                "standard_deviation": 0.1691131442785263
+            },
+            "incorrect": {
+                "samples": 104,
+                "mean": 0.21128889918327332,
+                "median": 0.04849618673324585,
+                "standard_deviation": 0.2833647131919861
+            }
+        }
+    },
+    "output_files": {
+        "predictions": "outputs\\phase6\\validation_uncertainty_predictions.csv",
+        "error_detection": "outputs\\phase6\\validation_uncertainty_error_detection.csv",
+        "risk_coverage": "outputs\\phase6\\validation_risk_coverage.csv",
+        "calibration_bins": "outputs\\phase6\\validation_calibration_bins.csv",
+        "occlusion_summary": "outputs\\phase6\\validation_uncertainty_by_occlusion.csv"
+    },
+    "test_split_used": false
+}

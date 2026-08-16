@@ -1,0 +1,49 @@
+{
+  "intent_train_videos": [
+    "video_0001",
+    "video_0002",
+    "video_0003",
+    "video_0004"
+  ],
+  "intent_val_videos": [
+    "video_0001",
+    "video_0002",
+    "video_0003",
+    "video_0004"
+  ],
+  "intent_test_videos": [
+    "video_0001",
+    "video_0002",
+    "video_0003"
+  ],
+  "all_split_videos": [
+    "video_0001",
+    "video_0002",
+    "video_0003",
+    "video_0004"
+  ],
+  "unseen_to_intent_train": [],
+  "overlap": {
+    "train_val": [
+      "video_0001",
+      "video_0002",
+      "video_0003",
+      "video_0004"
+    ],
+    "train_test": [
+      "video_0001",
+      "video_0002",
+      "video_0003"
+    ],
+    "val_test": [
+      "video_0001",
+      "video_0002",
+      "video_0003"
+    ]
+  },
+  "detector_methodology_note": "For direct RGB detection training, use NONE and PART annotations as positive pedestrian boxes. FULL occlusion should not be treated as a directly visible detection target when the pedestrian has no observable pixels; continuity through full occlusion belongs to the tracking stage.",
+  "outputs": {
+    "video_occlusion_summary": "outputs\\phase9\\detector_split_audit\\video_occlusion_summary.csv",
+    "unseen_video_candidates": "outputs\\phase9\\detector_split_audit\\unseen_video_candidates.csv"
+  }
+}

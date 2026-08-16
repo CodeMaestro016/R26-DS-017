@@ -1,0 +1,19 @@
+{
+  "phase": "9.4A",
+  "model": "outputs/phase9/yolo_pedestrian/yolo11n_pie_occlusion_v1-2/weights/best.pt",
+  "tracker": "botsort.yaml",
+  "device": "cpu",
+  "sequence_index": 28,
+  "video": "video_0001",
+  "reference_target": "1_1_9",
+  "annotation_used_as_detector_input": false,
+  "recall_iou_0_10": 0.4,
+  "recall_iou_0_30": 0.26666666666666666,
+  "recall_iou_0_50": 0.23333333333333334,
+  "mean_best_iou": 0.21175701549519313,
+  "dominant_auto_track_id": null,
+  "dominant_id_fraction": 0.0,
+  "longest_dominant_id_run": 0,
+  "video_output": "outputs\\phase9\\automatic_tracking\\pie_auto_tracking_sequence_28.mp4",
+  "csv_output": "outputs\\phase9\\automatic_tracking\\pie_auto_tracking_sequence_28.csv"
+}

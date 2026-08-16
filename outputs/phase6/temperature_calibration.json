@@ -1,0 +1,20 @@
+{
+    "checkpoint": "outputs\\phase5\\reliability_only_transformer_best.pt",
+    "calibration_split": "validation",
+    "validation_samples": 845,
+    "temperature": 3.7721452713012695,
+    "before_calibration": {
+        "brier_score": 0.11109693348407745,
+        "negative_log_likelihood": 0.7207838296890259,
+        "expected_calibration_error": 0.1023481584101717,
+        "f1_optimal_threshold": 0.4687584936618805
+    },
+    "after_calibration": {
+        "brier_score": 0.09819027036428452,
+        "negative_log_likelihood": 0.3368960916996002,
+        "expected_calibration_error": 0.040991039578554905,
+        "f1_optimal_threshold": 0.49170780181884766
+    },
+    "model_weights_modified": false,
+    "test_split_used": false
+}

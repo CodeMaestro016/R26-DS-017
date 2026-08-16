@@ -1,0 +1,539 @@
+{
+  "phase": "9.3",
+  "sequence_index": 28,
+  "sequence_id": "196",
+  "video": "video_0001",
+  "pedestrian_id": "1_1_9",
+  "warmup_history": [
+    {
+      "track_id": "1_1_9",
+      "status": "WARMING_UP",
+      "buffered_frames": 1,
+      "required_frames": 30,
+      "ready": false,
+      "normalized_occlusion": "low",
+      "maximum_buffer_occlusion": "low",
+      "final_result": null
+    },
+    {
+      "track_id": "1_1_9",
+      "status": "WARMING_UP",
+      "buffered_frames": 2,
+      "required_frames": 30,
+      "ready": false,
+      "normalized_occlusion": "low",
+      "maximum_buffer_occlusion": "low",
+      "final_result": null
+    },
+    {
+      "track_id": "1_1_9",
+      "status": "WARMING_UP",
+      "buffered_frames": 3,
+      "required_frames": 30,
+      "ready": false,
+      "normalized_occlusion": "low",
+      "maximum_buffer_occlusion": "low",
+      "final_result": null
+    },
+    {
+      "track_id": "1_1_9",
+      "status": "WARMING_UP",
+      "buffered_frames": 4,
+      "required_frames": 30,
+      "ready": false,
+      "normalized_occlusion": "low",
+      "maximum_buffer_occlusion": "low",
+      "final_result": null
+    },
+    {
+      "track_id": "1_1_9",
+      "status": "WARMING_UP",
+      "buffered_frames": 5,
+      "required_frames": 30,
+      "ready": false,
+      "normalized_occlusion": "low",
+      "maximum_buffer_occlusion": "low",
+      "final_result": null
+    },
+    {
+      "track_id": "1_1_9",
+      "status": "WARMING_UP",
+      "buffered_frames": 6,
+      "required_frames": 30,
+      "ready": false,
+      "normalized_occlusion": "low",
+      "maximum_buffer_occlusion": "low",
+      "final_result": null
+    },
+    {
+      "track_id": "1_1_9",
+      "status": "WARMING_UP",
+      "buffered_frames": 7,
+      "required_frames": 30,
+      "ready": false,
+      "normalized_occlusion": "low",
+      "maximum_buffer_occlusion": "low",
+      "final_result": null
+    },
+    {
+      "track_id": "1_1_9",
+      "status": "WARMING_UP",
+      "buffered_frames": 8,
+      "required_frames": 30,
+      "ready": false,
+      "normalized_occlusion": "low",
+      "maximum_buffer_occlusion": "low",
+      "final_result": null
+    },
+    {
+      "track_id": "1_1_9",
+      "status": "WARMING_UP",
+      "buffered_frames": 9,
+      "required_frames": 30,
+      "ready": false,
+      "normalized_occlusion": "low",
+      "maximum_buffer_occlusion": "low",
+      "final_result": null
+    },
+    {
+      "track_id": "1_1_9",
+      "status": "WARMING_UP",
+      "buffered_frames": 10,
+      "required_frames": 30,
+      "ready": false,
+      "normalized_occlusion": "low",
+      "maximum_buffer_occlusion": "low",
+      "final_result": null
+    },
+    {
+      "track_id": "1_1_9",
+      "status": "WARMING_UP",
+      "buffered_frames": 11,
+      "required_frames": 30,
+      "ready": false,
+      "normalized_occlusion": "low",
+      "maximum_buffer_occlusion": "low",
+      "final_result": null
+    },
+    {
+      "track_id": "1_1_9",
+      "status": "WARMING_UP",
+      "buffered_frames": 12,
+      "required_frames": 30,
+      "ready": false,
+      "normalized_occlusion": "low",
+      "maximum_buffer_occlusion": "low",
+      "final_result": null
+    },
+    {
+      "track_id": "1_1_9",
+      "status": "WARMING_UP",
+      "buffered_frames": 13,
+      "required_frames": 30,
+      "ready": false,
+      "normalized_occlusion": "low",
+      "maximum_buffer_occlusion": "low",
+      "final_result": null
+    },
+    {
+      "track_id": "1_1_9",
+      "status": "WARMING_UP",
+      "buffered_frames": 14,
+      "required_frames": 30,
+      "ready": false,
+      "normalized_occlusion": "medium",
+      "maximum_buffer_occlusion": "medium",
+      "final_result": null
+    },
+    {
+      "track_id": "1_1_9",
+      "status": "WARMING_UP",
+      "buffered_frames": 15,
+      "required_frames": 30,
+      "ready": false,
+      "normalized_occlusion": "medium",
+      "maximum_buffer_occlusion": "medium",
+      "final_result": null
+    },
+    {
+      "track_id": "1_1_9",
+      "status": "WARMING_UP",
+      "buffered_frames": 16,
+      "required_frames": 30,
+      "ready": false,
+      "normalized_occlusion": "medium",
+      "maximum_buffer_occlusion": "medium",
+      "final_result": null
+    },
+    {
+      "track_id": "1_1_9",
+      "status": "WARMING_UP",
+      "buffered_frames": 17,
+      "required_frames": 30,
+      "ready": false,
+      "normalized_occlusion": "medium",
+      "maximum_buffer_occlusion": "medium",
+      "final_result": null
+    },
+    {
+      "track_id": "1_1_9",
+      "status": "WARMING_UP",
+      "buffered_frames": 18,
+      "required_frames": 30,
+      "ready": false,
+      "normalized_occlusion": "high",
+      "maximum_buffer_occlusion": "high",
+      "final_result": null
+    },
+    {
+      "track_id": "1_1_9",
+      "status": "WARMING_UP",
+      "buffered_frames": 19,
+      "required_frames": 30,
+      "ready": false,
+      "normalized_occlusion": "high",
+      "maximum_buffer_occlusion": "high",
+      "final_result": null
+    },
+    {
+      "track_id": "1_1_9",
+      "status": "WARMING_UP",
+      "buffered_frames": 20,
+      "required_frames": 30,
+      "ready": false,
+      "normalized_occlusion": "high",
+      "maximum_buffer_occlusion": "high",
+      "final_result": null
+    },
+    {
+      "track_id": "1_1_9",
+      "status": "WARMING_UP",
+      "buffered_frames": 21,
+      "required_frames": 30,
+      "ready": false,
+      "normalized_occlusion": "high",
+      "maximum_buffer_occlusion": "high",
+      "final_result": null
+    },
+    {
+      "track_id": "1_1_9",
+      "status": "WARMING_UP",
+      "buffered_frames": 22,
+      "required_frames": 30,
+      "ready": false,
+      "normalized_occlusion": "high",
+      "maximum_buffer_occlusion": "high",
+      "final_result": null
+    },
+    {
+      "track_id": "1_1_9",
+      "status": "WARMING_UP",
+      "buffered_frames": 23,
+      "required_frames": 30,
+      "ready": false,
+      "normalized_occlusion": "high",
+      "maximum_buffer_occlusion": "high",
+      "final_result": null
+    },
+    {
+      "track_id": "1_1_9",
+      "status": "WARMING_UP",
+      "buffered_frames": 24,
+      "required_frames": 30,
+      "ready": false,
+      "normalized_occlusion": "high",
+      "maximum_buffer_occlusion": "high",
+      "final_result": null
+    },
+    {
+      "track_id": "1_1_9",
+      "status": "WARMING_UP",
+      "buffered_frames": 25,
+      "required_frames": 30,
+      "ready": false,
+      "normalized_occlusion": "high",
+      "maximum_buffer_occlusion": "high",
+      "final_result": null
+    },
+    {
+      "track_id": "1_1_9",
+      "status": "WARMING_UP",
+      "buffered_frames": 26,
+      "required_frames": 30,
+      "ready": false,
+      "normalized_occlusion": "high",
+      "maximum_buffer_occlusion": "high",
+      "final_result": null
+    },
+    {
+      "track_id": "1_1_9",
+      "status": "WARMING_UP",
+      "buffered_frames": 27,
+      "required_frames": 30,
+      "ready": false,
+      "normalized_occlusion": "high",
+      "maximum_buffer_occlusion": "high",
+      "final_result": null
+    },
+    {
+      "track_id": "1_1_9",
+      "status": "WARMING_UP",
+      "buffered_frames": 28,
+      "required_frames": 30,
+      "ready": false,
+      "normalized_occlusion": "high",
+      "maximum_buffer_occlusion": "high",
+      "final_result": null
+    },
+    {
+      "track_id": "1_1_9",
+      "status": "WARMING_UP",
+      "buffered_frames": 29,
+      "required_frames": 30,
+      "ready": false,
+      "normalized_occlusion": "high",
+      "maximum_buffer_occlusion": "high",
+      "final_result": null
+    },
+    {
+      "track_id": "1_1_9",
+      "status": "READY",
+      "buffered_frames": 30,
+      "required_frames": 30,
+      "ready": true,
+      "normalized_occlusion": "high",
+      "maximum_buffer_occlusion": "high",
+      "final_result": {
+        "feature_shape": [
+          30,
+          525
+        ],
+        "intent_prediction": "NOT_CROSSING",
+        "p_crossing": 0.02778654545545578,
+        "confidence": 0.9722134470939636,
+        "normalized_predictive_entropy": 0.18316704811155016,
+        "mutual_information": 0.004162892699241638,
+        "crossing_probability_variance": 0.0002558908599894494,
+        "variation_ratio": 0.0,
+        "decision_margin_uncertainty": 0.05557309091091156,
+        "observation_reliability_mean": {
+          "low": 0.43332964181900024,
+          "medium": 0.13333474099636078,
+          "high": 0.43333563208580017
+        },
+        "observation_reliability_last": {
+          "low": 0.9999885559082031,
+          "medium": 5.724327820644248e-06,
+          "high": 5.724327820644248e-06
+        },
+        "mean_speed": 0.9307186007499695,
+        "last_speed": 1.1180340051651,
+        "agent_action_id": 1,
+        "agent_action_name": "COMMIT_NOT_CROSSING",
+        "agent_action_probability": 0.9732424020767212,
+        "agent_action_probabilities": {
+          "OBSERVE_MORE": 0.02633330598473549,
+          "COMMIT_NOT_CROSSING": 0.9732424020767212,
+          "COMMIT_CROSSING": 0.0004242501163389534
+        },
+        "committed_intent": "NOT_CROSSING",
+        "av_interface_signal": "NOT_CROSSING_INTENT_AVAILABLE",
+        "maximum_occlusion": "high",
+        "dominant_explanation_group": "reliability",
+        "explanation": "Decision: COMMIT_NOT_CROSSING (policy probability 0.973). Observed maximum occlusion: high. The strongest local evidence supporting this decision was latest high-reliability evidence (value=0.000, attribution=+0.474), predictive entropy (value=0.183, attribution=+0.425), and crossing probability (value=0.028, attribution=+0.402). The strongest local evidence opposing the selected decision was crossing-probability variance (value=0.000, attribution=-0.033). The dominant attribution group was reliability. This explanation describes the learned policy's local model evidence for the current situation; it is not a causal claim about pedestrian behaviour.",
+        "top_supporting_evidence": [
+          {
+            "feature": "reliability_high_last",
+            "label": "latest high-reliability evidence",
+            "state_value": 5.724327820644248e-06,
+            "attribution": 0.47395405173301697,
+            "absolute_share": 0.17067745327949524
+          },
+          {
+            "feature": "normalized_predictive_entropy",
+            "label": "predictive entropy",
+            "state_value": 0.18316704811155016,
+            "attribution": 0.42473867535591125,
+            "absolute_share": 0.1529543101787567
+          },
+          {
+            "feature": "p_crossing",
+            "label": "crossing probability",
+            "state_value": 0.02778654545545578,
+            "attribution": 0.40160325169563293,
+            "absolute_share": 0.14462292194366455
+          }
+        ],
+        "top_opposing_evidence": [
+          {
+            "feature": "crossing_probability_variance",
+            "label": "crossing-probability variance",
+            "state_value": 0.0002558908599894494,
+            "attribution": -0.033125534653663635,
+            "absolute_share": 0.011928966268897057
+          }
+        ],
+        "agent_state": {
+          "p_crossing": 0.02778654545545578,
+          "confidence": 0.9722134470939636,
+          "normalized_predictive_entropy": 0.18316704811155016,
+          "mutual_information": 0.004162892699241638,
+          "crossing_probability_variance": 0.0002558908599894494,
+          "variation_ratio": 0.0,
+          "decision_margin_uncertainty": 0.05557309091091156,
+          "reliability_low_mean": 0.43332964181900024,
+          "reliability_medium_mean": 0.13333474099636078,
+          "reliability_high_mean": 0.43333563208580017,
+          "reliability_low_last": 0.9999885559082031,
+          "reliability_medium_last": 5.724327820644248e-06,
+          "reliability_high_last": 5.724327820644248e-06,
+          "mean_speed": 0.9307186007499695,
+          "last_speed": 1.1180340051651
+        },
+        "raw_intent_output": {
+          "predicted_class_id": 0,
+          "predicted_intent": "not-crossing",
+          "not_crossing_probability": 0.9722134470939636,
+          "crossing_probability": 0.02778654545545578,
+          "decision_threshold": 0.47512510418891907,
+          "confidence": 0.9722134470939636,
+          "predictive_entropy": 0.12696172297000885,
+          "normalized_entropy": 0.18316704811155016,
+          "expected_entropy": 0.12279883027076721,
+          "mutual_information": 0.004162892699241638,
+          "crossing_probability_variance": 0.0002558908599894494,
+          "crossing_probability_std": 0.01599658839404583,
+          "crossing_probability_min": 0.013749262318015099,
+          "crossing_probability_max": 0.07611262798309326,
+          "temperature": 3.7721452713012695,
+          "mc_samples": 30,
+          "_unified_state_sources": {
+            "p_crossing": "crossing_probability",
+            "confidence": "confidence",
+            "normalized_predictive_entropy": "normalized_entropy",
+            "mutual_information": "mutual_information",
+            "crossing_probability_variance": "crossing_probability_variance",
+            "variation_ratio": "filled_zero",
+            "decision_margin_uncertainty": "derived_from_p_crossing"
+          }
+        }
+      }
+    }
+  ],
+  "final_result": {
+    "feature_shape": [
+      30,
+      525
+    ],
+    "intent_prediction": "NOT_CROSSING",
+    "p_crossing": 0.02778654545545578,
+    "confidence": 0.9722134470939636,
+    "normalized_predictive_entropy": 0.18316704811155016,
+    "mutual_information": 0.004162892699241638,
+    "crossing_probability_variance": 0.0002558908599894494,
+    "variation_ratio": 0.0,
+    "decision_margin_uncertainty": 0.05557309091091156,
+    "observation_reliability_mean": {
+      "low": 0.43332964181900024,
+      "medium": 0.13333474099636078,
+      "high": 0.43333563208580017
+    },
+    "observation_reliability_last": {
+      "low": 0.9999885559082031,
+      "medium": 5.724327820644248e-06,
+      "high": 5.724327820644248e-06
+    },
+    "mean_speed": 0.9307186007499695,
+    "last_speed": 1.1180340051651,
+    "agent_action_id": 1,
+    "agent_action_name": "COMMIT_NOT_CROSSING",
+    "agent_action_probability": 0.9732424020767212,
+    "agent_action_probabilities": {
+      "OBSERVE_MORE": 0.02633330598473549,
+      "COMMIT_NOT_CROSSING": 0.9732424020767212,
+      "COMMIT_CROSSING": 0.0004242501163389534
+    },
+    "committed_intent": "NOT_CROSSING",
+    "av_interface_signal": "NOT_CROSSING_INTENT_AVAILABLE",
+    "maximum_occlusion": "high",
+    "dominant_explanation_group": "reliability",
+    "explanation": "Decision: COMMIT_NOT_CROSSING (policy probability 0.973). Observed maximum occlusion: high. The strongest local evidence supporting this decision was latest high-reliability evidence (value=0.000, attribution=+0.474), predictive entropy (value=0.183, attribution=+0.425), and crossing probability (value=0.028, attribution=+0.402). The strongest local evidence opposing the selected decision was crossing-probability variance (value=0.000, attribution=-0.033). The dominant attribution group was reliability. This explanation describes the learned policy's local model evidence for the current situation; it is not a causal claim about pedestrian behaviour.",
+    "top_supporting_evidence": [
+      {
+        "feature": "reliability_high_last",
+        "label": "latest high-reliability evidence",
+        "state_value": 5.724327820644248e-06,
+        "attribution": 0.47395405173301697,
+        "absolute_share": 0.17067745327949524
+      },
+      {
+        "feature": "normalized_predictive_entropy",
+        "label": "predictive entropy",
+        "state_value": 0.18316704811155016,
+        "attribution": 0.42473867535591125,
+        "absolute_share": 0.1529543101787567
+      },
+      {
+        "feature": "p_crossing",
+        "label": "crossing probability",
+        "state_value": 0.02778654545545578,
+        "attribution": 0.40160325169563293,
+        "absolute_share": 0.14462292194366455
+      }
+    ],
+    "top_opposing_evidence": [
+      {
+        "feature": "crossing_probability_variance",
+        "label": "crossing-probability variance",
+        "state_value": 0.0002558908599894494,
+        "attribution": -0.033125534653663635,
+        "absolute_share": 0.011928966268897057
+      }
+    ],
+    "agent_state": {
+      "p_crossing": 0.02778654545545578,
+      "confidence": 0.9722134470939636,
+      "normalized_predictive_entropy": 0.18316704811155016,
+      "mutual_information": 0.004162892699241638,
+      "crossing_probability_variance": 0.0002558908599894494,
+      "variation_ratio": 0.0,
+      "decision_margin_uncertainty": 0.05557309091091156,
+      "reliability_low_mean": 0.43332964181900024,
+      "reliability_medium_mean": 0.13333474099636078,
+      "reliability_high_mean": 0.43333563208580017,
+      "reliability_low_last": 0.9999885559082031,
+      "reliability_medium_last": 5.724327820644248e-06,
+      "reliability_high_last": 5.724327820644248e-06,
+      "mean_speed": 0.9307186007499695,
+      "last_speed": 1.1180340051651
+    },
+    "raw_intent_output": {
+      "predicted_class_id": 0,
+      "predicted_intent": "not-crossing",
+      "not_crossing_probability": 0.9722134470939636,
+      "crossing_probability": 0.02778654545545578,
+      "decision_threshold": 0.47512510418891907,
+      "confidence": 0.9722134470939636,
+      "predictive_entropy": 0.12696172297000885,
+      "normalized_entropy": 0.18316704811155016,
+      "expected_entropy": 0.12279883027076721,
+      "mutual_information": 0.004162892699241638,
+      "crossing_probability_variance": 0.0002558908599894494,
+      "crossing_probability_std": 0.01599658839404583,
+      "crossing_probability_min": 0.013749262318015099,
+      "crossing_probability_max": 0.07611262798309326,
+      "temperature": 3.7721452713012695,
+      "mc_samples": 30,
+      "_unified_state_sources": {
+        "p_crossing": "crossing_probability",
+        "confidence": "confidence",
+        "normalized_predictive_entropy": "normalized_entropy",
+        "mutual_information": "mutual_information",
+        "crossing_probability_variance": "crossing_probability_variance",
+        "variation_ratio": "filled_zero",
+        "decision_margin_uncertainty": "derived_from_p_crossing"
+      }
+    }
+  },
+  "track_cleanup_passed": true
+}

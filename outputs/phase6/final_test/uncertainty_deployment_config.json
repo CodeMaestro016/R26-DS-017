@@ -1,0 +1,17 @@
+{
+    "checkpoint": "outputs\\phase5\\reliability_only_transformer_best.pt",
+    "input_dimension": 525,
+    "sequence_length": 30,
+    "temperature": 3.7721452713012695,
+    "temperature_source": "outputs\\phase6\\temperature_calibration.json",
+    "mc_samples": 30,
+    "decision_threshold": 0.47512510418891907,
+    "decision_threshold_source": "validation calibrated MC-mean F1 optimization",
+    "primary_uncertainty_metric": "crossing_probability_variance",
+    "supporting_uncertainty_metrics": [
+        "mutual_information",
+        "normalized_predictive_entropy"
+    ],
+    "validation_high_confidence_cutoff": 0.9631310105323792,
+    "test_data_used_for_tuning": false
+}
