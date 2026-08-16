@@ -25,7 +25,8 @@ from traffic_accounting import DemandScheduleSource, VehicleDemandLedger
 from traffic_rules import TrafficRuleEngine
 
 from .controller import (ExecutionConstraintError,
-                         build_sumo_native_speed_constraint)
+                         build_sumo_native_speed_constraint,
+                         speed_mode_enforcement)
 from .planner import ConflictZoneExecutionPlanner
 from .replay_models import (ACTION_SOURCE, PhysicalBranchReplaySpecification,
     PhysicalNegotiationBranchReplayTrace, PreBranchPhysicalStateFingerprint)
@@ -173,25 +174,28 @@ class PhysicalBranchReplayRunner:
                     if vehicle_id not in states:
                         continue
                     (previous_time, previous_speed, comfortable_deceleration,
-                     comfortable_minimum, requested, mode) = audit
+                     comfortable_minimum, requested, mode, speed_mode,
+                     zone_state, source_records) = audit
                     current_speed = states[vehicle_id]["speed"]
+                    actual_acceleration = states[vehicle_id]["accel"]
+                    if traci.vehicle.getSpeedMode(vehicle_id) != speed_mode:
+                        raise PhysicalReplayError("SAFE_SUMO_SPEED_MODE_CHANGED")
+                    for source_record in source_records:
+                        index = constraints.index(source_record)
+                        constraints[index] = replace(
+                            source_record,
+                            actual_realized_next_speed_mps=current_speed,
+                            actual_realized_acceleration_mps2=actual_acceleration)
                     realized_deceleration = (
                         previous_speed - current_speed) / simulation_step
                     if realized_deceleration <= comfortable_deceleration:
                         classification = "WITHIN_COMFORTABLE_BOUND"
-                    elif (mode == "PRECEDENCE_SPEED_CAP" and
-                          requested < comfortable_minimum):
-                        classification = (
-                            "PRECEDENCE_CONTROLLER_COMFORTABLE_BOUND_VIOLATION")
-                        raise PhysicalReplayError(
-                            "PRECEDENCE_CONTROLLER_REQUIRES_EMERGENCY_DECELERATION",
-                            (vehicle_id, previous_time, requested,
-                             comfortable_minimum))
                     else:
                         classification = "NATIVE_SUMO_SAFETY_INTERVENTION"
                     realized.append((now, vehicle_id, previous_speed,
                                      current_speed, realized_deceleration,
-                                     comfortable_deceleration, mode,
+                                     comfortable_deceleration, mode, requested,
+                                     actual_acceleration, speed_mode, zone_state,
                                      classification))
                 for vehicle_id in environment.lifecycle_events.departed_vehicle_ids:
                     if ledger.get_vehicle_record(vehicle_id):
@@ -204,6 +208,9 @@ class PhysicalBranchReplayRunner:
                 colliding = tuple(sorted(traci.simulation.getCollidingVehiclesIDList()))
                 if colliding:
                     collision_events.append((now, colliding))
+                    raise PhysicalReplayError(
+                        "PHYSICAL_CAUSAL_BRANCH_COLLISION_OBSERVED",
+                        tuple(collision_events))
                 emergency = tuple(sorted(
                     traci.simulation.getEmergencyStoppingVehiclesIDList()))
                 if emergency:
@@ -458,6 +465,14 @@ class PhysicalBranchReplayRunner:
                                           (vehicle_id, zone_id, now))
             state = states[vehicle_id]
             try:
+                speed_mode = int(traci.vehicle.getSpeedMode(vehicle_id))
+                if speed_mode != SAFE_SUMO_SPEED_MODE:
+                    raise PhysicalReplayError("SAFE_SUMO_SPEED_MODE_CHANGED")
+                enforcement = speed_mode_enforcement(speed_mode)
+                if not all(enforcement.values()):
+                    raise PhysicalReplayError(
+                        "SUMO_SPEED_MODE_REQUIRED_ENFORCEMENT_DISABLED",
+                        enforcement)
                 action_step = float(traci.vehicle.getActionStepLength(vehicle_id))
                 sumo_stop_speed = float(traci.vehicle.getStopSpeed(
                     vehicle_id, state["speed"], evidence["distance_to_entry"]))
@@ -466,7 +481,8 @@ class PhysicalBranchReplayRunner:
                 record = build_sumo_native_speed_constraint(
                     vehicle_id, zone_id, evidence["distance_to_entry"],
                     state["comfortable_deceleration_mps2"], state["speed"],
-                    simulation_step, action_step, sumo_stop_speed, native_speed)
+                    simulation_step, action_step, sumo_stop_speed, native_speed,
+                    speed_mode)
             except ExecutionConstraintError as error:
                 raise PhysicalReplayError(error.args[0], {
                     "timestamp": now, "vehicle_id": vehicle_id,
@@ -494,6 +510,9 @@ class PhysicalBranchReplayRunner:
         for vehicle_id in sorted(states):
             if vehicle_id in by_vehicle:
                 cap = min(by_vehicle[vehicle_id])
+                speed_mode = int(traci.vehicle.getSpeedMode(vehicle_id))
+                if speed_mode != SAFE_SUMO_SPEED_MODE:
+                    raise PhysicalReplayError("SAFE_SUMO_SPEED_MODE_CHANGED")
                 traci.vehicle.setSpeed(vehicle_id, cap)
                 command_records.append((now, vehicle_id, "PRECEDENCE_SPEED_CAP", cap))
                 governing = min(
@@ -503,7 +522,9 @@ class PhysicalBranchReplayRunner:
                     now, states[vehicle_id]["speed"],
                     states[vehicle_id]["comfortable_deceleration_mps2"],
                     governing.comfortable_min_next_speed_mps, cap,
-                    "PRECEDENCE_SPEED_CAP")
+                    "PRECEDENCE_SPEED_CAP", speed_mode, "BEFORE_ZONE",
+                    tuple(item for item in records
+                          if item.vehicle_id == vehicle_id))
                 command_mode[vehicle_id] = "PRECEDENCE_CONSTRAINED"
             else:
                 traci.vehicle.setSpeed(vehicle_id, -1.0)
@@ -513,8 +534,10 @@ class PhysicalBranchReplayRunner:
                     now, state["speed"],
                     state["comfortable_deceleration_mps2"],
                     max(0.0, state["speed"] -
-                        state["comfortable_deceleration_mps2"] * simulation_step),
-                    -1.0, "RELEASE_TO_SUMO")
+                    state["comfortable_deceleration_mps2"] * simulation_step),
+                    -1.0, "RELEASE_TO_SUMO",
+                    int(traci.vehicle.getSpeedMode(vehicle_id)),
+                    "NOT_PRECEDENCE_BLOCKED", ())
                 command_mode[vehicle_id] = "RELEASED_TO_SUMO"
             if traci.vehicle.getSpeedMode(vehicle_id) != SAFE_SUMO_SPEED_MODE:
                 raise PhysicalReplayError("SAFE_SUMO_SPEED_MODE_CHANGED")

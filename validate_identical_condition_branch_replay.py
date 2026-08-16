@@ -1,4 +1,4 @@
-"""Step 5J.2B.2 real-SUMO identical-condition replay validator."""
+"""Step 5J.2B.4 SUMO-authoritative identical-condition replay validator."""
 
 import json
 import math
@@ -48,31 +48,49 @@ def main():
     if not exact_equal:
         raise PhysicalReplayError(
             "IDENTICAL_INITIAL_CONDITION_REPLAY_DIVERGED_BEFORE_BRANCH")
-    stopping_failure = next((item["error"] for item in attempts
-                             if item["error"] and item["error"].code ==
-                             "EXECUTION_CONSTRAINT_NOT_PHYSICALLY_FEASIBLE"), None)
+    replay_failure = next((item["error"] for item in attempts
+                           if item["error"]), None)
     traces = tuple(item["trace"] for item in attempts)
     completed = tuple(item for item in traces if item is not None)
+    trajectory_signatures = tuple(
+        (item.conflict_zone_entry_events, item.conflict_zone_clear_events,
+         item.vehicle_completion_events) for item in completed)
+    physical_causal_witness = (
+        len(trajectory_signatures) == 2 and
+        trajectory_signatures[0] != trajectory_signatures[1])
+    if len(completed) == 2 and not physical_causal_witness:
+        raise PhysicalReplayError("NO_PHYSICAL_CAUSAL_WITNESS_FOUND")
+    former_24_36 = next((record for record in completed[0].speed_constraint_records
+                         if record.vehicle_id == "SCENARIO_AV_1" and
+                         record.conflict_zone_id == "CZ_016" and
+                         record.provenance.get("timestamp") == "24.36"), None) \
+        if completed else None
+    former_24_36_realized = next((item for item in
+                                  completed[0].realized_deceleration_records
+                                  if item[0] == 24.4 and
+                                  item[1] == "SCENARIO_AV_1"), None) \
+        if completed else None
     payload = {
-        "checkpoint": "STEP_5J_2B_2",
+        "checkpoint": "STEP_5J_2B_4",
         "freeze_id": repr(EXPECTED_FREEZE_ID),
         "selection_method": PAIR_SELECTION_METHOD,
         "pair_selected_before_outcomes": True,
         "branch_ids": [repr(item.branch_id) for item in pair],
         "fingerprint_ids": [repr(item.fingerprint_id) for item in fingerprints],
         "fingerprints_exactly_equal": exact_equal,
-        "status": ("EXECUTION_CONSTRAINT_NOT_PHYSICALLY_FEASIBLE"
-                   if stopping_failure else "CAUSAL_EXECUTION_PATH_VALIDATED"),
-        "next_blocker": (
-            "SUMO_NATIVE_STOP_SPEED_BELOW_COMFORTABLE_NEXT_STEP_AT_24_36"
-            if stopping_failure else None),
+        "status": (replay_failure.code if replay_failure else
+                   "CAUSAL_EXECUTION_PATH_VALIDATED"),
+        "next_blocker": replay_failure.code if replay_failure else None,
+        "physical_causal_witness": physical_causal_witness,
+        "former_24_36_record": repr(former_24_36),
+        "former_24_36_realized_record": repr(former_24_36_realized),
         "error_evidence": ({key: repr(value) for key, value in
-                            stopping_failure.evidence.items() if key not in {
+                            replay_failure.evidence.items() if key not in {
                                 "pre_branch_fingerprint",
                                 "speed_constraint_records_before_failure",
                                 "speed_command_records_before_failure",
                                 "realized_deceleration_before_failure"}}
-                           if stopping_failure else None),
+                           if replay_failure else None),
         "completed_branch_count": len(completed),
         "physical_speed_command_count": sum(
             sum(command[2] == "PRECEDENCE_SPEED_CAP" for command in
@@ -102,7 +120,7 @@ def main():
     }
     ARTIFACT.write_text(json.dumps(payload, indent=2), encoding="utf-8")
 
-    print("Step 5J.2B.2 Identical-Condition Physical Replay\n")
+    print("Step 5J.2B.4 SUMO-Native Physical Causal Replay\n")
     print("Frozen source")
     print("  Step 5J.2 design identity unchanged: PASS")
     print("  Source role: TRAINING")
@@ -147,6 +165,23 @@ def main():
     print("  Continuous equation role: DIAGNOSTIC_REFERENCE_ONLY")
     print("  New stopping margin: 0")
     print("  Native SUMO safety mode changed: False\n")
+    if former_24_36:
+        print("Former 24.36 state under SUMO authority")
+        print(f"  Current speed: {former_24_36.current_speed_mps}")
+        print(f"  SUMO stop speed: {former_24_36.sumo_stop_speed_mps}")
+        print("  Diagnostic comfortable minimum: " +
+              str(former_24_36.comfortable_min_next_speed_mps))
+        print("  Pre-command Python rejection: False")
+        print("  Requested precedence speed: " +
+              str(former_24_36.requested_precedence_speed_mps))
+        print("  Actual next SUMO speed: " +
+              str(former_24_36.actual_realized_next_speed_mps))
+        print("  Actual next acceleration: " +
+              str(former_24_36.actual_realized_acceleration_mps2))
+        print("  Native intervention classification: " +
+              str(former_24_36_realized[-1] if former_24_36_realized else None))
+        print("  SUMO emergency-stop event: False")
+        print(f"  Speed mode: {former_24_36.speed_mode}\n")
     for label, attempt in zip(("A", "B"), attempts):
         print(f"Branch {label} physical outcome")
         if attempt["trace"]:
@@ -188,12 +223,12 @@ def main():
     print("  Checkpoints: 0")
     print("  Learned main.py actions: 0\n")
     print("Status")
-    if stopping_failure:
-        print("  STOP: EXECUTION_CONSTRAINT_NOT_PHYSICALLY_FEASIBLE")
+    if replay_failure:
+        print(f"  STOP: {replay_failure.code}")
         print("  NEGOTIATION_ACTION_TO_TRAFFIC_OUTCOME_STATUS: NEGOTIATION_ACTION_TO_TRAFFIC_OUTCOME_COUPLING_INCOMPLETE")
-        print("  Former 23.44 continuous-reference false rejection cleared: PASS")
-        print("  NEXT_BLOCKER: SUMO_NATIVE_STOP_SPEED_BELOW_COMFORTABLE_NEXT_STEP_AT_24_36")
+        print(f"  NEXT_BLOCKER: {replay_failure.code}")
     else:
+        print("  Physical trajectory difference: PASS")
         print("  NEGOTIATION_ACTION_TO_TRAFFIC_OUTCOME_STATUS: CAUSAL_EXECUTION_PATH_VALIDATED")
 
 

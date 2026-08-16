@@ -74,6 +74,16 @@ class SpeedConstraintRecord:
     requested_precedence_speed_mps: Optional[float] = None
     comfortable_feasible: Optional[bool] = None
     integration_method: Optional[str] = None
+    comfortable_feasibility_status: Optional[str] = None
+    actual_realized_next_speed_mps: Optional[float] = None
+    actual_realized_acceleration_mps2: Optional[float] = None
+    sumo_max_deceleration_enforcement_active: Optional[bool] = None
+    sumo_safe_speed_enforcement_active: Optional[bool] = None
+    sumo_max_acceleration_enforcement_active: Optional[bool] = None
+    sumo_junction_priority_enforcement_active: Optional[bool] = None
+    runtime_authority: Optional[str] = None
+    precommand_python_feasibility_rejection: Optional[bool] = None
+    speed_mode: Optional[int] = None
 
     def __post_init__(self):
         object.__setattr__(self, "provenance", _freeze(self.provenance))

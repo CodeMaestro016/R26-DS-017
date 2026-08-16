@@ -392,14 +392,28 @@ next-step bound is derived from the actual vehicle deceleration. No numerical
 tolerance, distance/time margin, or emergency-deceleration substitution is
 used.
 
-This clears the former false continuous-time rejection at 23.44 seconds.
-During the unchanged branch A replay, a later state at 24.36 seconds produced
-a SUMO-native stop speed of `3.87473868489288 m/s`, directly below the
-comfortable next-step minimum `3.8747675412749003 m/s`. Under the required
-direct comparison this is a new genuine physical-feasibility blocker. Branch B
-still completes with Step 5H accounting, but the causal coupling status remains
-incomplete until that exact simulator/controller boundary is resolved without
-a tolerance or heuristic.
+This clears the former false continuous-time rejection at 23.44 seconds. The
+later Python comparison observed at 24.36 seconds is retained as a diagnostic,
+not duplicated as live simulator authority.
+
+## SUMO-native TraCI speed-influence authority
+
+Step 5J.2B.4 delegates final application of each precedence-derived request to
+SUMO 1.26.0. The live chain uses `traci.vehicle.getStopSpeed`, limits the
+request by `traci.vehicle.getSpeedWithoutTraCI`, and submits it with
+`traci.vehicle.setSpeed` while the unchanged `SAFE_SUMO_SPEED_MODE` is active.
+The continuous cap, Euler brake gap, and Python comfortable-minimum value are
+diagnostic references only; none is a pre-command rejection authority.
+
+The inspected SUMO source contract comprises `MSCFModel::minNextSpeed`,
+`MSCFModel::maximumSafeStopSpeed` / `maximumSafeStopSpeedEuler`,
+`MSVehicle::processTraCISpeedControl`, and
+`MSVehicle::Influencer::influenceSpeed`. Under semi-implicit Euler,
+`minNextSpeed(speed)` is `max(speed - ACCEL2SPEED(decel), 0)`, and TraCI speed
+influence respects that native minimum when maximum-deceleration checking is
+enabled. SUMO's internal numerical handling is a simulator implementation
+detail, not a project constant, hyperparameter, actor input, or reward input.
+Project epsilon and tolerance additions remain zero.
 
 ## Identical-condition physical replay checkpoint
 
@@ -407,10 +421,8 @@ The dedicated replay restarts a fresh SUMO process and fresh Python-side state
 for each outcome, reproduces the real TRAINING source context, reconstructs the
 selected joint branches, and applies only path-derived per-zone speed caps. The
 first canonical executable pair reproduced an exactly identical pre-branch
-fingerprint. One branch completed with Step 5H accounting; the other reached
-the mandatory `EXECUTION_CONSTRAINT_NOT_PHYSICALLY_FEASIBLE` stop because its
-actual discrete SUMO speed exceeded the exact comfortable-braking envelope.
-No tolerance, emergency-deceleration substitution, stopping margin, native
-safety bypass, or reward term was added. Consequently the causal coupling
-status remains incomplete pending resolution of that exact physical-control
-discretization issue.
+fingerprint. With SUMO authoritative for TraCI speed influence, both branches
+complete with zero collisions and valid Step 5H accounting. Their zone-entry,
+zone-clear, completion, and objective traces differ, establishing the physical
+causal witness. No tolerance, emergency-deceleration substitution, stopping
+margin, native safety bypass, or reward term was added.

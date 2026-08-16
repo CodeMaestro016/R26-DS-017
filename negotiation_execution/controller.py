@@ -8,6 +8,27 @@ class ExecutionConstraintError(ValueError):
     pass
 
 
+SUMO_SPEED_MODE_SAFE_SPEED_BIT = 0
+SUMO_SPEED_MODE_MAX_ACCELERATION_BIT = 1
+SUMO_SPEED_MODE_MAX_DECELERATION_BIT = 2
+SUMO_SPEED_MODE_JUNCTION_PRIORITY_BIT = 3
+SUMO_PROCESS_TRACI_SPEED_CONTROL = "SUMO_PROCESS_TRACI_SPEED_CONTROL"
+
+
+def speed_mode_enforcement(speed_mode):
+    """Interpret SUMO's non-inverted safety bits without changing the mask."""
+    mode = int(speed_mode)
+    return {
+        "safe_speed": bool(mode & (1 << SUMO_SPEED_MODE_SAFE_SPEED_BIT)),
+        "max_acceleration": bool(
+            mode & (1 << SUMO_SPEED_MODE_MAX_ACCELERATION_BIT)),
+        "max_deceleration": bool(
+            mode & (1 << SUMO_SPEED_MODE_MAX_DECELERATION_BIT)),
+        "junction_priority": bool(
+            mode & (1 << SUMO_SPEED_MODE_JUNCTION_PRIORITY_BIT)),
+    }
+
+
 def stopping_speed_cap(distance_to_zone_entry, comfortable_deceleration_mps2):
     """Continuous-time diagnostic reference, not live SUMO authority."""
     distance = float(distance_to_zone_entry)
@@ -60,8 +81,9 @@ def build_sumo_native_speed_constraint(
         vehicle_id, conflict_zone_id, distance_to_zone_entry,
         comfortable_deceleration_mps2, current_speed_mps,
         simulation_step_seconds, action_step_length_seconds,
-        sumo_stop_speed_mps, native_sumo_speed_without_traci_mps):
-    """Build live authority from SUMO's own car-following stop-speed API."""
+        sumo_stop_speed_mps, native_sumo_speed_without_traci_mps,
+        speed_mode):
+    """Build a TraCI request; SUMO remains the live feasibility authority."""
     distance = float(distance_to_zone_entry)
     if distance < 0.0 or not math.isfinite(distance):
         raise ExecutionConstraintError("BLOCKED_VEHICLE_ENTERED_CONFLICT_ZONE")
@@ -81,27 +103,28 @@ def build_sumo_native_speed_constraint(
     brake_gap = sumo_euler_comfortable_brake_gap(speed, deceleration, step)
     comfortable_minimum = comfortable_minimum_next_speed(
         speed, deceleration, step)
-    feasible = stop_speed >= comfortable_minimum
-    if not feasible:
-        raise ExecutionConstraintError(
-            "EXECUTION_CONSTRAINT_NOT_PHYSICALLY_FEASIBLE")
     requested = min(native_speed, stop_speed)
-    # A lower native speed is SUMO safety behavior, not a precedence demand.
-    if requested < comfortable_minimum and native_speed >= comfortable_minimum:
-        raise ExecutionConstraintError(
-            "PRECEDENCE_CONTROLLER_REQUIRES_EMERGENCY_DECELERATION")
+    enforcement = speed_mode_enforcement(speed_mode)
     return SpeedConstraintRecord(
         vehicle_id, conflict_zone_id, distance, deceleration, speed,
         requested, True,
         {"feasibility_model": "SUMO_NATIVE_CAR_FOLLOWING_STOP_SPEED",
          "integration_model": "SUMO_SEMI_IMPLICIT_EULER",
          "continuous_equation_role": "DIAGNOSTIC_REFERENCE_ONLY",
+         "comfortable_minimum_role": "DIAGNOSTIC_REFERENCE_ONLY",
+         "runtime_authority": SUMO_PROCESS_TRACI_SPEED_CONTROL,
+         "precommand_python_feasibility_rejection": "False",
          "emergency_deceleration_used_for_precedence": "False",
          "arbitrary_margin_meters": "0",
          "arbitrary_time_margin_seconds": "0", "numeric_tolerance": "0"},
         step, action_step, continuous, brake_gap, stop_speed,
-        comfortable_minimum, native_speed, requested, feasible,
-        "SUMO_SEMI_IMPLICIT_EULER")
+        comfortable_minimum, native_speed, requested, None,
+        "SUMO_SEMI_IMPLICIT_EULER",
+        "DELEGATED_TO_SUMO_NATIVE_SPEED_MODE_ENFORCEMENT",
+        None, None, enforcement["max_deceleration"],
+        enforcement["safe_speed"], enforcement["max_acceleration"],
+        enforcement["junction_priority"], SUMO_PROCESS_TRACI_SPEED_CONTROL,
+        False, int(speed_mode))
 
 
 def build_speed_constraint(vehicle_id, conflict_zone_id,

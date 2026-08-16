@@ -1,5 +1,5 @@
 {
-  "checkpoint": "STEP_5J_2B_2",
+  "checkpoint": "STEP_5J_2B_4",
   "freeze_id": "('EXPERIMENTAL_DESIGN_FREEZE_V1', '588b2a4e03565cd3a1a76fc65682297692e4d1c891dea2087b97569e860d5aa8')",
   "selection_method": "FIRST_CANONICAL_EXECUTABLE_PAIR_WITH_DIFFERENT_EXECUTION_SEMANTICS",
   "pair_selected_before_outcomes": true,
@@ -12,34 +12,39 @@
     "('PRE_BRANCH_PHYSICAL_STATE_V1', 'e9b710dc66d5773882db6a2171582f62d8220ecfddb970aa0ef2223529b59b94')"
   ],
   "fingerprints_exactly_equal": true,
-  "status": "EXECUTION_CONSTRAINT_NOT_PHYSICALLY_FEASIBLE",
-  "next_blocker": "SUMO_NATIVE_STOP_SPEED_BELOW_COMFORTABLE_NEXT_STEP_AT_24_36",
-  "error_evidence": {
-    "timestamp": "24.36",
-    "vehicle_id": "'SCENARIO_AV_1'",
-    "conflict_zone_id": "'CZ_016'",
-    "current_speed_mps": "4.0547675412749005",
-    "distance_to_zone_entry_m": "1.7475700427057346",
-    "comfortable_deceleration_mps2": "4.5",
-    "emergency_deceleration_mps2": "7.0",
-    "max_acceleration_mps2": "2.0",
-    "max_speed_mps": "13.89",
-    "simulation_step_seconds": "0.04",
-    "action_step_length_seconds": "0.04",
-    "sumo_stop_speed_mps": "3.87473868489288",
-    "native_sumo_speed_without_traci_mps": "4.0547675412749005",
-    "comfortable_min_next_speed_mps": "3.8747675412749003",
-    "branch_id": "('JOINT_NEGOTIATION_BRANCH_V1', (('NEGOTIATION_SCENARIO_V1', 'intersection.net.xml:9316', 'REGULATORY_CYCLE', ('E_IN_0_LEFT', 'N_IN_0_LEFT', 'S_IN_0_LEFT'), 'ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT', 'AV', 'DE_STVO_UNCONTROLLED_4WAY_V1'), 16.8, 'JOINT_NEGOTIATION_CONTEXT'), ((('SCENARIO_AV_0', 'SCENARIO_AV_1'), 'KEEP_CLAIM'), (('SCENARIO_AV_1', 'SCENARIO_AV_2'), 'KEEP_CLAIM'), (('SCENARIO_AV_2', 'SCENARIO_AV_0'), 'RELINQUISH_CLAIM'), (('SCENARIO_AV_2', 'SCENARIO_AV_1'), 'RELINQUISH_CLAIM')), (((16.8, 'SCENARIO_AV_2', 'SCENARIO_AV_0', 'SCENARIO_AV_0', 'SCENARIO_AV_2'), 'ACCEPT_RELINQUISHMENT'), ((16.8, 'SCENARIO_AV_2', 'SCENARIO_AV_1', 'SCENARIO_AV_1', 'SCENARIO_AV_2'), 'ACCEPT_RELINQUISHMENT')), 'DE_STVO_UNCONTROLLED_4WAY_V1')",
-    "effective_precedence_graph": "(('SCENARIO_AV_0', 'SCENARIO_AV_1'), ('SCENARIO_AV_1', 'SCENARIO_AV_2'))",
-    "initial_ready_vehicle_ids": "('SCENARIO_AV_2',)",
-    "entry_events_before_failure": "()",
-    "clear_events_before_failure": "()",
-    "native_sumo_interventions_before_failure": "()"
-  },
-  "completed_branch_count": 1,
-  "physical_speed_command_count": 875,
+  "status": "CAUSAL_EXECUTION_PATH_VALIDATED",
+  "next_blocker": null,
+  "physical_causal_witness": true,
+  "former_24_36_record": "SpeedConstraintRecord(vehicle_id='SCENARIO_AV_1', conflict_zone_id='CZ_016', distance_to_zone_entry=1.7475700427057346, comfortable_deceleration_mps2=4.5, current_speed_mps=4.0547675412749005, requested_speed_cap_mps=3.87473868489288, physically_feasible=True, provenance=mappingproxy({'feasibility_model': 'SUMO_NATIVE_CAR_FOLLOWING_STOP_SPEED', 'integration_model': 'SUMO_SEMI_IMPLICIT_EULER', 'continuous_equation_role': 'DIAGNOSTIC_REFERENCE_ONLY', 'comfortable_minimum_role': 'DIAGNOSTIC_REFERENCE_ONLY', 'runtime_authority': 'SUMO_PROCESS_TRACI_SPEED_CONTROL', 'precommand_python_feasibility_rejection': 'False', 'emergency_deceleration_used_for_precedence': 'False', 'arbitrary_margin_meters': '0', 'arbitrary_time_margin_seconds': '0', 'numeric_tolerance': '0', 'timestamp': '24.36'}), simulation_step_seconds=0.04, action_step_length_seconds=0.04, continuous_reference_cap_mps=3.965870696877498, discrete_euler_brake_gap_m=1.7465954363219127, sumo_stop_speed_mps=3.87473868489288, comfortable_min_next_speed_mps=3.8747675412749003, native_sumo_speed_without_traci_mps=4.0547675412749005, requested_precedence_speed_mps=3.87473868489288, comfortable_feasible=None, integration_method='SUMO_SEMI_IMPLICIT_EULER', comfortable_feasibility_status='DELEGATED_TO_SUMO_NATIVE_SPEED_MODE_ENFORCEMENT', actual_realized_next_speed_mps=3.8747675412749003, actual_realized_acceleration_mps2=-4.5000000000000036, sumo_max_deceleration_enforcement_active=True, sumo_safe_speed_enforcement_active=True, sumo_max_acceleration_enforcement_active=True, sumo_junction_priority_enforcement_active=True, runtime_authority='SUMO_PROCESS_TRACI_SPEED_CONTROL', precommand_python_feasibility_rejection=False, speed_mode=31)",
+  "former_24_36_realized_record": "(24.4, 'SCENARIO_AV_1', 4.0547675412749005, 3.8747675412749003, 4.5000000000000036, 4.5, 'PRECEDENCE_SPEED_CAP', 3.87473868489288, -4.5000000000000036, 31, 'BEFORE_ZONE', 'NATIVE_SUMO_SAFETY_INTERVENTION')",
+  "error_evidence": null,
+  "completed_branch_count": 2,
+  "physical_speed_command_count": 1016,
   "blocked_zone_entry_violation_count": 0,
   "completed_branch_summaries": [
+    {
+      "branch_id": "('JOINT_NEGOTIATION_BRANCH_V1', (('NEGOTIATION_SCENARIO_V1', 'intersection.net.xml:9316', 'REGULATORY_CYCLE', ('E_IN_0_LEFT', 'N_IN_0_LEFT', 'S_IN_0_LEFT'), 'ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT', 'AV', 'DE_STVO_UNCONTROLLED_4WAY_V1'), 16.8, 'JOINT_NEGOTIATION_CONTEXT'), ((('SCENARIO_AV_0', 'SCENARIO_AV_1'), 'KEEP_CLAIM'), (('SCENARIO_AV_1', 'SCENARIO_AV_2'), 'KEEP_CLAIM'), (('SCENARIO_AV_2', 'SCENARIO_AV_0'), 'RELINQUISH_CLAIM'), (('SCENARIO_AV_2', 'SCENARIO_AV_1'), 'RELINQUISH_CLAIM')), (((16.8, 'SCENARIO_AV_2', 'SCENARIO_AV_0', 'SCENARIO_AV_0', 'SCENARIO_AV_2'), 'ACCEPT_RELINQUISHMENT'), ((16.8, 'SCENARIO_AV_2', 'SCENARIO_AV_1', 'SCENARIO_AV_1', 'SCENARIO_AV_2'), 'ACCEPT_RELINQUISHMENT')), 'DE_STVO_UNCONTROLLED_4WAY_V1')",
+      "entry_events": "((24.56, 'SCENARIO_AV_2', 'CZ_003', 5.006983802770206), (25.0, 'SCENARIO_AV_2', 'CZ_016', 7.1897254933070585), (25.88, 'SCENARIO_AV_1', 'CZ_016', 6.997181328407072), (26.32, 'SCENARIO_AV_1', 'CZ_001', 7.243619906370903), (30.76, 'SCENARIO_AV_0', 'CZ_001', 5.006983802770284), (31.24, 'SCENARIO_AV_0', 'CZ_003', 7.407359562158292))",
+      "clear_events": "((25.8, 'SCENARIO_AV_2', 'CZ_003', 12.150502062709034), (25.84, 'SCENARIO_AV_2', 'CZ_016', 12.432146151810574), (28.12, 'SCENARIO_AV_1', 'CZ_016', 12.284409001085828), (28.52, 'SCENARIO_AV_1', 'CZ_001', 14.284707653711733), (32.0, 'SCENARIO_AV_0', 'CZ_001', 12.15050206270909), (32.32, 'SCENARIO_AV_0', 'CZ_003', 14.493221677381909))",
+      "completion_events": "(('SCENARIO_AV_2', 47.88), ('SCENARIO_AV_1', 52.12), ('SCENARIO_AV_0', 54.08))",
+      "team_travel_time_seconds": 154.07999999999998,
+      "raw_shared_team_reward": -154.07999999999998,
+      "collision_count": 0,
+      "speed_command_count": 2592,
+      "native_sumo_intervention_events": "()",
+      "controller_comfortable_bound_violations": 0,
+      "native_safety_deceleration_records": 62,
+      "constraint_summary": {
+        "count": 519,
+        "first": "SpeedConstraintRecord(vehicle_id='SCENARIO_AV_0', conflict_zone_id='CZ_001', distance_to_zone_entry=59.813520459722504, comfortable_deceleration_mps2=4.5, current_speed_mps=13.89, requested_speed_cap_mps=13.89, physically_feasible=True, provenance=mappingproxy({'feasibility_model': 'SUMO_NATIVE_CAR_FOLLOWING_STOP_SPEED', 'integration_model': 'SUMO_SEMI_IMPLICIT_EULER', 'continuous_equation_role': 'DIAGNOSTIC_REFERENCE_ONLY', 'comfortable_minimum_role': 'DIAGNOSTIC_REFERENCE_ONLY', 'runtime_authority': 'SUMO_PROCESS_TRACI_SPEED_CONTROL', 'precommand_python_feasibility_rejection': 'False', 'emergency_deceleration_used_for_precedence': 'False', 'arbitrary_margin_meters': '0', 'arbitrary_time_margin_seconds': '0', 'numeric_tolerance': '0', 'timestamp': '16.8'}), simulation_step_seconds=0.04, action_step_length_seconds=0.04, continuous_reference_cap_mps=23.201760367211417, discrete_euler_brake_gap_m=21.1596, sumo_stop_speed_mps=13.89, comfortable_min_next_speed_mps=13.71, native_sumo_speed_without_traci_mps=13.89, requested_precedence_speed_mps=13.89, comfortable_feasible=None, integration_method='SUMO_SEMI_IMPLICIT_EULER', comfortable_feasibility_status='DELEGATED_TO_SUMO_NATIVE_SPEED_MODE_ENFORCEMENT', actual_realized_next_speed_mps=13.89, actual_realized_acceleration_mps2=0.0, sumo_max_deceleration_enforcement_active=True, sumo_safe_speed_enforcement_active=True, sumo_max_acceleration_enforcement_active=True, sumo_junction_priority_enforcement_active=True, runtime_authority='SUMO_PROCESS_TRACI_SPEED_CONTROL', precommand_python_feasibility_rejection=False, speed_mode=31)",
+        "last": "SpeedConstraintRecord(vehicle_id='SCENARIO_AV_0', conflict_zone_id='CZ_001', distance_to_zone_entry=5.010920459721779, comfortable_deceleration_mps2=4.5, current_speed_mps=0.0, requested_speed_cap_mps=0.0, physically_feasible=True, provenance=mappingproxy({'feasibility_model': 'SUMO_NATIVE_CAR_FOLLOWING_STOP_SPEED', 'integration_model': 'SUMO_SEMI_IMPLICIT_EULER', 'continuous_equation_role': 'DIAGNOSTIC_REFERENCE_ONLY', 'comfortable_minimum_role': 'DIAGNOSTIC_REFERENCE_ONLY', 'runtime_authority': 'SUMO_PROCESS_TRACI_SPEED_CONTROL', 'precommand_python_feasibility_rejection': 'False', 'emergency_deceleration_used_for_precedence': 'False', 'arbitrary_margin_meters': '0', 'arbitrary_time_margin_seconds': '0', 'numeric_tolerance': '0', 'timestamp': '28.48'}), simulation_step_seconds=0.04, action_step_length_seconds=0.04, continuous_reference_cap_mps=6.7155256039639974, discrete_euler_brake_gap_m=0.0, sumo_stop_speed_mps=0.08, comfortable_min_next_speed_mps=0.0, native_sumo_speed_without_traci_mps=0.0, requested_precedence_speed_mps=0.0, comfortable_feasible=None, integration_method='SUMO_SEMI_IMPLICIT_EULER', comfortable_feasibility_status='DELEGATED_TO_SUMO_NATIVE_SPEED_MODE_ENFORCEMENT', actual_realized_next_speed_mps=0.0, actual_realized_acceleration_mps2=0.0, sumo_max_deceleration_enforcement_active=True, sumo_safe_speed_enforcement_active=True, sumo_max_acceleration_enforcement_active=True, sumo_junction_priority_enforcement_active=True, runtime_authority='SUMO_PROCESS_TRACI_SPEED_CONTROL', precommand_python_feasibility_rejection=False, speed_mode=31)",
+        "comfortable_decelerations": [
+          4.5
+        ],
+        "minimum_distance_to_entry": 0.0007011482037091454,
+        "minimum_requested_cap": 0.0
+      }
+    },
     {
       "branch_id": "('JOINT_NEGOTIATION_BRANCH_V1', (('NEGOTIATION_SCENARIO_V1', 'intersection.net.xml:9316', 'REGULATORY_CYCLE', ('E_IN_0_LEFT', 'N_IN_0_LEFT', 'S_IN_0_LEFT'), 'ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT', 'AV', 'DE_STVO_UNCONTROLLED_4WAY_V1'), 16.8, 'JOINT_NEGOTIATION_CONTEXT'), ((('SCENARIO_AV_0', 'SCENARIO_AV_1'), 'KEEP_CLAIM'), (('SCENARIO_AV_1', 'SCENARIO_AV_2'), 'RELINQUISH_CLAIM'), (('SCENARIO_AV_2', 'SCENARIO_AV_0'), 'KEEP_CLAIM'), (('SCENARIO_AV_2', 'SCENARIO_AV_1'), 'KEEP_CLAIM')), (((16.8, 'SCENARIO_AV_1', 'SCENARIO_AV_2', 'SCENARIO_AV_2', 'SCENARIO_AV_1'), 'ACCEPT_RELINQUISHMENT'),), 'DE_STVO_UNCONTROLLED_4WAY_V1')",
       "entry_events": "((23.84, 'SCENARIO_AV_1', 'CZ_016', 7.051059643825084), (23.88, 'SCENARIO_AV_1', 'CZ_001', 7.351362653829606), (27.08, 'SCENARIO_AV_0', 'CZ_001', 5.006983802770284), (27.56, 'SCENARIO_AV_0', 'CZ_003', 7.407359562158292), (30.88, 'SCENARIO_AV_2', 'CZ_003', 5.006983802770284), (31.32, 'SCENARIO_AV_2', 'CZ_016', 7.189725493307107))",
@@ -54,8 +59,8 @@
       "native_safety_deceleration_records": 44,
       "constraint_summary": {
         "count": 691,
-        "first": "SpeedConstraintRecord(vehicle_id='SCENARIO_AV_0', conflict_zone_id='CZ_001', distance_to_zone_entry=59.813520459722504, comfortable_deceleration_mps2=4.5, current_speed_mps=13.89, requested_speed_cap_mps=13.89, physically_feasible=True, provenance=mappingproxy({'feasibility_model': 'SUMO_NATIVE_CAR_FOLLOWING_STOP_SPEED', 'integration_model': 'SUMO_SEMI_IMPLICIT_EULER', 'continuous_equation_role': 'DIAGNOSTIC_REFERENCE_ONLY', 'emergency_deceleration_used_for_precedence': 'False', 'arbitrary_margin_meters': '0', 'arbitrary_time_margin_seconds': '0', 'numeric_tolerance': '0', 'timestamp': '16.8'}), simulation_step_seconds=0.04, action_step_length_seconds=0.04, continuous_reference_cap_mps=23.201760367211417, discrete_euler_brake_gap_m=21.1596, sumo_stop_speed_mps=13.89, comfortable_min_next_speed_mps=13.71, native_sumo_speed_without_traci_mps=13.89, requested_precedence_speed_mps=13.89, comfortable_feasible=True, integration_method='SUMO_SEMI_IMPLICIT_EULER')",
-        "last": "SpeedConstraintRecord(vehicle_id='SCENARIO_AV_2', conflict_zone_id='CZ_003', distance_to_zone_entry=5.010920459721779, comfortable_deceleration_mps2=4.5, current_speed_mps=0.0, requested_speed_cap_mps=0.0, physically_feasible=True, provenance=mappingproxy({'feasibility_model': 'SUMO_NATIVE_CAR_FOLLOWING_STOP_SPEED', 'integration_model': 'SUMO_SEMI_IMPLICIT_EULER', 'continuous_equation_role': 'DIAGNOSTIC_REFERENCE_ONLY', 'emergency_deceleration_used_for_precedence': 'False', 'arbitrary_margin_meters': '0', 'arbitrary_time_margin_seconds': '0', 'numeric_tolerance': '0', 'timestamp': '28.6'}), simulation_step_seconds=0.04, action_step_length_seconds=0.04, continuous_reference_cap_mps=6.7155256039639974, discrete_euler_brake_gap_m=0.0, sumo_stop_speed_mps=0.08, comfortable_min_next_speed_mps=0.0, native_sumo_speed_without_traci_mps=0.0, requested_precedence_speed_mps=0.0, comfortable_feasible=True, integration_method='SUMO_SEMI_IMPLICIT_EULER')",
+        "first": "SpeedConstraintRecord(vehicle_id='SCENARIO_AV_0', conflict_zone_id='CZ_001', distance_to_zone_entry=59.813520459722504, comfortable_deceleration_mps2=4.5, current_speed_mps=13.89, requested_speed_cap_mps=13.89, physically_feasible=True, provenance=mappingproxy({'feasibility_model': 'SUMO_NATIVE_CAR_FOLLOWING_STOP_SPEED', 'integration_model': 'SUMO_SEMI_IMPLICIT_EULER', 'continuous_equation_role': 'DIAGNOSTIC_REFERENCE_ONLY', 'comfortable_minimum_role': 'DIAGNOSTIC_REFERENCE_ONLY', 'runtime_authority': 'SUMO_PROCESS_TRACI_SPEED_CONTROL', 'precommand_python_feasibility_rejection': 'False', 'emergency_deceleration_used_for_precedence': 'False', 'arbitrary_margin_meters': '0', 'arbitrary_time_margin_seconds': '0', 'numeric_tolerance': '0', 'timestamp': '16.8'}), simulation_step_seconds=0.04, action_step_length_seconds=0.04, continuous_reference_cap_mps=23.201760367211417, discrete_euler_brake_gap_m=21.1596, sumo_stop_speed_mps=13.89, comfortable_min_next_speed_mps=13.71, native_sumo_speed_without_traci_mps=13.89, requested_precedence_speed_mps=13.89, comfortable_feasible=None, integration_method='SUMO_SEMI_IMPLICIT_EULER', comfortable_feasibility_status='DELEGATED_TO_SUMO_NATIVE_SPEED_MODE_ENFORCEMENT', actual_realized_next_speed_mps=13.89, actual_realized_acceleration_mps2=0.0, sumo_max_deceleration_enforcement_active=True, sumo_safe_speed_enforcement_active=True, sumo_max_acceleration_enforcement_active=True, sumo_junction_priority_enforcement_active=True, runtime_authority='SUMO_PROCESS_TRACI_SPEED_CONTROL', precommand_python_feasibility_rejection=False, speed_mode=31)",
+        "last": "SpeedConstraintRecord(vehicle_id='SCENARIO_AV_2', conflict_zone_id='CZ_003', distance_to_zone_entry=5.010920459721779, comfortable_deceleration_mps2=4.5, current_speed_mps=0.0, requested_speed_cap_mps=0.0, physically_feasible=True, provenance=mappingproxy({'feasibility_model': 'SUMO_NATIVE_CAR_FOLLOWING_STOP_SPEED', 'integration_model': 'SUMO_SEMI_IMPLICIT_EULER', 'continuous_equation_role': 'DIAGNOSTIC_REFERENCE_ONLY', 'comfortable_minimum_role': 'DIAGNOSTIC_REFERENCE_ONLY', 'runtime_authority': 'SUMO_PROCESS_TRACI_SPEED_CONTROL', 'precommand_python_feasibility_rejection': 'False', 'emergency_deceleration_used_for_precedence': 'False', 'arbitrary_margin_meters': '0', 'arbitrary_time_margin_seconds': '0', 'numeric_tolerance': '0', 'timestamp': '28.6'}), simulation_step_seconds=0.04, action_step_length_seconds=0.04, continuous_reference_cap_mps=6.7155256039639974, discrete_euler_brake_gap_m=0.0, sumo_stop_speed_mps=0.08, comfortable_min_next_speed_mps=0.0, native_sumo_speed_without_traci_mps=0.0, requested_precedence_speed_mps=0.0, comfortable_feasible=None, integration_method='SUMO_SEMI_IMPLICIT_EULER', comfortable_feasibility_status='DELEGATED_TO_SUMO_NATIVE_SPEED_MODE_ENFORCEMENT', actual_realized_next_speed_mps=0.0, actual_realized_acceleration_mps2=0.0, sumo_max_deceleration_enforcement_active=True, sumo_safe_speed_enforcement_active=True, sumo_max_acceleration_enforcement_active=True, sumo_junction_priority_enforcement_active=True, runtime_authority='SUMO_PROCESS_TRACI_SPEED_CONTROL', precommand_python_feasibility_rejection=False, speed_mode=31)",
         "comfortable_decelerations": [
           4.5
         ],
