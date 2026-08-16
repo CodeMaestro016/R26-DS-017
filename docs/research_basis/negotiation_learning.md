@@ -380,3 +380,17 @@ cycle-preserving valid outcomes and acyclic planner-executable outcomes exist.
 Identical-initial-condition physical SUMO branch replay remains unresolved, so
 this structural result does not claim a physical causal witness or Step 5H
 branch reward.
+
+## Identical-condition physical replay checkpoint
+
+The dedicated replay restarts a fresh SUMO process and fresh Python-side state
+for each outcome, reproduces the real TRAINING source context, reconstructs the
+selected joint branches, and applies only path-derived per-zone speed caps. The
+first canonical executable pair reproduced an exactly identical pre-branch
+fingerprint. One branch completed with Step 5H accounting; the other reached
+the mandatory `EXECUTION_CONSTRAINT_NOT_PHYSICALLY_FEASIBLE` stop because its
+actual discrete SUMO speed exceeded the exact comfortable-braking envelope.
+No tolerance, emergency-deceleration substitution, stopping margin, native
+safety bypass, or reward term was added. Consequently the causal coupling
+status remains incomplete pending resolution of that exact physical-control
+discretization issue.

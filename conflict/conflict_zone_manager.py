@@ -156,8 +156,6 @@ class ConflictZoneManager:
     @staticmethod
     def _projected_interval(line, zone):
         occupied = line.intersection(zone)
-        if occupied.is_empty:
-            return None
         distances = []
 
         def collect(geometry):
@@ -165,11 +163,19 @@ class ConflictZoneManager:
                 distances.extend(
                     line.project(Point(x, y)) for x, y in geometry.coords
                 )
+            elif geometry.geom_type == "Polygon":
+                collect(geometry.exterior)
+                for ring in geometry.interiors:
+                    collect(ring)
             elif hasattr(geometry, "geoms"):
                 for component in geometry.geoms:
                     collect(component)
 
-        collect(occupied)
+        # Swept envelopes can overlap between nearby centre lines without the
+        # overlap polygon containing either centre line. In that valid case,
+        # project the same authoritative overlap polygon onto the path. This
+        # introduces neither a tolerance nor any additional geometry.
+        collect(zone if occupied.is_empty else occupied)
         return (min(distances), max(distances)) if distances else None
 
     def zone_record(self, first_path_id, first_width,

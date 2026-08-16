@@ -366,6 +366,15 @@ def test_actual_map_graph_and_zone_records_integrate():
     assert separated["edges"][0]["status"] == "SPATIAL_ONLY"
 
 
+def test_all_map_derived_coordinated_zones_have_path_progress_intervals():
+    paths = MapPathManager()
+    zones = ConflictZoneManager(paths)
+    records = tuple(zones.zone_geometries.values())
+    assert records
+    assert all(item["first_path_distance_interval"] is not None for item in records)
+    assert all(item["second_path_distance_interval"] is not None for item in records)
+
+
 def test_observed_internal_lane_rejects_incompatible_unknown_candidates():
     paths = MapPathManager()
     zones = ConflictZoneManager(paths)

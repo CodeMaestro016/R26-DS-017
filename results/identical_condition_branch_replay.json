@@ -1,0 +1,59 @@
+{
+  "checkpoint": "STEP_5J_2B_2",
+  "freeze_id": "('EXPERIMENTAL_DESIGN_FREEZE_V1', '588b2a4e03565cd3a1a76fc65682297692e4d1c891dea2087b97569e860d5aa8')",
+  "selection_method": "FIRST_CANONICAL_EXECUTABLE_PAIR_WITH_DIFFERENT_EXECUTION_SEMANTICS",
+  "pair_selected_before_outcomes": true,
+  "branch_ids": [
+    "('JOINT_NEGOTIATION_BRANCH_V1', (('NEGOTIATION_SCENARIO_V1', 'intersection.net.xml:9316', 'REGULATORY_CYCLE', ('E_IN_0_LEFT', 'N_IN_0_LEFT', 'S_IN_0_LEFT'), 'ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT', 'AV', 'DE_STVO_UNCONTROLLED_4WAY_V1'), 16.8, 'JOINT_NEGOTIATION_CONTEXT'), ((('SCENARIO_AV_0', 'SCENARIO_AV_1'), 'KEEP_CLAIM'), (('SCENARIO_AV_1', 'SCENARIO_AV_2'), 'KEEP_CLAIM'), (('SCENARIO_AV_2', 'SCENARIO_AV_0'), 'RELINQUISH_CLAIM'), (('SCENARIO_AV_2', 'SCENARIO_AV_1'), 'RELINQUISH_CLAIM')), (((16.8, 'SCENARIO_AV_2', 'SCENARIO_AV_0', 'SCENARIO_AV_0', 'SCENARIO_AV_2'), 'ACCEPT_RELINQUISHMENT'), ((16.8, 'SCENARIO_AV_2', 'SCENARIO_AV_1', 'SCENARIO_AV_1', 'SCENARIO_AV_2'), 'ACCEPT_RELINQUISHMENT')), 'DE_STVO_UNCONTROLLED_4WAY_V1')",
+    "('JOINT_NEGOTIATION_BRANCH_V1', (('NEGOTIATION_SCENARIO_V1', 'intersection.net.xml:9316', 'REGULATORY_CYCLE', ('E_IN_0_LEFT', 'N_IN_0_LEFT', 'S_IN_0_LEFT'), 'ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT', 'AV', 'DE_STVO_UNCONTROLLED_4WAY_V1'), 16.8, 'JOINT_NEGOTIATION_CONTEXT'), ((('SCENARIO_AV_0', 'SCENARIO_AV_1'), 'KEEP_CLAIM'), (('SCENARIO_AV_1', 'SCENARIO_AV_2'), 'RELINQUISH_CLAIM'), (('SCENARIO_AV_2', 'SCENARIO_AV_0'), 'KEEP_CLAIM'), (('SCENARIO_AV_2', 'SCENARIO_AV_1'), 'KEEP_CLAIM')), (((16.8, 'SCENARIO_AV_1', 'SCENARIO_AV_2', 'SCENARIO_AV_2', 'SCENARIO_AV_1'), 'ACCEPT_RELINQUISHMENT'),), 'DE_STVO_UNCONTROLLED_4WAY_V1')"
+  ],
+  "fingerprint_ids": [
+    "('PRE_BRANCH_PHYSICAL_STATE_V1', 'e9b710dc66d5773882db6a2171582f62d8220ecfddb970aa0ef2223529b59b94')",
+    "('PRE_BRANCH_PHYSICAL_STATE_V1', 'e9b710dc66d5773882db6a2171582f62d8220ecfddb970aa0ef2223529b59b94')"
+  ],
+  "fingerprints_exactly_equal": true,
+  "status": "EXECUTION_CONSTRAINT_NOT_PHYSICALLY_FEASIBLE",
+  "error_evidence": {
+    "timestamp": "23.44",
+    "vehicle_id": "'SCENARIO_AV_1'",
+    "conflict_zone_id": "'CZ_016'",
+    "current_speed_mps": "6.327762945206484",
+    "distance_to_zone_entry_m": "4.410609013325224",
+    "comfortable_deceleration_mps2": "4.5",
+    "emergency_deceleration_mps2": "7.0",
+    "max_acceleration_mps2": "2.0",
+    "max_speed_mps": "13.89",
+    "branch_id": "('JOINT_NEGOTIATION_BRANCH_V1', (('NEGOTIATION_SCENARIO_V1', 'intersection.net.xml:9316', 'REGULATORY_CYCLE', ('E_IN_0_LEFT', 'N_IN_0_LEFT', 'S_IN_0_LEFT'), 'ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT', 'AV', 'DE_STVO_UNCONTROLLED_4WAY_V1'), 16.8, 'JOINT_NEGOTIATION_CONTEXT'), ((('SCENARIO_AV_0', 'SCENARIO_AV_1'), 'KEEP_CLAIM'), (('SCENARIO_AV_1', 'SCENARIO_AV_2'), 'KEEP_CLAIM'), (('SCENARIO_AV_2', 'SCENARIO_AV_0'), 'RELINQUISH_CLAIM'), (('SCENARIO_AV_2', 'SCENARIO_AV_1'), 'RELINQUISH_CLAIM')), (((16.8, 'SCENARIO_AV_2', 'SCENARIO_AV_0', 'SCENARIO_AV_0', 'SCENARIO_AV_2'), 'ACCEPT_RELINQUISHMENT'), ((16.8, 'SCENARIO_AV_2', 'SCENARIO_AV_1', 'SCENARIO_AV_1', 'SCENARIO_AV_2'), 'ACCEPT_RELINQUISHMENT')), 'DE_STVO_UNCONTROLLED_4WAY_V1')",
+    "effective_precedence_graph": "(('SCENARIO_AV_0', 'SCENARIO_AV_1'), ('SCENARIO_AV_1', 'SCENARIO_AV_2'))",
+    "initial_ready_vehicle_ids": "('SCENARIO_AV_2',)",
+    "entry_events_before_failure": "()",
+    "clear_events_before_failure": "()",
+    "native_sumo_interventions_before_failure": "()"
+  },
+  "completed_branch_count": 1,
+  "physical_speed_command_count": 832,
+  "blocked_zone_entry_violation_count": 0,
+  "completed_branch_summaries": [
+    {
+      "branch_id": "('JOINT_NEGOTIATION_BRANCH_V1', (('NEGOTIATION_SCENARIO_V1', 'intersection.net.xml:9316', 'REGULATORY_CYCLE', ('E_IN_0_LEFT', 'N_IN_0_LEFT', 'S_IN_0_LEFT'), 'ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT', 'AV', 'DE_STVO_UNCONTROLLED_4WAY_V1'), 16.8, 'JOINT_NEGOTIATION_CONTEXT'), ((('SCENARIO_AV_0', 'SCENARIO_AV_1'), 'KEEP_CLAIM'), (('SCENARIO_AV_1', 'SCENARIO_AV_2'), 'RELINQUISH_CLAIM'), (('SCENARIO_AV_2', 'SCENARIO_AV_0'), 'KEEP_CLAIM'), (('SCENARIO_AV_2', 'SCENARIO_AV_1'), 'KEEP_CLAIM')), (((16.8, 'SCENARIO_AV_1', 'SCENARIO_AV_2', 'SCENARIO_AV_2', 'SCENARIO_AV_1'), 'ACCEPT_RELINQUISHMENT'),), 'DE_STVO_UNCONTROLLED_4WAY_V1')",
+      "entry_events": "((24.24, 'SCENARIO_AV_1', 'CZ_016', 7.1822271371385344), (24.28, 'SCENARIO_AV_1', 'CZ_001', 7.474238461754896), (26.8, 'SCENARIO_AV_0', 'CZ_001', 5.018193520727229), (27.28, 'SCENARIO_AV_0', 'CZ_003', 7.266639709435164), (30.0, 'SCENARIO_AV_2', 'CZ_003', 5.000421406905609), (30.44, 'SCENARIO_AV_2', 'CZ_016', 7.067408228265464))",
+      "clear_events": "((24.92, 'SCENARIO_AV_1', 'CZ_016', 12.272104754088138), (25.2, 'SCENARIO_AV_1', 'CZ_001', 14.374197332844297), (28.08, 'SCENARIO_AV_0', 'CZ_001', 12.038210347954035), (28.4, 'SCENARIO_AV_0', 'CZ_003', 14.305277016094832), (31.28, 'SCENARIO_AV_2', 'CZ_003', 12.088842318339985), (31.32, 'SCENARIO_AV_2', 'CZ_016', 12.3631637385289))",
+      "completion_events": "(('SCENARIO_AV_1', 48.24), ('SCENARIO_AV_0', 50.24), ('SCENARIO_AV_2', 53.44))",
+      "team_travel_time_seconds": 151.92000000000002,
+      "raw_shared_team_reward": -151.92000000000002,
+      "collision_count": 0,
+      "speed_command_count": 2538,
+      "native_sumo_intervention_events": "((22.68, 'ACTUAL_EMERGENCY_DECELERATION_REACHED', 'SCENARIO_AV_1', -7.000000000000006, 4.5, 7.0), (22.76, 'ACTUAL_EMERGENCY_DECELERATION_REACHED', 'SCENARIO_AV_1', -7.000000000000006, 4.5, 7.0))",
+      "constraint_summary": {
+        "count": 703,
+        "first": "SpeedConstraintRecord(vehicle_id='SCENARIO_AV_0', conflict_zone_id='CZ_001', distance_to_zone_entry=59.813520459722504, comfortable_deceleration_mps2=4.5, current_speed_mps=13.89, requested_speed_cap_mps=23.201760367211417, physically_feasible=True, provenance=mappingproxy({'equation': 'v_cap=sqrt(2*b*d_entry)', 'distance_reference': 'FRONT_BUMPER_PATH_PROGRESS', 'arbitrary_margin_meters': '0', 'timestamp': '16.8'}))",
+        "last": "SpeedConstraintRecord(vehicle_id='SCENARIO_AV_2', conflict_zone_id='CZ_003', distance_to_zone_entry=4.2048755825313755, comfortable_deceleration_mps2=4.5, current_speed_mps=1.0154272290960695, requested_speed_cap_mps=6.15173798554379, physically_feasible=True, provenance=mappingproxy({'equation': 'v_cap=sqrt(2*b*d_entry)', 'distance_reference': 'FRONT_BUMPER_PATH_PROGRESS', 'arbitrary_margin_meters': '0', 'timestamp': '28.36'}))",
+        "comfortable_decelerations": [
+          4.5
+        ],
+        "minimum_distance_to_entry": 4.102875875021265,
+        "minimum_requested_cap": 6.076667086091799
+      }
+    }
+  ]
+}
