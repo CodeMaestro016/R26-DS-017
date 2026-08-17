@@ -1,0 +1,1322 @@
+{
+  "checkpoint": "STEP_5K_1",
+  "source_demo_policy_identity": [
+    "RESEARCH_PROTOTYPE_DEMONSTRATION_POLICY_V1",
+    "231ebcc35c0c2b987beb1b6cfb9895be1f9835f50841f67ec4efead29c345a91"
+  ],
+  "source_training_checkpoint_identity": [
+    "EXTENDED_EVIDENCE_RESUME_CHECKPOINT_V1",
+    "7061abb4c884f82d5aa35be545b6c4bf74c86282d9521f2348af4d45ebb3a98b"
+  ],
+  "demo_checkpoint_selection_rule": "FIRST_CANONICAL_REPLICATION_TERMINAL_STATE_OF_COMPLETED_EVIDENCE_TRANCHE",
+  "performance_selected": false,
+  "statistical_selection_performed": false,
+  "best_model": false,
+  "final_model": false,
+  "optimal_model": false,
+  "decentralized_execution": true,
+  "scenario_selection_rule": "FROZEN_TRAINING_STRUCTURAL_COVERAGE_REGULATORY_CYCLE_MULTI_FACTOR_MULTI_ACTION_AUTHORITATIVE_NONPHYSICAL_EDGE_V1",
+  "scenario_selection_performance_based": false,
+  "status": "DECENTRALIZED_MAPPO_RESEARCH_PROTOTYPE_DEMONSTRATED",
+  "ctde_runtime_critic_calls": 0,
+  "actor_route_truth_fields_consumed": 0,
+  "ego_local_observation_used": true,
+  "hard_action_masks_active": true,
+  "demonstration_action_sampling_seed_identity": [
+    "STEP_5K_1_DEMONSTRATION_ACTION_SAMPLING",
+    0,
+    2
+  ],
+  "scenario_ids": [
+    [
+      "NEGOTIATION_SCENARIO_V1",
+      "intersection.net.xml:9316",
+      "REGULATORY_CYCLE",
+      [
+        "E_IN_0_LEFT",
+        "N_IN_0_RIGHT",
+        "S_IN_0_LEFT",
+        "W_IN_0_RIGHT"
+      ],
+      "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+      "AV",
+      "DE_STVO_UNCONTROLLED_4WAY_V1"
+    ],
+    [
+      "NEGOTIATION_SCENARIO_V1",
+      "intersection.net.xml:9316",
+      "REGULATORY_CYCLE",
+      [
+        "E_IN_0_LEFT",
+        "N_IN_0_LEFT",
+        "S_IN_0_LEFT"
+      ],
+      "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+      "AV",
+      "DE_STVO_UNCONTROLLED_4WAY_V1"
+    ],
+    [
+      "NEGOTIATION_SCENARIO_V1",
+      "intersection.net.xml:9316",
+      "REGULATORY_CYCLE",
+      [
+        "E_IN_0_LEFT",
+        "N_IN_0_LEFT",
+        "S_IN_0_RIGHT"
+      ],
+      "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+      "AV",
+      "DE_STVO_UNCONTROLLED_4WAY_V1"
+    ]
+  ],
+  "per_scenario_evidence": [
+    {
+      "structural_category": "REGULATORY_CYCLE_NEGOTIATION",
+      "selection_evidence": {
+        "cyclic_participant_count": 4,
+        "participant_count": 4
+      },
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "E_IN_0_LEFT",
+          "N_IN_0_RIGHT",
+          "S_IN_0_LEFT",
+          "W_IN_0_RIGHT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "scenario_family": "REGULATORY_CYCLE",
+      "movement_paths": {
+        "SCENARIO_AV_0": "E_IN_0_LEFT",
+        "SCENARIO_AV_1": "N_IN_0_RIGHT",
+        "SCENARIO_AV_2": "S_IN_0_LEFT",
+        "SCENARIO_AV_3": "W_IN_0_RIGHT"
+      },
+      "perception": {
+        "av_count": 4,
+        "encoded_ego_local_graph_count": 4,
+        "maximum_locally_encoded_nodes": 4,
+        "locally_observed_neighbor_count_upper_bound": 3,
+        "unobserved_or_propagated_track_count": "NOT_RETAINED_BY_COUPLED_EPISODE_RECORD"
+      },
+      "intention_prediction": {
+        "runtime_pipeline_active": true,
+        "per_vehicle_prediction_trace": "NOT_RETAINED_BY_COUPLED_EPISODE_RECORD"
+      },
+      "conflict_reasoning": {
+        "coordination_edges": 7,
+        "physical_execution_edges": 4,
+        "nonphysical_coordination_edges": 3
+      },
+      "traffic_rule_reasoning": {
+        "regulatory_cycle_expected_by_frozen_signature": true,
+        "coordination_cycles_observed": 1
+      },
+      "negotiation": {
+        "batch_count": 1,
+        "proposer_decisions": 8,
+        "responder_decisions": 3,
+        "action_trace": [
+          {
+            "decision_role": "PROPOSER",
+            "ego_id": "SCENARIO_AV_1",
+            "claim_identity": [
+              "SCENARIO_AV_0",
+              "SCENARIO_AV_1"
+            ],
+            "proposal_id": null,
+            "available_semantic_actions": [
+              "KEEP_CLAIM",
+              "RELINQUISH_CLAIM"
+            ],
+            "hard_action_mask": [
+              true,
+              true
+            ],
+            "actor_probability_vector": [
+              0.4628811776638031,
+              0.5371187329292297
+            ],
+            "selected_action_index": 0,
+            "selected_semantic_action": "KEEP_CLAIM",
+            "actor_route_truth_fields_consumed": 0,
+            "centralized_critic_used_for_action": false,
+            "ego_local_observation_used": true,
+            "hard_action_mask_applied": true
+          },
+          {
+            "decision_role": "PROPOSER",
+            "ego_id": "SCENARIO_AV_3",
+            "claim_identity": [
+              "SCENARIO_AV_0",
+              "SCENARIO_AV_3"
+            ],
+            "proposal_id": null,
+            "available_semantic_actions": [
+              "KEEP_CLAIM",
+              "RELINQUISH_CLAIM"
+            ],
+            "hard_action_mask": [
+              true,
+              true
+            ],
+            "actor_probability_vector": [
+              0.3778252899646759,
+              0.6221746802330017
+            ],
+            "selected_action_index": 0,
+            "selected_semantic_action": "KEEP_CLAIM",
+            "actor_route_truth_fields_consumed": 0,
+            "centralized_critic_used_for_action": false,
+            "ego_local_observation_used": true,
+            "hard_action_mask_applied": true
+          },
+          {
+            "decision_role": "PROPOSER",
+            "ego_id": "SCENARIO_AV_2",
+            "claim_identity": [
+              "SCENARIO_AV_1",
+              "SCENARIO_AV_2"
+            ],
+            "proposal_id": null,
+            "available_semantic_actions": [
+              "KEEP_CLAIM",
+              "RELINQUISH_CLAIM"
+            ],
+            "hard_action_mask": [
+              true,
+              true
+            ],
+            "actor_probability_vector": [
+              0.3676498830318451,
+              0.6323500871658325
+            ],
+            "selected_action_index": 1,
+            "selected_semantic_action": "RELINQUISH_CLAIM",
+            "actor_route_truth_fields_consumed": 0,
+            "centralized_critic_used_for_action": false,
+            "ego_local_observation_used": true,
+            "hard_action_mask_applied": true
+          },
+          {
+            "decision_role": "PROPOSER",
+            "ego_id": "SCENARIO_AV_3",
+            "claim_identity": [
+              "SCENARIO_AV_1",
+              "SCENARIO_AV_3"
+            ],
+            "proposal_id": null,
+            "available_semantic_actions": [
+              "KEEP_CLAIM",
+              "RELINQUISH_CLAIM"
+            ],
+            "hard_action_mask": [
+              true,
+              true
+            ],
+            "actor_probability_vector": [
+              0.47152000665664673,
+              0.5284799933433533
+            ],
+            "selected_action_index": 0,
+            "selected_semantic_action": "KEEP_CLAIM",
+            "actor_route_truth_fields_consumed": 0,
+            "centralized_critic_used_for_action": false,
+            "ego_local_observation_used": true,
+            "hard_action_mask_applied": true
+          },
+          {
+            "decision_role": "PROPOSER",
+            "ego_id": "SCENARIO_AV_0",
+            "claim_identity": [
+              "SCENARIO_AV_2",
+              "SCENARIO_AV_0"
+            ],
+            "proposal_id": null,
+            "available_semantic_actions": [
+              "KEEP_CLAIM",
+              "RELINQUISH_CLAIM"
+            ],
+            "hard_action_mask": [
+              true,
+              true
+            ],
+            "actor_probability_vector": [
+              0.4920700788497925,
+              0.5079299807548523
+            ],
+            "selected_action_index": 0,
+            "selected_semantic_action": "KEEP_CLAIM",
+            "actor_route_truth_fields_consumed": 0,
+            "centralized_critic_used_for_action": false,
+            "ego_local_observation_used": true,
+            "hard_action_mask_applied": true
+          },
+          {
+            "decision_role": "PROPOSER",
+            "ego_id": "SCENARIO_AV_1",
+            "claim_identity": [
+              "SCENARIO_AV_2",
+              "SCENARIO_AV_1"
+            ],
+            "proposal_id": null,
+            "available_semantic_actions": [
+              "KEEP_CLAIM",
+              "RELINQUISH_CLAIM"
+            ],
+            "hard_action_mask": [
+              true,
+              true
+            ],
+            "actor_probability_vector": [
+              0.3771910071372986,
+              0.6228089928627014
+            ],
+            "selected_action_index": 1,
+            "selected_semantic_action": "RELINQUISH_CLAIM",
+            "actor_route_truth_fields_consumed": 0,
+            "centralized_critic_used_for_action": false,
+            "ego_local_observation_used": true,
+            "hard_action_mask_applied": true
+          },
+          {
+            "decision_role": "PROPOSER",
+            "ego_id": "SCENARIO_AV_0",
+            "claim_identity": [
+              "SCENARIO_AV_3",
+              "SCENARIO_AV_0"
+            ],
+            "proposal_id": null,
+            "available_semantic_actions": [
+              "KEEP_CLAIM",
+              "RELINQUISH_CLAIM"
+            ],
+            "hard_action_mask": [
+              true,
+              true
+            ],
+            "actor_probability_vector": [
+              0.37714168429374695,
+              0.6228583455085754
+            ],
+            "selected_action_index": 1,
+            "selected_semantic_action": "RELINQUISH_CLAIM",
+            "actor_route_truth_fields_consumed": 0,
+            "centralized_critic_used_for_action": false,
+            "ego_local_observation_used": true,
+            "hard_action_mask_applied": true
+          },
+          {
+            "decision_role": "PROPOSER",
+            "ego_id": "SCENARIO_AV_2",
+            "claim_identity": [
+              "SCENARIO_AV_3",
+              "SCENARIO_AV_2"
+            ],
+            "proposal_id": null,
+            "available_semantic_actions": [
+              "KEEP_CLAIM",
+              "RELINQUISH_CLAIM"
+            ],
+            "hard_action_mask": [
+              true,
+              true
+            ],
+            "actor_probability_vector": [
+              0.5111182928085327,
+              0.4888817369937897
+            ],
+            "selected_action_index": 0,
+            "selected_semantic_action": "KEEP_CLAIM",
+            "actor_route_truth_fields_consumed": 0,
+            "centralized_critic_used_for_action": false,
+            "ego_local_observation_used": true,
+            "hard_action_mask_applied": true
+          },
+          {
+            "decision_role": "RESPONDER",
+            "ego_id": "SCENARIO_AV_1",
+            "claim_identity": [
+              "SCENARIO_AV_1",
+              "SCENARIO_AV_2"
+            ],
+            "proposal_id": [
+              16.8,
+              "SCENARIO_AV_1",
+              "SCENARIO_AV_2",
+              "SCENARIO_AV_2",
+              "SCENARIO_AV_1"
+            ],
+            "available_semantic_actions": [
+              "ACCEPT_RELINQUISHMENT",
+              "REJECT_RELINQUISHMENT"
+            ],
+            "hard_action_mask": [
+              true,
+              true
+            ],
+            "actor_probability_vector": [
+              0.2689746022224426,
+              0.7310253381729126
+            ],
+            "selected_action_index": 1,
+            "selected_semantic_action": "REJECT_RELINQUISHMENT",
+            "actor_route_truth_fields_consumed": 0,
+            "centralized_critic_used_for_action": false,
+            "ego_local_observation_used": true,
+            "hard_action_mask_applied": true
+          },
+          {
+            "decision_role": "RESPONDER",
+            "ego_id": "SCENARIO_AV_2",
+            "claim_identity": [
+              "SCENARIO_AV_2",
+              "SCENARIO_AV_1"
+            ],
+            "proposal_id": [
+              16.8,
+              "SCENARIO_AV_2",
+              "SCENARIO_AV_1",
+              "SCENARIO_AV_1",
+              "SCENARIO_AV_2"
+            ],
+            "available_semantic_actions": [
+              "ACCEPT_RELINQUISHMENT",
+              "REJECT_RELINQUISHMENT"
+            ],
+            "hard_action_mask": [
+              true,
+              true
+            ],
+            "actor_probability_vector": [
+              0.2598644196987152,
+              0.7401356101036072
+            ],
+            "selected_action_index": 1,
+            "selected_semantic_action": "REJECT_RELINQUISHMENT",
+            "actor_route_truth_fields_consumed": 0,
+            "centralized_critic_used_for_action": false,
+            "ego_local_observation_used": true,
+            "hard_action_mask_applied": true
+          },
+          {
+            "decision_role": "RESPONDER",
+            "ego_id": "SCENARIO_AV_3",
+            "claim_identity": [
+              "SCENARIO_AV_3",
+              "SCENARIO_AV_0"
+            ],
+            "proposal_id": [
+              16.8,
+              "SCENARIO_AV_3",
+              "SCENARIO_AV_0",
+              "SCENARIO_AV_0",
+              "SCENARIO_AV_3"
+            ],
+            "available_semantic_actions": [
+              "ACCEPT_RELINQUISHMENT",
+              "REJECT_RELINQUISHMENT"
+            ],
+            "hard_action_mask": [
+              true,
+              true
+            ],
+            "actor_probability_vector": [
+              0.27134308218955994,
+              0.7286568880081177
+            ],
+            "selected_action_index": 0,
+            "selected_semantic_action": "ACCEPT_RELINQUISHMENT",
+            "actor_route_truth_fields_consumed": 0,
+            "centralized_critic_used_for_action": false,
+            "ego_local_observation_used": true,
+            "hard_action_mask_applied": true
+          }
+        ],
+        "effective_coordination_graphs": [
+          [
+            [
+              "SCENARIO_AV_0",
+              "SCENARIO_AV_1"
+            ],
+            [
+              "SCENARIO_AV_0",
+              "SCENARIO_AV_3"
+            ],
+            [
+              "SCENARIO_AV_1",
+              "SCENARIO_AV_2"
+            ],
+            [
+              "SCENARIO_AV_1",
+              "SCENARIO_AV_3"
+            ],
+            [
+              "SCENARIO_AV_2",
+              "SCENARIO_AV_0"
+            ],
+            [
+              "SCENARIO_AV_2",
+              "SCENARIO_AV_1"
+            ],
+            [
+              "SCENARIO_AV_3",
+              "SCENARIO_AV_2"
+            ]
+          ]
+        ]
+      },
+      "execution": {
+        "physical_execution_graphs": [
+          [
+            [
+              "SCENARIO_AV_0",
+              "SCENARIO_AV_3"
+            ],
+            [
+              "SCENARIO_AV_1",
+              "SCENARIO_AV_2"
+            ],
+            [
+              "SCENARIO_AV_2",
+              "SCENARIO_AV_0"
+            ],
+            [
+              "SCENARIO_AV_2",
+              "SCENARIO_AV_1"
+            ]
+          ]
+        ],
+        "edge_interpretations": [
+          {
+            "yielding_vehicle_id": "SCENARIO_AV_0",
+            "priority_vehicle_id": "SCENARIO_AV_1",
+            "yielding_movement_path_id": "E_IN_0_LEFT",
+            "priority_movement_path_id": "N_IN_0_RIGHT",
+            "coordination_edge_present": true,
+            "physical_relationship_status": "AUTHORITATIVE_MAP_NO_CONFLICT",
+            "conflict_zone_ids": [],
+            "execution_constraint_count": 0,
+            "execution_relevance": "PHYSICALLY_NONCONFLICTING_NO_EXECUTION_CONSTRAINT",
+            "mapping_source": "CONFLICT_ZONE_MANAGER_AUTHORITATIVE_MAP_RELATIONSHIP",
+            "provenance": {
+              "environment_transition_only": true,
+              "actor_information": false,
+              "numerical_thresholds": 0
+            }
+          },
+          {
+            "yielding_vehicle_id": "SCENARIO_AV_0",
+            "priority_vehicle_id": "SCENARIO_AV_3",
+            "yielding_movement_path_id": "E_IN_0_LEFT",
+            "priority_movement_path_id": "W_IN_0_RIGHT",
+            "coordination_edge_present": true,
+            "physical_relationship_status": "MERGING",
+            "conflict_zone_ids": [
+              "CZ_006"
+            ],
+            "execution_constraint_count": 1,
+            "execution_relevance": "PHYSICAL_CONFLICT_EXECUTION_RELEVANT",
+            "mapping_source": "CONFLICT_ZONE_MANAGER_AUTHORITATIVE_MAP_RELATIONSHIP",
+            "provenance": {
+              "environment_transition_only": true,
+              "actor_information": false,
+              "numerical_thresholds": 0
+            }
+          },
+          {
+            "yielding_vehicle_id": "SCENARIO_AV_1",
+            "priority_vehicle_id": "SCENARIO_AV_2",
+            "yielding_movement_path_id": "N_IN_0_RIGHT",
+            "priority_movement_path_id": "S_IN_0_LEFT",
+            "coordination_edge_present": true,
+            "physical_relationship_status": "MERGING",
+            "conflict_zone_ids": [
+              "CZ_021"
+            ],
+            "execution_constraint_count": 1,
+            "execution_relevance": "PHYSICAL_CONFLICT_EXECUTION_RELEVANT",
+            "mapping_source": "CONFLICT_ZONE_MANAGER_AUTHORITATIVE_MAP_RELATIONSHIP",
+            "provenance": {
+              "environment_transition_only": true,
+              "actor_information": false,
+              "numerical_thresholds": 0
+            }
+          },
+          {
+            "yielding_vehicle_id": "SCENARIO_AV_1",
+            "priority_vehicle_id": "SCENARIO_AV_3",
+            "yielding_movement_path_id": "N_IN_0_RIGHT",
+            "priority_movement_path_id": "W_IN_0_RIGHT",
+            "coordination_edge_present": true,
+            "physical_relationship_status": "AUTHORITATIVE_MAP_NO_CONFLICT",
+            "conflict_zone_ids": [],
+            "execution_constraint_count": 0,
+            "execution_relevance": "PHYSICALLY_NONCONFLICTING_NO_EXECUTION_CONSTRAINT",
+            "mapping_source": "CONFLICT_ZONE_MANAGER_AUTHORITATIVE_MAP_RELATIONSHIP",
+            "provenance": {
+              "environment_transition_only": true,
+              "actor_information": false,
+              "numerical_thresholds": 0
+            }
+          },
+          {
+            "yielding_vehicle_id": "SCENARIO_AV_2",
+            "priority_vehicle_id": "SCENARIO_AV_0",
+            "yielding_movement_path_id": "S_IN_0_LEFT",
+            "priority_movement_path_id": "E_IN_0_LEFT",
+            "coordination_edge_present": true,
+            "physical_relationship_status": "CROSSING",
+            "conflict_zone_ids": [
+              "CZ_003"
+            ],
+            "execution_constraint_count": 1,
+            "execution_relevance": "PHYSICAL_CONFLICT_EXECUTION_RELEVANT",
+            "mapping_source": "CONFLICT_ZONE_MANAGER_AUTHORITATIVE_MAP_RELATIONSHIP",
+            "provenance": {
+              "environment_transition_only": true,
+              "actor_information": false,
+              "numerical_thresholds": 0
+            }
+          },
+          {
+            "yielding_vehicle_id": "SCENARIO_AV_2",
+            "priority_vehicle_id": "SCENARIO_AV_1",
+            "yielding_movement_path_id": "S_IN_0_LEFT",
+            "priority_movement_path_id": "N_IN_0_RIGHT",
+            "coordination_edge_present": true,
+            "physical_relationship_status": "MERGING",
+            "conflict_zone_ids": [
+              "CZ_021"
+            ],
+            "execution_constraint_count": 1,
+            "execution_relevance": "PHYSICAL_CONFLICT_EXECUTION_RELEVANT",
+            "mapping_source": "CONFLICT_ZONE_MANAGER_AUTHORITATIVE_MAP_RELATIONSHIP",
+            "provenance": {
+              "environment_transition_only": true,
+              "actor_information": false,
+              "numerical_thresholds": 0
+            }
+          },
+          {
+            "yielding_vehicle_id": "SCENARIO_AV_3",
+            "priority_vehicle_id": "SCENARIO_AV_2",
+            "yielding_movement_path_id": "W_IN_0_RIGHT",
+            "priority_movement_path_id": "S_IN_0_LEFT",
+            "coordination_edge_present": true,
+            "physical_relationship_status": "AUTHORITATIVE_MAP_NO_CONFLICT",
+            "conflict_zone_ids": [],
+            "execution_constraint_count": 0,
+            "execution_relevance": "PHYSICALLY_NONCONFLICTING_NO_EXECUTION_CONSTRAINT",
+            "mapping_source": "CONFLICT_ZONE_MANAGER_AUTHORITATIVE_MAP_RELATIONSHIP",
+            "provenance": {
+              "environment_transition_only": true,
+              "actor_information": false,
+              "numerical_thresholds": 0
+            }
+          }
+        ],
+        "physically_executable_outcomes": 0,
+        "nonphysical_interpretations_observed": 3
+      },
+      "decentralization": {
+        "actor_route_truth_fields_consumed": 0,
+        "centralized_critic_used_for_action": false,
+        "ego_local_observation_used": true,
+        "hard_action_mask_applied": true
+      },
+      "outcome": {
+        "completed_vehicles": 2,
+        "team_travel_time_seconds": 490.76,
+        "collisions": 0,
+        "blocked_zone_violations": 0,
+        "native_sumo_safety_interventions": 0,
+        "sumo_steps": 5000,
+        "wall_clock_runtime_seconds": 22.75198410000303
+      }
+    },
+    {
+      "structural_category": "MULTI_FACTOR_MULTI_ACTION_NEGOTIATION",
+      "selection_evidence": {
+        "potential_claim_factors": 3,
+        "multi_factor_capable": true,
+        "multi_action_proposer_capable": true,
+        "multi_action_responder_capable": true
+      },
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "E_IN_0_LEFT",
+          "N_IN_0_LEFT",
+          "S_IN_0_LEFT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "scenario_family": "REGULATORY_CYCLE",
+      "movement_paths": {
+        "SCENARIO_AV_0": "E_IN_0_LEFT",
+        "SCENARIO_AV_1": "N_IN_0_LEFT",
+        "SCENARIO_AV_2": "S_IN_0_LEFT"
+      },
+      "perception": {
+        "av_count": 3,
+        "encoded_ego_local_graph_count": 3,
+        "maximum_locally_encoded_nodes": 3,
+        "locally_observed_neighbor_count_upper_bound": 2,
+        "unobserved_or_propagated_track_count": "NOT_RETAINED_BY_COUPLED_EPISODE_RECORD"
+      },
+      "intention_prediction": {
+        "runtime_pipeline_active": true,
+        "per_vehicle_prediction_trace": "NOT_RETAINED_BY_COUPLED_EPISODE_RECORD"
+      },
+      "conflict_reasoning": {
+        "coordination_edges": 4,
+        "physical_execution_edges": 4,
+        "nonphysical_coordination_edges": 0
+      },
+      "traffic_rule_reasoning": {
+        "regulatory_cycle_expected_by_frozen_signature": true,
+        "coordination_cycles_observed": 1
+      },
+      "negotiation": {
+        "batch_count": 1,
+        "proposer_decisions": 4,
+        "responder_decisions": 0,
+        "action_trace": [
+          {
+            "decision_role": "PROPOSER",
+            "ego_id": "SCENARIO_AV_1",
+            "claim_identity": [
+              "SCENARIO_AV_0",
+              "SCENARIO_AV_1"
+            ],
+            "proposal_id": null,
+            "available_semantic_actions": [
+              "KEEP_CLAIM",
+              "RELINQUISH_CLAIM"
+            ],
+            "hard_action_mask": [
+              true,
+              true
+            ],
+            "actor_probability_vector": [
+              0.4669763147830963,
+              0.5330236554145813
+            ],
+            "selected_action_index": 0,
+            "selected_semantic_action": "KEEP_CLAIM",
+            "actor_route_truth_fields_consumed": 0,
+            "centralized_critic_used_for_action": false,
+            "ego_local_observation_used": true,
+            "hard_action_mask_applied": true
+          },
+          {
+            "decision_role": "PROPOSER",
+            "ego_id": "SCENARIO_AV_2",
+            "claim_identity": [
+              "SCENARIO_AV_1",
+              "SCENARIO_AV_2"
+            ],
+            "proposal_id": null,
+            "available_semantic_actions": [
+              "KEEP_CLAIM",
+              "RELINQUISH_CLAIM"
+            ],
+            "hard_action_mask": [
+              true,
+              true
+            ],
+            "actor_probability_vector": [
+              0.36695969104766846,
+              0.6330403089523315
+            ],
+            "selected_action_index": 0,
+            "selected_semantic_action": "KEEP_CLAIM",
+            "actor_route_truth_fields_consumed": 0,
+            "centralized_critic_used_for_action": false,
+            "ego_local_observation_used": true,
+            "hard_action_mask_applied": true
+          },
+          {
+            "decision_role": "PROPOSER",
+            "ego_id": "SCENARIO_AV_0",
+            "claim_identity": [
+              "SCENARIO_AV_2",
+              "SCENARIO_AV_0"
+            ],
+            "proposal_id": null,
+            "available_semantic_actions": [
+              "KEEP_CLAIM",
+              "RELINQUISH_CLAIM"
+            ],
+            "hard_action_mask": [
+              true,
+              true
+            ],
+            "actor_probability_vector": [
+              0.49192798137664795,
+              0.508072018623352
+            ],
+            "selected_action_index": 0,
+            "selected_semantic_action": "KEEP_CLAIM",
+            "actor_route_truth_fields_consumed": 0,
+            "centralized_critic_used_for_action": false,
+            "ego_local_observation_used": true,
+            "hard_action_mask_applied": true
+          },
+          {
+            "decision_role": "PROPOSER",
+            "ego_id": "SCENARIO_AV_1",
+            "claim_identity": [
+              "SCENARIO_AV_2",
+              "SCENARIO_AV_1"
+            ],
+            "proposal_id": null,
+            "available_semantic_actions": [
+              "KEEP_CLAIM",
+              "RELINQUISH_CLAIM"
+            ],
+            "hard_action_mask": [
+              true,
+              true
+            ],
+            "actor_probability_vector": [
+              0.3810659348964691,
+              0.6189340949058533
+            ],
+            "selected_action_index": 0,
+            "selected_semantic_action": "KEEP_CLAIM",
+            "actor_route_truth_fields_consumed": 0,
+            "centralized_critic_used_for_action": false,
+            "ego_local_observation_used": true,
+            "hard_action_mask_applied": true
+          }
+        ],
+        "effective_coordination_graphs": [
+          [
+            [
+              "SCENARIO_AV_0",
+              "SCENARIO_AV_1"
+            ],
+            [
+              "SCENARIO_AV_1",
+              "SCENARIO_AV_2"
+            ],
+            [
+              "SCENARIO_AV_2",
+              "SCENARIO_AV_0"
+            ],
+            [
+              "SCENARIO_AV_2",
+              "SCENARIO_AV_1"
+            ]
+          ]
+        ]
+      },
+      "execution": {
+        "physical_execution_graphs": [
+          [
+            [
+              "SCENARIO_AV_0",
+              "SCENARIO_AV_1"
+            ],
+            [
+              "SCENARIO_AV_1",
+              "SCENARIO_AV_2"
+            ],
+            [
+              "SCENARIO_AV_2",
+              "SCENARIO_AV_0"
+            ],
+            [
+              "SCENARIO_AV_2",
+              "SCENARIO_AV_1"
+            ]
+          ]
+        ],
+        "edge_interpretations": [
+          {
+            "yielding_vehicle_id": "SCENARIO_AV_0",
+            "priority_vehicle_id": "SCENARIO_AV_1",
+            "yielding_movement_path_id": "E_IN_0_LEFT",
+            "priority_movement_path_id": "N_IN_0_LEFT",
+            "coordination_edge_present": true,
+            "physical_relationship_status": "CROSSING",
+            "conflict_zone_ids": [
+              "CZ_001"
+            ],
+            "execution_constraint_count": 1,
+            "execution_relevance": "PHYSICAL_CONFLICT_EXECUTION_RELEVANT",
+            "mapping_source": "CONFLICT_ZONE_MANAGER_AUTHORITATIVE_MAP_RELATIONSHIP",
+            "provenance": {
+              "environment_transition_only": true,
+              "actor_information": false,
+              "numerical_thresholds": 0
+            }
+          },
+          {
+            "yielding_vehicle_id": "SCENARIO_AV_1",
+            "priority_vehicle_id": "SCENARIO_AV_2",
+            "yielding_movement_path_id": "N_IN_0_LEFT",
+            "priority_movement_path_id": "S_IN_0_LEFT",
+            "coordination_edge_present": true,
+            "physical_relationship_status": "CROSSING",
+            "conflict_zone_ids": [
+              "CZ_016"
+            ],
+            "execution_constraint_count": 1,
+            "execution_relevance": "PHYSICAL_CONFLICT_EXECUTION_RELEVANT",
+            "mapping_source": "CONFLICT_ZONE_MANAGER_AUTHORITATIVE_MAP_RELATIONSHIP",
+            "provenance": {
+              "environment_transition_only": true,
+              "actor_information": false,
+              "numerical_thresholds": 0
+            }
+          },
+          {
+            "yielding_vehicle_id": "SCENARIO_AV_2",
+            "priority_vehicle_id": "SCENARIO_AV_0",
+            "yielding_movement_path_id": "S_IN_0_LEFT",
+            "priority_movement_path_id": "E_IN_0_LEFT",
+            "coordination_edge_present": true,
+            "physical_relationship_status": "CROSSING",
+            "conflict_zone_ids": [
+              "CZ_003"
+            ],
+            "execution_constraint_count": 1,
+            "execution_relevance": "PHYSICAL_CONFLICT_EXECUTION_RELEVANT",
+            "mapping_source": "CONFLICT_ZONE_MANAGER_AUTHORITATIVE_MAP_RELATIONSHIP",
+            "provenance": {
+              "environment_transition_only": true,
+              "actor_information": false,
+              "numerical_thresholds": 0
+            }
+          },
+          {
+            "yielding_vehicle_id": "SCENARIO_AV_2",
+            "priority_vehicle_id": "SCENARIO_AV_1",
+            "yielding_movement_path_id": "S_IN_0_LEFT",
+            "priority_movement_path_id": "N_IN_0_LEFT",
+            "coordination_edge_present": true,
+            "physical_relationship_status": "CROSSING",
+            "conflict_zone_ids": [
+              "CZ_016"
+            ],
+            "execution_constraint_count": 1,
+            "execution_relevance": "PHYSICAL_CONFLICT_EXECUTION_RELEVANT",
+            "mapping_source": "CONFLICT_ZONE_MANAGER_AUTHORITATIVE_MAP_RELATIONSHIP",
+            "provenance": {
+              "environment_transition_only": true,
+              "actor_information": false,
+              "numerical_thresholds": 0
+            }
+          }
+        ],
+        "physically_executable_outcomes": 0,
+        "nonphysical_interpretations_observed": 0
+      },
+      "decentralization": {
+        "actor_route_truth_fields_consumed": 0,
+        "centralized_critic_used_for_action": false,
+        "ego_local_observation_used": true,
+        "hard_action_mask_applied": true
+      },
+      "outcome": {
+        "completed_vehicles": 0,
+        "team_travel_time_seconds": 600.0,
+        "collisions": 0,
+        "blocked_zone_violations": 0,
+        "native_sumo_safety_interventions": 0,
+        "sumo_steps": 5000,
+        "wall_clock_runtime_seconds": 30.314955100009684
+      }
+    },
+    {
+      "structural_category": "COORDINATION_TO_NONPHYSICAL_EXECUTION_INTERPRETATION",
+      "selection_evidence": {
+        "authoritative_nonconflicting_movement_pair": [
+          "E_IN_0_LEFT",
+          "S_IN_0_RIGHT"
+        ]
+      },
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "E_IN_0_LEFT",
+          "N_IN_0_LEFT",
+          "S_IN_0_RIGHT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "scenario_family": "REGULATORY_CYCLE",
+      "movement_paths": {
+        "SCENARIO_AV_0": "E_IN_0_LEFT",
+        "SCENARIO_AV_1": "N_IN_0_LEFT",
+        "SCENARIO_AV_2": "S_IN_0_RIGHT"
+      },
+      "perception": {
+        "av_count": 3,
+        "encoded_ego_local_graph_count": 3,
+        "maximum_locally_encoded_nodes": 3,
+        "locally_observed_neighbor_count_upper_bound": 2,
+        "unobserved_or_propagated_track_count": "NOT_RETAINED_BY_COUPLED_EPISODE_RECORD"
+      },
+      "intention_prediction": {
+        "runtime_pipeline_active": true,
+        "per_vehicle_prediction_trace": "NOT_RETAINED_BY_COUPLED_EPISODE_RECORD"
+      },
+      "conflict_reasoning": {
+        "coordination_edges": 2,
+        "physical_execution_edges": 1,
+        "nonphysical_coordination_edges": 1
+      },
+      "traffic_rule_reasoning": {
+        "regulatory_cycle_expected_by_frozen_signature": true,
+        "coordination_cycles_observed": 0
+      },
+      "negotiation": {
+        "batch_count": 1,
+        "proposer_decisions": 4,
+        "responder_decisions": 3,
+        "action_trace": [
+          {
+            "decision_role": "PROPOSER",
+            "ego_id": "SCENARIO_AV_1",
+            "claim_identity": [
+              "SCENARIO_AV_0",
+              "SCENARIO_AV_1"
+            ],
+            "proposal_id": null,
+            "available_semantic_actions": [
+              "KEEP_CLAIM",
+              "RELINQUISH_CLAIM"
+            ],
+            "hard_action_mask": [
+              true,
+              true
+            ],
+            "actor_probability_vector": [
+              0.4669763147830963,
+              0.5330236554145813
+            ],
+            "selected_action_index": 1,
+            "selected_semantic_action": "RELINQUISH_CLAIM",
+            "actor_route_truth_fields_consumed": 0,
+            "centralized_critic_used_for_action": false,
+            "ego_local_observation_used": true,
+            "hard_action_mask_applied": true
+          },
+          {
+            "decision_role": "PROPOSER",
+            "ego_id": "SCENARIO_AV_2",
+            "claim_identity": [
+              "SCENARIO_AV_1",
+              "SCENARIO_AV_2"
+            ],
+            "proposal_id": null,
+            "available_semantic_actions": [
+              "KEEP_CLAIM",
+              "RELINQUISH_CLAIM"
+            ],
+            "hard_action_mask": [
+              true,
+              true
+            ],
+            "actor_probability_vector": [
+              0.3664655387401581,
+              0.6335344314575195
+            ],
+            "selected_action_index": 1,
+            "selected_semantic_action": "RELINQUISH_CLAIM",
+            "actor_route_truth_fields_consumed": 0,
+            "centralized_critic_used_for_action": false,
+            "ego_local_observation_used": true,
+            "hard_action_mask_applied": true
+          },
+          {
+            "decision_role": "PROPOSER",
+            "ego_id": "SCENARIO_AV_0",
+            "claim_identity": [
+              "SCENARIO_AV_2",
+              "SCENARIO_AV_0"
+            ],
+            "proposal_id": null,
+            "available_semantic_actions": [
+              "KEEP_CLAIM",
+              "RELINQUISH_CLAIM"
+            ],
+            "hard_action_mask": [
+              true,
+              true
+            ],
+            "actor_probability_vector": [
+              0.5102970004081726,
+              0.4897029399871826
+            ],
+            "selected_action_index": 1,
+            "selected_semantic_action": "RELINQUISH_CLAIM",
+            "actor_route_truth_fields_consumed": 0,
+            "centralized_critic_used_for_action": false,
+            "ego_local_observation_used": true,
+            "hard_action_mask_applied": true
+          },
+          {
+            "decision_role": "PROPOSER",
+            "ego_id": "SCENARIO_AV_1",
+            "claim_identity": [
+              "SCENARIO_AV_2",
+              "SCENARIO_AV_1"
+            ],
+            "proposal_id": null,
+            "available_semantic_actions": [
+              "KEEP_CLAIM",
+              "RELINQUISH_CLAIM"
+            ],
+            "hard_action_mask": [
+              true,
+              true
+            ],
+            "actor_probability_vector": [
+              0.3810659348964691,
+              0.6189340949058533
+            ],
+            "selected_action_index": 0,
+            "selected_semantic_action": "KEEP_CLAIM",
+            "actor_route_truth_fields_consumed": 0,
+            "centralized_critic_used_for_action": false,
+            "ego_local_observation_used": true,
+            "hard_action_mask_applied": true
+          },
+          {
+            "decision_role": "RESPONDER",
+            "ego_id": "SCENARIO_AV_0",
+            "claim_identity": [
+              "SCENARIO_AV_0",
+              "SCENARIO_AV_1"
+            ],
+            "proposal_id": [
+              16.8,
+              "SCENARIO_AV_0",
+              "SCENARIO_AV_1",
+              "SCENARIO_AV_1",
+              "SCENARIO_AV_0"
+            ],
+            "available_semantic_actions": [
+              "ACCEPT_RELINQUISHMENT",
+              "REJECT_RELINQUISHMENT"
+            ],
+            "hard_action_mask": [
+              true,
+              true
+            ],
+            "actor_probability_vector": [
+              0.2624235451221466,
+              0.7375764846801758
+            ],
+            "selected_action_index": 0,
+            "selected_semantic_action": "ACCEPT_RELINQUISHMENT",
+            "actor_route_truth_fields_consumed": 0,
+            "centralized_critic_used_for_action": false,
+            "ego_local_observation_used": true,
+            "hard_action_mask_applied": true
+          },
+          {
+            "decision_role": "RESPONDER",
+            "ego_id": "SCENARIO_AV_1",
+            "claim_identity": [
+              "SCENARIO_AV_1",
+              "SCENARIO_AV_2"
+            ],
+            "proposal_id": [
+              16.8,
+              "SCENARIO_AV_1",
+              "SCENARIO_AV_2",
+              "SCENARIO_AV_2",
+              "SCENARIO_AV_1"
+            ],
+            "available_semantic_actions": [
+              "ACCEPT_RELINQUISHMENT",
+              "REJECT_RELINQUISHMENT"
+            ],
+            "hard_action_mask": [
+              true,
+              true
+            ],
+            "actor_probability_vector": [
+              0.2694445550441742,
+              0.730555534362793
+            ],
+            "selected_action_index": 0,
+            "selected_semantic_action": "ACCEPT_RELINQUISHMENT",
+            "actor_route_truth_fields_consumed": 0,
+            "centralized_critic_used_for_action": false,
+            "ego_local_observation_used": true,
+            "hard_action_mask_applied": true
+          },
+          {
+            "decision_role": "RESPONDER",
+            "ego_id": "SCENARIO_AV_2",
+            "claim_identity": [
+              "SCENARIO_AV_2",
+              "SCENARIO_AV_0"
+            ],
+            "proposal_id": [
+              16.8,
+              "SCENARIO_AV_2",
+              "SCENARIO_AV_0",
+              "SCENARIO_AV_0",
+              "SCENARIO_AV_2"
+            ],
+            "available_semantic_actions": [
+              "ACCEPT_RELINQUISHMENT",
+              "REJECT_RELINQUISHMENT"
+            ],
+            "hard_action_mask": [
+              true,
+              true
+            ],
+            "actor_probability_vector": [
+              0.29944729804992676,
+              0.7005526423454285
+            ],
+            "selected_action_index": 1,
+            "selected_semantic_action": "REJECT_RELINQUISHMENT",
+            "actor_route_truth_fields_consumed": 0,
+            "centralized_critic_used_for_action": false,
+            "ego_local_observation_used": true,
+            "hard_action_mask_applied": true
+          }
+        ],
+        "effective_coordination_graphs": [
+          [
+            [
+              "SCENARIO_AV_2",
+              "SCENARIO_AV_0"
+            ],
+            [
+              "SCENARIO_AV_2",
+              "SCENARIO_AV_1"
+            ]
+          ]
+        ]
+      },
+      "execution": {
+        "physical_execution_graphs": [
+          [
+            [
+              "SCENARIO_AV_2",
+              "SCENARIO_AV_1"
+            ]
+          ]
+        ],
+        "edge_interpretations": [
+          {
+            "yielding_vehicle_id": "SCENARIO_AV_2",
+            "priority_vehicle_id": "SCENARIO_AV_0",
+            "yielding_movement_path_id": "S_IN_0_RIGHT",
+            "priority_movement_path_id": "E_IN_0_LEFT",
+            "coordination_edge_present": true,
+            "physical_relationship_status": "AUTHORITATIVE_MAP_NO_CONFLICT",
+            "conflict_zone_ids": [],
+            "execution_constraint_count": 0,
+            "execution_relevance": "PHYSICALLY_NONCONFLICTING_NO_EXECUTION_CONSTRAINT",
+            "mapping_source": "CONFLICT_ZONE_MANAGER_AUTHORITATIVE_MAP_RELATIONSHIP",
+            "provenance": {
+              "environment_transition_only": true,
+              "actor_information": false,
+              "numerical_thresholds": 0
+            }
+          },
+          {
+            "yielding_vehicle_id": "SCENARIO_AV_2",
+            "priority_vehicle_id": "SCENARIO_AV_1",
+            "yielding_movement_path_id": "S_IN_0_RIGHT",
+            "priority_movement_path_id": "N_IN_0_LEFT",
+            "coordination_edge_present": true,
+            "physical_relationship_status": "MERGING",
+            "conflict_zone_ids": [
+              "CZ_017"
+            ],
+            "execution_constraint_count": 1,
+            "execution_relevance": "PHYSICAL_CONFLICT_EXECUTION_RELEVANT",
+            "mapping_source": "CONFLICT_ZONE_MANAGER_AUTHORITATIVE_MAP_RELATIONSHIP",
+            "provenance": {
+              "environment_transition_only": true,
+              "actor_information": false,
+              "numerical_thresholds": 0
+            }
+          }
+        ],
+        "physically_executable_outcomes": 1,
+        "nonphysical_interpretations_observed": 1
+      },
+      "decentralization": {
+        "actor_route_truth_fields_consumed": 0,
+        "centralized_critic_used_for_action": false,
+        "ego_local_observation_used": true,
+        "hard_action_mask_applied": true
+      },
+      "outcome": {
+        "completed_vehicles": 1,
+        "team_travel_time_seconds": 453.44,
+        "collisions": 0,
+        "blocked_zone_violations": 0,
+        "native_sumo_safety_interventions": 0,
+        "sumo_steps": 5000,
+        "wall_clock_runtime_seconds": 24.089276500002597
+      }
+    }
+  ],
+  "aggregate": {
+    "scenario_count": 3,
+    "completed_vehicles": 3,
+    "team_travel_time_seconds": 1544.2,
+    "collisions": 0,
+    "blocked_zone_violations": 0,
+    "learned_proposer_actions": 16,
+    "learned_responder_actions": 6,
+    "learned_mappo_decisions": 22,
+    "negotiation_batches": 3,
+    "regulatory_cycles": 2,
+    "physical_executable_outcomes": 1,
+    "nonphysical_coordination_edges": 4,
+    "native_safety_interventions": 0
+  },
+  "parameter_hashes_before": {
+    "gnn": "62d377da08eebab7a7f555b7a74a1caeaf9f2a6d3da733e71608ed0714fc56e4",
+    "proposer": "b8fec406b0a8e01ba4a1a55b578202ea82b19d1b0399b43f7f443e8c48802355",
+    "responder": "57b20633a49b13c8e45452dae3acf86b8c61d22f342cee12f366715264723410"
+  },
+  "parameter_hashes_after": {
+    "gnn": "62d377da08eebab7a7f555b7a74a1caeaf9f2a6d3da733e71608ed0714fc56e4",
+    "proposer": "b8fec406b0a8e01ba4a1a55b578202ea82b19d1b0399b43f7f443e8c48802355",
+    "responder": "57b20633a49b13c8e45452dae3acf86b8c61d22f342cee12f366715264723410"
+  },
+  "policy_hashes_unchanged": true,
+  "source_checkpoint_sha256_before": "6053416afb7c07873fd847ea114728f4beec8a51ae251528d9dce72de2cc802d",
+  "source_checkpoint_sha256_after": "6053416afb7c07873fd847ea114728f4beec8a51ae251528d9dce72de2cc802d",
+  "source_checkpoint_unchanged": true,
+  "training_operations": 0,
+  "optimizer_instances": 0,
+  "optimizer_step_calls": 0,
+  "backward_calls": 0,
+  "ppo_updates": 0,
+  "parameter_updates": 0,
+  "new_training_episodes": 0,
+  "validation_scenarios_used": 0,
+  "held_out_scenarios_used": 0,
+  "normal_main_learned_actions": 0
+}

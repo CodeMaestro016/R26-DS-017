@@ -308,8 +308,11 @@ class CoupledNegotiationTrainingEnvironment:
                     plan0.plan_id, 0.0, EPISODE_DURATION_SECONDS, None,
                     "EPISODE_TERMINATED", reward, factors,
                     tuple(encoded_shapes),
-                    (sum(shape[0][0] for shape in encoded_shapes),
-                     encoded_shapes[0][0][1] if encoded_shapes else 0),
+                    ((sum(shape[0][0] for shape in encoded_shapes),
+                      encoded_shapes[0][0][1] if encoded_shapes else 0)
+                     if getattr(self.action_provider,
+                                "runtime_critic_enabled", True)
+                     else (0, 0)),
                     {"joint_physical_consequences": 1,
                      "reward_definition": "NEGATIVE_TEAM_TRAVEL_TIME_INCREMENT_V1"}))
             factors = tuple(item for batch in final_batches

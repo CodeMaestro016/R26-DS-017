@@ -1,0 +1,11 @@
+{
+  "MAXIMUM_ACCEPTABLE_TRAINING_RESOURCE_BUDGET": {
+    "status": "UNRESOLVED",
+    "scope": "PER_REPLICATION",
+    "budget_type": null,
+    "budget_value": null,
+    "unit": null,
+    "justification_source": null,
+    "approval_status": "NOT_SUPPLIED"
+  }
+}

@@ -141,8 +141,11 @@ class MAPPOBehaviorActionProvider:
     outcome_data_used = False
     uses_mappo_behavior_policy = True
 
-    def __init__(self, bundle=None, sampling_seed=None):
+    def __init__(self, bundle=None, sampling_seed=None,
+                 runtime_critic_enabled=True):
         self.bundle = bundle or build_mechanical_mappo_behavior_policy_bundle()
+        self.runtime_critic_enabled = bool(runtime_critic_enabled)
+        self.runtime_critic_calls = 0
         self.generator = torch.Generator(device="cpu")
         self.sampling_seed = (self.bundle.component_seeds["sampling"]
                               if sampling_seed is None else int(sampling_seed))
@@ -218,17 +221,22 @@ class MAPPOBehaviorActionProvider:
         if not factors or not required_local_egos <= set(encoded_by_ego):
             return None
 
-        # One centralized sample from current per-agent graph representations.
-        with torch.no_grad():
-            graph_outputs = [self.bundle.gnn(to_torch_graph(encoded_by_ego[ego]))
-                             for ego in sorted(encoded_by_ego)]
-            central = CentralizedCriticInputBuilder.build(torch.stack(
-                [item.graph_embedding for item in graph_outputs], dim=0))
-            critic_value = float(self.bundle.centralized_critic(central).item())
-        critic_id = (batch_id, "CENTRALIZED_CRITIC_SAMPLE")
-        self.pending_critics.append(MAPPOCriticSample(
-            critic_id, batch_id, tuple(float(x) for x in central.tolist()),
-            critic_value, None, None, None))
+        critic_id = None
+        if self.runtime_critic_enabled:
+            # Centralized value collection is a CTDE training-only concern.
+            with torch.no_grad():
+                graph_outputs = [
+                    self.bundle.gnn(to_torch_graph(encoded_by_ego[ego]))
+                    for ego in sorted(encoded_by_ego)]
+                central = CentralizedCriticInputBuilder.build(torch.stack(
+                    [item.graph_embedding for item in graph_outputs], dim=0))
+                critic_value = float(
+                    self.bundle.centralized_critic(central).item())
+            self.runtime_critic_calls += 1
+            critic_id = (batch_id, "CENTRALIZED_CRITIC_SAMPLE")
+            self.pending_critics.append(MAPPOCriticSample(
+                critic_id, batch_id, tuple(float(x) for x in central.tolist()),
+                critic_value, None, None, None))
 
         proposals, proposer_pairs, proposer_masks = [], [], []
         proposer_samples = []

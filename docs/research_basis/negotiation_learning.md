@@ -548,6 +548,32 @@ scale, statistical precision or power targets, bootstrap resolution, and final
 comparison-family rules are not inferred from observed trajectories. These
 resource and domain inputs must be justified explicitly and incorporated into a
 new finalized protocol identity before further evidence acquisition begins.
+
+## MAPPO training resource horizon
+
+The fixed MAPPO training horizon is determined from an explicit
+per-replication project resource ceiling, not from observed learning
+performance. Runtime evidence may map a wall-clock constraint to a conservative
+structural workload, but historical performance cannot determine the resource
+ceiling. No approved per-replication resource ceiling is currently supplied, so
+no training horizon has yet been chosen.
+
+## Final Research Prototype Demonstration
+
+The demonstration policy is derived from canonical replication 0, State 2 by
+a deterministic provenance rule independent of performance. It is not claimed
+to be statistically optimal, converged, or the final selected MAPPO model. Its
+purpose is end-to-end implementation validation across local perception,
+intention-supported conflict reasoning, regulatory negotiation, learned masked
+actor decisions, physical execution planning, and SUMO control.
+
+Execution remains decentralized: proposer and responder actors receive only
+ego-local runtime observations, while the centralized critic is absent from the
+runtime action path. Hard regulatory and physical-safety constraints remain in
+authority. HELD_OUT is untouched, and exhaustive hyperparameter and model
+selection remain future work subject to the unresolved project resource and
+statistical inputs.
+
 ## Step 5J.3B.3A coordination-to-physical execution boundary
 
 The physical execution graph is a derived environment-transition
