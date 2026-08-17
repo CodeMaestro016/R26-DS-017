@@ -172,15 +172,23 @@ class JointNegotiationBranchEnumerator:
                     status = "JOINT_BRANCH_PROPOSALS_REJECTED"
                 else: status = "JOINT_BRANCH_EXECUTABLE_ACYCLIC"
                 plan = None
+                physical_execution_status = None
                 if not cyclic and not blocked and not disagreement and self.planner:
-                    plan = self.planner.plan(
+                    plan_arguments = dict(
                         source_snapshot_id=source_snapshot_id,
                         effective_coordination_graph=graph,
                         active_vehicle_ids=active_vehicle_ids,
                         movement_path_by_vehicle=movement_path_by_vehicle,
                         timestamp=timestamp, source_protocol_state=status,
                         cleared_vehicle_zones=())
+                    if hasattr(self.planner, "classify_plan"):
+                        plan, physical_execution_status = (
+                            self.planner.classify_plan(**plan_arguments))
+                    else:
+                        plan = self.planner.plan(**plan_arguments)
                 executable = bool(plan and plan.graph_status == "EXECUTABLE")
+                if physical_execution_status:
+                    status = "JOINT_BRANCH_PHYSICAL_EXECUTION_UNORDERED"
                 branch_id = ("JOINT_NEGOTIATION_BRANCH_V1", source_snapshot_id,
                              tuple(proposer_pairs), tuple(response_pairs), regulatory_profile)
                 results.append(JointNegotiationBranchResult(
@@ -193,5 +201,7 @@ class JointNegotiationBranchEnumerator:
                     cyclic, executable, status, plan.plan_id if plan else None, plan,
                     ACTION_SOURCE, {"joint_protocol_evaluations": 1,
                                     "automatic_edge_removal": False,
-                                    "winner_heuristic": False}))
+                                    "winner_heuristic": False,
+                                    "physical_execution_status":
+                                        physical_execution_status}))
         return tuple(sorted(results, key=lambda item: item.branch_id))

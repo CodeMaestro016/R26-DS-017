@@ -16,6 +16,15 @@ class ConflictZoneExecutionPlanner:
         self.paths = path_manager
         self.zones = conflict_zone_manager
 
+    def classify_plan(self, **kwargs):
+        """Return an execution plan or a precise non-executable classification."""
+        try:
+            return self.plan(**kwargs), None
+        except ExecutionSemanticError as error:
+            if error.args == ("EXECUTION_GRAPH_PHYSICAL_CONFLICT_UNORDERED",):
+                return None, error.args[0]
+            raise
+
     def plan(self, *, source_snapshot_id, effective_coordination_graph,
              active_vehicle_ids, movement_path_by_vehicle, timestamp,
              source_protocol_state, cleared_vehicle_zones=()):
@@ -74,4 +83,3 @@ class ConflictZoneExecutionPlanner:
             {"edge_direction": self.EDGE_DIRECTION,
              "ready_definition": "NO_ACTIVE_OUTGOING_PRECEDENCE_OBLIGATION",
              "vehicle_iteration_order_consumed": "False"})
-

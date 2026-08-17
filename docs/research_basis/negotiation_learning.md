@@ -426,3 +426,21 @@ complete with zero collisions and valid Step 5H accounting. Their zone-entry,
 zone-clear, completion, and objective traces differ, establishing the physical
 causal witness. No tolerance, emergency-deceleration substitution, stopping
 margin, native safety bypass, or reward term was added.
+
+## Coupled MAPPO environment profiling checkpoint
+
+Step 5J.3A adds a post-freeze evidence layer; the Step 5J.2 design and its
+historical coupling status are not mutated. A reusable event-driven coupled
+environment accepts semantic proposer and responder actions through an action
+provider, composes one joint protocol outcome, and delegates the resulting
+precedence execution to the existing SUMO-native controller. The deterministic
+profiling provider selects the first canonically ordered executable branch
+without reading reward or future outcome data. Its samples are explicitly
+ineligible for PPO updates and are not algorithm or baseline performance.
+
+One exhaustive pass covers every frozen TRAINING-manifest scenario exactly
+once in a fresh SUMO process. VALIDATION and HELD_OUT_TEST performance remain
+unused. Profiling measures natural simulator, decision-batch, policy-factor,
+episode, tensor-shape, safety, and Step 5H objective quantities without
+selecting a training budget, replication count, seed, candidate, optimizer, or
+hyperparameter.
