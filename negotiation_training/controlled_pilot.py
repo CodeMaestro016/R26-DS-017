@@ -2,6 +2,7 @@
 
 import hashlib
 import json
+import os
 from pathlib import Path
 from time import perf_counter
 
@@ -24,6 +25,16 @@ from .rollout import MAPPOBehaviorRolloutIdentity, parameter_hash
 
 EVIDENCE_PATH = Path("results/mappo_closed_loop_pilot_evidence.json")
 PROGRESS_PATH = Path("results/mappo_closed_loop_pilot_progress.json")
+
+
+def atomic_write_json(path, payload):
+    """Replace a JSON record only after its complete successor is durable."""
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_suffix(path.suffix + ".tmp")
+    temporary.write_text(json.dumps(serializable(payload), indent=2),
+                         encoding="utf-8")
+    os.replace(temporary, path)
 
 
 def _identity(design, architecture, optimization, manifest, replication, label):
@@ -67,7 +78,8 @@ def _pass_rollout_payload(design, architecture, optimization, manifest,
 def collect_controlled_training_pass(*, design, architecture, optimization,
                                      manifest, specifications, bundle,
                                      replication_identity, pass_label,
-                                     progress_context):
+                                     progress_context,
+                                     progress_path=PROGRESS_PATH):
     pass_identity = _identity(
         design, architecture, optimization, manifest,
         replication_identity, pass_label)
@@ -83,12 +95,11 @@ def collect_controlled_training_pass(*, design, architecture, optimization,
               f"{index}/{len(specifications)}")
         episodes.append(CoupledNegotiationTrainingEnvironment(provider).run_episode(
             specification, manifest.manifest_id))
-        PROGRESS_PATH.write_text(json.dumps({
+        atomic_write_json(progress_path, {
             **progress_context, "active_pass": pass_label,
             "active_pass_scenarios_completed": index,
             "active_pass_team_travel_time_seconds": sum(
-                item.team_travel_time_seconds for item in episodes)}, indent=2),
-            encoding="utf-8")
+                item.team_travel_time_seconds for item in episodes)})
     final_hashes = _current_hashes(bundle)
     if final_hashes != initial_hashes:
         raise RuntimeError("POLICY_PARAMETER_CHANGED_DURING_COLLECTION")
@@ -271,9 +282,9 @@ class ControlledMAPPOPilotRunner:
                                "pass0_data_used_for_update_cycles": 1,
                                "pass1_update_cycles": 0}}
             replications.append(replication)
-            PROGRESS_PATH.write_text(json.dumps({
+            atomic_write_json(PROGRESS_PATH, {
                 "completed_replications": replication_index + 1,
-                "replications": replications}, indent=2), encoding="utf-8")
+                "replications": replications})
         pre = [item["pass0"]["team_travel_time_seconds"]
                for item in replications]
         post = [item["pass1"]["team_travel_time_seconds"]
@@ -328,5 +339,5 @@ class ControlledMAPPOPilotRunner:
                 "The two-replication pilot is the mathematical minimum required "
                 "to obtain a first sample-variance estimate. It is not the final "
                 "replication design.")}
-        EVIDENCE_PATH.write_text(json.dumps(result, indent=2), encoding="utf-8")
+        atomic_write_json(EVIDENCE_PATH, result)
         return result

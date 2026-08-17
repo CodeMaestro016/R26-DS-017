@@ -208,7 +208,9 @@ class MechanicalMAPPOTrainer:
         epochs = int(next(item.value for item in
             self.configuration.runtime_choices
             if item.choice_id == "ppo_update_epochs"))
-        initial_hashes = dict(self.bundle.initial_parameter_hashes)
+        # Each sequential update begins at the policy that generated its own
+        # on-policy rollout, not necessarily at the bundle's State-0 weights.
+        initial_hashes = dict(self.rollout["initial_parameter_hashes"])
         diagnostics = []
         actor_steps = critic_steps = actor_backward = critic_backward = 0
         for epoch in range(1, epochs + 1):
