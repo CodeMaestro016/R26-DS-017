@@ -461,3 +461,30 @@ internals, optimizer grouping, or critic-loss reduction. Existing test-only
 architectures and PyTorch defaults are not promoted into the pilot. Therefore
 no behavior-policy sample, RL seed, optimizer, backward call, parameter update,
 training-manifest pass, or checkpoint is produced in Step 5J.3B at this state.
+
+## Step 5J.3B.1 mechanical architecture contract
+
+Message-passing depth is not theoretically unique. The post-freeze contract
+therefore records a controlled-ablation candidate set derived from the measured
+maximum graph size: the observed four-node maximum implies possible receptive
+field radii of one through three edges. Three layers are used only as the
+full-simple-path-radius mechanical reference; the earlier validation-only depth
+of two is not promoted, and no optimality is claimed. This interpretation is
+consistent with the iterative message-passing framework of Gilmer et al.
+(2017).
+
+All existing linear modules are explicitly reinitialized from a supplied seed
+identity by replaying the documented PyTorch `nn.Linear.reset_parameters`
+algorithm: Kaiming uniform with `a=sqrt(5)` for weights and fan-in-bounded
+uniform biases. The resulting frozen GNN is a deterministic initialized
+mechanical representation only, not pretrained, fitted, or eligible for final
+selection.
+
+The actor and critic contracts preserve existing topology without new hidden
+dimensions: proposer concatenation to one two-logit linear head, responder
+concatenation including protocol and role semantics to one two-logit linear
+head, and a training-only permutation-invariant sum followed by one scalar
+linear critic head. The contract remains post-freeze, mechanical-reference
+only, and project-unselected. Architecture fields are resolved; Adam internals,
+optimizer grouping, and critic-loss reduction remain the next configuration
+gate.

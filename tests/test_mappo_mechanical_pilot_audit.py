@@ -5,8 +5,9 @@ import json
 
 from experimentation import build_design
 from negotiation_training.optimizer_contract import (
-    ARCHITECTURE_BLOCKER, AUDIT_BLOCKED, FROZEN_PILOT_CANDIDATE,
-    UNRESOLVED, build_mechanical_pilot_configuration_audit)
+    AUDIT_BLOCKED, FROZEN_PILOT_CANDIDATE,
+    RESOLVED_MECHANICAL_REFERENCE,
+    build_mechanical_pilot_configuration_audit)
 
 
 def test_audit_preserves_frozen_design_and_loads_provisional_reference():
@@ -25,7 +26,7 @@ def test_audit_preserves_frozen_design_and_loads_provisional_reference():
                for item in frozen.values())
 
 
-def test_architecture_contract_is_exactly_unresolved_without_test_defaults():
+def test_architecture_contract_resolves_without_promoting_test_depth():
     audit = build_mechanical_pilot_configuration_audit()
     choices = {item.choice_id: item for item in audit.runtime_choices}
     for name in ("gnn_message_passing_layers", "neural_initialization_policy",
@@ -33,9 +34,10 @@ def test_architecture_contract_is_exactly_unresolved_without_test_defaults():
                  "proposer_actor_head_architecture",
                  "responder_actor_head_architecture",
                  "centralized_critic_architecture"):
-        assert choices[name].classification == UNRESOLVED
-        assert choices[name].value is None
-    assert choices["gnn_message_passing_layers"].value != 2
+        assert choices[name].classification == RESOLVED_MECHANICAL_REFERENCE
+        assert choices[name].value is not None
+        assert choices[name].provenance["project_selected"] is False
+    assert choices["gnn_message_passing_layers"].value == 3
 
 
 def test_adam_internals_are_not_silently_inherited():
@@ -49,7 +51,7 @@ def test_adam_internals_are_not_silently_inherited():
 def test_hard_stop_prevents_behavior_collection_and_optimization():
     audit = build_mechanical_pilot_configuration_audit()
     assert audit.status == AUDIT_BLOCKED
-    assert audit.next_blocker == ARCHITECTURE_BLOCKER
+    assert audit.next_blocker == "ADAM_INTERNAL_PARAMETER_CONTRACT_UNRESOLVED"
     assert audit.optimizer_instances == 0
     assert audit.backward_calls == 0
     assert audit.parameter_updates == 0

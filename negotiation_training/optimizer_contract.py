@@ -7,6 +7,7 @@ from types import MappingProxyType
 from typing import Any, Mapping, Optional, Tuple
 
 from experimentation import build_design
+from .architecture_contract import build_mechanical_pilot_architecture_contract
 
 
 SCHEMA_DERIVED = "SCHEMA_DERIVED"
@@ -16,6 +17,7 @@ EXPLICIT_EXISTING_ARCHITECTURE_SEMANTIC = (
     "EXPLICIT_EXISTING_ARCHITECTURE_SEMANTIC")
 MECHANICAL_REFERENCE_ONLY = "MECHANICAL_IMPLEMENTATION_REFERENCE_ONLY"
 UNRESOLVED = "UNRESOLVED_OPERATIONAL_PARAMETER"
+RESOLVED_MECHANICAL_REFERENCE = "RESOLVED_MECHANICAL_REFERENCE"
 AUDIT_BLOCKED = "MECHANICAL_PILOT_CONFIGURATION_INCOMPLETE"
 ARCHITECTURE_BLOCKER = "PILOT_ARCHITECTURE_CONTRACT_UNRESOLVED"
 
@@ -72,6 +74,7 @@ def build_mechanical_pilot_configuration_audit(
             "READY_TO_IMPLEMENT_FIRST_CONTROLLED_MAPPO_PILOT"):
         raise ValueError("STEP_5J_3B_NOT_READY_FOR_CONFIGURATION_AUDIT")
     provisional = design["provisional"]
+    architecture = build_mechanical_pilot_architecture_contract(profile_path)
     assignments = {item.choice_id: item for item in provisional.assignments}
 
     def frozen(name):
@@ -92,26 +95,34 @@ def build_mechanical_pilot_configuration_audit(
         _choice("responder_action_count", SCHEMA_DERIVED, 2,
                 provenance_source="RESPONDER_ACTION_ORDER"),
         frozen("gnn_hidden_dimension"),
-        _choice("gnn_message_passing_layers", UNRESOLVED,
-                blocker=ARCHITECTURE_BLOCKER,
-                reason="Existing depth 2 is validation-only, not operational evidence"),
+        _choice("gnn_message_passing_layers", RESOLVED_MECHANICAL_REFERENCE,
+                architecture.gnn_message_passing_layers,
+                architecture.contract_id,
+                mechanical_reference_only=True, project_selected=False),
         _choice("gnn_activation", EXPLICIT_EXISTING_ARCHITECTURE_SEMANTIC,
                 "RELU", provenance_source="EdgeAwareMPNNEncoder source"),
-        _choice("neural_initialization_policy", UNRESOLVED,
-                blocker=ARCHITECTURE_BLOCKER,
-                reason="nn.Linear initialization is not explicitly specified"),
-        _choice("frozen_gnn_parameter_source", UNRESOLVED,
-                blocker=ARCHITECTURE_BLOCKER,
-                reason="FROZEN_GNN does not identify trained or initialized weights"),
-        _choice("proposer_actor_head_architecture", UNRESOLVED,
-                blocker=ARCHITECTURE_BLOCKER,
-                reason="FINAL_POLICY_ARCHITECTURE requires experimental selection"),
-        _choice("responder_actor_head_architecture", UNRESOLVED,
-                blocker=ARCHITECTURE_BLOCKER,
-                reason="RESPONSE_ACTOR_ARCHITECTURE requires experimental selection"),
-        _choice("centralized_critic_architecture", UNRESOLVED,
-                blocker=ARCHITECTURE_BLOCKER,
-                reason="Training-only linear test interface is not an operational pilot contract"),
+        _choice("neural_initialization_policy", RESOLVED_MECHANICAL_REFERENCE,
+                architecture.initialization_policy, architecture.contract_id,
+                mechanical_reference_only=True, project_selected=False),
+        _choice("frozen_gnn_parameter_source", RESOLVED_MECHANICAL_REFERENCE,
+                architecture.frozen_gnn_parameter_source,
+                architecture.contract_id, mechanical_reference_only=True,
+                project_selected=False),
+        _choice("proposer_actor_head_architecture",
+                RESOLVED_MECHANICAL_REFERENCE,
+                architecture.proposer_actor_head_architecture,
+                architecture.contract_id, mechanical_reference_only=True,
+                project_selected=False),
+        _choice("responder_actor_head_architecture",
+                RESOLVED_MECHANICAL_REFERENCE,
+                architecture.responder_actor_head_architecture,
+                architecture.contract_id, mechanical_reference_only=True,
+                project_selected=False),
+        _choice("centralized_critic_architecture",
+                RESOLVED_MECHANICAL_REFERENCE,
+                architecture.centralized_critic_architecture,
+                architecture.contract_id, mechanical_reference_only=True,
+                project_selected=False),
         frozen("parameter_sharing_strategy"),
         frozen("gnn_training_mode"),
         frozen("ppo_clip_epsilon"),
