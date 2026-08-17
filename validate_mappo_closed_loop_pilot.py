@@ -1,6 +1,6 @@
 """Run and report the Step 5J.3C.1 minimum closed-loop pilot."""
 
-from negotiation_training import ControlledMAPPOPilotRunner
+from negotiation_training.controlled_pilot import ControlledMAPPOPilotRunner
 
 
 def main():

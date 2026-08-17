@@ -8,8 +8,6 @@ from .mappo_provider import *
 from .rollout import *
 from .ppo_trainer import *
 from .pilot_analysis import *
-from .controlled_pilot import *
 from .pilot_evidence_review import *
-from .evidence_checkpoint import *
 from .extended_learning_analysis import *
-from .extended_learning_curve import *
+from .extended_evidence_review import *

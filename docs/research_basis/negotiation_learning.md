@@ -511,6 +511,21 @@ make a value-loss mixing coefficient inapplicable.
 This contract is a mechanical implementation reference, not a final method
 selection. Step 5J.3B.2 constructs no optimizer, calls no backward pass, makes
 no parameter update, and performs no training.
+
+## Step 5J.3C.2C extended learning-evidence interpretation
+
+Across three independently initialized MAPPO replications, the mean
+TRAINING-manifest team travel time decreased from State 0 to State 2, and all
+three replications had lower State-2 than State-0 total team travel time.
+However, the direction of the individual update intervals was not consistent:
+one replication worsened after Update 1 and another worsened after Update 2.
+These observations demonstrate learning progress but do not establish
+convergence, an optimal stopping point, or an adequate final replication count.
+
+No training-budget, replication-count, or checkpoint-selection rule was chosen
+retrospectively from the observed trajectories. Selection and termination rules
+must be predeclared and frozen before acquiring more training evidence, avoiding
+a post-hoc stopping decision based on whether the current curve looks adequate.
 ## Step 5J.3B.3A coordination-to-physical execution boundary
 
 The physical execution graph is a derived environment-transition
