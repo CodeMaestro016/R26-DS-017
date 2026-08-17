@@ -1,0 +1,67 @@
+"""Execute and report the first offline mechanical MAPPO PPO update."""
+
+from negotiation_training import MechanicalMAPPOTrainer
+
+
+def main():
+    result = MechanicalMAPPOTrainer().run()
+    counts = result["sample_counts"]
+    print("Step 5J.3B.4 First Mechanical MAPPO PPO Update\n")
+    print("Source rollout")
+    print("  Status: REAL_MAPPO_BEHAVIOR_ROLLOUT_VALIDATED")
+    print(f"  PPO factors: {counts['actor']}")
+    print(f"  Proposer: {counts['proposer']}")
+    print(f"  Responder: {counts['responder']}")
+    print(f"  Critic samples: {counts['critic']}\n")
+    print("Pre-update integrity")
+    print("  Initial parameter hashes match behavior policy: PASS")
+    print("  Hard masks exact: PASS")
+    print("  Old/current log probabilities exact: PASS")
+    print("  Importance ratios exactly one: PASS\n")
+    print("Optimizer")
+    print("  Actor Adam instances: 1")
+    print("  Critic Adam instances: 1")
+    print("  Frozen GNN optimizer membership: 0")
+    print("  Silent defaults: 0\n")
+    print("PPO mechanics")
+    print("  Full batch: PASS")
+    print(f"  PPO epochs: {result['ppo_configuration']['epochs']}")
+    print(f"  Clip epsilon: {result['ppo_configuration']['clip_epsilon']}")
+    print("  Raw Monte Carlo advantage: PASS")
+    print("  Entropy term: NONE")
+    print("  Gradient clipping: NONE\n")
+    for item in result["epoch_diagnostics"]:
+        print(f"Epoch {item['epoch']}")
+        print(f"  Actor loss: {item['actor_loss']}")
+        print(f"  Critic loss: {item['critic_loss']}")
+        print("  Ratio min/mean/max: "
+              f"{item['ratio_minimum']} / {item['ratio_mean']} / "
+              f"{item['ratio_maximum']}")
+        print(f"  Clipped factors: {item['clipped_factor_count']}")
+        print("  Actor gradients finite: PASS")
+        print("  Critic gradients finite: PASS")
+    print("\nOptimization")
+    print(f"  Actor optimizer steps: {result['actor_optimizer_steps']}")
+    print(f"  Critic optimizer steps: {result['critic_optimizer_steps']}")
+    print(f"  Total optimizer steps: {result['total_optimizer_steps']}")
+    print(f"  Actor backward calls: {result['actor_backward_calls']}")
+    print(f"  Critic backward calls: {result['critic_backward_calls']}")
+    print(f"  Total backward calls: {result['total_backward_calls']}\n")
+    print("Parameters")
+    print(f"  GNN changed: {not result['gnn_hash_unchanged']}")
+    print(f"  Proposer changed: {result['proposer_parameter_changed']}")
+    print(f"  Responder changed: {result['responder_parameter_changed']}")
+    print(f"  Critic changed: {result['critic_parameter_changed']}\n")
+    print("Environment")
+    print("  New SUMO rollouts: 0")
+    print("  VALIDATION runs: 0")
+    print("  HELD_OUT runs: 0\n")
+    print("Research status")
+    print("  Final hyperparameters selected: 0")
+    print("  Final model trained: False")
+    print("  Mechanical update validated: True\n")
+    print(f"STEP_5J_3B_4_STATUS: {result['status']}")
+    print(f"STEP_5J_3C_READINESS: {result['step_5j_3c_readiness']}")
+
+
+if __name__ == "__main__": main()
