@@ -1,0 +1,192 @@
+{
+  "checkpoint": "STEP_5J_3C_2",
+  "status": "PILOT_EVIDENCE_REVIEW_COMPLETE",
+  "source_pilot_identity": [
+    "MAPPO_CLOSED_LOOP_PILOT_EVIDENCE_V1",
+    "7682fa7339255effcda1ef49968950c8934e6b836e3218f55fbfaa53df97a4a1"
+  ],
+  "source_pilot_path": "results\\mappo_closed_loop_pilot_evidence.json",
+  "pilot_statistics": {
+    "replications_observed": 2,
+    "replication_indices_preserved": [
+      0,
+      1
+    ],
+    "replications_discarded": 0,
+    "ppo_update_intervals_per_replication": 1,
+    "unique_training_scenarios": 36,
+    "training_manifest_passes": 4,
+    "training_exposure_episodes": 144,
+    "delta_values": [
+      -150.79999999999927,
+      -2939.5200000000004
+    ],
+    "delta_sample_mean": -1545.1599999999999,
+    "delta_sample_variance_n_minus_1": 3888479.6192000033,
+    "delta_sample_standard_deviation": 1971.9228228305496,
+    "validation_runs": 0,
+    "held_out_runs": 0,
+    "collisions": 0,
+    "blocked_zone_violations": 0
+  },
+  "training_budget_sufficiency_assessment": {
+    "status": "INSUFFICIENT_SINGLE_UPDATE_INTERVAL",
+    "final_budget_justified": false,
+    "final_training_budget_selected": false,
+    "reason": "ONLY_ONE_UPDATE_INTERVAL_OBSERVED",
+    "established": "PARAMETER_LEARNING_CAN_ALTER_PHYSICAL_TRAFFIC_OUTCOME",
+    "not_established": [
+      "LEARNING_CURVE_SHAPE",
+      "PLATEAU",
+      "CONVERGENCE",
+      "OVER_TRAINING_BEHAVIOR",
+      "LATER_DEGRADATION",
+      "BEST_TRAINING_DURATION"
+    ]
+  },
+  "replication_sufficiency_assessment": {
+    "status": "INSUFFICIENT_MINIMUM_TWO_RUN_VARIANCE_PROBE",
+    "final_replication_count_justified": false,
+    "final_replication_count_selected": false,
+    "reason": "TWO_RUN_MINIMUM_VARIANCE_PROBE_ONLY",
+    "observations_called_outliers": 0,
+    "interpretation": "TWO_OBSERVATIONS_PERMIT_A_FIRST_SAMPLE_VARIANCE_CALCULATION_BUT_POORLY_CHARACTERIZE_THE_VARIANCE"
+  },
+  "scenario_design_assessment": {
+    "new_unique_training_scenarios_required_now": false,
+    "repeated_training_manifest_exposure_required": true,
+    "partitions_modified": false,
+    "terminology": {
+      "UNIQUE_TRAINING_SCENARIOS": "NUMBER_OF_FROZEN_TRAINING_SCENARIO_IDENTITIES",
+      "TRAINING_MANIFEST_PASS": "ONE_EXECUTION_OF_EVERY_FROZEN_TRAINING_SCENARIO",
+      "PPO_UPDATE_CYCLE": "ONE_ON_POLICY_MANIFEST_COLLECTION_FOLLOWED_BY_CONFIGURED_PPO_OPTIMIZATION",
+      "TRAINING_EXPOSURE": "SCENARIO_EPISODES_GENERATED_ACROSS_MANIFEST_PASSES_AND_REPLICATIONS"
+    }
+  },
+  "compute_cost_evidence": {
+    "total_wall_clock_seconds": 3042.461620499991,
+    "wall_clock_seconds_per_training_manifest_collection": 760.6154051249978,
+    "complete_replication_wall_clock_seconds": [
+      2094.463890500003,
+      947.8373249999859
+    ],
+    "total_ppo_update_runtime_seconds": 3.45058540001628,
+    "ppo_update_runtime_seconds": [
+      2.39041590000852,
+      1.0601695000077598
+    ],
+    "sumo_steps_per_training_manifest_collection": 180000.0,
+    "runtime_threshold_imposed": false
+  },
+  "extended_evidence_acquisition_design": {
+    "design_id": [
+      "EXTENDED_MAPPO_EVIDENCE_ACQUISITION_DESIGN_V1",
+      "3abdfca96a48d251115eee79bfdd9ffce2955ddbca2e093922735a9e0923e87d"
+    ],
+    "source_pilot_evidence_id": [
+      "MAPPO_CLOSED_LOOP_PILOT_EVIDENCE_V1",
+      "7682fa7339255effcda1ef49968950c8934e6b836e3218f55fbfaa53df97a4a1"
+    ],
+    "frozen_experimental_design_id": [
+      "EXPERIMENTAL_DESIGN_FREEZE_V1",
+      "588b2a4e03565cd3a1a76fc65682297692e4d1c891dea2087b97569e860d5aa8"
+    ],
+    "training_manifest_id": [
+      "SCENARIO_MANIFEST_V1",
+      "TRAINING",
+      [
+        "CONTENT",
+        "4cfc99bf27893f13dcefdfcc932f00b9088009b1e92e612a36d2ee682fe5dd5f"
+      ]
+    ],
+    "validation_manifest_id": [
+      "SCENARIO_MANIFEST_V1",
+      "VALIDATION",
+      [
+        "CONTENT",
+        "d783a7977bfd0e18c4e9c14bc800b50aace078f3bf0d04bcfbcf9b61ce4dbb17"
+      ]
+    ],
+    "held_out_manifest_id": [
+      "SCENARIO_MANIFEST_V1",
+      "HELD_OUT_TEST",
+      [
+        "CONTENT",
+        "76977147c4c4261e94035468c3e01536a9ab3accfca40f6ca628b81fca55d7a3"
+      ]
+    ],
+    "current_replication_evidence_status": "INSUFFICIENT_MINIMUM_TWO_RUN_VARIANCE_PROBE",
+    "current_training_budget_evidence_status": "INSUFFICIENT_SINGLE_UPDATE_INTERVAL",
+    "replication_extension_rule": {
+      "stream": "CANONICAL_DETERMINISTIC_REPLICATION_STREAM",
+      "next_index": 2,
+      "order": "2,3,4,..._WITHOUT_SKIPPING",
+      "termination_count": "NOT_YET_SELECTED",
+      "performance_based_replacement": false
+    },
+    "training_curve_extension_rule": {
+      "sequence": "STATE_K_COLLECTION_THEN_UPDATE_K_PLUS_1",
+      "collection": "FULL_FROZEN_TRAINING_MANIFEST",
+      "update_data": "IMMEDIATELY_PRECEDING_CURRENT_POLICY_ON_POLICY_DATA_ONLY",
+      "stale_rollout_reuse": false,
+      "final_update_count": "NOT_YET_SELECTED",
+      "convergence_rule": "STATISTICAL_SELECTION_RULE_REQUIRES_PREDECLARATION"
+    },
+    "measurement_schedule": [
+      "policy_identity",
+      "critic_identity",
+      "training_team_travel_time",
+      "per_scenario_travel_times",
+      "physical_executable_outcomes",
+      "coordination_cycles",
+      "physical_cycles",
+      "action_frequencies",
+      "completed_vehicles",
+      "collision_count",
+      "blocked_zone_violations",
+      "policy_factor_count",
+      "sumo_steps",
+      "wall_clock_runtime"
+    ],
+    "selection_data_boundary": {
+      "configuration_selection_roles": [
+        "TRAINING",
+        "VALIDATION"
+      ],
+      "training_budget_probe_role": "TRAINING_ONLY",
+      "held_out_role": "SEALED_FINAL_EVALUATION",
+      "new_scenario_identities_added": false,
+      "future_external_stress_test_classification": "POST_SELECTION_EXTERNAL_GENERALIZATION_EXPERIMENT"
+    },
+    "held_out_sealed": true,
+    "performance_seed_selection_forbidden": true,
+    "final_counts_selected": false,
+    "provenance": {
+      "checkpoint": "STEP_5J_3C_2",
+      "derivation": "EXISTING_STEP_5J_3C_1_EVIDENCE_ONLY",
+      "sumo_runs": 0,
+      "optimizer_invocations": 0,
+      "backward_calls": 0,
+      "parameter_updates": 0
+    }
+  },
+  "remaining_methodological_blockers": [
+    "TRAINING_BUDGET_SELECTION_CRITERION_REQUIRES_PREDECLARATION",
+    "REPLICATION_COUNT_ADEQUACY_CRITERION_REQUIRES_PREDECLARATION",
+    "CANDIDATE_COMPARISON_STATISTIC_REQUIRES_PREDECLARATION",
+    "TIE_RULE_REQUIRES_PREDECLARATION",
+    "CHECKPOINT_MODEL_SELECTION_RULE_REQUIRES_PREDECLARATION",
+    "STATISTICAL_SELECTION_RULE_REQUIRES_PREDECLARATION"
+  ],
+  "candidate_experiments_started": false,
+  "arbitrary_convergence_thresholds": 0,
+  "final_counts_selected": false,
+  "sumo_invocations": 0,
+  "optimizer_invocations": 0,
+  "backward_calls": 0,
+  "model_parameter_updates": 0,
+  "training_budget_evidence": "INSUFFICIENT_SINGLE_UPDATE_INTERVAL",
+  "replication_evidence": "INSUFFICIENT_MINIMUM_TWO_RUN_VARIANCE_PROBE",
+  "next_readiness": "READY_TO_DEFINE_EXTENDED_LEARNING_EVIDENCE_PROTOCOL",
+  "next_checkpoint": "STEP_5J_3C_2B"
+}

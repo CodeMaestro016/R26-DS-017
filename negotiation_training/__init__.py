@@ -9,3 +9,4 @@ from .rollout import *
 from .ppo_trainer import *
 from .pilot_analysis import *
 from .controlled_pilot import *
+from .pilot_evidence_review import *
