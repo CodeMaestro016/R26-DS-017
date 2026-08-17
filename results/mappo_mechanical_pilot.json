@@ -1,6 +1,6 @@
 {
   "audit_id": [
-    "MECHANICAL_PILOT_CONFIGURATION_AUDIT_V1",
+    "MECHANICAL_PILOT_CONFIGURATION_AUDIT_V2",
     [
       "EXPERIMENTAL_DESIGN_FREEZE_V1",
       "588b2a4e03565cd3a1a76fc65682297692e4d1c891dea2087b97569e860d5aa8"
@@ -12,6 +12,14 @@
   ],
   "provisional_configuration_id": [
     "PROVISIONAL_REFERENCE_V1"
+  ],
+  "architecture_contract_id": [
+    "MECHANICAL_PILOT_ARCHITECTURE_CONTRACT_V1",
+    "9a6a65d1c4fba1cf7ac8b1bb8442846f55efab209c01218aed6e32b4d99c4ad3"
+  ],
+  "optimization_contract_id": [
+    "MECHANICAL_ADAM_OPTIMIZATION_CONTRACT_V1",
+    "b1c0ff507154de3a5d9f2cdad854ce1333e9336b82fd0ce6a2d3ce87121e0e26"
   ],
   "runtime_choices": [
     {
@@ -257,57 +265,104 @@
     },
     {
       "choice_id": "adam_beta1",
-      "classification": "UNRESOLVED_OPERATIONAL_PARAMETER",
-      "value": null,
-      "evidence_id": null,
+      "classification": "RESOLVED_MECHANICAL_REFERENCE",
+      "value": 0.9,
+      "evidence_id": [
+        "MECHANICAL_ADAM_OPTIMIZATION_CONTRACT_V1",
+        "b1c0ff507154de3a5d9f2cdad854ce1333e9336b82fd0ce6a2d3ce87121e0e26"
+      ],
       "operationally_required": true,
-      "blocker_code": "ADAM_INTERNAL_PARAMETER_CONTRACT_UNRESOLVED",
-      "provenance": {}
+      "blocker_code": null,
+      "provenance": {
+        "source": "Kingma & Ba (2014), Adam: A Method for Stochastic Optimization, arXiv:1412.6980",
+        "project_selected": false
+      }
     },
     {
       "choice_id": "adam_beta2",
-      "classification": "UNRESOLVED_OPERATIONAL_PARAMETER",
-      "value": null,
-      "evidence_id": null,
+      "classification": "RESOLVED_MECHANICAL_REFERENCE",
+      "value": 0.999,
+      "evidence_id": [
+        "MECHANICAL_ADAM_OPTIMIZATION_CONTRACT_V1",
+        "b1c0ff507154de3a5d9f2cdad854ce1333e9336b82fd0ce6a2d3ce87121e0e26"
+      ],
       "operationally_required": true,
-      "blocker_code": "ADAM_INTERNAL_PARAMETER_CONTRACT_UNRESOLVED",
-      "provenance": {}
+      "blocker_code": null,
+      "provenance": {
+        "source": "Kingma & Ba (2014), Adam: A Method for Stochastic Optimization, arXiv:1412.6980",
+        "project_selected": false
+      }
     },
     {
       "choice_id": "adam_epsilon",
-      "classification": "UNRESOLVED_OPERATIONAL_PARAMETER",
-      "value": null,
-      "evidence_id": null,
+      "classification": "RESOLVED_MECHANICAL_REFERENCE",
+      "value": 1e-08,
+      "evidence_id": [
+        "MECHANICAL_ADAM_OPTIMIZATION_CONTRACT_V1",
+        "b1c0ff507154de3a5d9f2cdad854ce1333e9336b82fd0ce6a2d3ce87121e0e26"
+      ],
       "operationally_required": true,
-      "blocker_code": "ADAM_INTERNAL_PARAMETER_CONTRACT_UNRESOLVED",
-      "provenance": {}
+      "blocker_code": null,
+      "provenance": {
+        "source": "Kingma & Ba (2014), Adam: A Method for Stochastic Optimization, arXiv:1412.6980",
+        "project_selected": false
+      }
     },
     {
       "choice_id": "weight_decay",
-      "classification": "UNRESOLVED_OPERATIONAL_PARAMETER",
-      "value": null,
-      "evidence_id": null,
+      "classification": "RESOLVED_MECHANICAL_REFERENCE",
+      "value": 0.0,
+      "evidence_id": [
+        "MECHANICAL_ADAM_OPTIMIZATION_CONTRACT_V1",
+        "b1c0ff507154de3a5d9f2cdad854ce1333e9336b82fd0ce6a2d3ce87121e0e26"
+      ],
       "operationally_required": true,
-      "blocker_code": "WEIGHT_DECAY_CONTRACT_UNRESOLVED",
-      "provenance": {}
+      "blocker_code": null,
+      "provenance": {
+        "semantics": "PLAIN_ADAM_NO_ADDITIONAL_WEIGHT_REGULARIZATION",
+        "project_selected": false
+      }
     },
     {
       "choice_id": "adam_amsgrad",
-      "classification": "UNRESOLVED_OPERATIONAL_PARAMETER",
-      "value": null,
-      "evidence_id": null,
+      "classification": "RESOLVED_MECHANICAL_REFERENCE",
+      "value": false,
+      "evidence_id": [
+        "MECHANICAL_ADAM_OPTIMIZATION_CONTRACT_V1",
+        "b1c0ff507154de3a5d9f2cdad854ce1333e9336b82fd0ce6a2d3ce87121e0e26"
+      ],
       "operationally_required": true,
-      "blocker_code": "ADAM_INTERNAL_PARAMETER_CONTRACT_UNRESOLVED",
-      "provenance": {}
+      "blocker_code": null,
+      "provenance": {
+        "semantics": "ORIGINAL_ADAM_NOT_AMSGRAD_VARIANT",
+        "project_selected": false
+      }
     },
     {
       "choice_id": "optimizer_parameter_grouping",
-      "classification": "UNRESOLVED_OPERATIONAL_PARAMETER",
-      "value": null,
-      "evidence_id": null,
+      "classification": "RESOLVED_MECHANICAL_REFERENCE",
+      "value": [
+        [
+          "proposer_actor.*",
+          "responder_actor.*"
+        ],
+        [
+          "centralized_critic.*"
+        ],
+        [
+          "frozen_gnn.*"
+        ]
+      ],
+      "evidence_id": [
+        "MECHANICAL_ADAM_OPTIMIZATION_CONTRACT_V1",
+        "b1c0ff507154de3a5d9f2cdad854ce1333e9336b82fd0ce6a2d3ce87121e0e26"
+      ],
       "operationally_required": true,
-      "blocker_code": "OPTIMIZER_PARAMETER_GROUPING_UNRESOLVED",
-      "provenance": {}
+      "blocker_code": null,
+      "provenance": {
+        "separate_optimizers": true,
+        "role_specific_optimizer_weights": 0
+      }
     },
     {
       "choice_id": "minibatch_construction",
@@ -376,12 +431,18 @@
     },
     {
       "choice_id": "critic_loss_reduction",
-      "classification": "UNRESOLVED_OPERATIONAL_PARAMETER",
-      "value": null,
-      "evidence_id": null,
+      "classification": "MATHEMATICALLY_FIXED",
+      "value": "PER_JOINT_DECISION_BATCH_EMPIRICAL_MEAN_SQUARED_ERROR",
+      "evidence_id": [
+        "MECHANICAL_ADAM_OPTIMIZATION_CONTRACT_V1",
+        "b1c0ff507154de3a5d9f2cdad854ce1333e9336b82fd0ce6a2d3ce87121e0e26"
+      ],
       "operationally_required": true,
-      "blocker_code": "CRITIC_LOSS_REDUCTION_UNRESOLVED",
-      "provenance": {}
+      "blocker_code": null,
+      "provenance": {
+        "sample_unit": "CENTRALIZED_JOINT_DECISION_BATCH",
+        "policy_factor_weighting": false
+      }
     },
     {
       "choice_id": "value_loss_mixing_coefficient",
@@ -455,21 +516,13 @@
       }
     }
   ],
-  "unresolved_choice_ids": [
-    "adam_beta1",
-    "adam_beta2",
-    "adam_epsilon",
-    "weight_decay",
-    "adam_amsgrad",
-    "optimizer_parameter_grouping",
-    "critic_loss_reduction"
-  ],
+  "unresolved_choice_ids": [],
   "silent_default_count": 0,
   "optimizer_instances": 0,
   "backward_calls": 0,
   "parameter_updates": 0,
-  "status": "MECHANICAL_PILOT_CONFIGURATION_INCOMPLETE",
-  "next_blocker": "ADAM_INTERNAL_PARAMETER_CONTRACT_UNRESOLVED",
+  "status": "MECHANICAL_PILOT_CONFIGURATION_COMPLETE",
+  "next_blocker": "NONE",
   "provenance": {
     "models_constructed": 0,
     "behavior_policy_samples": 0,

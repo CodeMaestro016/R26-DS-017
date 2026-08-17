@@ -488,3 +488,26 @@ linear critic head. The contract remains post-freeze, mechanical-reference
 only, and project-unselected. Architecture fields are resolved; Adam internals,
 optimizer grouping, and critic-loss reduction remain the next configuration
 gate.
+## Step 5J.3B.2 mechanical Adam and critic contract
+
+Adam beta1, beta2 and epsilon values are adopted only as mechanical
+reference settings from the original Adam algorithm. They are not claimed to
+be optimal for this traffic-negotiation task. Kingma and Ba report beta1=0.9,
+beta2=0.999 and epsilon=1e-8 as good default settings for the machine-learning
+problems tested in the Adam paper. They are used here only to instantiate the
+first mechanical Adam pilot and are not claimed to be project-optimal.
+
+No weight-decay regularization or AMSGrad variant is introduced in the
+mechanical baseline, because neither is part of the currently selected
+optimizer family/objective contract. The future pilot has two logical plain
+Adam optimizers: one for both role-specific actor heads and one for the
+centralized critic. The frozen GNN is excluded from both.
+
+The centralized critic minimizes the empirical mean of squared Monte-Carlo
+return errors over joint semantic decision batches. Policy factor multiplicity
+does not change critic-state weighting. Separate actor and critic objectives
+make a value-loss mixing coefficient inapplicable.
+
+This contract is a mechanical implementation reference, not a final method
+selection. Step 5J.3B.2 constructs no optimizer, calls no backward pass, makes
+no parameter update, and performs no training.

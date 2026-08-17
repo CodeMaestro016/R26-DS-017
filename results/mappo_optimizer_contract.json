@@ -1,0 +1,194 @@
+{
+  "contract_id": [
+    "MECHANICAL_ADAM_OPTIMIZATION_CONTRACT_V1",
+    "b1c0ff507154de3a5d9f2cdad854ce1333e9336b82fd0ce6a2d3ce87121e0e26"
+  ],
+  "frozen_design_id": [
+    "EXPERIMENTAL_DESIGN_FREEZE_V1",
+    "588b2a4e03565cd3a1a76fc65682297692e4d1c891dea2087b97569e860d5aa8"
+  ],
+  "architecture_contract_id": [
+    "MECHANICAL_PILOT_ARCHITECTURE_CONTRACT_V1",
+    "9a6a65d1c4fba1cf7ac8b1bb8442846f55efab209c01218aed6e32b4d99c4ad3"
+  ],
+  "optimizer_family": "ADAM",
+  "learning_rate": 0.0005,
+  "learning_rate_evidence_id": [
+    "CANDIDATE_EVIDENCE",
+    "learning_rate",
+    0.0005
+  ],
+  "beta1": 0.9,
+  "beta1_source": "Kingma & Ba (2014), Adam: A Method for Stochastic Optimization, arXiv:1412.6980",
+  "beta2": 0.999,
+  "beta2_source": "Kingma & Ba (2014), Adam: A Method for Stochastic Optimization, arXiv:1412.6980",
+  "epsilon": 1e-08,
+  "epsilon_source": "Kingma & Ba (2014), Adam: A Method for Stochastic Optimization, arXiv:1412.6980",
+  "weight_decay": 0.0,
+  "weight_decay_semantics": "PLAIN_ADAM_NO_ADDITIONAL_WEIGHT_REGULARIZATION",
+  "amsgrad": false,
+  "amsgrad_semantics": "ORIGINAL_ADAM_NOT_AMSGRAD_VARIANT",
+  "actor_parameter_grouping": [
+    "proposer_actor.*",
+    "responder_actor.*"
+  ],
+  "critic_parameter_grouping": [
+    "centralized_critic.*"
+  ],
+  "frozen_parameter_exclusions": [
+    "frozen_gnn.*"
+  ],
+  "critic_loss_form": "PURE_SQUARED_MONTE_CARLO_RETURN_ERROR",
+  "critic_loss_reduction": "PER_JOINT_DECISION_BATCH_EMPIRICAL_MEAN_SQUARED_ERROR",
+  "critic_sample_unit": "CENTRALIZED_JOINT_DECISION_BATCH",
+  "value_loss_mixing_coefficient": "NOT_APPLICABLE_SEPARATE_OPTIMIZERS",
+  "adam_argument_audit": [
+    {
+      "name": "params",
+      "installed_default": "<class 'inspect._empty'>",
+      "explicit_mechanical_value": "ACTOR_OR_CRITIC_EXACT_PARAMETER_SET",
+      "classification": "ALGORITHM_PARAMETER",
+      "semantics": "Two disjoint logical optimizers; frozen GNN excluded."
+    },
+    {
+      "name": "lr",
+      "installed_default": "0.001",
+      "explicit_mechanical_value": "0.0005",
+      "classification": "ALGORITHM_PARAMETER",
+      "semantics": "Frozen Step 5J.2 provisional learning-rate candidate."
+    },
+    {
+      "name": "betas",
+      "installed_default": "(0.9, 0.999)",
+      "explicit_mechanical_value": "(0.9, 0.999)",
+      "classification": "ALGORITHM_PARAMETER",
+      "semantics": "Original Adam mechanical reference."
+    },
+    {
+      "name": "eps",
+      "installed_default": "1e-08",
+      "explicit_mechanical_value": "1e-08",
+      "classification": "ALGORITHM_PARAMETER",
+      "semantics": "Original Adam numerical-stability reference."
+    },
+    {
+      "name": "weight_decay",
+      "installed_default": "0",
+      "explicit_mechanical_value": "0",
+      "classification": "ALGORITHM_PARAMETER",
+      "semantics": "No additional regularization."
+    },
+    {
+      "name": "amsgrad",
+      "installed_default": "False",
+      "explicit_mechanical_value": "False",
+      "classification": "ALGORITHM_PARAMETER",
+      "semantics": "Plain Adam, not the later AMSGrad variant."
+    },
+    {
+      "name": "foreach",
+      "installed_default": "None",
+      "explicit_mechanical_value": "False",
+      "classification": "MECHANICAL_IMPLEMENTATION_MODE",
+      "semantics": "Explicit CPU single-tensor implementation path."
+    },
+    {
+      "name": "maximize",
+      "installed_default": "False",
+      "explicit_mechanical_value": "False",
+      "classification": "MECHANICAL_IMPLEMENTATION_MODE",
+      "semantics": "The defined actor and critic losses are minimized."
+    },
+    {
+      "name": "capturable",
+      "installed_default": "False",
+      "explicit_mechanical_value": "False",
+      "classification": "NOT_APPLICABLE_CPU_MODE",
+      "semantics": "No accelerator graph capture in the CPU pilot."
+    },
+    {
+      "name": "differentiable",
+      "installed_default": "False",
+      "explicit_mechanical_value": "False",
+      "classification": "MECHANICAL_IMPLEMENTATION_MODE",
+      "semantics": "No higher-order differentiation through steps."
+    },
+    {
+      "name": "fused",
+      "installed_default": "None",
+      "explicit_mechanical_value": "False",
+      "classification": "NOT_APPLICABLE_CPU_MODE",
+      "semantics": "Explicit non-fused CPU mechanical implementation."
+    },
+    {
+      "name": "decoupled_weight_decay",
+      "installed_default": "NOT_SUPPORTED_INSTALLED_API",
+      "explicit_mechanical_value": "False",
+      "classification": "NOT_APPLICABLE_CPU_MODE",
+      "semantics": "PyTorch 2.6.0 Adam has no such argument; optimizer family remains plain Adam."
+    }
+  ],
+  "torch_version": "2.6.0+cpu",
+  "mechanical_reference_only": true,
+  "project_selected": false,
+  "final_selection_eligible": false,
+  "unresolved_optimizer_fields": [],
+  "provenance": {
+    "beta_classification": "ORIGINAL_ADAM_MECHANICAL_REFERENCE",
+    "epsilon_classification": "ORIGINAL_ADAM_MECHANICAL_REFERENCE",
+    "learning_rate_classification": "FROZEN_PILOT_CANDIDATE",
+    "optimizer_instances": 0,
+    "backward_calls": 0,
+    "parameter_updates": 0,
+    "role_specific_optimizer_weights": 0,
+    "silent_adam_defaults": 0,
+    "frozen_design_mutated": false,
+    "claimed_optimal": false
+  },
+  "parameter_membership": {
+    "proposer": [
+      "proposer_actor.logit_head.weight",
+      "proposer_actor.logit_head.bias"
+    ],
+    "responder": [
+      "responder_actor.logit_head.weight",
+      "responder_actor.logit_head.bias"
+    ],
+    "critic": [
+      "centralized_critic.value_head.weight",
+      "centralized_critic.value_head.bias"
+    ],
+    "gnn": [
+      "frozen_gnn.node_projection.0.weight",
+      "frozen_gnn.node_projection.0.bias",
+      "frozen_gnn.edge_projection.0.weight",
+      "frozen_gnn.edge_projection.0.bias",
+      "frozen_gnn.layers.0.message_function.0.weight",
+      "frozen_gnn.layers.0.message_function.0.bias",
+      "frozen_gnn.layers.0.update_function.0.weight",
+      "frozen_gnn.layers.0.update_function.0.bias",
+      "frozen_gnn.layers.1.message_function.0.weight",
+      "frozen_gnn.layers.1.message_function.0.bias",
+      "frozen_gnn.layers.1.update_function.0.weight",
+      "frozen_gnn.layers.1.update_function.0.bias",
+      "frozen_gnn.layers.2.message_function.0.weight",
+      "frozen_gnn.layers.2.message_function.0.bias",
+      "frozen_gnn.layers.2.update_function.0.weight",
+      "frozen_gnn.layers.2.update_function.0.bias"
+    ],
+    "duplicate_trainable_parameter_membership": 0
+  },
+  "critic_loss_validation": {
+    "single_batch": 4.0,
+    "multiple_batch": 2.5
+  },
+  "policy_factor_count_used_for_critic_weighting": false,
+  "frozen_design_changed": false,
+  "configuration_status": "MECHANICAL_PILOT_CONFIGURATION_COMPLETE",
+  "remaining_unresolved_operational_parameters": 0,
+  "next_blocker": "NONE",
+  "next_readiness": "READY_TO_IMPLEMENT_REAL_MAPPO_BEHAVIOR_POLICY",
+  "optimizer_instances": 0,
+  "backward_calls": 0,
+  "parameter_updates": 0
+}

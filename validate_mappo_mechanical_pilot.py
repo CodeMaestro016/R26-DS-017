@@ -62,7 +62,7 @@ def main():
     print("  Learned main.py control: 0\n")
     print("Status")
     print(f"  STEP_5J_3B_STATUS: {audit.status}")
-    print(f"  STOP: {audit.next_blocker}")
+    print(f"  NEXT_BLOCKER: {audit.next_blocker}")
 
 
 if __name__ == "__main__": main()

@@ -62,3 +62,25 @@ def assess_step_5j_3b_pilot_readiness(profile):
             profile.get("optimizer_instances") == 0):
         return "READY_TO_IMPLEMENT_FIRST_CONTROLLED_MAPPO_PILOT"
     return "STEP_5J_3A_PROFILE_INCOMPLETE"
+
+
+def assess_step_5j_3b_behavior_policy_readiness(
+        profile_path="results/coupled_environment_profile.json"):
+    """Gate real behavior-policy implementation on both complete contracts."""
+    from .adam_contract import build_mechanical_adam_optimization_contract
+    from .architecture_contract import build_mechanical_pilot_architecture_contract
+
+    profile = json.loads(Path(profile_path).read_text(encoding="utf-8"))
+    architecture = build_mechanical_pilot_architecture_contract(profile_path)
+    optimization = build_mechanical_adam_optimization_contract(profile_path)
+    ready = (
+        not architecture.unresolved_architecture_fields
+        and not optimization.unresolved_optimizer_fields
+        and optimization.critic_loss_reduction ==
+        "PER_JOINT_DECISION_BATCH_EMPIRICAL_MEAN_SQUARED_ERROR"
+        and architecture.frozen_design_id == optimization.frozen_design_id
+        and assess_step_5j_3b_pilot_readiness(profile) ==
+        "READY_TO_IMPLEMENT_FIRST_CONTROLLED_MAPPO_PILOT"
+    )
+    return ("READY_TO_IMPLEMENT_REAL_MAPPO_BEHAVIOR_POLICY" if ready else
+            "STEP_5J_3B_CONFIGURATION_INCOMPLETE")

@@ -94,8 +94,8 @@ def main():
     assert build_design()["freeze"].freeze_id == before == contract.frozen_design_id
     audit = build_mechanical_pilot_configuration_audit()
     assert not contract.unresolved_architecture_fields
-    assert len(audit.unresolved_choice_ids) == 7
-    assert audit.next_blocker == "ADAM_INTERNAL_PARAMETER_CONTRACT_UNRESOLVED"
+    assert len(audit.unresolved_choice_ids) == 0
+    assert audit.next_blocker == "NONE"
     payload = _json(contract)
     payload.update({"parameter_hashes": hashes,
                     "initialization_reproducible": True,

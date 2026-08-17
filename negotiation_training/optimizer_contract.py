@@ -8,6 +8,7 @@ from typing import Any, Mapping, Optional, Tuple
 
 from experimentation import build_design
 from .architecture_contract import build_mechanical_pilot_architecture_contract
+from .adam_contract import build_mechanical_adam_optimization_contract
 
 
 SCHEMA_DERIVED = "SCHEMA_DERIVED"
@@ -42,6 +43,8 @@ class MechanicalPilotConfigurationAudit:
     audit_id: tuple
     frozen_design_id: tuple
     provisional_configuration_id: tuple
+    architecture_contract_id: tuple
+    optimization_contract_id: tuple
     runtime_choices: Tuple[MechanicalPilotRuntimeChoice, ...]
     unresolved_choice_ids: Tuple[str, ...]
     silent_default_count: int
@@ -75,6 +78,7 @@ def build_mechanical_pilot_configuration_audit(
         raise ValueError("STEP_5J_3B_NOT_READY_FOR_CONFIGURATION_AUDIT")
     provisional = design["provisional"]
     architecture = build_mechanical_pilot_architecture_contract(profile_path)
+    optimization = build_mechanical_adam_optimization_contract(profile_path)
     assignments = {item.choice_id: item for item in provisional.assignments}
 
     def frozen(name):
@@ -128,18 +132,29 @@ def build_mechanical_pilot_configuration_audit(
         frozen("ppo_clip_epsilon"),
         frozen("learning_rate"),
         frozen("optimizer_family"),
-        _choice("adam_beta1", UNRESOLVED,
-                blocker="ADAM_INTERNAL_PARAMETER_CONTRACT_UNRESOLVED"),
-        _choice("adam_beta2", UNRESOLVED,
-                blocker="ADAM_INTERNAL_PARAMETER_CONTRACT_UNRESOLVED"),
-        _choice("adam_epsilon", UNRESOLVED,
-                blocker="ADAM_INTERNAL_PARAMETER_CONTRACT_UNRESOLVED"),
-        _choice("weight_decay", UNRESOLVED,
-                blocker="WEIGHT_DECAY_CONTRACT_UNRESOLVED"),
-        _choice("adam_amsgrad", UNRESOLVED,
-                blocker="ADAM_INTERNAL_PARAMETER_CONTRACT_UNRESOLVED"),
-        _choice("optimizer_parameter_grouping", UNRESOLVED,
-                blocker="OPTIMIZER_PARAMETER_GROUPING_UNRESOLVED"),
+        _choice("adam_beta1", RESOLVED_MECHANICAL_REFERENCE,
+                optimization.beta1, optimization.contract_id,
+                source=optimization.beta1_source, project_selected=False),
+        _choice("adam_beta2", RESOLVED_MECHANICAL_REFERENCE,
+                optimization.beta2, optimization.contract_id,
+                source=optimization.beta2_source, project_selected=False),
+        _choice("adam_epsilon", RESOLVED_MECHANICAL_REFERENCE,
+                optimization.epsilon, optimization.contract_id,
+                source=optimization.epsilon_source, project_selected=False),
+        _choice("weight_decay", RESOLVED_MECHANICAL_REFERENCE,
+                optimization.weight_decay, optimization.contract_id,
+                semantics=optimization.weight_decay_semantics,
+                project_selected=False),
+        _choice("adam_amsgrad", RESOLVED_MECHANICAL_REFERENCE,
+                optimization.amsgrad, optimization.contract_id,
+                semantics=optimization.amsgrad_semantics,
+                project_selected=False),
+        _choice("optimizer_parameter_grouping", RESOLVED_MECHANICAL_REFERENCE,
+                (optimization.actor_parameter_grouping,
+                 optimization.critic_parameter_grouping,
+                 optimization.frozen_parameter_exclusions),
+                optimization.contract_id, separate_optimizers=True,
+                role_specific_optimizer_weights=0),
         _choice("minibatch_construction", MECHANICAL_REFERENCE_ONLY,
                 "MECHANICAL_FULL_BATCH_NO_MINIBATCH_HYPERPARAMETER",
                 final_method_selection_eligible=False),
@@ -150,8 +165,11 @@ def build_mechanical_pilot_configuration_audit(
                 final_method_selection_eligible=False),
         _choice("critic_loss_form", MATHEMATICALLY_FIXED,
                 "PURE_SQUARED_ERROR", provenance_source="Step 5I"),
-        _choice("critic_loss_reduction", UNRESOLVED,
-                blocker="CRITIC_LOSS_REDUCTION_UNRESOLVED"),
+        _choice("critic_loss_reduction", MATHEMATICALLY_FIXED,
+                optimization.critic_loss_reduction,
+                optimization.contract_id,
+                sample_unit=optimization.critic_sample_unit,
+                policy_factor_weighting=False),
         _choice("value_loss_mixing_coefficient", MECHANICAL_REFERENCE_ONLY,
                 "NOT_USED_SEPARATE_OBJECTIVES",
                 final_method_selection_eligible=False),
@@ -175,9 +193,10 @@ def build_mechanical_pilot_configuration_audit(
     next_blocker = (ARCHITECTURE_BLOCKER if ARCHITECTURE_BLOCKER in blockers
                     else blockers[0] if blockers else "NONE")
     return MechanicalPilotConfigurationAudit(
-        ("MECHANICAL_PILOT_CONFIGURATION_AUDIT_V1",
+        ("MECHANICAL_PILOT_CONFIGURATION_AUDIT_V2",
          design["freeze"].freeze_id), design["freeze"].freeze_id,
-        provisional.configuration_id, tuple(choices), unresolved, 0, 0, 0, 0,
+        provisional.configuration_id, architecture.contract_id,
+        optimization.contract_id, tuple(choices), unresolved, 0, 0, 0, 0,
         AUDIT_BLOCKED if unresolved else "MECHANICAL_PILOT_CONFIGURATION_COMPLETE",
         next_blocker,
         {"models_constructed": 0, "behavior_policy_samples": 0,

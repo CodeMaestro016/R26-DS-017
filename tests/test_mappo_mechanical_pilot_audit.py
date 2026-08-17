@@ -5,8 +5,7 @@ import json
 
 from experimentation import build_design
 from negotiation_training.optimizer_contract import (
-    AUDIT_BLOCKED, FROZEN_PILOT_CANDIDATE,
-    RESOLVED_MECHANICAL_REFERENCE,
+    FROZEN_PILOT_CANDIDATE, RESOLVED_MECHANICAL_REFERENCE,
     build_mechanical_pilot_configuration_audit)
 
 
@@ -40,18 +39,19 @@ def test_architecture_contract_resolves_without_promoting_test_depth():
     assert choices["gnn_message_passing_layers"].value == 3
 
 
-def test_adam_internals_are_not_silently_inherited():
+def test_adam_internals_are_explicitly_resolved():
     audit = build_mechanical_pilot_configuration_audit()
-    unresolved = set(audit.unresolved_choice_ids)
-    assert {"adam_beta1", "adam_beta2", "adam_epsilon", "weight_decay",
-            "adam_amsgrad", "optimizer_parameter_grouping"} <= unresolved
+    choices = {item.choice_id: item for item in audit.runtime_choices}
+    for name in ("adam_beta1", "adam_beta2", "adam_epsilon", "weight_decay",
+                 "adam_amsgrad", "optimizer_parameter_grouping"):
+        assert choices[name].classification == RESOLVED_MECHANICAL_REFERENCE
     assert audit.silent_default_count == 0
 
 
-def test_hard_stop_prevents_behavior_collection_and_optimization():
+def test_complete_configuration_still_performs_no_behavior_or_optimization():
     audit = build_mechanical_pilot_configuration_audit()
-    assert audit.status == AUDIT_BLOCKED
-    assert audit.next_blocker == "ADAM_INTERNAL_PARAMETER_CONTRACT_UNRESOLVED"
+    assert audit.status == "MECHANICAL_PILOT_CONFIGURATION_COMPLETE"
+    assert audit.next_blocker == "NONE"
     assert audit.optimizer_instances == 0
     assert audit.backward_calls == 0
     assert audit.parameter_updates == 0
@@ -72,7 +72,7 @@ def test_audit_implementation_constructs_no_torch_objects():
 def test_artifact_reports_zero_training_activity():
     payload = json.load(open("results/mappo_mechanical_pilot.json",
                              encoding="utf-8"))
-    assert payload["status"] == AUDIT_BLOCKED
+    assert payload["status"] == "MECHANICAL_PILOT_CONFIGURATION_COMPLETE"
     assert payload["policy_integration_executed"] is False
     assert payload["training_manifest_passes"] == 0
     assert payload["ppo_eligible_proposer_factors"] == 0
