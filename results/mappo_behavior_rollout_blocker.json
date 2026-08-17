@@ -1,0 +1,109 @@
+{
+  "checkpoint": "STEP_5J_3B_3",
+  "status": "MAPPO_BEHAVIOR_ROLLOUT_BLOCKED",
+  "next_blocker": "EXECUTION_GRAPH_PHYSICAL_CONFLICT_UNORDERED",
+  "failed_training_scenario_index": 2,
+  "failed_scenario_id": [
+    "NEGOTIATION_SCENARIO_V1",
+    "intersection.net.xml:9316",
+    "REGULATORY_CYCLE",
+    [
+      "E_IN_0_LEFT",
+      "N_IN_0_LEFT",
+      "S_IN_0_RIGHT"
+    ],
+    "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+    "AV",
+    "DE_STVO_UNCONTROLLED_4WAY_V1"
+  ],
+  "sampled_effective_graph": [
+    [
+      "SCENARIO_AV_0",
+      "SCENARIO_AV_1"
+    ],
+    [
+      "SCENARIO_AV_1",
+      "SCENARIO_AV_2"
+    ],
+    [
+      "SCENARIO_AV_2",
+      "SCENARIO_AV_0"
+    ],
+    [
+      "SCENARIO_AV_2",
+      "SCENARIO_AV_1"
+    ]
+  ],
+  "movement_path_by_vehicle": [
+    [
+      "SCENARIO_AV_0",
+      "E_IN_0_LEFT"
+    ],
+    [
+      "SCENARIO_AV_1",
+      "N_IN_0_LEFT"
+    ],
+    [
+      "SCENARIO_AV_2",
+      "S_IN_0_RIGHT"
+    ]
+  ],
+  "completed_training_scenarios_before_stop": 1,
+  "policy_actions_resampled": 0,
+  "branch_replacements": 0,
+  "manual_graph_edits": 0,
+  "optimizer_instances": 0,
+  "backward_calls": 0,
+  "parameter_updates": 0,
+  "frozen_design_id": [
+    "EXPERIMENTAL_DESIGN_FREEZE_V1",
+    "588b2a4e03565cd3a1a76fc65682297692e4d1c891dea2087b97569e860d5aa8"
+  ],
+  "architecture_contract_id": [
+    "MECHANICAL_PILOT_ARCHITECTURE_CONTRACT_V1",
+    "9a6a65d1c4fba1cf7ac8b1bb8442846f55efab209c01218aed6e32b4d99c4ad3"
+  ],
+  "optimization_contract_id": [
+    "MECHANICAL_ADAM_OPTIMIZATION_CONTRACT_V1",
+    "b1c0ff507154de3a5d9f2cdad854ce1333e9336b82fd0ce6a2d3ce87121e0e26"
+  ],
+  "behavior_rollout_identity": {
+    "rollout_id": [
+      "MAPPO_BEHAVIOR_ROLLOUT_V1",
+      "672c57f42ea99f488b1cb19d89a9cc679aa53f032b05d9219943daf76d6f5b4f"
+    ],
+    "frozen_design_id": [
+      "EXPERIMENTAL_DESIGN_FREEZE_V1",
+      "588b2a4e03565cd3a1a76fc65682297692e4d1c891dea2087b97569e860d5aa8"
+    ],
+    "architecture_contract_id": [
+      "MECHANICAL_PILOT_ARCHITECTURE_CONTRACT_V1",
+      "9a6a65d1c4fba1cf7ac8b1bb8442846f55efab209c01218aed6e32b4d99c4ad3"
+    ],
+    "optimization_contract_id": [
+      "MECHANICAL_ADAM_OPTIMIZATION_CONTRACT_V1",
+      "b1c0ff507154de3a5d9f2cdad854ce1333e9336b82fd0ce6a2d3ce87121e0e26"
+    ],
+    "training_manifest_id": [
+      "SCENARIO_MANIFEST_V1",
+      "TRAINING",
+      [
+        "CONTENT",
+        "4cfc99bf27893f13dcefdfcc932f00b9088009b1e92e612a36d2ee682fe5dd5f"
+      ]
+    ],
+    "checkpoint_identity": "STEP_5J_3B_3"
+  },
+  "initial_parameter_hashes": {
+    "gnn": "928d40e28fa1a576643fc2729475081224603a02e8b30bb5d91c676556fd2afb",
+    "proposer": "16b8053e1f21ebbceebb8965e9fe938d755eefd0070370781ce0076d2e313428",
+    "responder": "92b7ed319e46ca384a176b037b2d4ca391690fd6781f9a6340a812c19edc38d8",
+    "critic": "fac973ae43b7c6c344aa8f5475307b95d487a2afcfaa44fe15cf459f1f86f6bc"
+  },
+  "parameter_hashes_at_stop": {
+    "gnn": "928d40e28fa1a576643fc2729475081224603a02e8b30bb5d91c676556fd2afb",
+    "proposer": "16b8053e1f21ebbceebb8965e9fe938d755eefd0070370781ce0076d2e313428",
+    "responder": "92b7ed319e46ca384a176b037b2d4ca391690fd6781f9a6340a812c19edc38d8",
+    "critic": "fac973ae43b7c6c344aa8f5475307b95d487a2afcfaa44fe15cf459f1f86f6bc"
+  }
+}

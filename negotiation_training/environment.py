@@ -181,38 +181,64 @@ class CoupledNegotiationTrainingEnvironment:
                         encoder)
                     edges = self._edge_union(snapshots)
                     if edges:
-                        enumerator = JointNegotiationBranchEnumerator(self.planner)
                         source_id = (specification.scenario_id, now,
                                      "COUPLED_JOINT_NEGOTIATION_CONTEXT")
-                        possible = enumerator.enumerate(
-                            scenario_id=specification.scenario_id,
-                            source_snapshot_id=source_id, original_edges=edges,
-                            active_vehicle_ids=tuple(sorted(states)), timestamp=now,
-                            regulatory_profile=specification.regulatory_profile,
-                            negotiation_status=specification.expected_negotiation_status,
-                            movement_path_by_vehicle=movements)
-                        executable = tuple(item for item in possible
-                                           if item.graph_executable)
-                        if executable:
-                            factor_contexts = self._proposer_contexts(
-                                enumerator, states, edges, specification,
-                                source_id)
+                        batch_id = (episode_id, now, "JOINT_NEGOTIATION_BATCH")
+                        encoded_graphs = tuple(
+                            observations.get_ldm(
+                                snapshot["ego_id"]
+                            ).current_encoded_graph_observation
+                            for snapshot in snapshots)
+                        if getattr(self.action_provider,
+                                   "uses_mappo_behavior_policy", False):
                             branch = self.action_provider.select_joint_actions(
-                                possible, factor_contexts)
+                                scenario_id=specification.scenario_id,
+                                episode_id=episode_id, batch_id=batch_id,
+                                source_snapshot_id=source_id,
+                                original_edges=edges,
+                                active_vehicle_ids=tuple(sorted(states)),
+                                timestamp=now,
+                                regulatory_profile=specification.regulatory_profile,
+                                negotiation_status=specification.expected_negotiation_status,
+                                movement_path_by_vehicle=movements,
+                                encoded_graphs=encoded_graphs,
+                                planner=self.planner)
+                        else:
+                            enumerator = JointNegotiationBranchEnumerator(self.planner)
+                            possible = enumerator.enumerate(
+                                scenario_id=specification.scenario_id,
+                                source_snapshot_id=source_id, original_edges=edges,
+                                active_vehicle_ids=tuple(sorted(states)), timestamp=now,
+                                regulatory_profile=specification.regulatory_profile,
+                                negotiation_status=specification.expected_negotiation_status,
+                                movement_path_by_vehicle=movements)
+                            executable = tuple(item for item in possible
+                                               if item.graph_executable)
+                            if executable:
+                                factor_contexts = self._proposer_contexts(
+                                    enumerator, states, edges, specification,
+                                    source_id)
+                                branch = self.action_provider.select_joint_actions(
+                                    possible, factor_contexts)
+                        if branch is not None:
                             plan0 = branch.execution_plan
                             zone_states = PhysicalBranchReplayRunner._zone_definitions(
                                 self, states, movements,
                                 branch.effective_precedence_graph)
-                            for snapshot in snapshots:
-                                encoded = observations.get_ldm(
-                                    snapshot["ego_id"]).current_encoded_graph_observation
+                            for encoded in encoded_graphs:
                                 encoded_shapes.append((
                                     tuple(encoded.node_features.shape),
                                     tuple(encoded.edge_features.shape),
                                     tuple(encoded.edge_index.shape)))
-                            batch_id = (episode_id, now, "JOINT_NEGOTIATION_BATCH")
-                            factors = self._factor_records(
-                                branch, batch_id, tuple(encoded_shapes))
+                            if getattr(self.action_provider,
+                                       "uses_mappo_behavior_policy", False):
+                                shape = (encoded_shapes[0] if encoded_shapes
+                                         else ((0, 0), (0, 0), (2, 0)))
+                                factors = self.action_provider.coupled_factor_records(
+                                    batch_id, shape)
+                            else:
+                                factors = self._factor_records(
+                                    branch, batch_id, tuple(encoded_shapes))
                             batches.append((batch_id, now, source_id, factors))
 
                 if branch is not None:
@@ -238,6 +264,9 @@ class CoupledNegotiationTrainingEnvironment:
                 demand_records, EPISODE_DURATION_SECONDS)
             team_time = total_team_travel_time_seconds(measures)
             reward = raw_team_reward(team_time)
+            if getattr(self.action_provider,
+                       "uses_mappo_behavior_policy", False):
+                self.action_provider.finalize_episode(episode_id, reward)
             final_batches = []
             for batch_id, timestamp, source_id, factors in batches:
                 factor_ids = tuple(item.decision_event_id for item in factors)

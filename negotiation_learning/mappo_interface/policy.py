@@ -62,8 +62,12 @@ class MaskedCategoricalPolicy:
     def entropy(self):
         return self.distribution.entropy()
 
-    def sample_action_index(self):
-        return self.distribution.sample()
+    def sample_action_index(self, generator=None):
+        if generator is None:
+            return self.distribution.sample()
+        return torch.multinomial(
+            self.probabilities, num_samples=1, generator=generator
+        ).squeeze(-1)
 
     def evaluate_action_index(self, action_index):
         index = (action_index if isinstance(action_index, torch.Tensor)
@@ -130,9 +134,9 @@ class RoleAwareNegotiationPolicy:
             output.unmasked_action_logits, output.action_feasibility_mask,
         )
 
-    def select_action(self, context):
+    def select_action(self, context, generator=None):
         output, policy = self.distribution_for(context)
-        index = policy.sample_action_index()
+        index = policy.sample_action_index(generator=generator)
         return self._decision(context, output.unmasked_action_logits,
                               policy, index)
 
