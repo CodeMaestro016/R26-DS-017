@@ -1,0 +1,473 @@
+{
+  "audit_id": [
+    "MECHANICAL_PILOT_CONFIGURATION_AUDIT_V1",
+    [
+      "EXPERIMENTAL_DESIGN_FREEZE_V1",
+      "588b2a4e03565cd3a1a76fc65682297692e4d1c891dea2087b97569e860d5aa8"
+    ]
+  ],
+  "frozen_design_id": [
+    "EXPERIMENTAL_DESIGN_FREEZE_V1",
+    "588b2a4e03565cd3a1a76fc65682297692e4d1c891dea2087b97569e860d5aa8"
+  ],
+  "provisional_configuration_id": [
+    "PROVISIONAL_REFERENCE_V1"
+  ],
+  "runtime_choices": [
+    {
+      "choice_id": "node_input_dimension",
+      "classification": "SCHEMA_DERIVED",
+      "value": 8,
+      "evidence_id": null,
+      "operationally_required": true,
+      "blocker_code": null,
+      "provenance": {
+        "provenance_source": "NODE_NUMERIC_SCHEMA"
+      }
+    },
+    {
+      "choice_id": "edge_input_dimension",
+      "classification": "SCHEMA_DERIVED",
+      "value": 9,
+      "evidence_id": null,
+      "operationally_required": true,
+      "blocker_code": null,
+      "provenance": {
+        "provenance_source": "EDGE_NUMERIC_SCHEMA"
+      }
+    },
+    {
+      "choice_id": "proposer_action_count",
+      "classification": "SCHEMA_DERIVED",
+      "value": 2,
+      "evidence_id": null,
+      "operationally_required": true,
+      "blocker_code": null,
+      "provenance": {
+        "provenance_source": "PROPOSER_ACTION_ORDER"
+      }
+    },
+    {
+      "choice_id": "responder_action_count",
+      "classification": "SCHEMA_DERIVED",
+      "value": 2,
+      "evidence_id": null,
+      "operationally_required": true,
+      "blocker_code": null,
+      "provenance": {
+        "provenance_source": "RESPONDER_ACTION_ORDER"
+      }
+    },
+    {
+      "choice_id": "gnn_hidden_dimension",
+      "classification": "FROZEN_PILOT_CANDIDATE",
+      "value": 64,
+      "evidence_id": [
+        "CANDIDATE_EVIDENCE",
+        "gnn_hidden_dimension",
+        64
+      ],
+      "operationally_required": true,
+      "blocker_code": null,
+      "provenance": {
+        "project_selected": false,
+        "assignment_status": "PROVISIONAL_PILOT_REFERENCE_ONLY"
+      }
+    },
+    {
+      "choice_id": "gnn_message_passing_layers",
+      "classification": "UNRESOLVED_OPERATIONAL_PARAMETER",
+      "value": null,
+      "evidence_id": null,
+      "operationally_required": true,
+      "blocker_code": "PILOT_ARCHITECTURE_CONTRACT_UNRESOLVED",
+      "provenance": {
+        "reason": "Existing depth 2 is validation-only, not operational evidence"
+      }
+    },
+    {
+      "choice_id": "gnn_activation",
+      "classification": "EXPLICIT_EXISTING_ARCHITECTURE_SEMANTIC",
+      "value": "RELU",
+      "evidence_id": null,
+      "operationally_required": true,
+      "blocker_code": null,
+      "provenance": {
+        "provenance_source": "EdgeAwareMPNNEncoder source"
+      }
+    },
+    {
+      "choice_id": "neural_initialization_policy",
+      "classification": "UNRESOLVED_OPERATIONAL_PARAMETER",
+      "value": null,
+      "evidence_id": null,
+      "operationally_required": true,
+      "blocker_code": "PILOT_ARCHITECTURE_CONTRACT_UNRESOLVED",
+      "provenance": {
+        "reason": "nn.Linear initialization is not explicitly specified"
+      }
+    },
+    {
+      "choice_id": "frozen_gnn_parameter_source",
+      "classification": "UNRESOLVED_OPERATIONAL_PARAMETER",
+      "value": null,
+      "evidence_id": null,
+      "operationally_required": true,
+      "blocker_code": "PILOT_ARCHITECTURE_CONTRACT_UNRESOLVED",
+      "provenance": {
+        "reason": "FROZEN_GNN does not identify trained or initialized weights"
+      }
+    },
+    {
+      "choice_id": "proposer_actor_head_architecture",
+      "classification": "UNRESOLVED_OPERATIONAL_PARAMETER",
+      "value": null,
+      "evidence_id": null,
+      "operationally_required": true,
+      "blocker_code": "PILOT_ARCHITECTURE_CONTRACT_UNRESOLVED",
+      "provenance": {
+        "reason": "FINAL_POLICY_ARCHITECTURE requires experimental selection"
+      }
+    },
+    {
+      "choice_id": "responder_actor_head_architecture",
+      "classification": "UNRESOLVED_OPERATIONAL_PARAMETER",
+      "value": null,
+      "evidence_id": null,
+      "operationally_required": true,
+      "blocker_code": "PILOT_ARCHITECTURE_CONTRACT_UNRESOLVED",
+      "provenance": {
+        "reason": "RESPONSE_ACTOR_ARCHITECTURE requires experimental selection"
+      }
+    },
+    {
+      "choice_id": "centralized_critic_architecture",
+      "classification": "UNRESOLVED_OPERATIONAL_PARAMETER",
+      "value": null,
+      "evidence_id": null,
+      "operationally_required": true,
+      "blocker_code": "PILOT_ARCHITECTURE_CONTRACT_UNRESOLVED",
+      "provenance": {
+        "reason": "Training-only linear test interface is not an operational pilot contract"
+      }
+    },
+    {
+      "choice_id": "parameter_sharing_strategy",
+      "classification": "FROZEN_PILOT_CANDIDATE",
+      "value": "SHARED_REPRESENTATION_ROLE_SPECIFIC_HEADS",
+      "evidence_id": [
+        "CANDIDATE_EVIDENCE",
+        "parameter_sharing_strategy",
+        "SHARED_REPRESENTATION_ROLE_SPECIFIC_HEADS"
+      ],
+      "operationally_required": true,
+      "blocker_code": null,
+      "provenance": {
+        "project_selected": false,
+        "assignment_status": "PROVISIONAL_PILOT_REFERENCE_ONLY"
+      }
+    },
+    {
+      "choice_id": "gnn_training_mode",
+      "classification": "FROZEN_PILOT_CANDIDATE",
+      "value": "FROZEN_GNN",
+      "evidence_id": [
+        "CANDIDATE_EVIDENCE",
+        "gnn_training_mode",
+        "FROZEN_GNN"
+      ],
+      "operationally_required": true,
+      "blocker_code": null,
+      "provenance": {
+        "project_selected": false,
+        "assignment_status": "PROVISIONAL_PILOT_REFERENCE_ONLY"
+      }
+    },
+    {
+      "choice_id": "ppo_clip_epsilon",
+      "classification": "FROZEN_PILOT_CANDIDATE",
+      "value": 0.2,
+      "evidence_id": [
+        "CANDIDATE_EVIDENCE",
+        "ppo_clip_epsilon",
+        0.2
+      ],
+      "operationally_required": true,
+      "blocker_code": null,
+      "provenance": {
+        "project_selected": false,
+        "assignment_status": "PROVISIONAL_PILOT_REFERENCE_ONLY"
+      }
+    },
+    {
+      "choice_id": "learning_rate",
+      "classification": "FROZEN_PILOT_CANDIDATE",
+      "value": 0.0005,
+      "evidence_id": [
+        "CANDIDATE_EVIDENCE",
+        "learning_rate",
+        0.0005
+      ],
+      "operationally_required": true,
+      "blocker_code": null,
+      "provenance": {
+        "project_selected": false,
+        "assignment_status": "PROVISIONAL_PILOT_REFERENCE_ONLY"
+      }
+    },
+    {
+      "choice_id": "optimizer_family",
+      "classification": "FROZEN_PILOT_CANDIDATE",
+      "value": "ADAM",
+      "evidence_id": [
+        "CANDIDATE_EVIDENCE",
+        "optimizer_family",
+        "ADAM"
+      ],
+      "operationally_required": true,
+      "blocker_code": null,
+      "provenance": {
+        "project_selected": false,
+        "assignment_status": "PROVISIONAL_PILOT_REFERENCE_ONLY"
+      }
+    },
+    {
+      "choice_id": "adam_beta1",
+      "classification": "UNRESOLVED_OPERATIONAL_PARAMETER",
+      "value": null,
+      "evidence_id": null,
+      "operationally_required": true,
+      "blocker_code": "ADAM_INTERNAL_PARAMETER_CONTRACT_UNRESOLVED",
+      "provenance": {}
+    },
+    {
+      "choice_id": "adam_beta2",
+      "classification": "UNRESOLVED_OPERATIONAL_PARAMETER",
+      "value": null,
+      "evidence_id": null,
+      "operationally_required": true,
+      "blocker_code": "ADAM_INTERNAL_PARAMETER_CONTRACT_UNRESOLVED",
+      "provenance": {}
+    },
+    {
+      "choice_id": "adam_epsilon",
+      "classification": "UNRESOLVED_OPERATIONAL_PARAMETER",
+      "value": null,
+      "evidence_id": null,
+      "operationally_required": true,
+      "blocker_code": "ADAM_INTERNAL_PARAMETER_CONTRACT_UNRESOLVED",
+      "provenance": {}
+    },
+    {
+      "choice_id": "weight_decay",
+      "classification": "UNRESOLVED_OPERATIONAL_PARAMETER",
+      "value": null,
+      "evidence_id": null,
+      "operationally_required": true,
+      "blocker_code": "WEIGHT_DECAY_CONTRACT_UNRESOLVED",
+      "provenance": {}
+    },
+    {
+      "choice_id": "adam_amsgrad",
+      "classification": "UNRESOLVED_OPERATIONAL_PARAMETER",
+      "value": null,
+      "evidence_id": null,
+      "operationally_required": true,
+      "blocker_code": "ADAM_INTERNAL_PARAMETER_CONTRACT_UNRESOLVED",
+      "provenance": {}
+    },
+    {
+      "choice_id": "optimizer_parameter_grouping",
+      "classification": "UNRESOLVED_OPERATIONAL_PARAMETER",
+      "value": null,
+      "evidence_id": null,
+      "operationally_required": true,
+      "blocker_code": "OPTIMIZER_PARAMETER_GROUPING_UNRESOLVED",
+      "provenance": {}
+    },
+    {
+      "choice_id": "minibatch_construction",
+      "classification": "MECHANICAL_IMPLEMENTATION_REFERENCE_ONLY",
+      "value": "MECHANICAL_FULL_BATCH_NO_MINIBATCH_HYPERPARAMETER",
+      "evidence_id": null,
+      "operationally_required": true,
+      "blocker_code": null,
+      "provenance": {
+        "final_method_selection_eligible": false
+      }
+    },
+    {
+      "choice_id": "ppo_update_epochs",
+      "classification": "FROZEN_PILOT_CANDIDATE",
+      "value": 5,
+      "evidence_id": [
+        "CANDIDATE_EVIDENCE",
+        "ppo_update_epochs",
+        5
+      ],
+      "operationally_required": true,
+      "blocker_code": null,
+      "provenance": {
+        "project_selected": false,
+        "assignment_status": "PROVISIONAL_PILOT_REFERENCE_ONLY"
+      }
+    },
+    {
+      "choice_id": "advantage_normalization",
+      "classification": "FROZEN_PILOT_CANDIDATE",
+      "value": "RAW_MONTE_CARLO_ADVANTAGE",
+      "evidence_id": [
+        "CANDIDATE_EVIDENCE",
+        "advantage_normalization",
+        "RAW_MONTE_CARLO_ADVANTAGE"
+      ],
+      "operationally_required": true,
+      "blocker_code": null,
+      "provenance": {
+        "project_selected": false,
+        "assignment_status": "PROVISIONAL_PILOT_REFERENCE_ONLY"
+      }
+    },
+    {
+      "choice_id": "entropy_regularization",
+      "classification": "MECHANICAL_IMPLEMENTATION_REFERENCE_ONLY",
+      "value": "UNRESOLVED_NOT_USED_IN_MECHANICAL_INTEGRATION",
+      "evidence_id": null,
+      "operationally_required": true,
+      "blocker_code": null,
+      "provenance": {
+        "final_method_selection_eligible": false
+      }
+    },
+    {
+      "choice_id": "critic_loss_form",
+      "classification": "MATHEMATICALLY_FIXED",
+      "value": "PURE_SQUARED_ERROR",
+      "evidence_id": null,
+      "operationally_required": true,
+      "blocker_code": null,
+      "provenance": {
+        "provenance_source": "Step 5I"
+      }
+    },
+    {
+      "choice_id": "critic_loss_reduction",
+      "classification": "UNRESOLVED_OPERATIONAL_PARAMETER",
+      "value": null,
+      "evidence_id": null,
+      "operationally_required": true,
+      "blocker_code": "CRITIC_LOSS_REDUCTION_UNRESOLVED",
+      "provenance": {}
+    },
+    {
+      "choice_id": "value_loss_mixing_coefficient",
+      "classification": "MECHANICAL_IMPLEMENTATION_REFERENCE_ONLY",
+      "value": "NOT_USED_SEPARATE_OBJECTIVES",
+      "evidence_id": null,
+      "operationally_required": true,
+      "blocker_code": null,
+      "provenance": {
+        "final_method_selection_eligible": false
+      }
+    },
+    {
+      "choice_id": "gradient_clipping",
+      "classification": "MECHANICAL_IMPLEMENTATION_REFERENCE_ONLY",
+      "value": "UNRESOLVED_NOT_USED_IN_MECHANICAL_INTEGRATION",
+      "evidence_id": null,
+      "operationally_required": true,
+      "blocker_code": null,
+      "provenance": {
+        "final_method_selection_eligible": false
+      }
+    },
+    {
+      "choice_id": "multi_policy_factor_aggregation",
+      "classification": "FROZEN_PILOT_CANDIDATE",
+      "value": "PER_POLICY_FACTOR_EMPIRICAL_MEAN",
+      "evidence_id": [
+        "CANDIDATE_EVIDENCE",
+        "multi_policy_factor_aggregation",
+        "PER_POLICY_FACTOR_EMPIRICAL_MEAN"
+      ],
+      "operationally_required": true,
+      "blocker_code": null,
+      "provenance": {
+        "project_selected": false,
+        "assignment_status": "PROVISIONAL_PILOT_REFERENCE_ONLY"
+      }
+    },
+    {
+      "choice_id": "rollout_scope",
+      "classification": "MATHEMATICALLY_FIXED",
+      "value": "ONE_TRAINING_MANIFEST_PASS",
+      "evidence_id": null,
+      "operationally_required": true,
+      "blocker_code": null,
+      "provenance": {
+        "provenance_source": "Step 5J.3A natural structural unit"
+      }
+    },
+    {
+      "choice_id": "discount_factor",
+      "classification": "MATHEMATICALLY_FIXED",
+      "value": null,
+      "evidence_id": null,
+      "operationally_required": true,
+      "blocker_code": null,
+      "provenance": {
+        "provenance_source": "Exact undiscounted Step 5I return"
+      }
+    },
+    {
+      "choice_id": "gae_lambda",
+      "classification": "MATHEMATICALLY_FIXED",
+      "value": null,
+      "evidence_id": null,
+      "operationally_required": true,
+      "blocker_code": null,
+      "provenance": {
+        "provenance_source": "GAE not used in baseline"
+      }
+    }
+  ],
+  "unresolved_choice_ids": [
+    "gnn_message_passing_layers",
+    "neural_initialization_policy",
+    "frozen_gnn_parameter_source",
+    "proposer_actor_head_architecture",
+    "responder_actor_head_architecture",
+    "centralized_critic_architecture",
+    "adam_beta1",
+    "adam_beta2",
+    "adam_epsilon",
+    "weight_decay",
+    "adam_amsgrad",
+    "optimizer_parameter_grouping",
+    "critic_loss_reduction"
+  ],
+  "silent_default_count": 0,
+  "optimizer_instances": 0,
+  "backward_calls": 0,
+  "parameter_updates": 0,
+  "status": "MECHANICAL_PILOT_CONFIGURATION_INCOMPLETE",
+  "next_blocker": "PILOT_ARCHITECTURE_CONTRACT_UNRESOLVED",
+  "provenance": {
+    "models_constructed": 0,
+    "behavior_policy_samples": 0,
+    "rl_seeds_instantiated": 0,
+    "project_selected_hyperparameters": 0,
+    "validation_performance_runs": 0,
+    "held_out_performance_runs": 0,
+    "learned_main_actions": 0
+  },
+  "checkpoint": "STEP_5J_3B",
+  "step_5j_3a_profile": "PASS",
+  "coupling_status": "CAUSAL_EXECUTION_PATH_VALIDATED",
+  "policy_integration_executed": false,
+  "training_manifest_passes": 0,
+  "ppo_eligible_proposer_factors": 0,
+  "ppo_eligible_responder_factors": 0,
+  "mappo_pilot_runs": 0,
+  "model_checkpoints": 0
+}

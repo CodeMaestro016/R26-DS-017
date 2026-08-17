@@ -444,3 +444,20 @@ unused. Profiling measures natural simulator, decision-batch, policy-factor,
 episode, tensor-shape, safety, and Step 5H objective quantities without
 selecting a training budget, replication count, seed, candidate, optimizer, or
 hyperparameter.
+
+## Step 5J.3B mechanical-pilot configuration gate
+
+The post-profile mechanical-pilot audit loads the unchanged
+`PROVISIONAL_REFERENCE_V1` rather than copying candidate values into training
+code. It resolves the frozen candidate-only hidden dimension, GNN training
+mode, parameter-sharing method, PPO clip, learning rate, optimizer family,
+update epochs, raw advantage method, and policy-factor aggregation. All remain
+unselected research candidates.
+
+The audit stops before model construction because the frozen evidence does not
+specify the message-passing depth, neural initialization and frozen-GNN weight
+source, operational proposer/responder/critic architectures, required Adam
+internals, optimizer grouping, or critic-loss reduction. Existing test-only
+architectures and PyTorch defaults are not promoted into the pilot. Therefore
+no behavior-policy sample, RL seed, optimizer, backward call, parameter update,
+training-manifest pass, or checkpoint is produced in Step 5J.3B at this state.
