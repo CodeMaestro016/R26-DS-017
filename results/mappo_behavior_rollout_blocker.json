@@ -1,6 +1,8 @@
 {
   "checkpoint": "STEP_5J_3B_3",
   "status": "MAPPO_BEHAVIOR_ROLLOUT_BLOCKED",
+  "resolution_status": "RESOLVED_STEP_5J_3B_3A",
+  "resolution_artifact": "results/mappo_behavior_rollout.json",
   "next_blocker": "EXECUTION_GRAPH_PHYSICAL_CONFLICT_UNORDERED",
   "failed_training_scenario_index": 2,
   "failed_scenario_id": [

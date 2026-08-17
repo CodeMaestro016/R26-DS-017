@@ -12,6 +12,7 @@ from conflict import (ConflictGraphManager, ConflictZoneManager,
 from conflict_entry_monitor import ConflictEntryMonitor
 from environment import SUMOEnv
 from negotiation_execution import ConflictZoneExecutionPlanner
+from negotiation_execution import CoordinationToPhysicalExecutionMapper
 from negotiation_execution.replay import (PhysicalBranchReplayRunner,
                                             PhysicalReplayError)
 from negotiation_learning import (GraphTensorEncoder,
@@ -42,6 +43,7 @@ class CoupledNegotiationTrainingEnvironment:
         self.paths = MapPathManager()
         self.zones = ConflictZoneManager(self.paths)
         self.planner = ConflictZoneExecutionPlanner(self.paths, self.zones)
+        self.physical_mapper = CoordinationToPhysicalExecutionMapper(self.zones)
         self._active_zone_markers = {}
 
     def reset(self):
@@ -134,7 +136,7 @@ class CoupledNegotiationTrainingEnvironment:
         pending = list(zip(specification.scheduled_spawn_steps,
                            specification.movement_path_ids,
                            range(len(specification.movement_path_ids))))
-        branch = plan0 = None
+        branch = plan0 = physical_obligations = None
         zone_states, cleared = {}, set()
         commands, command_audit, command_mode, constraints = [], {}, {}, []
         entry_events, clear_events, completion_events = [], [], []
@@ -200,9 +202,23 @@ class CoupledNegotiationTrainingEnvironment:
                                 timestamp=now,
                                 regulatory_profile=specification.regulatory_profile,
                                 negotiation_status=specification.expected_negotiation_status,
-                                movement_path_by_vehicle=movements,
-                                encoded_graphs=encoded_graphs,
-                                planner=self.planner)
+                                encoded_graphs=encoded_graphs)
+                            if branch is not None:
+                                physical_obligations = self.physical_mapper.map(
+                                    branch.effective_precedence_graph,
+                                    tuple(sorted(states)), movements)
+                                plan0 = self.planner.plan(
+                                    source_snapshot_id=branch.source_snapshot_id,
+                                    effective_coordination_graph=
+                                        branch.effective_precedence_graph,
+                                    active_vehicle_ids=tuple(sorted(states)),
+                                    movement_path_by_vehicle=movements,
+                                    timestamp=now,
+                                    source_protocol_state=branch.policy_status,
+                                    cleared_vehicle_zones=(),
+                                    physical_obligation_set=physical_obligations)
+                                self.action_provider.record_physical_interpretation(
+                                    batch_id, physical_obligations, plan0)
                         else:
                             enumerator = JointNegotiationBranchEnumerator(self.planner)
                             possible = enumerator.enumerate(
@@ -221,10 +237,15 @@ class CoupledNegotiationTrainingEnvironment:
                                 branch = self.action_provider.select_joint_actions(
                                     possible, factor_contexts)
                         if branch is not None:
-                            plan0 = branch.execution_plan
+                            if plan0 is None:
+                                plan0 = branch.execution_plan
+                            execution_graph = (
+                                physical_obligations.physical_execution_graph
+                                if physical_obligations is not None else
+                                branch.effective_precedence_graph)
                             zone_states = PhysicalBranchReplayRunner._zone_definitions(
                                 self, states, movements,
-                                branch.effective_precedence_graph)
+                                execution_graph)
                             for encoded in encoded_graphs:
                                 encoded_shapes.append((
                                     tuple(encoded.node_features.shape),
@@ -250,8 +271,11 @@ class CoupledNegotiationTrainingEnvironment:
                         effective_coordination_graph=branch.effective_precedence_graph,
                         active_vehicle_ids=tuple(sorted(states)),
                         movement_path_by_vehicle=movements, timestamp=now,
-                        source_protocol_state=branch.branch_status,
-                        cleared_vehicle_zones=tuple(sorted(cleared)))
+                        source_protocol_state=(
+                            branch.policy_status if hasattr(branch, "policy_status")
+                            else branch.branch_status),
+                        cleared_vehicle_zones=tuple(sorted(cleared)),
+                        physical_obligation_set=physical_obligations)
                     plan_count += 1
                     step_records = PhysicalBranchReplayRunner._apply_control(
                         plan, states, zone_observations, now, commands,

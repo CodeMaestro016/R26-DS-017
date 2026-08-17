@@ -1,0 +1,31 @@
+{
+  "checkpoint": "STEP_5J_3B_3A",
+  "status": "COORDINATION_PHYSICAL_EXECUTION_SEMANTICS_VALIDATED",
+  "blocker_pair": [
+    "S_IN_0_RIGHT",
+    "E_IN_0_LEFT"
+  ],
+  "authoritative_relationship": {
+    "first_path_id": "E_IN_0_LEFT",
+    "second_path_id": "S_IN_0_RIGHT",
+    "conflict_zone_id": null,
+    "conflict_type": "NO_CONFLICT",
+    "physical_overlap": false,
+    "coordinated_conflict": false,
+    "geometry_type": null
+  },
+  "coordination_edge_retained": true,
+  "physical_zone_count": 0,
+  "physical_constraint_count": 0,
+  "execution_relevance": "PHYSICALLY_NONCONFLICTING_NO_EXECUTION_CONSTRAINT",
+  "coordination_cycle_physical_acyclic_validated": true,
+  "genuine_physical_cycle_validated": true,
+  "policy_provider_accepts_movement_truth": false,
+  "policy_provider_accepts_planner": false,
+  "effective_coordination_graph_mutations": 0,
+  "policy_actions_resampled": 0,
+  "protocol_edges_modified": 0,
+  "new_hard_mask_rules": 0,
+  "route_truth_actor_fields": 0,
+  "numerical_values_introduced": 0
+}

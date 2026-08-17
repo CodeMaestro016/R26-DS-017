@@ -197,6 +197,16 @@ def collect_mappo_behavior_rollout(output_path=ROLLOUT_PATH):
         "real_proposal_count": sum(x["proposal_count"] for x in metadata),
         "action_counts": actions,
         "cyclic_policy_outcome_count": sum(x["cycle_detected"] for x in metadata),
+        "coordination_edge_count": sum(
+            x["coordination_edge_count"] for x in metadata),
+        "physical_execution_edge_count": sum(
+            x["physical_execution_edge_count"] for x in metadata),
+        "nonphysical_coordination_edge_count": sum(
+            x["nonphysical_coordination_edge_count"] for x in metadata),
+        "coordination_cycle_count": sum(
+            x["coordination_cycle_detected"] for x in metadata),
+        "physical_execution_cycle_count": sum(
+            x["physical_execution_cycle_detected"] for x in metadata),
         "executable_policy_outcome_count": sum(x["graph_executable"] for x in metadata),
         "joint_protocol_evaluations": provider.joint_protocol_evaluations,
         "manual_graph_edits": provider.manual_graph_edits,

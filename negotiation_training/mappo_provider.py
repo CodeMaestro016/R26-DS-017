@@ -13,8 +13,7 @@ from negotiation_learning.ctde import (
     DecentralizedNegotiationActor, DecentralizedNegotiationResponseActor)
 from negotiation_learning.gnn import EdgeAwareMPNNEncoder, to_torch_graph
 from negotiation_learning.joint_negotiation import (
-    JointNegotiationBranchResult, JointProposerActionAssignment,
-    JointResponderActionAssignment)
+    JointProposerActionAssignment, JointResponderActionAssignment)
 from negotiation_learning.mappo_interface import (
     NegotiationDecisionRole, NegotiationPolicyContextBuilder,
     RoleAwareNegotiationPolicy)
@@ -56,6 +55,26 @@ class MechanicalMAPPOBehaviorPolicyBundle:
     component_seeds: MappingProxyType
     initial_parameter_hashes: MappingProxyType
     policy_parameter_identity: tuple
+
+
+@dataclass(frozen=True)
+class MAPPOJointPolicyOutcome:
+    outcome_id: tuple
+    scenario_id: tuple
+    source_snapshot_id: tuple
+    proposer_assignment: object
+    responder_assignment: object
+    protocol_messages: tuple
+    completed_agreement_ids: tuple
+    rejected_proposal_ids: tuple
+    pending_proposal_ids: tuple
+    original_precedence_graph: tuple
+    effective_precedence_graph: tuple
+    coordination_sccs: tuple
+    coordination_cycle_detected: bool
+    policy_status: str
+    behavior_source: str
+    provenance: MappingProxyType
 
 
 def build_behavior_rollout_identity():
@@ -180,8 +199,7 @@ class MAPPOBehaviorActionProvider:
     def select_joint_actions(self, *, scenario_id, episode_id, batch_id,
                              source_snapshot_id, original_edges,
                              active_vehicle_ids, timestamp, regulatory_profile,
-                             negotiation_status, movement_path_by_vehicle,
-                             encoded_graphs, planner):
+                             negotiation_status, encoded_graphs):
         """The learned seam accepts no candidate branches or future outcomes."""
         factors = self._eligible_factors(
             active_vehicle_ids, original_edges, negotiation_status)
@@ -273,16 +291,6 @@ class MAPPOBehaviorActionProvider:
             status = "EXECUTION_BLOCKED_PRECEDENCE_CYCLE"
         else:
             status = "JOINT_POLICY_EXECUTABLE_ACYCLIC"
-        plan, physical_status = planner.classify_plan(
-            source_snapshot_id=source_snapshot_id,
-            effective_coordination_graph=graph,
-            active_vehicle_ids=active_vehicle_ids,
-            movement_path_by_vehicle=movement_path_by_vehicle,
-            timestamp=timestamp, source_protocol_state=status,
-            cleared_vehicle_zones=())
-        if plan is None:
-            raise RuntimeError((physical_status, tuple(graph),
-                                tuple(sorted(movement_path_by_vehicle.items()))))
         proposer_assignment = JointProposerActionAssignment(
             source_snapshot_id, tuple(proposer_pairs),
             tuple((claim.yielding_vehicle_id, claim.priority_vehicle_id)
@@ -293,10 +301,10 @@ class MAPPOBehaviorActionProvider:
             source_snapshot_id, tuple(item.proposal_id for item in proposals),
             tuple(response_pairs), tuple(response_masks), BEHAVIOR_SOURCE,
             {"all_proposals_frozen_before_responses": True})
-        branch_id = ("MAPPO_POLICY_OUTCOME_V1", source_snapshot_id,
+        outcome_id = ("MAPPO_POLICY_OUTCOME_V1", source_snapshot_id,
                      tuple(proposer_pairs), tuple(response_pairs))
-        branch = JointNegotiationBranchResult(
-            branch_id, scenario_id, source_snapshot_id, proposer_assignment,
+        outcome = MAPPOJointPolicyOutcome(
+            outcome_id, scenario_id, source_snapshot_id, proposer_assignment,
             responder_assignment, messages,
             tuple(item.proposal_id for item in
                   protocol_snapshot.completed_agreements),
@@ -306,11 +314,11 @@ class MAPPOBehaviorActionProvider:
                   protocol_snapshot.pending_proposals),
             protocol_snapshot.original_regulatory_precedence_graph, graph,
             tuple(tuple(x) for x in analysis["strongly_connected_components"]),
-            cyclic, plan.graph_status == "EXECUTABLE", status, plan.plan_id,
-            plan, BEHAVIOR_SOURCE,
-            {"joint_protocol_evaluations": 1, "manual_graph_edits": 0,
-             "branch_enumerator_action_selection": 0,
-             "future_outcome_action_selection_fields": 0})
+            cyclic, status, BEHAVIOR_SOURCE, MappingProxyType({
+                "joint_protocol_evaluations": 1, "manual_graph_edits": 0,
+                "branch_enumerator_action_selection": 0,
+                "future_outcome_action_selection_fields": 0,
+                "movement_truth_fields": 0, "planner_fields": 0}))
         samples = tuple(proposer_samples + responder_samples)
         self.pending_factors.extend(samples)
         self.batch_metadata.append({
@@ -319,7 +327,6 @@ class MAPPOBehaviorActionProvider:
             "proposer_count": len(proposer_samples),
             "responder_count": len(responder_samples),
             "proposal_count": len(proposals), "cycle_detected": cyclic,
-            "graph_executable": branch.graph_executable,
             "effective_graph": tuple(graph),
             "proposer_trace": tuple((x.selected_semantic_action,
                                       x.behavior_policy_log_probability)
@@ -327,7 +334,26 @@ class MAPPOBehaviorActionProvider:
             "responder_trace": tuple((x.selected_semantic_action,
                                        x.behavior_policy_log_probability)
                                       for x in responder_samples)})
-        return branch
+        return outcome
+
+    def record_physical_interpretation(self, batch_id, obligation_set, plan):
+        record = next(item for item in self.batch_metadata
+                      if item["batch_id"] == batch_id)
+        record.update({
+            "coordination_edge_count": len(
+                obligation_set.source_effective_coordination_graph),
+            "physical_execution_edge_count": len(
+                obligation_set.physical_execution_graph),
+            "nonphysical_coordination_edge_count": len(
+                obligation_set.nonphysical_coordination_edges),
+            "coordination_cycle_detected":
+                obligation_set.coordination_cycle_detected,
+            "physical_execution_cycle_detected":
+                obligation_set.physical_execution_cycle_detected,
+            "physical_execution_graph":
+                obligation_set.physical_execution_graph,
+            "edge_interpretations": obligation_set.edge_interpretations,
+            "graph_executable": plan.graph_status == "EXECUTABLE"})
 
     def coupled_factor_records(self, batch_id, shape):
         from .models import CoupledPolicyFactorRecord

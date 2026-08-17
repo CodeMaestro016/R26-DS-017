@@ -8,3 +8,4 @@ from .controller import (ExecutionConstraintError, build_speed_constraint,
     continuous_kinematic_reference_cap, stopping_speed_cap,
     speed_mode_enforcement, sumo_euler_comfortable_brake_gap)
 from .replay_models import *
+from .physical_mapping import *

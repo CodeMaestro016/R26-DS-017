@@ -511,3 +511,25 @@ make a value-loss mixing coefficient inapplicable.
 This contract is a mechanical implementation reference, not a final method
 selection. Step 5J.3B.2 constructs no optimizer, calls no backward pass, makes
 no parameter update, and performs no training.
+## Step 5J.3B.3A coordination-to-physical execution boundary
+
+The physical execution graph is a derived environment-transition
+representation and does not replace, modify, reject, or resample the
+policy-generated effective coordination graph. Each complete coordination edge
+is interpreted independently against authoritative SUMO map conflict geometry.
+It creates one execution obligation per mapped conflict zone, or zero execution
+obligations when the realized movement pair is conclusively non-conflicting.
+Unknown paths or unresolved geometry remain hard failures.
+
+Coordination cycles and physical-execution cycles are recorded separately. A
+vehicle is physically blocked only by active conflict-zone obligations; a
+non-conflicting coordination edge cannot create a stopping constraint. The
+complete coordination graph remains the protocol and policy-outcome identity.
+
+The actor acts from partial ego-local observations. Authoritative realized
+movement paths are hidden simulator state used only after policy and protocol
+completion by the environment transition. This is not actor information
+leakage. The simulation mapping is `AUTHORITATIVE_ENVIRONMENT_TRAJECTORY`, actor
+information is `EGO_LOCAL_PARTIAL_OBSERVATION`, and a future real deployment
+must instead use a conservative feasible-path conflict set. That deployment
+safety mapping is outside this checkpoint.
