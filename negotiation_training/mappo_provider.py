@@ -91,8 +91,9 @@ def build_behavior_rollout_identity():
         manifest.manifest_id)
 
 
-def build_mechanical_mappo_behavior_policy_bundle():
-    identity = build_behavior_rollout_identity()
+def build_mechanical_mappo_behavior_policy_bundle(
+        component_seed_identity=None, behavior_rollout_identity=None):
+    identity = behavior_rollout_identity or build_behavior_rollout_identity()
     architecture = build_mechanical_pilot_architecture_contract()
     components = {
         "gnn": EdgeAwareMPNNEncoder(
@@ -112,8 +113,10 @@ def build_mechanical_mappo_behavior_policy_bundle():
         "critic": "MODEL_INITIALIZATION_CRITIC",
         "sampling": "POLICY_ACTION_SAMPLING",
     }
+    seed_scope = (identity.rollout_id if component_seed_identity is None
+                  else component_seed_identity)
     seeds = {name: deterministic_initialization_seed(
-        architecture.contract_id, (identity.rollout_id, label))
+        architecture.contract_id, (seed_scope, label))
         for name, label in labels.items()}
     for name, module in components.items():
         apply_explicit_mechanical_initialization(module, seeds[name])
@@ -138,10 +141,16 @@ class MAPPOBehaviorActionProvider:
     outcome_data_used = False
     uses_mappo_behavior_policy = True
 
-    def __init__(self, bundle=None):
+    def __init__(self, bundle=None, sampling_seed=None):
         self.bundle = bundle or build_mechanical_mappo_behavior_policy_bundle()
         self.generator = torch.Generator(device="cpu")
-        self.generator.manual_seed(self.bundle.component_seeds["sampling"])
+        self.sampling_seed = (self.bundle.component_seeds["sampling"]
+                              if sampling_seed is None else int(sampling_seed))
+        self.generator.manual_seed(self.sampling_seed)
+        self.policy_parameter_identity = (
+            "MAPPO_POLICY_PARAMETERS_V1",
+            parameter_hash(self.bundle.proposer_actor),
+            parameter_hash(self.bundle.responder_actor))
         self.protocol = ClaimRelinquishmentProtocol()
         self.semantic = NegotiationSemanticFeatureEncoder()
         self.pending_factors = []
@@ -192,7 +201,7 @@ class MAPPOBehaviorActionProvider:
             float(decision.action_log_probability.item()),
             tuple(float(x) for x in decision.action_probabilities.tolist()),
             tensor_snapshot(context), critic_sample_id, None, None, None,
-            BEHAVIOR_SOURCE, self.bundle.policy_parameter_identity, True,
+            BEHAVIOR_SOURCE, self.policy_parameter_identity, True,
             {"stochastic_masked_sample": True, "argmax_used": False,
              "future_outcome_fields": 0, "route_truth_actor_fields": 0})
 

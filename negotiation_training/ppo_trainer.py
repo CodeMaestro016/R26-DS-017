@@ -73,15 +73,22 @@ def _context(snapshot):
 
 
 class MechanicalMAPPOTrainer:
-    def __init__(self, rollout_path=ROLLOUT_PATH):
+    def __init__(self, rollout_path=ROLLOUT_PATH, *, rollout_payload=None,
+                 bundle=None, output_path=UPDATE_PATH):
         self.rollout_path = Path(rollout_path)
-        self.rollout_bytes = self.rollout_path.read_bytes()
-        self.rollout = json.loads(self.rollout_bytes)
+        if rollout_payload is None:
+            self.rollout_bytes = self.rollout_path.read_bytes()
+            self.rollout = json.loads(self.rollout_bytes)
+        else:
+            self.rollout = rollout_payload
+            self.rollout_bytes = json.dumps(
+                rollout_payload, sort_keys=True).encode()
+        self.output_path = Path(output_path) if output_path is not None else None
         self.design = build_design()
         self.architecture = build_mechanical_pilot_architecture_contract()
         self.optimization = build_mechanical_adam_optimization_contract()
         self.configuration = build_mechanical_pilot_configuration_audit()
-        self.bundle = build_mechanical_mappo_behavior_policy_bundle()
+        self.bundle = bundle or build_mechanical_mappo_behavior_policy_bundle()
         self.actor_optimizer = None
         self.critic_optimizer = None
         self._validate_source()
@@ -328,5 +335,7 @@ class MechanicalMAPPOTrainer:
             "main_learned_actions": 0,
             "mechanical_update_only": True, "final_model": False,
             "final_selection_eligible": False, "model_checkpoint_saved": False}
-        UPDATE_PATH.write_text(json.dumps(result, indent=2), encoding="utf-8")
+        if self.output_path is not None:
+            self.output_path.write_text(json.dumps(result, indent=2),
+                                        encoding="utf-8")
         return result

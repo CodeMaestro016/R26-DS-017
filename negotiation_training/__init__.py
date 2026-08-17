@@ -7,3 +7,5 @@ from .adam_contract import *
 from .mappo_provider import *
 from .rollout import *
 from .ppo_trainer import *
+from .pilot_analysis import *
+from .controlled_pilot import *
