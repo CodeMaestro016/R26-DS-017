@@ -526,6 +526,28 @@ No training-budget, replication-count, or checkpoint-selection rule was chosen
 retrospectively from the observed trajectories. Selection and termination rules
 must be predeclared and frozen before acquiring more training evidence, avoiding
 a post-hoc stopping decision based on whether the current curve looks adequate.
+
+## Predeclared MAPPO model-selection protocol
+
+Future MAPPO training will use a fixed resource horizon declared before the
+experiment. TRAINING data optimize policy weights; the frozen VALIDATION
+manifest selects checkpoints and configurations; HELD_OUT_TEST is used only
+once all architecture, training, and selection choices are frozen. No adaptive
+decision is permitted after inspecting held-out results.
+
+Independent replications follow the canonical deterministic seed stream without
+skipping, replacement, or performance filtering. Candidate comparisons use
+matched replication and scenario identities with paired travel-time differences
+and dependency-aware uncertainty reporting. Safety, regulatory constraints,
+hard action masks, and protocol validity are hard eligibility gates rather than
+terms in a weighted performance score.
+
+Practical superiority requires an externally justified meaningful difference in
+total team travel time. The training resource ceiling, meaningful-difference
+scale, statistical precision or power targets, bootstrap resolution, and final
+comparison-family rules are not inferred from observed trajectories. These
+resource and domain inputs must be justified explicitly and incorporated into a
+new finalized protocol identity before further evidence acquisition begins.
 ## Step 5J.3B.3A coordination-to-physical execution boundary
 
 The physical execution graph is a derived environment-transition

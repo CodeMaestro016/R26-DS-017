@@ -1,0 +1,356 @@
+{
+  "checkpoint": "STEP_5J_3C_2D",
+  "status": "PREDECLARED_SELECTION_PROTOCOL_STRUCTURE_COMPLETE",
+  "protocol_readiness": "STRUCTURE_DEFINED_EXTERNAL_INPUTS_REQUIRED",
+  "protocol": {
+    "protocol_id": [
+      "MAPPO_SELECTION_PROTOCOL_V1",
+      "cc2ac385d9ac8134f621f792a037700d5fb1dfaee74ef2f0f8317ecef3e3331e"
+    ],
+    "source_review_identity": {
+      "checkpoint": "STEP_5J_3C_2C",
+      "status": "EXTENDED_EVIDENCE_REVIEW_COMPLETE",
+      "source_evidence_identity": {
+        "evidence_tranche_identity": [
+          "EXTENDED_EVIDENCE_TRANCHE_V1",
+          "e45ae14f1e710c1fe9ae0e152fbb58436f6bebe98054e913f21650e9f9a1c885"
+        ],
+        "sha256": "9edaf07c9804e78b984a26cd321373644d2d5f2080b167c1b2c0de024beb2e5f",
+        "checkpoint": "STEP_5J_3C_2B",
+        "status": "EXTENDED_MULTI_UPDATE_EVIDENCE_ACQUIRED"
+      },
+      "sha256": "06d294e607796ffbb4354f7ef762c3d82c386ad7b8fd7f39db6337182a600dfe"
+    },
+    "frozen_experimental_design_id": [
+      "EXPERIMENTAL_DESIGN_FREEZE_V1",
+      "588b2a4e03565cd3a1a76fc65682297692e4d1c891dea2087b97569e860d5aa8"
+    ],
+    "primary_metric": {
+      "metric_id": "TOTAL_TEAM_TRAVEL_TIME_SECONDS",
+      "direction": "LOWER_IS_BETTER",
+      "secondary_quantities_are_diagnostics_only": true,
+      "weighted_performance_score": false
+    },
+    "hard_validity_gates": [
+      "ZERO_COLLISIONS",
+      "ZERO_BLOCKED_ZONE_VIOLATIONS",
+      "TRAFFIC_RULE_HARD_CONSTRAINTS_PRESERVED",
+      "HARD_ACTION_MASKS_RESPECTED",
+      "PROTOCOL_VALIDITY_PRESERVED"
+    ],
+    "training_budget_protocol": {
+      "architecture": "FIXED_RESOURCE_HORIZON_WITH_VALIDATION_CHECKPOINT_SELECTION",
+      "maximum_update_horizon_H": "UNRESOLVED_EXTERNAL_INPUT",
+      "resource_horizon_status": "REQUIRES_EXTERNAL_RESOURCE_BUDGET",
+      "states": "STATE_0_THROUGH_STATE_H_INCLUSIVE",
+      "adaptive_curve_inspection_stopping": false,
+      "convergence_threshold": "NONE",
+      "mapping_to_H": {
+        "ppo_update_cycles_per_replication": "H_EQUALS_CYCLE_LIMIT",
+        "training_manifest_collections_per_replication": "H_EQUALS_COLLECTION_LIMIT_MINUS_ONE",
+        "sumo_steps_per_replication": "FINAL_PROTOCOL_MUST_PREDECLARE_EXACT_FULL_MANIFEST_STEP_MAPPING",
+        "wall_clock_allocation": "FINAL_PROTOCOL_MUST_PREDECLARE_CONSERVATIVE_DETERMINISTIC_MAPPING_BEFORE_RUN"
+      }
+    },
+    "replication_protocol": {
+      "stream": "CANONICAL_DETERMINISTIC_REPLICATION_STREAM",
+      "indices": "0_THROUGH_N_MINUS_1_NO_SKIPPING",
+      "performance_seed_replacement": "FORBIDDEN",
+      "bad_seed_reruns": "FORBIDDEN",
+      "target_quantity": "PAIRED_TOTAL_TEAM_TRAVEL_TIME_DIFFERENCE",
+      "calculation_method": "REPLICATION_ADEQUACY_CALCULATOR",
+      "required_inputs": [
+        "MPID_TTT_SECONDS",
+        "ESTIMATED_VARIABILITY",
+        "STATISTICAL_CONFIDENCE_OR_PRECISION_TARGET",
+        "STATISTICAL_POWER_TARGET_IF_POWER_BASED",
+        "PAIRED_DEPENDENCY_STRUCTURE"
+      ],
+      "estimated_variability_source": "CANONICAL_PRIOR_PILOT_EVIDENCE_WITHOUT_SEED_FILTERING",
+      "final_replication_count_n": "NOT_CALCULABLE_INPUTS_INCOMPLETE",
+      "early_significance_stopping": false,
+      "extend_because_preferred_candidate_loses": false
+    },
+    "checkpoint_selection_protocol": {
+      "eligible_states": "STATE_0_THROUGH_STATE_H",
+      "training_performance_used_for_selection": false,
+      "selection_data_role": "VALIDATION_ONLY",
+      "metric": "TOTAL_TEAM_TRAVEL_TIME_SECONDS",
+      "direction": "LOWER_IS_BETTER",
+      "uncertainty_and_practical_rule_required": true,
+      "tie_rule": "EARLIEST_EQUIVALENT_CHECKPOINT_RULE",
+      "current_state_2_retrospectively_selected": false,
+      "existing_resume_checkpoints_selection_eligible": false
+    },
+    "candidate_comparison_protocol": {
+      "design": "MATCHED_PAIRED_VALIDATION_COMPARISON",
+      "matched_conditions": [
+        "SAME_VALIDATION_SCENARIO_IDENTITIES",
+        "SAME_CANONICAL_REPLICATION_IDENTITIES",
+        "SAME_EVALUATION_PROTOCOL",
+        "SAME_CHECKPOINT_SELECTION_RULE",
+        "SAME_HARD_VALIDITY_GATES"
+      ],
+      "paired_quantity": "D_i_EQUALS_C_A_i_MINUS_C_B_i",
+      "interpretation": {
+        "D_LESS_THAN_ZERO": "A_LOWER_BETTER",
+        "D_GREATER_THAN_ZERO": "B_LOWER_BETTER"
+      },
+      "primary_statistic": "PAIRED_EMPIRICAL_MEAN_DIFFERENCE_TTT",
+      "median_and_interquartile_mean": "ROBUST_DESCRIPTIVE_ONLY",
+      "point_estimate_ranking_alone_sufficient": false,
+      "practical_significance_requires_MPID": true,
+      "formal_test_family": "REQUIRES_PREDECLARATION_IF_LATER_REQUIRED",
+      "existing_frozen_ablation_plans": [
+        {
+          "plan_id": [
+            "PILOT_PLAN_V1",
+            "POLICY_FACTOR_AGGREGATION_STUDY"
+          ],
+          "choice_ids_under_test": [
+            "multi_policy_factor_aggregation"
+          ],
+          "execution_status": "NOT_EXECUTED_STEP_5J_2"
+        },
+        {
+          "plan_id": [
+            "PILOT_PLAN_V1",
+            "ARCHITECTURE_CAPACITY_STUDY"
+          ],
+          "choice_ids_under_test": [
+            "gnn_hidden_dimension"
+          ],
+          "execution_status": "NOT_EXECUTED_STEP_5J_2"
+        },
+        {
+          "plan_id": [
+            "PILOT_PLAN_V1",
+            "PARAMETER_SHARING_STUDY"
+          ],
+          "choice_ids_under_test": [
+            "parameter_sharing_strategy"
+          ],
+          "execution_status": "NOT_EXECUTED_STEP_5J_2"
+        },
+        {
+          "plan_id": [
+            "PILOT_PLAN_V1",
+            "GNN_TRAINING_MODE_STUDY"
+          ],
+          "choice_ids_under_test": [
+            "gnn_training_mode"
+          ],
+          "execution_status": "NOT_EXECUTED_STEP_5J_2"
+        },
+        {
+          "plan_id": [
+            "PILOT_PLAN_V1",
+            "PPO_OPTIMIZATION_STUDY"
+          ],
+          "choice_ids_under_test": [
+            "ppo_clip_epsilon",
+            "learning_rate",
+            "ppo_update_epochs"
+          ],
+          "execution_status": "NOT_EXECUTED_STEP_5J_2"
+        },
+        {
+          "plan_id": [
+            "PILOT_PLAN_V1",
+            "ADVANTAGE_NORMALIZATION_STUDY"
+          ],
+          "choice_ids_under_test": [
+            "advantage_normalization"
+          ],
+          "execution_status": "NOT_EXECUTED_STEP_5J_2"
+        }
+      ],
+      "search_sequence": "REQUIRES_PREDECLARATION",
+      "cartesian_product_search": false
+    },
+    "uncertainty_reporting_protocol": {
+      "primary_method": "PAIRED_BOOTSTRAP_CONFIDENCE_INTERVAL",
+      "independent_unit": "MATCHED_REPLICATION_WITH_SCENARIO_DEPENDENCY_PRESERVED",
+      "bootstrap_time_steps": false,
+      "bootstrap_policy_factors": false,
+      "confidence_level": "REQUIRES_PREDECLARATION",
+      "bootstrap_resample_count": "REQUIRES_PREDECLARATION",
+      "multiple_comparison_control": "REQUIRES_FINAL_CANDIDATE_COMPARISON_FAMILY_DEFINITION",
+      "estimation_preferred_over_unjustified_parametric_test": true
+    },
+    "tie_protocol": {
+      "candidate_pair": "REFERENCE_PRESERVING_TIE_RULE",
+      "candidate_pair_action": "RETAIN_EXISTING_REFERENCE_OR_PROVISIONAL_CONFIGURATION",
+      "multi_candidate_reference_in_tied_set": "RETAIN_REFERENCE",
+      "multi_candidate_reference_not_in_tied_set": "UNRESOLVED_MULTI_CANDIDATE_TIE",
+      "checkpoint": "EARLIEST_EQUIVALENT_CHECKPOINT_RULE",
+      "sample_until_one_wins": false
+    },
+    "extension_protocol": {
+      "replications": "COLLECT_EXACTLY_0_THROUGH_N_MINUS_1_AFTER_N_IS_FROZEN",
+      "training": "COLLECT_EXACTLY_STATE_0_THROUGH_STATE_H_AFTER_H_IS_FROZEN",
+      "adaptive_extension": false,
+      "new_protocol_identity_required_after_external_inputs": true,
+      "additional_evidence_before_final_protocol": false
+    },
+    "data_role_protocol": {
+      "TRAINING": "OPTIMIZE_POLICY_WEIGHTS_ONLY",
+      "VALIDATION": "CHECKPOINT_AND_CONFIGURATION_SELECTION_ONLY",
+      "HELD_OUT_TEST": "FINAL_CONFIGURATION_EVALUATION_ONLY",
+      "held_out_for_checkpoint_selection": false,
+      "held_out_for_training_budget_selection": false,
+      "held_out_for_hyperparameter_or_architecture_selection": false,
+      "held_out_for_tie_resolution": false,
+      "adaptive_decisions_after_held_out": false
+    },
+    "unresolved_external_inputs": [
+      {
+        "input_name": "MAXIMUM_ACCEPTABLE_TRAINING_RESOURCE_BUDGET",
+        "status": "REQUIRES_EXTERNAL_RESOURCE_BUDGET",
+        "why_required": "DERIVE_FIXED_MAXIMUM_TRAINING_UPDATE_HORIZON_H",
+        "unit": "ONE_OF_PPO_UPDATES_MANIFEST_COLLECTIONS_SUMO_STEPS_OR_WALL_CLOCK",
+        "allowed_source_of_justification": [
+          "EXPLICIT_PROJECT_RESOURCE_ALLOCATION",
+          "SUPERVISOR_APPROVED_EXPERIMENTAL_RESOURCE_CEILING"
+        ],
+        "cannot_be_derived_from_existing_results": true,
+        "blocks_which_next_action": [
+          "FINALIZE_TRAINING_HORIZON",
+          "ACQUIRE_ADDITIONAL_EVIDENCE"
+        ]
+      },
+      {
+        "input_name": "MINIMUM_PRACTICALLY_IMPORTANT_DIFFERENCE_TEAM_TRAVEL_TIME_SECONDS",
+        "status": "REQUIRES_DOMAIN_OR_RESEARCH_JUSTIFICATION",
+        "why_required": "REPLICATION_PRECISION_OR_POWER_AND_PRACTICAL_SUPERIORITY",
+        "unit": "vehicle-seconds",
+        "allowed_source_of_justification": [
+          "TRANSPORTATION_DOMAIN_JUSTIFICATION",
+          "RESEARCH_OBJECTIVE",
+          "SUPERVISOR_APPROVED_EXPERIMENTAL_SPECIFICATION",
+          "EXPLICIT_PRACTICAL_REQUIREMENT"
+        ],
+        "cannot_be_derived_from_existing_results": true,
+        "blocks_which_next_action": [
+          "CALCULATE_REPLICATION_COUNT",
+          "CLASSIFY_PRACTICAL_SUPERIORITY"
+        ]
+      },
+      {
+        "input_name": "STATISTICAL_CONFIDENCE_OR_PRECISION_TARGET",
+        "status": "REQUIRES_PREDECLARATION",
+        "why_required": "DEFINE_REQUIRED_UNCERTAINTY_PRECISION_AND_INTERVAL_INTERPRETATION",
+        "unit": "confidence-level-or-vehicle-seconds",
+        "allowed_source_of_justification": [
+          "APPROVED_RESEARCH_METHODOLOGY",
+          "CITED_METHODOLOGICAL_REFERENCE"
+        ],
+        "cannot_be_derived_from_existing_results": true,
+        "blocks_which_next_action": [
+          "CALCULATE_REPLICATION_COUNT",
+          "INTERPRET_UNCERTAINTY"
+        ]
+      },
+      {
+        "input_name": "STATISTICAL_POWER_TARGET",
+        "status": "REQUIRES_PREDECLARATION",
+        "why_required": "CALCULATE_REPLICATION_COUNT_IF_POWER_BASED_DESIGN_IS_USED",
+        "unit": "probability",
+        "allowed_source_of_justification": [
+          "APPROVED_RESEARCH_METHODOLOGY",
+          "CITED_METHODOLOGICAL_REFERENCE"
+        ],
+        "cannot_be_derived_from_existing_results": true,
+        "blocks_which_next_action": [
+          "CALCULATE_POWER_BASED_REPLICATION_COUNT"
+        ]
+      },
+      {
+        "input_name": "UNCERTAINTY_MONTE_CARLO_RESOLUTION",
+        "status": "BOOTSTRAP_MONTE_CARLO_RESOLUTION_REQUIRES_PREDECLARATION",
+        "why_required": "FIX_PAIRED_BOOTSTRAP_COMPUTATIONAL_RESOLUTION",
+        "unit": "bootstrap-resamples",
+        "allowed_source_of_justification": [
+          "CITED_METHOD_IMPLEMENTATION",
+          "APPROVED_COMPUTATIONAL_PROTOCOL"
+        ],
+        "cannot_be_derived_from_existing_results": true,
+        "blocks_which_next_action": [
+          "EXECUTE_BOOTSTRAP_UNCERTAINTY_ESTIMATION"
+        ]
+      },
+      {
+        "input_name": "MULTIPLE_COMPARISON_CONTROL",
+        "status": "REQUIRES_FINAL_CANDIDATE_COMPARISON_FAMILY_DEFINITION",
+        "why_required": "CONTROL_SIMULTANEOUS_INFERENCE_AFTER_FINAL_COMPARISON_FAMILY_IS_KNOWN",
+        "unit": "method",
+        "allowed_source_of_justification": [
+          "FINAL_CANDIDATE_COMPARISON_FAMILY_DEFINITION",
+          "CITED_MULTIPLE_COMPARISON_METHOD"
+        ],
+        "cannot_be_derived_from_existing_results": true,
+        "blocks_which_next_action": [
+          "RUN_MULTI_CANDIDATE_INFERENCE"
+        ]
+      },
+      {
+        "input_name": "CANDIDATE_SEARCH_SEQUENCE",
+        "status": "REQUIRES_PREDECLARATION",
+        "why_required": "ORDER_EXISTING_FROZEN_ABLATION_PLANS_WITHOUT_INVENTING_A_SEARCH_STRATEGY",
+        "unit": "ordered-plan-identities",
+        "allowed_source_of_justification": [
+          "SUPERVISOR_APPROVED_EXPERIMENTAL_SPECIFICATION",
+          "FROZEN_PROJECT_RESEARCH_PLAN"
+        ],
+        "cannot_be_derived_from_existing_results": true,
+        "blocks_which_next_action": [
+          "BEGIN_CANDIDATE_COMPARISON"
+        ]
+      }
+    ],
+    "freeze_status": "STRUCTURE_FROZEN_EXTERNAL_INPUTS_UNRESOLVED",
+    "provenance": {
+      "checkpoint": "STEP_5J_3C_2D",
+      "current_results_used_to_optimize_selection_rules": false,
+      "state_2_selected": false,
+      "replication_count_3_selected": false,
+      "new_sumo_executions": 0,
+      "training_episodes": 0,
+      "optimizer_invocations": 0,
+      "backward_calls": 0,
+      "parameter_updates": 0,
+      "validation_executions": 0,
+      "held_out_executions": 0
+    }
+  },
+  "resolved_methodological_rules": {
+    "primary_metric": true,
+    "metric_direction": true,
+    "hard_validity_gates": true,
+    "fixed_resource_horizon_architecture": true,
+    "canonical_replication_stream": true,
+    "paired_candidate_comparison": true,
+    "data_role_separation": true,
+    "validation_checkpoint_selection": true,
+    "earliest_checkpoint_tie_rule": true,
+    "reference_preserving_candidate_tie_rule": true,
+    "held_out_final_use": true
+  },
+  "training_horizon_selected": false,
+  "replication_count_selected": false,
+  "checkpoint_selected": false,
+  "candidate_selected": false,
+  "confidence_level_silently_assumed": false,
+  "power_silently_assumed": false,
+  "mpid_silently_invented": false,
+  "resource_budget_silently_invented": false,
+  "new_sumo_executions": 0,
+  "training_episodes": 0,
+  "optimizer_invocations": 0,
+  "backward_calls": 0,
+  "parameter_updates": 0,
+  "validation_executions": 0,
+  "held_out_executions": 0,
+  "next_blocker": "MAXIMUM_ACCEPTABLE_TRAINING_RESOURCE_BUDGET",
+  "next_action": "RESOLVE_EXTERNAL_INPUTS_AND_CREATE_NEW_FINALIZED_PROTOCOL_IDENTITY"
+}
