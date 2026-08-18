@@ -1,0 +1,186 @@
+{
+  "audit_date": "2026-08-18",
+  "scope": {
+    "files_inspected": 767,
+    "excluded": [".git/**", "docs/FINAL_PROJECT_FILE_AUDIT.md", "results/final_project_file_audit.json"],
+    "note": "Audit outputs are excluded because they did not exist at inventory time. Glob items classify every matching file and report file_count.",
+    "files_deleted": 0,
+    "files_moved": 0,
+    "files_renamed": 0,
+    "source_modifications": 0
+  },
+  "counts": {
+    "KEEP_FINAL_RUNTIME": 122,
+    "KEEP_SUMO_INFRASTRUCTURE": 8,
+    "KEEP_ML_MODELS": 20,
+    "KEEP_RESEARCH_EVIDENCE": 47,
+    "KEEP_TESTS": 49,
+    "KEEP_DOCUMENTATION": 269,
+    "ARCHIVE_HISTORICAL": 33,
+    "DELETE_CANDIDATE": 219,
+    "UNKNOWN_REQUIRES_REVIEW": 0
+  },
+  "items": [
+    {
+      "path": "main.py|run_project.bat|config.py|environment.py|evaluation.py|perception_interface.py|observation.py|predictor.py|conflict_entry_monitor.py|risk_assessment.py|negotiation.py|ml_runtime_capability.py",
+      "category": "KEEP_FINAL_RUNTIME",
+      "purpose": "Core SUMO, perception, ONNX-shadow, negotiation, evaluation, and launch modules",
+      "required_by": ["main.py", "runtime tests"],
+      "safe_to_delete": false,
+      "reason": "Direct final entry-point imports or launcher/config dependencies",
+      "confidence": "high",
+      "file_count": 12
+    },
+    {
+      "path": "conflict/*.py|map_geometry/*.py|traffic_rules/*.py|traffic_rules/profiles/*.json|traffic_accounting/*.py|negotiation_objective/*.py",
+      "category": "KEEP_FINAL_RUNTIME",
+      "purpose": "Conflict geometry, regulatory rules, demand accounting, and objective stack",
+      "required_by": ["main.py", "run_research_demo.py", "negotiation_execution/replay.py"],
+      "safe_to_delete": false,
+      "reason": "Imported by both runtime paths and tests",
+      "confidence": "high",
+      "file_count": 22
+    },
+    {
+      "path": "negotiation_learning/**/*.py",
+      "category": "KEEP_FINAL_RUNTIME",
+      "purpose": "Claims, V2V, graph/tensor/GNN, CTDE, MAPPO, protocol, transition and return interfaces",
+      "required_by": ["main.py", "MAPPO demonstration", "training environment"],
+      "safe_to_delete": false,
+      "reason": "Direct and package-export dependencies of final negotiation paths",
+      "confidence": "high",
+      "file_count": 43
+    },
+    {
+      "path": "negotiation_execution/*.py|negotiation_scenarios/*.py|experimentation/*.py",
+      "category": "KEEP_FINAL_RUNTIME",
+      "purpose": "Physical execution/replay and frozen scenario/experimental design",
+      "required_by": ["run_research_demo.py", "training and validation"],
+      "safe_to_delete": false,
+      "reason": "Final demo selects scenarios and executes through these modules",
+      "confidence": "high",
+      "file_count": 20
+    },
+    {
+      "path": "negotiation_training/*.py|run_research_demo.py",
+      "category": "KEEP_FINAL_RUNTIME",
+      "purpose": "Final demo provider/policy and import-time training contracts",
+      "required_by": ["run_research_demo.py"],
+      "safe_to_delete": false,
+      "reason": "The demo imports this package and its initializer eagerly exports all modules",
+      "confidence": "high",
+      "file_count": 25
+    },
+    {
+      "path": "intersection.sumocfg|networks/*",
+      "category": "KEEP_SUMO_INFRASTRUCTURE",
+      "purpose": "SUMO runtime configuration, compiled network, routes, build sources and scripts",
+      "required_by": ["environment.py", "config.py", "network reproducibility"],
+      "safe_to_delete": false,
+      "reason": "The sumocfg names the compiled net and route; build scripts name node/edge/connection sources",
+      "confidence": "high",
+      "file_count": 8
+    },
+    {
+      "path": "models/intention/*",
+      "category": "KEEP_ML_MODELS",
+      "purpose": "ONNX intention models, inference contracts, verification, deployment and preprocessing provenance",
+      "required_by": ["predictor.py", "model validation", "historical reproducibility"],
+      "safe_to_delete": false,
+      "reason": "Runtime model bundle and protected model provenance",
+      "confidence": "high",
+      "file_count": 10
+    },
+    {
+      "path": "results/mappo_demo_policy.pt|results/mappo_extended_resume/*.pt",
+      "category": "KEEP_ML_MODELS",
+      "purpose": "Frozen demonstration policy and resume/evidence checkpoints",
+      "required_by": ["run_research_demo.py", "demo_policy.py", "training reproducibility"],
+      "safe_to_delete": false,
+      "reason": "Selected checkpoint is explicitly named; all checkpoints are protected evidence",
+      "confidence": "high",
+      "file_count": 10
+    },
+    {
+      "path": "research_inputs/*|results/.gitkeep|results/*.json|results/*.csv|results/*.txt|results/*summary.md",
+      "category": "KEEP_RESEARCH_EVIDENCE",
+      "purpose": "Experimental inputs, design/contracts, results, logs, selection records and final demo evidence",
+      "required_by": ["validators", "tests", "research claims", "demo"],
+      "safe_to_delete": false,
+      "reason": "Referenced evidence or protected provenance; excludes separately classified .pt and audit output",
+      "confidence": "high",
+      "file_count": 47
+    },
+    {
+      "path": "tests/__init__.py|tests/test_*.py",
+      "category": "KEEP_TESTS",
+      "purpose": "Final regression and evidence-validation suite",
+      "required_by": ["pytest", "release validation"],
+      "safe_to_delete": false,
+      "reason": "Tests cover current runtime, models, SUMO, negotiation, training contracts and demo",
+      "confidence": "high",
+      "file_count": 49
+    },
+    {
+      "path": ".gitignore|README.md|PROJECT_STRUCTURE.md|VALIDATION_REPORT.md|requirements.txt|requirements-training.txt|docs/research_basis/*.md",
+      "category": "KEEP_DOCUMENTATION",
+      "purpose": "Setup, architecture, research basis, requirements and validation documentation",
+      "required_by": ["users", "researchers", "reproducibility"],
+      "safe_to_delete": false,
+      "reason": "Current project and thesis-supporting documentation",
+      "confidence": "high",
+      "file_count": 8
+    },
+    {
+      "path": "docs/regulatory_sources/**",
+      "category": "KEEP_DOCUMENTATION",
+      "purpose": "Official StVO PDF/XML source snapshot and relative image assets",
+      "required_by": ["traffic-rule provenance", "tests", "thesis support"],
+      "safe_to_delete": false,
+      "reason": "Protected regulatory source bundle; dated XML is cited and top-level XML resolves adjacent images",
+      "confidence": "high",
+      "file_count": 261
+    },
+    {
+      "path": "check_ml_runtime.py|joint_negotiation_validation.py|validate_*.py",
+      "category": "ARCHIVE_HISTORICAL",
+      "purpose": "Stage-specific capability, methodology, validation, training and evidence runners",
+      "required_by": ["historical reproducibility", "some tests"],
+      "safe_to_delete": false,
+      "reason": "Not final entry points, but reproduce research gates and some are imported by tests",
+      "confidence": "high",
+      "file_count": 33
+    },
+    {
+      "path": ".pytest_cache/**",
+      "category": "DELETE_CANDIDATE",
+      "purpose": "Generated pytest cache",
+      "required_by": [],
+      "safe_to_delete": true,
+      "reason": "Git-ignored, reproducible, and unreferenced",
+      "confidence": "high",
+      "file_count": 5
+    },
+    {
+      "path": "**/__pycache__/**/*.pyc",
+      "category": "DELETE_CANDIDATE",
+      "purpose": "Generated CPython and pytest bytecode",
+      "required_by": [],
+      "safe_to_delete": true,
+      "reason": "Git-ignored and regenerated; includes stale bytecode without current source",
+      "confidence": "high",
+      "file_count": 213
+    },
+    {
+      "path": "conflict.zip",
+      "category": "DELETE_CANDIDATE",
+      "purpose": "Obsolete snapshot of conflict package",
+      "required_by": [],
+      "safe_to_delete": true,
+      "reason": "Unreferenced, older/incomplete relative to live canonical package, and contains generated caches",
+      "confidence": "high",
+      "file_count": 1
+    }
+  ],
+  "unknown_requires_review": []
+}
