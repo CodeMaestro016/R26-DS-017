@@ -54,17 +54,17 @@ desktop.ini
 # Project research artifacts intentionally tracked
 # ------------------------------------------------------------------
 # Do NOT broadly ignore:
-#   results/
-#   models/
+ results/
+ models/
 #   networks/
-#   research_inputs/
-#   docs/
-#   *.json
-#   *.csv
-#   *.txt
-#   *.pt
-#   *.onnx
-#   *.xml
+ research_inputs/
+ docs/
+*.json
+*.csv
+ *.txt
+*.pt
+*.onnx
+*.xml
 #
 # These contain trained models, experimental evidence, SUMO assets,
 # regulatory provenance, and thesis-supporting results.
