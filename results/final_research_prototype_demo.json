@@ -637,7 +637,7 @@
         "blocked_zone_violations": 0,
         "native_sumo_safety_interventions": 0,
         "sumo_steps": 5000,
-        "wall_clock_runtime_seconds": 22.75198410000303
+        "wall_clock_runtime_seconds": 36.284459999995306
       }
     },
     {
@@ -937,7 +937,7 @@
         "blocked_zone_violations": 0,
         "native_sumo_safety_interventions": 0,
         "sumo_steps": 5000,
-        "wall_clock_runtime_seconds": 30.314955100009684
+        "wall_clock_runtime_seconds": 47.007924999983516
       }
     },
     {
@@ -1276,7 +1276,7 @@
         "blocked_zone_violations": 0,
         "native_sumo_safety_interventions": 0,
         "sumo_steps": 5000,
-        "wall_clock_runtime_seconds": 24.089276500002597
+        "wall_clock_runtime_seconds": 28.04177199996775
       }
     }
   ],

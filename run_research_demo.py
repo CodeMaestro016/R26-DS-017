@@ -1,5 +1,6 @@
 """Run the three-scenario Step 5K.1 decentralized research demonstration."""
 
+import argparse
 import json
 from pathlib import Path
 
@@ -18,6 +19,8 @@ from negotiation_training.environment import CoupledNegotiationTrainingEnvironme
 
 RESULT_PATH = Path("results/final_research_prototype_demo.json")
 SUMMARY_PATH = Path("results/final_research_prototype_demo_summary.md")
+GUI_RESULT_PATH = Path("results/final_research_prototype_demo_gui.json")
+GUI_SUMMARY_PATH = Path("results/final_research_prototype_demo_gui_summary.md")
 SCENARIO_RULE = (
     "FROZEN_TRAINING_STRUCTURAL_COVERAGE_REGULATORY_CYCLE_"
     "MULTI_FACTOR_MULTI_ACTION_AUTHORITATIVE_NONPHYSICAL_EDGE_V1")
@@ -179,7 +182,7 @@ def _scenario_trace(selected, episode, provider):
             "wall_clock_runtime_seconds": episode.wall_clock_runtime_seconds}}
 
 
-def _write_summary(result):
+def _write_summary(result, summary_path=SUMMARY_PATH):
     lines = [
         "# Final Research Prototype Demonstration", "",
         "Project: Multi-Agent Negotiation for Right-of-Way in Complex Intersections",
@@ -206,10 +209,13 @@ def _write_summary(result):
                   "This validates end-to-end implementation, not model optimality. "
                   "Exhaustive hyperparameter selection remains future work under "
                   "explicit project resource and statistical protocols."))
-    SUMMARY_PATH.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    summary_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
-def run_demo():
+def run_demo(use_gui=False):
+    use_gui = bool(use_gui)
+    result_path = GUI_RESULT_PATH if use_gui else RESULT_PATH
+    summary_path = GUI_SUMMARY_PATH if use_gui else SUMMARY_PATH
     source_hash_before = file_sha256(SOURCE_CHECKPOINT)
     create_demo_policy()
     policy = load_demo_policy(DEMO_POLICY_PATH)
@@ -236,7 +242,7 @@ def run_demo():
             specification = _specification(
                 design["payload"], selected_item["signature"].scenario_id)
             episode = CoupledNegotiationTrainingEnvironment(
-                provider).run_episode(
+                provider, use_gui=use_gui).run_episode(
                     specification,
                     design["manifests"][ScenarioRole.TRAINING].manifest_id)
             trace = _scenario_trace(selected_item, episode, provider)
@@ -253,7 +259,10 @@ def run_demo():
                    "source_checkpoint_sha256_before": source_hash_before,
                    "source_checkpoint_sha256_after":
                        file_sha256(SOURCE_CHECKPOINT)}
-        atomic_write_json(RESULT_PATH, failure)
+        if use_gui:
+            atomic_write_json(GUI_RESULT_PATH, failure)
+        else:
+            atomic_write_json(RESULT_PATH, failure)
         raise
     hashes_after = provider.inference_parameter_hashes()
     if hashes_after != hashes_before:
@@ -317,15 +326,30 @@ def run_demo():
             result["aggregate"]["learned_mappo_decisions"] < 1 or
             not result["source_checkpoint_unchanged"]):
         result["status"] = "DEMONSTRATION_RUNTIME_BOUNDARY_FAILED"
-        atomic_write_json(RESULT_PATH, result)
+        atomic_write_json(result_path, result)
         raise RuntimeError(result["status"])
-    atomic_write_json(RESULT_PATH, result)
-    _write_summary(result)
+    atomic_write_json(result_path, result)
+    _write_summary(result, summary_path)
     return result
 
 
-def main():
-    result = run_demo()
+def parse_args(argv=None):
+    parser = argparse.ArgumentParser(
+        description="Run the frozen decentralized MAPPO research demo.")
+    parser.add_argument(
+        "--gui", action="store_true",
+        help="visualize the unchanged demonstration with SUMO-GUI")
+    return parser.parse_args(argv)
+
+
+def main(argv=None):
+    args = parse_args(argv)
+    print("Final MAPPO research demo mode: " +
+          ("SUMO-GUI" if args.gui else "headless SUMO"))
+    print("Policy execution: decentralized")
+    print("Centralized critic at runtime: disabled")
+    print("Training/parameter updates: disabled\n")
+    result = run_demo(use_gui=args.gui)
     print("Final Research Prototype Demonstration\n")
     print("Policy")
     print("  Type: RESEARCH_PROTOTYPE_DEMONSTRATION_POLICY")
@@ -345,6 +369,7 @@ def main():
         print(f"  Negotiation actions: {len(item['negotiation']['action_trace'])}")
         print(f"  Proposer: {item['negotiation']['proposer_decisions']}")
         print(f"  Responder: {item['negotiation']['responder_decisions']}")
+        print(f"  Completed vehicles: {item['outcome']['completed_vehicles']}")
         print(f"  Physical outcomes: {item['execution']['physically_executable_outcomes']}")
         print(f"  Collision: {item['outcome']['collisions']}")
         print("  Blocked-zone violations: "

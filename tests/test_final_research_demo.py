@@ -9,7 +9,10 @@ from negotiation_training.demo_policy import (
     SELECTION_RULE, SOURCE_CHECKPOINT, create_demo_policy, file_sha256,
     load_demo_policy)
 from negotiation_training.demo_provider import DemonstrationMAPPOActionProvider
-from run_research_demo import SCENARIO_RULE, select_demo_scenarios
+from run_research_demo import (
+    GUI_RESULT_PATH, RESULT_PATH, SCENARIO_RULE, parse_args,
+    select_demo_scenarios)
+from negotiation_training.environment import CoupledNegotiationTrainingEnvironment
 
 
 @pytest.fixture(scope="module")
@@ -116,6 +119,21 @@ def test_explicit_runner_uses_real_sumo_coupled_environment():
     assert "DemonstrationMAPPOActionProvider" in source
     assert "CoupledNegotiationTrainingEnvironment" in source
     assert "run_episode" in source
+
+
+def test_coupled_environment_defaults_to_headless():
+    environment = CoupledNegotiationTrainingEnvironment(object())
+    assert environment.use_gui is False
+
+
+def test_research_demo_gui_cli_is_opt_in_and_uses_separate_evidence():
+    assert parse_args([]).gui is False
+    assert parse_args(["--gui"]).gui is True
+    assert RESULT_PATH.name == "final_research_prototype_demo.json"
+    assert GUI_RESULT_PATH.name == "final_research_prototype_demo_gui.json"
+    source = Path("run_research_demo.py").read_text(encoding="utf-8")
+    assert "DemonstrationMAPPOActionProvider(policy)" in source
+    assert "provider, use_gui=use_gui" in source
 
 
 def test_demo_has_no_optimizer_backward_or_parameter_update_code():

@@ -38,8 +38,9 @@ from .providers import PROFILING_SOURCE
 class CoupledNegotiationTrainingEnvironment:
     """One fresh real-SUMO episode with event-driven semantic policy input."""
 
-    def __init__(self, action_provider):
+    def __init__(self, action_provider, use_gui=False):
         self.action_provider = action_provider
+        self.use_gui = bool(use_gui)
         self.paths = MapPathManager()
         self.zones = ConflictZoneManager(self.paths)
         self.planner = ConflictZoneExecutionPlanner(self.paths, self.zones)
@@ -118,7 +119,8 @@ class CoupledNegotiationTrainingEnvironment:
     def run_episode(self, specification, scenario_manifest_id):
         self.reset()
         started = perf_counter()
-        environment, observations = SUMOEnv(use_gui=False), ObservationManager()
+        environment = SUMOEnv(use_gui=self.use_gui)
+        observations = ObservationManager()
         predictor, entry_monitor = IntentionPredictor(), ConflictEntryMonitor()
         graph_manager = ConflictGraphManager(self.paths, self.zones)
         occupancy = ConflictZoneOccupancyAssessor(self.paths, self.zones)
