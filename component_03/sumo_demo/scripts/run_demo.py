@@ -5,19 +5,47 @@ Proactive Social Compliance Modeling — SUMO Demo
 ENSEMBLE VERSION: LSTM + GRU
 
 Uses REAL PIE test sequences from X_test.npy.
-Each run picks one random real sequence.
-ONE run = ONE pedestrian = ONE result.
+Each run picks several random real sequences — one per SIMULATED
+pedestrian — and treats them as all being visible in the SAME frame.
+ONE run = ONE frame = several pedestrians = ONE AV action.
+
+Pipeline per run (mirrors rule_based_agent.MultiPedestrianAVController):
+
+    Current frame
+          |
+    Select N pedestrians (stand-ins for "detect all pedestrians",
+    since this demo replays real PIE sequences instead of a live
+    detector)
+          |
+    For each pedestrian:
+          |-- features already extracted (X_test_raw, last frame)
+          |-- predict mental state  (ensemble: LSTM + GRU on X_test)
+          |-- calculate TTC         (rule_based_agent.RuleBasedAgent)
+          |
+    Compare all pedestrians
+          |
+    Select pedestrian with minimum TTC (highest risk)
+          |
+    Take AV action  (applied to the SUMO vehicle)
 
 IMPORTANT:
   Ensemble inference → uses X_test        (scaled)
   agent.decide()     → uses X_test_raw    (unscaled — pixels/frame)
   AV speed taken from SUMO after simulation starts.
+  All of the above happens once PER pedestrian, per frame.
 
 DECISION METHOD:
-  Mental state + TTC rule-based agent.
-  TTC >= 3.0s  → LOW/Safe
-  TTC < 3.0s   → MEDIUM/Warning
-  TTC < 1.5s   → HIGH/Emergency
+  Per pedestrian : mental state + TTC rule-based agent
+                   (see rule_based_agent.py for the exact TTC_WARNING /
+                   TTC_EMERGENCY thresholds and the literature behind
+                   them — currently 2.5s / 1.5s).
+  Per frame      : the pedestrian with the MINIMUM TTC across all
+                   detected pedestrians is treated as highest risk,
+                   and the AV acts on that pedestrian's decision (see
+                   MultiPedestrianAVController in rule_based_agent.py
+                   for the rationale — this is the standard
+                   "most-critical-target" selection rule used in
+                   published AEB / forward-collision-warning work).
 
 Run: python run_demo.py
 """
@@ -54,6 +82,8 @@ from rule_based_agent import (
     load_ensemble,
     predict_from_scaled_sequence,
     RuleBasedAgent,
+    MultiPedestrianAVController,
+    PedestrianObservation,
     LABELS,
     F_TRAFFIC_LIGHT,
     F_VEHICLE_DISTANCE,
@@ -65,11 +95,12 @@ from rule_based_agent import (
 SUMO_CFG     = os.path.join(SUMO_DEMO_DIR, 'config', 'simulation.sumocfg')
 X_TEST_FILE  = os.path.join(SUMO_DEMO_DIR, 'data', 'X_test.npy')
 Y_TEST_FILE  = os.path.join(SUMO_DEMO_DIR, 'data', 'y_test.npy')
-SCALER_FILE  = os.path.join(SUMO_DEMO_DIR, 'models', 'feature_scaler.pkl')
-LSTM_FILE    = os.path.join(SUMO_DEMO_DIR, 'models', 'lstm_mental_state_best.h5')
-GRU_FILE     = os.path.join(SUMO_DEMO_DIR, 'models', 'gru_mental_state_best.h5')
+SCALER_FILE  = os.path.join(SUMO_DEMO_DIR, 'models', 'scaler.joblib')
+LSTM_FILE    = os.path.join(SUMO_DEMO_DIR, 'models', 'lstm_mental_state_best.keras')
+GRU_FILE     = os.path.join(SUMO_DEMO_DIR, 'models', 'gru_mental_state_best.keras')
 AV_ID        = 'av_0'
 AV_MAX_SPEED = 13.89    # m/s = 50 km/h fallback
+NUM_PEDESTRIANS = 4  # how many pedestrians to simulate as visible in this frame
 
 
 LABEL_ICONS = {
@@ -162,8 +193,13 @@ def load_test_data():
     return X_test, X_test_raw, y_test
 
 
-# ── Result printer ────────────────────────────────────────────
-def print_result(true_name, probs, decision, idx, inference_ms, av_speed_kmh):
+# ── Per-pedestrian result printer ─────────────────────────────
+def print_pedestrian_block(ped_id, meta, decision):
+    """Print one pedestrian's ensemble prediction + own (pre-comparison) decision."""
+    true_name  = meta['true_name']
+    idx        = meta['idx']
+    probs      = meta['probs']
+
     pred_id     = int(np.argmax(probs))
     pred_state  = LABELS[pred_id]
     confidence  = float(max(probs)) * 100.0
@@ -182,15 +218,13 @@ def print_result(true_name, probs, decision, idx, inference_ms, av_speed_kmh):
         else 'N/A'
     )
 
-    print(f'\n{"═" * 62}')
-    print(f'  {icon}  {desc}')
+    print(f'\n{"─" * 62}')
+    print(f'  {icon}  [{ped_id}]  {desc}')
     print(f'  Real PIE test sequence #{idx}')
-    print(f'{"═" * 62}')
+    print(f'{"─" * 62}')
 
     print(f'\n  📋 Ground truth    : {true_name}')
-    pixel_distance = decision['pixel_distance']
-    print(f"  📍 Distance        : {pixel_distance:.2f} px")
-    print(f'  🚗 AV speed        : {av_speed_kmh:.1f} km/h from SUMO')
+    print(f"  📍 Distance        : {decision['pixel_distance']:.2f} px")
 
     print(f'\n  🧠 Ensemble prediction:')
     print(f'     Mental state   : {sc}{BOLD}{pred_state}{RESET}  {pred_ok}')
@@ -206,18 +240,38 @@ def print_result(true_name, probs, decision, idx, inference_ms, av_speed_kmh):
         true_m = '  (true)' if name == true_name else ''
         print(f'     {sc2}{name:<13}{RESET}  {bar}  {p * 100:5.1f}%{pred_m}{true_m}')
 
-    print(f'\n  🚗 AV Decision:')
+    print(f'\n  🚦 This pedestrian\'s own decision (before cross-pedestrian comparison):')
     print(f'     Action         : {ac}{BOLD}{action}{RESET}  {correct}')
     print(f"     Reason         : {decision['reason']}")
     print(f'     TTC            : {ttc_str}')
     print(f"     TTC level      : {decision['ttc_level'].upper()}")
     print(f"     Ped speed      : {decision['pixel_speed']:.2f} px/frame")
 
-    print(f'\n  ⏱  Runtime Measurement:')
-    print(f'     Inference + decision time : {inference_ms:.2f} ms')
-    #print(f'     Pipeline                 : scaled sequence → LSTM + GRU → average → agent')
 
+# ── Frame-level (compare + select + act) printer ──────────────
+def print_frame_summary(frame_decision, meta_by_id, inference_ms, av_speed_kmh, target_speed_ms):
     print(f'\n{"═" * 62}')
+    print(f'  {BOLD}FRAME SUMMARY — compare all pedestrians, act on min TTC{RESET}')
+    print(f'{"═" * 62}')
+    print(f'  🚗 AV speed (SUMO)     : {av_speed_kmh:.1f} km/h')
+
+    print(f"\n  {'Pedestrian':<16}{'True state':<12}{'TTC':>9}  {'Level':<8}{'Own action'}")
+    print(f'  {"-" * 58}')
+    for r in frame_decision['ranking']:
+        pid       = r['pedestrian_id']
+        true_name = meta_by_id[pid]['true_name']
+        ttc_text  = f"{r['ttc']:.2f}s" if np.isfinite(r['ttc']) else 'N/A'
+        marker    = '  ⬅ CRITICAL' if pid == frame_decision['critical_pedestrian_id'] else ''
+        print(f"  {pid:<16}{true_name:<12}{ttc_text:>9}  {r['ttc_level']:<8}{r['action']}{marker}")
+
+    ac = AC.get(frame_decision['action'], '')
+    print(f'\n  🚨 CRITICAL PEDESTRIAN : {frame_decision["critical_pedestrian_id"]}')
+    print(f'  🚗 FINAL AV ACTION     : {ac}{BOLD}{frame_decision["action"]}{RESET}')
+    print(f"  ℹ️  Reason              : {frame_decision['reason']}")
+    print(f'  🎯 AV speed set        : {target_speed_ms:.2f} m/s ({target_speed_ms * 3.6:.1f} km/h)')
+    print(f'\n  ⏱  Ensemble + decision + selection time: {inference_ms:.2f} ms '
+          f'(across {len(meta_by_id)} pedestrians)')
+    print(f'{"═" * 62}')
 
 
 # ── SUMO speed mapping ────────────────────────────────────────
@@ -229,28 +283,24 @@ ACTION_SPEED = {
 
 
 # ── Main run ──────────────────────────────────────────────────
-def run(X_test, X_test_raw, y_test, agent):
-    """Pick one random real test sequence and run the full pipeline."""
+def run(X_test, X_test_raw, y_test, controller):
+    """
+    Pick several random real test sequences (one per simulated
+    pedestrian, standing in for a live detector's output), run the
+    full per-pedestrian pipeline, then compare and act on the
+    highest-risk (minimum TTC) pedestrian for this frame.
+    """
 
-    idx        = random.randint(0, len(X_test) - 1)
-    true_label = int(y_test[idx])
-    true_name  = LABELS[true_label]
+    n_peds = min(random.randint(1, 4), len(X_test))
+    indices = random.sample(range(len(X_test)), n_peds)
 
-    # Scaled sequence for ensemble
-    seq_scaled = X_test[idx]
-
-    # Raw last frame for rule-based agent
-    F_raw = X_test_raw[idx, -1, :].copy()
-
-
-    F_raw[F_TRAFFIC_LIGHT] = 1.0
-
-    ped_dist_px = float(F_raw[F_VEHICLE_DISTANCE]) * 1920.0
-
-    print(f'\n  Selected sequence  : #{idx}')
-    print(f'  True label         : {LABEL_ICONS.get(true_name, "")} {true_name}')
-    print(f'  Pedestrian dist    : {ped_dist_px:.2f} px')
-    print(f'  Ped speed raw      : {F_raw[F_CURRENT_SPEED]:.2f} px/frame')
+    print(f'\n  Simulating {n_peds} pedestrians visible in this frame')
+    print(f'  (each drawn from a different real PIE test sequence,')
+    print(f'   standing in for a live pedestrian detector\'s output)')
+    for i, idx in enumerate(indices):
+        true_name = LABELS[int(y_test[idx])]
+        icon = LABEL_ICONS.get(true_name, '')
+        print(f'    P{i + 1}: seq #{idx:<6} true={icon} {true_name}')
 
     # ── STEP 1: Start SUMO and get real AV speed ──────────────
     sumo_cmd = [
@@ -276,27 +326,45 @@ def run(X_test, X_test_raw, y_test, agent):
     print(f'  SUMO AV speed      : {av_speed_ms:.2f} m/s ({av_speed_kmh:.1f} km/h)')
 
     # ── STEP 2: Warm up TensorFlow ────────────────────────────
-    _ = predict_from_scaled_sequence(seq_scaled)
-    _ = predict_from_scaled_sequence(seq_scaled)
+    _ = predict_from_scaled_sequence(X_test[indices[0]])
+    _ = predict_from_scaled_sequence(X_test[indices[0]])
 
-    # ── STEP 3: Timed prediction + decision ───────────────────
+    # ── STEP 3: Timed — for each pedestrian: predict mental state +
+    #            calculate TTC; then compare all pedestrians and
+    #            select the minimum-TTC (highest risk) one ────────
     t_start = time.perf_counter()
 
-    mental_state, confidence, probs, model_detail = predict_from_scaled_sequence(seq_scaled)
+    observations = []
+    meta_by_id   = {}
 
-    decision = agent.decide(
-        F=F_raw,
-        mental_state=mental_state,
-        confidence=confidence,
-        vehicle_speed_kmh=av_speed_kmh,
-    )
+    for i, idx in enumerate(indices):
+        true_label = int(y_test[idx])
+        true_name  = LABELS[true_label]
+
+        seq_scaled = X_test[idx]                     # ensemble input (scaled)
+        F_raw = X_test_raw[idx, -1, :].copy()         # agent input (raw, last frame)
+        F_raw[F_TRAFFIC_LIGHT] = 1.0
+
+        mental_state, confidence, probs, _detail = predict_from_scaled_sequence(seq_scaled)
+
+        ped_id = f'P{i + 1}_seq{idx}'
+        observations.append(PedestrianObservation(
+            ped_id=ped_id,
+            F=F_raw,
+            mental_state=mental_state,
+            confidence=confidence,
+        ))
+        meta_by_id[ped_id] = {'idx': idx, 'true_name': true_name, 'probs': probs}
+
+    # -- compare all pedestrians -> select minimum TTC -> take AV action --
+    frame_decision = controller.process_frame(observations, vehicle_speed_kmh=av_speed_kmh)
 
     t_end = time.perf_counter()
     inference_ms = (t_end - t_start) * 1000.0
 
-    # ── STEP 4: Apply action to SUMO ──────────────────────────
-    action       = decision['action']
-    speed_factor = ACTION_SPEED.get(action, 0.6)
+    # ── STEP 4: Apply the selected (highest-risk) action to SUMO ──
+    action          = frame_decision['action']
+    speed_factor    = ACTION_SPEED.get(action, 0.6)
     target_speed_ms = av_speed_ms * speed_factor
 
     if AV_ID in traci.vehicle.getIDList():
@@ -306,8 +374,12 @@ def run(X_test, X_test_raw, y_test, agent):
     for _ in range(40):
         traci.simulationStep()
 
-    # ── STEP 5: Print result ──────────────────────────────────
-    print_result(true_name, probs, decision, idx, inference_ms, av_speed_kmh)
+    # ── STEP 5: Print results ──────────────────────────────────
+    for i, idx in enumerate(indices):
+        ped_id = f'P{i + 1}_seq{idx}'
+        print_pedestrian_block(ped_id, meta_by_id[ped_id], frame_decision['all_results'][ped_id])
+
+    print_frame_summary(frame_decision, meta_by_id, inference_ms, av_speed_kmh, target_speed_ms)
 
     time.sleep(3)
     traci.close()
@@ -317,6 +389,7 @@ def run(X_test, X_test_raw, y_test, agent):
 if __name__ == '__main__':
     print(f'{"═" * 62}')
     print(f'  {BOLD}Proactive Social Compliance Modeling — SUMO Demo{RESET}')
+    print(f'  {BOLD}Multi-Pedestrian Frame Pipeline{RESET}')
     print(f'{"═" * 62}\n')
 
     check_files()
@@ -326,9 +399,10 @@ if __name__ == '__main__':
 
     X_test, X_test_raw, y_test = load_test_data()
 
-    print('\nInitialising agent...')
-    agent = RuleBasedAgent()
+    print('\nInitialising agent + multi-pedestrian controller...')
+    agent      = RuleBasedAgent()
+    controller = MultiPedestrianAVController(agent=agent)
 
-    run(X_test, X_test_raw, y_test, agent)
+    run(X_test, X_test_raw, y_test, controller)
 
-    print('\n  Done. Run again for a different sequence.')
+    print('\n  Done. Run again for a different set of pedestrians.')
