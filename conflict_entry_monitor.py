@@ -1,5 +1,6 @@
 """Route-independent conflict-entry timing for shadow prediction events."""
 
+import copy
 import math
 
 from config import (
@@ -24,6 +25,23 @@ class ConflictEntryMonitor:
         self.events = {}
         self.completed_pairs = set()
         self.next_event_number = 1
+
+    def get_active_event_snapshots(self, ego_id=None):
+        """Return defensive operational snapshots with evaluation truth removed."""
+        snapshots = {}
+        for (event_ego_id, target_id), event in self.events.items():
+            if ego_id is not None and event_ego_id != ego_id:
+                continue
+            snapshot = {
+                key: value for key, value in event.items()
+                if key not in {"ground_truth_route_id", "previous_eta_seconds"}
+            }
+            snapshots.setdefault(event_ego_id, {})[target_id] = copy.deepcopy(
+                snapshot
+            )
+        if ego_id is not None:
+            return snapshots.get(ego_id, {})
+        return snapshots
 
     @staticmethod
     def distance_to_conflict_entry(track):

@@ -27,6 +27,14 @@ from config import (
     USE_SUMO_GUI,
     VALIDATION_SCENARIO_ENABLED,
     VALIDATION_SPAWN_SCHEDULE,
+    VISUALIZATION_DEMO_EGO_ID,
+    VISUALIZATION_ENABLED,
+    VISUALIZATION_REFRESH_INTERVAL_SECONDS,
+    VISUALIZATION_SENSOR_CIRCLE_POINTS,
+    VISUALIZATION_SENSOR_OVERLAY_ENABLED,
+    PERCEPTION_EVIDENCE_JSONL,
+    SENSOR_RANGE,
+    DEFAULT_PERCEPTION_PROFILE,
 )
 from conflict_entry_monitor import conflict_entry_monitor
 from conflict import (
@@ -50,6 +58,10 @@ from negotiation_objective import (
     raw_team_reward, total_team_travel_time_seconds,
 )
 from config import SUMO_NETWORK_FILE
+from debug_evidence import (
+    EvidenceJsonlWriter, build_evidence_snapshot, prediction_record_snapshot,
+)
+from sumo_debug_overlay import SumoDebugOverlay
 
 try:
     import requests
@@ -103,6 +115,7 @@ def build_dashboard_payload(
     current_time,
     observations,
     current_actions,
+    intention_predictor=None,
 ):
     vehicles = {}
     prediction_data = {}
@@ -129,11 +142,12 @@ def build_dashboard_payload(
 
         ldm = observation_manager.get_ldm(vehicle_id)
         if ldm is not None:
-            prediction_data[vehicle_id] = (
-                ldm.prediction_snapshot()
-            )
+            prediction_data[vehicle_id] = {
+                target_id: prediction_record_snapshot(record)
+                for target_id, record in ldm.prediction_snapshot().items()
+            }
 
-    return {
+    payload = {
         "time_seconds": float(current_time),
         "vehicles": vehicles,
         "negotiation_actions": dict(current_actions),
@@ -205,6 +219,16 @@ def build_dashboard_payload(
         },
         "prediction_mode": "SHADOW" if SHADOW_MODE else "ACTIVE",
     }
+    payload.update(build_evidence_snapshot(
+        current_time,
+        observations,
+        observation_manager,
+        sensor_profile=DEFAULT_PERCEPTION_PROFILE,
+        sensor_range=SENSOR_RANGE,
+        prediction_monitor=conflict_entry_monitor,
+        predictor=intention_predictor,
+    ))
+    return payload
 
 
 def send_to_dashboard(payload):
@@ -304,6 +328,20 @@ def main():
     next_spawn_time = SPAWN_INTERVAL_SECONDS
     next_control_time = 0.0
     next_dashboard_time = 0.0
+    next_visualization_time = 0.0
+    try:
+        evidence_writer = EvidenceJsonlWriter(PERCEPTION_EVIDENCE_JSONL)
+    except OSError as error:
+        print(f"Perception evidence logging unavailable: {error}")
+        evidence_writer = None
+    overlay = SumoDebugOverlay(
+        traci,
+        enabled=VISUALIZATION_ENABLED and USE_SUMO_GUI,
+        ego_id=VISUALIZATION_DEMO_EGO_ID,
+        sensor_range=SENSOR_RANGE,
+        sensor_overlay=VISUALIZATION_SENSOR_OVERLAY_ENABLED,
+        point_count=VISUALIZATION_SENSOR_CIRCLE_POINTS,
+    )
 
     try:
         environment.start()
@@ -339,6 +377,13 @@ def main():
                 current_time,
             )
 
+            if current_time + 1e-9 >= next_visualization_time:
+                overlay.update(observations, observation_manager)
+                while next_visualization_time <= current_time + 1e-9:
+                    next_visualization_time += (
+                        VISUALIZATION_REFRESH_INTERVAL_SECONDS
+                    )
+
             prediction_events = []
             for ego_id in observations:
                 ldm = observation_manager.get_ldm(ego_id)
@@ -355,6 +400,25 @@ def main():
                 prediction_events
             )
             print_prediction_events(prediction_events)
+
+            # Passive 25 Hz evidence is captured after the existing monitor
+            # update, so perception, LDM, and prediction share one step time.
+            evidence_snapshot = build_evidence_snapshot(
+                current_time,
+                observations,
+                observation_manager,
+                sensor_profile=DEFAULT_PERCEPTION_PROFILE,
+                sensor_range=SENSOR_RANGE,
+                prediction_monitor=conflict_entry_monitor,
+                predictor=predictor,
+            )
+            if evidence_writer is not None:
+                try:
+                    evidence_writer.write(evidence_snapshot)
+                except (OSError, TypeError, ValueError) as error:
+                    print(f"Perception evidence logging disabled: {error}")
+                    evidence_writer.close()
+                    evidence_writer = None
 
             # Phase 1: every AV completes sender-local reasoning and publishes
             # only claims derived from its own LDM. No joint graph exists yet.
@@ -539,6 +603,7 @@ def main():
                         current_time,
                         observations,
                         current_actions,
+                        predictor,
                     )
                 )
                 next_dashboard_time += (
@@ -555,6 +620,8 @@ def main():
         evaluator.save_prediction_log()
 
     finally:
+        if evidence_writer is not None:
+            evidence_writer.close()
         demand_ledger.finalize_episode(environment.current_time)
         demand_summary = demand_ledger.validation_summary()
         print("\nDemand Ledger validation")

@@ -1,6 +1,7 @@
 """Per-AV Local Dynamic Maps and genuine position histories."""
 
 from collections import deque
+import copy
 
 import numpy as np
 
@@ -290,6 +291,9 @@ class ObservationManager:
         self.ldms = {}
         self.current_time = 0.0
         self.perception_interface = PerceptionInterface()
+        # Presentation-only copy of the exact latest perception output.  No
+        # operational consumer reads this structure.
+        self.last_local_observations_by_ego = {}
 
     def get_or_create_ldm(self, vehicle_id):
         if vehicle_id not in self.ldms:
@@ -298,6 +302,14 @@ class ObservationManager:
 
     def get_ldm(self, vehicle_id):
         return self.ldms.get(vehicle_id)
+
+    def get_last_local_observations(self, ego_id=None):
+        """Return defensive copies of retained visualization evidence."""
+        if ego_id is None:
+            return copy.deepcopy(self.last_local_observations_by_ego)
+        return copy.deepcopy(
+            self.last_local_observations_by_ego.get(ego_id, {})
+        )
 
     @staticmethod
     def get_ego_planned_manoeuvre(ego_id, ego_state):
@@ -348,6 +360,7 @@ class ObservationManager:
         ]
         for vehicle_id in departed_ldms:
             del self.ldms[vehicle_id]
+            self.last_local_observations_by_ego.pop(vehicle_id, None)
             self.perception_interface.clear_ego_diagnostics(vehicle_id)
 
         for ego_id, ldm in list(self.ldms.items()):
@@ -358,6 +371,8 @@ class ObservationManager:
             ldm.last_update_time = self.current_time
 
             if not ldm.in_approach_zone:
+                self.last_local_observations_by_ego.pop(ego_id, None)
+                self.perception_interface.clear_ego_diagnostics(ego_id)
                 # Keep the ego state current, but do not build intersection
                 # histories before the reasoning zone is reached.
                 ego_track = ldm.tracks.get(ego_id)
@@ -409,6 +424,9 @@ class ObservationManager:
                     self.current_time,
                 )
             )
+            self.last_local_observations_by_ego[ego_id] = copy.deepcopy(
+                local_observations
+            )
 
             for observed_id, observation in (
                 local_observations.items()
@@ -456,6 +474,7 @@ class ObservationManager:
 
     def reset(self):
         self.ldms.clear()
+        self.last_local_observations_by_ego.clear()
         self.current_time = 0.0
         self.perception_interface.clear_diagnostics()
 

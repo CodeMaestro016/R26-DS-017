@@ -18,6 +18,14 @@ from config import (
 
 CLASS_LABELS = ("LEFT", "RIGHT", "STRAIGHT")
 UNKNOWN_LABEL = "UNKNOWN"
+FEATURE_DIAGNOSTIC_NAMES = (
+    "speed",
+    "acceleration_magnitude",
+    "longitudinal_velocity",
+    "lateral_velocity",
+    "longitudinal_acceleration",
+    "lateral_acceleration",
+)
 
 
 class PredictionContractError(ValueError):
@@ -310,27 +318,19 @@ class IntentionPredictor:
 
     @staticmethod
     def _feature_diagnostics(features, scaled_features):
-        feature_names = (
-            "speed",
-            "acceleration_magnitude",
-            "longitudinal_velocity",
-            "lateral_velocity",
-            "longitudinal_acceleration",
-            "lateral_acceleration",
-        )
         return {
             "maximum_absolute_z_score": float(
                 np.max(np.abs(scaled_features))
             ),
             "raw_feature_means": {
                 name: float(features[:, index].mean())
-                for index, name in enumerate(feature_names)
+                for index, name in enumerate(FEATURE_DIAGNOSTIC_NAMES)
             },
             "maximum_absolute_z_score_by_feature": {
                 name: float(
                     np.max(np.abs(scaled_features[:, index]))
                 )
-                for index, name in enumerate(feature_names)
+                for index, name in enumerate(FEATURE_DIAGNOSTIC_NAMES)
             },
         }
 

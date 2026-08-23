@@ -217,3 +217,13 @@ STOPPED_SPEED_THRESHOLD_MPS = 0.5
 DASHBOARD_ENABLED = True
 DASHBOARD_API_URL = "http://localhost:8000/simulation/update"
 DASHBOARD_TIMEOUT_SECONDS = 0.1
+
+# ---------------------------------------------------------------------------
+# Visualization/evidence only (never consumed by decision or control logic)
+# ---------------------------------------------------------------------------
+VISUALIZATION_ENABLED = True
+VISUALIZATION_DEMO_EGO_ID = "AV_0"
+VISUALIZATION_REFRESH_INTERVAL_SECONDS = 0.20
+VISUALIZATION_SENSOR_OVERLAY_ENABLED = True
+VISUALIZATION_SENSOR_CIRCLE_POINTS = 48
+PERCEPTION_EVIDENCE_JSONL = OUTPUT_DIR / "perception_ldm_evidence.jsonl"
