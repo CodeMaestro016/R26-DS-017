@@ -225,7 +225,8 @@ def _prediction_sections(observation_manager, prediction_monitor, predictor):
 
 def build_evidence_snapshot(current_time, observations, observation_manager,
                             sensor_profile=None, sensor_range=None,
-                            prediction_monitor=None, predictor=None):
+                            prediction_monitor=None, predictor=None,
+                            path_manager=None, zone_manager=None):
     """Build the shared read-only visualization/evidence layer."""
     perception = {}
     local = {}
@@ -251,7 +252,7 @@ def build_evidence_snapshot(current_time, observations, observation_manager,
     prediction_events, prediction_pipeline, prediction_config = (
         _prediction_sections(observation_manager, prediction_monitor, predictor)
     )
-    return {
+    result = {
         "time_seconds": float(current_time),
         "ground_truth": _ground_truth(observations),
         "perception_by_ego": perception,
@@ -263,6 +264,14 @@ def build_evidence_snapshot(current_time, observations, observation_manager,
         "prediction_pipeline_by_ego": prediction_pipeline,
         "prediction_configuration": prediction_config,
     }
+    if path_manager is not None and zone_manager is not None:
+        # Local import avoids coupling the base perception serializer to
+        # Shapely unless conflict geometry is explicitly requested.
+        from debug_conflict_evidence import build_conflict_evidence
+        result.update(build_conflict_evidence(
+            observation_manager, path_manager, zone_manager
+        ))
+    return result
 
 
 class EvidenceJsonlWriter:

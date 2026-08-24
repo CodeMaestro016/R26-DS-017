@@ -94,8 +94,9 @@ def test_feature_order_and_confidence_separation_match_runtime_contract():
 
 
 def test_dashboard_supports_all_requested_prediction_states():
-    for text in ('id="overview"', 'id="readiness"', 'id="timing"',
-                 'id="model"', "Primary Prediction", "Secondary Prediction",
+    for text in ('id="predictionOverview"', 'id="readiness"',
+                 'id="predictionTiming"', 'id="modelInput"',
+                 "Primary Prediction", "Secondary Prediction",
                  "Final Intention Fusion", "WAITING_FOR_FINALIZATION"):
         assert text in HTML
 

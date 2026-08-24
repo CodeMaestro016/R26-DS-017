@@ -116,6 +116,8 @@ def build_dashboard_payload(
     observations,
     current_actions,
     intention_predictor=None,
+    map_path_manager=None,
+    conflict_zone_manager=None,
 ):
     vehicles = {}
     prediction_data = {}
@@ -227,6 +229,8 @@ def build_dashboard_payload(
         sensor_range=SENSOR_RANGE,
         prediction_monitor=conflict_entry_monitor,
         predictor=intention_predictor,
+        path_manager=map_path_manager,
+        zone_manager=conflict_zone_manager,
     ))
     return payload
 
@@ -401,25 +405,6 @@ def main():
             )
             print_prediction_events(prediction_events)
 
-            # Passive 25 Hz evidence is captured after the existing monitor
-            # update, so perception, LDM, and prediction share one step time.
-            evidence_snapshot = build_evidence_snapshot(
-                current_time,
-                observations,
-                observation_manager,
-                sensor_profile=DEFAULT_PERCEPTION_PROFILE,
-                sensor_range=SENSOR_RANGE,
-                prediction_monitor=conflict_entry_monitor,
-                predictor=predictor,
-            )
-            if evidence_writer is not None:
-                try:
-                    evidence_writer.write(evidence_snapshot)
-                except (OSError, TypeError, ValueError) as error:
-                    print(f"Perception evidence logging disabled: {error}")
-                    evidence_writer.close()
-                    evidence_writer = None
-
             # Phase 1: every AV completes sender-local reasoning and publishes
             # only claims derived from its own LDM. No joint graph exists yet.
             v2v_claim_bus.begin_step(current_time)
@@ -458,6 +443,27 @@ def main():
                     ldm.current_negotiated_precedence_overlay = None
                     conflict_graph_manager.reset(ego_id)
                     occupancy_assessor.reset(ego_id)
+
+            # One passive 25 Hz record after prediction, spatial graph, and
+            # temporal occupancy all correspond to this simulation step.
+            evidence_snapshot = build_evidence_snapshot(
+                current_time,
+                observations,
+                observation_manager,
+                sensor_profile=DEFAULT_PERCEPTION_PROFILE,
+                sensor_range=SENSOR_RANGE,
+                prediction_monitor=conflict_entry_monitor,
+                predictor=predictor,
+                path_manager=map_path_manager,
+                zone_manager=conflict_zone_manager,
+            )
+            if evidence_writer is not None:
+                try:
+                    evidence_writer.write(evidence_snapshot)
+                except (OSError, TypeError, ValueError) as error:
+                    print(f"Perception evidence logging disabled: {error}")
+                    evidence_writer.close()
+                    evidence_writer = None
 
             # Phase 2 starts only after every sender has published. Each AV
             # independently expands its own connected component from the same
@@ -604,6 +610,8 @@ def main():
                         observations,
                         current_actions,
                         predictor,
+                        map_path_manager,
+                        conflict_zone_manager,
                     )
                 )
                 next_dashboard_time += (
