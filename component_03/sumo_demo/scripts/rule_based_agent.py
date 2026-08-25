@@ -161,7 +161,7 @@ def load_ensemble(model_dir=None):
 
     lstm_path   = os.path.join(model_dir, 'lstm_mental_state_best.keras')
     gru_path    = os.path.join(model_dir, 'gru_mental_state_best.keras')
-    scaler_path = os.path.join(model_dir, 'scaler.joblib')
+    scaler_path = os.path.join(model_dir, 'scaler.pkl')
 
     for path, name in [
         (lstm_path,   'lstm_mental_state_best.h5'),
@@ -557,58 +557,58 @@ class MultiPedestrianAVController:
         }
 
 
-# ============================================================
-# SELF TEST
-# ============================================================
+# # ============================================================
+# # SELF TEST
+# # ============================================================
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
 
-    def make_F(speed=5.0, vehicle_dist=0.5):
-        F = np.zeros(36, dtype=np.float32)
-        F[F_CURRENT_SPEED]    = speed
-        F[F_VEHICLE_DISTANCE] = vehicle_dist
-        return F
+#     def make_F(speed=5.0, vehicle_dist=0.5):
+#         F = np.zeros(36, dtype=np.float32)
+#         F[F_CURRENT_SPEED]    = speed
+#         F[F_VEHICLE_DISTANCE] = vehicle_dist
+#         return F
 
-    # Same scenarios as before, now treated as pedestrians who are all
-    # visible in the SAME frame at once, to exercise the full pipeline:
-    #   detect -> per-pedestrian (features / mental state / TTC)
-    #   -> compare -> select min-TTC -> take AV action
-    scenarios = [
-        ("Waiting - safe",       make_F(speed=0.0, vehicle_dist=0.8), 0, 0.95),
-        ("Waiting - warning",    make_F(speed=0.0, vehicle_dist=0.3), 0, 0.95),
-        ("Waiting - emergency",  make_F(speed=0.0, vehicle_dist=0.1), 0, 0.95),
-        ("Hesitant - far",       make_F(speed=2.0, vehicle_dist=0.8), 1, 0.80),
-        ("Hesitant - warning",   make_F(speed=5.0, vehicle_dist=0.25),1, 0.78),
-        ("Hesitant - emergency", make_F(speed=8.0, vehicle_dist=0.05),1, 0.76),
-        ("Committed - far",      make_F(speed=4.0, vehicle_dist=0.8), 2, 0.90),
-        ("Committed - close",    make_F(speed=4.0, vehicle_dist=0.2), 2, 0.90),
-        ("Distracted",           make_F(speed=3.0, vehicle_dist=0.3), 3, 0.72),
-        ("Aggressive",           make_F(speed=8.0, vehicle_dist=0.2), 4, 0.85),
-        ("Jaywalk",              make_F(speed=6.0, vehicle_dist=0.15),5, 0.70),
-    ]
+#     # Same scenarios as before, now treated as pedestrians who are all
+#     # visible in the SAME frame at once, to exercise the full pipeline:
+#     #   detect -> per-pedestrian (features / mental state / TTC)
+#     #   -> compare -> select min-TTC -> take AV action
+#     scenarios = [
+#         ("Waiting - safe",       make_F(speed=0.0, vehicle_dist=0.8), 0, 0.95),
+#         ("Waiting - warning",    make_F(speed=0.0, vehicle_dist=0.3), 0, 0.95),
+#         ("Waiting - emergency",  make_F(speed=0.0, vehicle_dist=0.1), 0, 0.95),
+#         ("Hesitant - far",       make_F(speed=2.0, vehicle_dist=0.8), 1, 0.80),
+#         ("Hesitant - warning",   make_F(speed=5.0, vehicle_dist=0.25),1, 0.78),
+#         ("Hesitant - emergency", make_F(speed=8.0, vehicle_dist=0.05),1, 0.76),
+#         ("Committed - far",      make_F(speed=4.0, vehicle_dist=0.8), 2, 0.90),
+#         ("Committed - close",    make_F(speed=4.0, vehicle_dist=0.2), 2, 0.90),
+#         ("Distracted",           make_F(speed=3.0, vehicle_dist=0.3), 3, 0.72),
+#         ("Aggressive",           make_F(speed=8.0, vehicle_dist=0.2), 4, 0.85),
+#         ("Jaywalk",              make_F(speed=6.0, vehicle_dist=0.15),5, 0.70),
+#     ]
 
-    pedestrians_this_frame = [
-        PedestrianObservation(ped_id=name, F=F, mental_state=state, confidence=conf)
-        for name, F, state, conf in scenarios
-    ]
+#     pedestrians_this_frame = [
+#         PedestrianObservation(ped_id=name, F=F, mental_state=state, confidence=conf)
+#         for name, F, state, conf in scenarios
+#     ]
 
-    controller = MultiPedestrianAVController()
+#     controller = MultiPedestrianAVController()
 
-    print("\n===================================================")
-    print("MULTI-PEDESTRIAN FRAME PIPELINE — SELF TEST")
-    print("(detect -> per-pedestrian state/TTC -> compare -> select min-TTC -> act)")
-    print("===================================================")
+#     print("\n===================================================")
+#     print("MULTI-PEDESTRIAN FRAME PIPELINE — SELF TEST")
+#     print("(detect -> per-pedestrian state/TTC -> compare -> select min-TTC -> act)")
+#     print("===================================================")
 
-    frame_decision = controller.process_frame(pedestrians_this_frame, vehicle_speed_kmh=45.0)
+#     frame_decision = controller.process_frame(pedestrians_this_frame, vehicle_speed_kmh=45.0)
 
-    print(f"\n{'Pedestrian':<20}{'State':<12}{'TTC':>10}  {'Level':<8}{'Action'}")
-    print("-" * 70)
-    for r in frame_decision["ranking"]:
-        ttc_text = f"{r['ttc']:.2f}s" if np.isfinite(r["ttc"]) else "N/A"
-        print(f"{r['pedestrian_id']:<20}{r['state_name']:<12}{ttc_text:>10}  {r['ttc_level']:<8}{r['action']}")
+#     print(f"\n{'Pedestrian':<20}{'State':<12}{'TTC':>10}  {'Level':<8}{'Action'}")
+#     print("-" * 70)
+#     for r in frame_decision["ranking"]:
+#         ttc_text = f"{r['ttc']:.2f}s" if np.isfinite(r["ttc"]) else "N/A"
+#         print(f"{r['pedestrian_id']:<20}{r['state_name']:<12}{ttc_text:>10}  {r['ttc_level']:<8}{r['action']}")
 
-    print("\n---------------------------------------------------")
-    print(f"CRITICAL PEDESTRIAN : {frame_decision['critical_pedestrian_id']}")
-    print(f"FINAL AV ACTION     : {frame_decision['action']}")
-    print(f"REASON              : {frame_decision['reason']}")
-    print("---------------------------------------------------\n")
+#     print("\n---------------------------------------------------")
+#     print(f"CRITICAL PEDESTRIAN : {frame_decision['critical_pedestrian_id']}")
+#     print(f"FINAL AV ACTION     : {frame_decision['action']}")
+#     print(f"REASON              : {frame_decision['reason']}")
+#     print("---------------------------------------------------\n")
