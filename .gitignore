@@ -1,4 +1,4 @@
-# Python
+# Python bytecode and native build artifacts
 __pycache__/
 *.py[cod]
 *$py.class
@@ -10,7 +10,13 @@ dist/
 *.egg-info/
 .eggs/
 
-# Testing / coverage / tool caches
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Test, coverage, notebook, and tool caches
 .pytest_cache/
 .coverage
 .coverage.*
@@ -20,16 +26,9 @@ htmlcov/
 .hypothesis/
 .mypy_cache/
 .ruff_cache/
+.ipynb_checkpoints/
 
-# Virtual environments and local environment files
-.venv/
-venv/
-env/
-ENV/
-.env
-.envrc
-
-# IDE / editor
+# IDE and editor state
 .vscode/
 .idea/
 .vs/
@@ -38,35 +37,43 @@ ENV/
 *~
 tempCodeRunnerFile.py
 
-# OS-generated files
+# Operating-system files
 .DS_Store
 Thumbs.db
 desktop.ini
 
-# Temporary files
+# Local environments and secrets
+.env
+.env.*
+!.env.example
+.envrc
+*.pem
+*.key
+credentials*.json
+secrets*.json
+
+# Logs and temporary files
+*.log
 *.tmp
 *.temp
-*.log
 logs/
 
-# Project-specific obsolete artifact
-/conflict.zip
+# Component 2 regeneratable runtime output
+/components/component_2_right_of_way_negotiation/results/perception_ldm_evidence.jsonl
+/components/component_2_right_of_way_negotiation/results/*_progress.json
+/components/component_2_right_of_way_negotiation/results/final_mappo_selection_v2/progress.json
+/components/component_2_right_of_way_negotiation/results/panel_demo/latest_panel_demo.json
+/components/component_2_right_of_way_negotiation/results/panel_demo/latest_panel_demo_summary.md
+/components/component_2_right_of_way_negotiation/results/panel_demo/gui_smoke/
+/components/component_2_right_of_way_negotiation/results/final_research_prototype_demo_gui.json
+/components/component_2_right_of_way_negotiation/results/liveness_fix_validation/
 
-# ------------------------------------------------------------------
-# Project research artifacts intentionally tracked
-# ------------------------------------------------------------------
-# Do NOT broadly ignore:
- results/
- models/
-#   networks/
- research_inputs/
- docs/
-*.json
-*.csv
- *.txt
-*.pt
-*.onnx
-*.xml
-#
-# These contain trained models, experimental evidence, SUMO assets,
-# regulatory provenance, and thesis-supporting results.
+# Duplicate/generated packaging archives retained locally
+/components/component_2_right_of_way_negotiation/archive/**/*.zip
+/components/component_2_right_of_way_negotiation/results/final_mappo_selection_v2/*.zip
+/panel_demo.zip
+/socialmind_drive_showcase.zip
+/workspace_archive/*.zip
+
+# Historical obsolete root artifact
+/conflict.zip

@@ -1,0 +1,1410 @@
+{
+  "candidate_id": "E10",
+  "replication_index": 0,
+  "data_role": "VALIDATION",
+  "training_operations": 0,
+  "scenario_results": [
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "E_IN_0_LEFT",
+          "N_IN_0_LEFT",
+          "S_IN_0_LEFT",
+          "W_IN_0_LEFT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "total_team_travel_time_seconds": 800.0,
+      "scheduled_vehicles": 4,
+      "completed_vehicles": 0,
+      "unresolved_coordination_case": false,
+      "throughput": 0.0,
+      "collisions": 0,
+      "blocked_zone_violations": 0,
+      "native_sumo_safety_interventions": 0,
+      "negotiation_batches": 1,
+      "learned_proposer_actions": 8,
+      "learned_responder_actions": 5,
+      "hard_validity_gate_results": {
+        "collision_free": true,
+        "blocked_zone_invariant": true,
+        "safe_sumo_speed_mode": true,
+        "reward_reconciled": true
+      },
+      "hard_mask_violations": 0,
+      "regulatory_invariant_violations": 0,
+      "protocol_invariant_failures": 0,
+      "route_truth_actor_fields_consumed": 0,
+      "sumo_steps": 5000,
+      "runtime_seconds": 76.3464686999796
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "E_IN_0_LEFT",
+          "N_IN_0_LEFT",
+          "S_IN_0_LEFT",
+          "W_IN_0_STRAIGHT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "total_team_travel_time_seconds": 800.0,
+      "scheduled_vehicles": 4,
+      "completed_vehicles": 0,
+      "unresolved_coordination_case": false,
+      "throughput": 0.0,
+      "collisions": 0,
+      "blocked_zone_violations": 0,
+      "native_sumo_safety_interventions": 0,
+      "negotiation_batches": 1,
+      "learned_proposer_actions": 7,
+      "learned_responder_actions": 5,
+      "hard_validity_gate_results": {
+        "collision_free": true,
+        "blocked_zone_invariant": true,
+        "safe_sumo_speed_mode": true,
+        "reward_reconciled": true
+      },
+      "hard_mask_violations": 0,
+      "regulatory_invariant_violations": 0,
+      "protocol_invariant_failures": 0,
+      "route_truth_actor_fields_consumed": 0,
+      "sumo_steps": 5000,
+      "runtime_seconds": 73.47645449999254
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "E_IN_0_LEFT",
+          "N_IN_0_LEFT",
+          "S_IN_0_RIGHT",
+          "W_IN_0_LEFT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "total_team_travel_time_seconds": 644.6,
+      "scheduled_vehicles": 4,
+      "completed_vehicles": 1,
+      "unresolved_coordination_case": false,
+      "throughput": 0.005,
+      "collisions": 0,
+      "blocked_zone_violations": 0,
+      "native_sumo_safety_interventions": 0,
+      "negotiation_batches": 1,
+      "learned_proposer_actions": 8,
+      "learned_responder_actions": 6,
+      "hard_validity_gate_results": {
+        "collision_free": true,
+        "blocked_zone_invariant": true,
+        "safe_sumo_speed_mode": true,
+        "reward_reconciled": true
+      },
+      "hard_mask_violations": 0,
+      "regulatory_invariant_violations": 0,
+      "protocol_invariant_failures": 0,
+      "route_truth_actor_fields_consumed": 0,
+      "sumo_steps": 5000,
+      "runtime_seconds": 59.97188990004361
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "E_IN_0_LEFT",
+          "N_IN_0_LEFT",
+          "S_IN_0_STRAIGHT",
+          "W_IN_0_RIGHT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "total_team_travel_time_seconds": 647.84,
+      "scheduled_vehicles": 4,
+      "completed_vehicles": 1,
+      "unresolved_coordination_case": false,
+      "throughput": 0.005,
+      "collisions": 0,
+      "blocked_zone_violations": 0,
+      "native_sumo_safety_interventions": 0,
+      "negotiation_batches": 1,
+      "learned_proposer_actions": 7,
+      "learned_responder_actions": 6,
+      "hard_validity_gate_results": {
+        "collision_free": true,
+        "blocked_zone_invariant": true,
+        "safe_sumo_speed_mode": true,
+        "reward_reconciled": true
+      },
+      "hard_mask_violations": 0,
+      "regulatory_invariant_violations": 0,
+      "protocol_invariant_failures": 0,
+      "route_truth_actor_fields_consumed": 0,
+      "sumo_steps": 5000,
+      "runtime_seconds": 52.962693199981004
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "E_IN_0_LEFT",
+          "N_IN_0_LEFT",
+          "W_IN_0_RIGHT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "total_team_travel_time_seconds": 142.16,
+      "scheduled_vehicles": 3,
+      "completed_vehicles": 3,
+      "unresolved_coordination_case": false,
+      "throughput": 0.015,
+      "collisions": 0,
+      "blocked_zone_violations": 0,
+      "native_sumo_safety_interventions": 0,
+      "negotiation_batches": 1,
+      "learned_proposer_actions": 4,
+      "learned_responder_actions": 4,
+      "hard_validity_gate_results": {
+        "collision_free": true,
+        "blocked_zone_invariant": true,
+        "safe_sumo_speed_mode": true,
+        "reward_reconciled": true
+      },
+      "hard_mask_violations": 0,
+      "regulatory_invariant_violations": 0,
+      "protocol_invariant_failures": 0,
+      "route_truth_actor_fields_consumed": 0,
+      "sumo_steps": 5000,
+      "runtime_seconds": 11.229336200049147
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "E_IN_0_LEFT",
+          "N_IN_0_STRAIGHT",
+          "S_IN_0_LEFT",
+          "W_IN_0_RIGHT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "total_team_travel_time_seconds": 800.0,
+      "scheduled_vehicles": 4,
+      "completed_vehicles": 0,
+      "unresolved_coordination_case": false,
+      "throughput": 0.0,
+      "collisions": 0,
+      "blocked_zone_violations": 0,
+      "native_sumo_safety_interventions": 0,
+      "negotiation_batches": 1,
+      "learned_proposer_actions": 7,
+      "learned_responder_actions": 6,
+      "hard_validity_gate_results": {
+        "collision_free": true,
+        "blocked_zone_invariant": true,
+        "safe_sumo_speed_mode": true,
+        "reward_reconciled": true
+      },
+      "hard_mask_violations": 0,
+      "regulatory_invariant_violations": 0,
+      "protocol_invariant_failures": 0,
+      "route_truth_actor_fields_consumed": 0,
+      "sumo_steps": 5000,
+      "runtime_seconds": 71.46920910000335
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "E_IN_0_LEFT",
+          "N_IN_0_STRAIGHT",
+          "S_IN_0_RIGHT",
+          "W_IN_0_RIGHT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "total_team_travel_time_seconds": 644.6,
+      "scheduled_vehicles": 4,
+      "completed_vehicles": 1,
+      "unresolved_coordination_case": false,
+      "throughput": 0.005,
+      "collisions": 0,
+      "blocked_zone_violations": 0,
+      "native_sumo_safety_interventions": 0,
+      "negotiation_batches": 1,
+      "learned_proposer_actions": 7,
+      "learned_responder_actions": 5,
+      "hard_validity_gate_results": {
+        "collision_free": true,
+        "blocked_zone_invariant": true,
+        "safe_sumo_speed_mode": true,
+        "reward_reconciled": true
+      },
+      "hard_mask_violations": 0,
+      "regulatory_invariant_violations": 0,
+      "protocol_invariant_failures": 0,
+      "route_truth_actor_fields_consumed": 0,
+      "sumo_steps": 5000,
+      "runtime_seconds": 52.61304199998267
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "E_IN_0_LEFT",
+          "N_IN_0_STRAIGHT",
+          "S_IN_0_STRAIGHT",
+          "W_IN_0_LEFT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "total_team_travel_time_seconds": 647.92,
+      "scheduled_vehicles": 4,
+      "completed_vehicles": 1,
+      "unresolved_coordination_case": false,
+      "throughput": 0.005,
+      "collisions": 0,
+      "blocked_zone_violations": 0,
+      "native_sumo_safety_interventions": 0,
+      "negotiation_batches": 1,
+      "learned_proposer_actions": 6,
+      "learned_responder_actions": 5,
+      "hard_validity_gate_results": {
+        "collision_free": true,
+        "blocked_zone_invariant": true,
+        "safe_sumo_speed_mode": true,
+        "reward_reconciled": true
+      },
+      "hard_mask_violations": 0,
+      "regulatory_invariant_violations": 0,
+      "protocol_invariant_failures": 0,
+      "route_truth_actor_fields_consumed": 0,
+      "sumo_steps": 5000,
+      "runtime_seconds": 56.99376659991685
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "E_IN_0_LEFT",
+          "N_IN_0_STRAIGHT",
+          "S_IN_0_STRAIGHT",
+          "W_IN_0_STRAIGHT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "total_team_travel_time_seconds": 205.4,
+      "scheduled_vehicles": 4,
+      "completed_vehicles": 4,
+      "unresolved_coordination_case": false,
+      "throughput": 0.02,
+      "collisions": 0,
+      "blocked_zone_violations": 0,
+      "native_sumo_safety_interventions": 0,
+      "negotiation_batches": 1,
+      "learned_proposer_actions": 5,
+      "learned_responder_actions": 5,
+      "hard_validity_gate_results": {
+        "collision_free": true,
+        "blocked_zone_invariant": true,
+        "safe_sumo_speed_mode": true,
+        "reward_reconciled": true
+      },
+      "hard_mask_violations": 0,
+      "regulatory_invariant_violations": 0,
+      "protocol_invariant_failures": 0,
+      "route_truth_actor_fields_consumed": 0,
+      "sumo_steps": 5000,
+      "runtime_seconds": 13.279760299948975
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "E_IN_0_LEFT",
+          "N_IN_0_STRAIGHT",
+          "W_IN_0_LEFT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "total_team_travel_time_seconds": 143.96,
+      "scheduled_vehicles": 3,
+      "completed_vehicles": 3,
+      "unresolved_coordination_case": false,
+      "throughput": 0.015,
+      "collisions": 0,
+      "blocked_zone_violations": 0,
+      "native_sumo_safety_interventions": 0,
+      "negotiation_batches": 1,
+      "learned_proposer_actions": 4,
+      "learned_responder_actions": 4,
+      "hard_validity_gate_results": {
+        "collision_free": true,
+        "blocked_zone_invariant": true,
+        "safe_sumo_speed_mode": true,
+        "reward_reconciled": true
+      },
+      "hard_mask_violations": 0,
+      "regulatory_invariant_violations": 0,
+      "protocol_invariant_failures": 0,
+      "route_truth_actor_fields_consumed": 0,
+      "sumo_steps": 5000,
+      "runtime_seconds": 6.161179700051434
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "E_IN_0_LEFT",
+          "S_IN_0_LEFT",
+          "W_IN_0_LEFT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "total_team_travel_time_seconds": 155.76,
+      "scheduled_vehicles": 3,
+      "completed_vehicles": 3,
+      "unresolved_coordination_case": false,
+      "throughput": 0.015,
+      "collisions": 0,
+      "blocked_zone_violations": 0,
+      "native_sumo_safety_interventions": 0,
+      "negotiation_batches": 1,
+      "learned_proposer_actions": 4,
+      "learned_responder_actions": 3,
+      "hard_validity_gate_results": {
+        "collision_free": true,
+        "blocked_zone_invariant": true,
+        "safe_sumo_speed_mode": true,
+        "reward_reconciled": true
+      },
+      "hard_mask_violations": 0,
+      "regulatory_invariant_violations": 0,
+      "protocol_invariant_failures": 0,
+      "route_truth_actor_fields_consumed": 0,
+      "sumo_steps": 5000,
+      "runtime_seconds": 6.344290600041859
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "E_IN_0_LEFT",
+          "S_IN_0_LEFT",
+          "W_IN_0_RIGHT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "total_team_travel_time_seconds": 141.72,
+      "scheduled_vehicles": 3,
+      "completed_vehicles": 3,
+      "unresolved_coordination_case": false,
+      "throughput": 0.015,
+      "collisions": 0,
+      "blocked_zone_violations": 0,
+      "native_sumo_safety_interventions": 0,
+      "negotiation_batches": 1,
+      "learned_proposer_actions": 4,
+      "learned_responder_actions": 3,
+      "hard_validity_gate_results": {
+        "collision_free": true,
+        "blocked_zone_invariant": true,
+        "safe_sumo_speed_mode": true,
+        "reward_reconciled": true
+      },
+      "hard_mask_violations": 0,
+      "regulatory_invariant_violations": 0,
+      "protocol_invariant_failures": 0,
+      "route_truth_actor_fields_consumed": 0,
+      "sumo_steps": 5000,
+      "runtime_seconds": 5.491014300030656
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "E_IN_0_LEFT",
+          "S_IN_0_STRAIGHT",
+          "W_IN_0_RIGHT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "total_team_travel_time_seconds": 600.0,
+      "scheduled_vehicles": 3,
+      "completed_vehicles": 0,
+      "unresolved_coordination_case": false,
+      "throughput": 0.0,
+      "collisions": 0,
+      "blocked_zone_violations": 0,
+      "native_sumo_safety_interventions": 0,
+      "negotiation_batches": 1,
+      "learned_proposer_actions": 4,
+      "learned_responder_actions": 4,
+      "hard_validity_gate_results": {
+        "collision_free": true,
+        "blocked_zone_invariant": true,
+        "safe_sumo_speed_mode": true,
+        "reward_reconciled": true
+      },
+      "hard_mask_violations": 0,
+      "regulatory_invariant_violations": 0,
+      "protocol_invariant_failures": 0,
+      "route_truth_actor_fields_consumed": 0,
+      "sumo_steps": 5000,
+      "runtime_seconds": 19.81576909997966
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "E_IN_0_RIGHT",
+          "N_IN_0_LEFT",
+          "S_IN_0_LEFT",
+          "W_IN_0_RIGHT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "total_team_travel_time_seconds": 186.07999999999998,
+      "scheduled_vehicles": 4,
+      "completed_vehicles": 4,
+      "unresolved_coordination_case": false,
+      "throughput": 0.02,
+      "collisions": 0,
+      "blocked_zone_violations": 0,
+      "native_sumo_safety_interventions": 0,
+      "negotiation_batches": 1,
+      "learned_proposer_actions": 8,
+      "learned_responder_actions": 7,
+      "hard_validity_gate_results": {
+        "collision_free": true,
+        "blocked_zone_invariant": true,
+        "safe_sumo_speed_mode": true,
+        "reward_reconciled": true
+      },
+      "hard_mask_violations": 0,
+      "regulatory_invariant_violations": 0,
+      "protocol_invariant_failures": 0,
+      "route_truth_actor_fields_consumed": 0,
+      "sumo_steps": 5000,
+      "runtime_seconds": 6.632806199952029
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "E_IN_0_RIGHT",
+          "N_IN_0_LEFT",
+          "S_IN_0_RIGHT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "total_team_travel_time_seconds": 136.8,
+      "scheduled_vehicles": 3,
+      "completed_vehicles": 3,
+      "unresolved_coordination_case": false,
+      "throughput": 0.015,
+      "collisions": 0,
+      "blocked_zone_violations": 0,
+      "native_sumo_safety_interventions": 0,
+      "negotiation_batches": 1,
+      "learned_proposer_actions": 1,
+      "learned_responder_actions": 0,
+      "hard_validity_gate_results": {
+        "collision_free": true,
+        "blocked_zone_invariant": true,
+        "safe_sumo_speed_mode": true,
+        "reward_reconciled": true
+      },
+      "hard_mask_violations": 0,
+      "regulatory_invariant_violations": 0,
+      "protocol_invariant_failures": 0,
+      "route_truth_actor_fields_consumed": 0,
+      "sumo_steps": 5000,
+      "runtime_seconds": 5.148115899995901
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "E_IN_0_RIGHT",
+          "N_IN_0_LEFT",
+          "S_IN_0_RIGHT",
+          "W_IN_0_LEFT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "total_team_travel_time_seconds": 499.16,
+      "scheduled_vehicles": 4,
+      "completed_vehicles": 2,
+      "unresolved_coordination_case": false,
+      "throughput": 0.01,
+      "collisions": 0,
+      "blocked_zone_violations": 0,
+      "native_sumo_safety_interventions": 0,
+      "negotiation_batches": 1,
+      "learned_proposer_actions": 8,
+      "learned_responder_actions": 7,
+      "hard_validity_gate_results": {
+        "collision_free": true,
+        "blocked_zone_invariant": true,
+        "safe_sumo_speed_mode": true,
+        "reward_reconciled": true
+      },
+      "hard_mask_violations": 0,
+      "regulatory_invariant_violations": 0,
+      "protocol_invariant_failures": 0,
+      "route_truth_actor_fields_consumed": 0,
+      "sumo_steps": 5000,
+      "runtime_seconds": 15.287648699944839
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "E_IN_0_RIGHT",
+          "N_IN_0_LEFT",
+          "S_IN_0_STRAIGHT",
+          "W_IN_0_LEFT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "total_team_travel_time_seconds": 800.0,
+      "scheduled_vehicles": 4,
+      "completed_vehicles": 0,
+      "unresolved_coordination_case": false,
+      "throughput": 0.0,
+      "collisions": 0,
+      "blocked_zone_violations": 0,
+      "native_sumo_safety_interventions": 0,
+      "negotiation_batches": 1,
+      "learned_proposer_actions": 7,
+      "learned_responder_actions": 4,
+      "hard_validity_gate_results": {
+        "collision_free": true,
+        "blocked_zone_invariant": true,
+        "safe_sumo_speed_mode": true,
+        "reward_reconciled": true
+      },
+      "hard_mask_violations": 0,
+      "regulatory_invariant_violations": 0,
+      "protocol_invariant_failures": 0,
+      "route_truth_actor_fields_consumed": 0,
+      "sumo_steps": 5000,
+      "runtime_seconds": 25.487392199924216
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "E_IN_0_RIGHT",
+          "N_IN_0_LEFT",
+          "W_IN_0_LEFT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "total_team_travel_time_seconds": 454.56,
+      "scheduled_vehicles": 3,
+      "completed_vehicles": 1,
+      "unresolved_coordination_case": false,
+      "throughput": 0.005,
+      "collisions": 0,
+      "blocked_zone_violations": 0,
+      "native_sumo_safety_interventions": 0,
+      "negotiation_batches": 1,
+      "learned_proposer_actions": 4,
+      "learned_responder_actions": 4,
+      "hard_validity_gate_results": {
+        "collision_free": true,
+        "blocked_zone_invariant": true,
+        "safe_sumo_speed_mode": true,
+        "reward_reconciled": true
+      },
+      "hard_mask_violations": 0,
+      "regulatory_invariant_violations": 0,
+      "protocol_invariant_failures": 0,
+      "route_truth_actor_fields_consumed": 0,
+      "sumo_steps": 5000,
+      "runtime_seconds": 14.56906110001728
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "E_IN_0_RIGHT",
+          "N_IN_0_RIGHT",
+          "S_IN_0_LEFT",
+          "W_IN_0_RIGHT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "total_team_travel_time_seconds": 186.51999999999998,
+      "scheduled_vehicles": 4,
+      "completed_vehicles": 4,
+      "unresolved_coordination_case": false,
+      "throughput": 0.02,
+      "collisions": 0,
+      "blocked_zone_violations": 0,
+      "native_sumo_safety_interventions": 0,
+      "negotiation_batches": 1,
+      "learned_proposer_actions": 8,
+      "learned_responder_actions": 6,
+      "hard_validity_gate_results": {
+        "collision_free": true,
+        "blocked_zone_invariant": true,
+        "safe_sumo_speed_mode": true,
+        "reward_reconciled": true
+      },
+      "hard_mask_violations": 0,
+      "regulatory_invariant_violations": 0,
+      "protocol_invariant_failures": 0,
+      "route_truth_actor_fields_consumed": 0,
+      "sumo_steps": 5000,
+      "runtime_seconds": 6.644647200009786
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "E_IN_0_RIGHT",
+          "N_IN_0_RIGHT",
+          "S_IN_0_LEFT",
+          "W_IN_0_STRAIGHT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "total_team_travel_time_seconds": 644.44,
+      "scheduled_vehicles": 4,
+      "completed_vehicles": 1,
+      "unresolved_coordination_case": false,
+      "throughput": 0.005,
+      "collisions": 0,
+      "blocked_zone_violations": 0,
+      "native_sumo_safety_interventions": 0,
+      "negotiation_batches": 1,
+      "learned_proposer_actions": 7,
+      "learned_responder_actions": 5,
+      "hard_validity_gate_results": {
+        "collision_free": true,
+        "blocked_zone_invariant": true,
+        "safe_sumo_speed_mode": true,
+        "reward_reconciled": true
+      },
+      "hard_mask_violations": 0,
+      "regulatory_invariant_violations": 0,
+      "protocol_invariant_failures": 0,
+      "route_truth_actor_fields_consumed": 0,
+      "sumo_steps": 5000,
+      "runtime_seconds": 20.509225700050592
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "E_IN_0_RIGHT",
+          "N_IN_0_STRAIGHT",
+          "S_IN_0_LEFT",
+          "W_IN_0_STRAIGHT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "total_team_travel_time_seconds": 644.44,
+      "scheduled_vehicles": 4,
+      "completed_vehicles": 1,
+      "unresolved_coordination_case": false,
+      "throughput": 0.005,
+      "collisions": 0,
+      "blocked_zone_violations": 0,
+      "native_sumo_safety_interventions": 0,
+      "negotiation_batches": 1,
+      "learned_proposer_actions": 6,
+      "learned_responder_actions": 5,
+      "hard_validity_gate_results": {
+        "collision_free": true,
+        "blocked_zone_invariant": true,
+        "safe_sumo_speed_mode": true,
+        "reward_reconciled": true
+      },
+      "hard_mask_violations": 0,
+      "regulatory_invariant_violations": 0,
+      "protocol_invariant_failures": 0,
+      "route_truth_actor_fields_consumed": 0,
+      "sumo_steps": 5000,
+      "runtime_seconds": 21.97347450000234
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "E_IN_0_RIGHT",
+          "S_IN_0_RIGHT",
+          "W_IN_0_LEFT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "total_team_travel_time_seconds": 447.4,
+      "scheduled_vehicles": 3,
+      "completed_vehicles": 1,
+      "unresolved_coordination_case": false,
+      "throughput": 0.005,
+      "collisions": 0,
+      "blocked_zone_violations": 0,
+      "native_sumo_safety_interventions": 0,
+      "negotiation_batches": 1,
+      "learned_proposer_actions": 4,
+      "learned_responder_actions": 4,
+      "hard_validity_gate_results": {
+        "collision_free": true,
+        "blocked_zone_invariant": true,
+        "safe_sumo_speed_mode": true,
+        "reward_reconciled": true
+      },
+      "hard_mask_violations": 0,
+      "regulatory_invariant_violations": 0,
+      "protocol_invariant_failures": 0,
+      "route_truth_actor_fields_consumed": 0,
+      "sumo_steps": 5000,
+      "runtime_seconds": 15.67358000006061
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "E_IN_0_STRAIGHT",
+          "N_IN_0_LEFT",
+          "S_IN_0_LEFT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "total_team_travel_time_seconds": 146.72,
+      "scheduled_vehicles": 3,
+      "completed_vehicles": 3,
+      "unresolved_coordination_case": false,
+      "throughput": 0.015,
+      "collisions": 0,
+      "blocked_zone_violations": 0,
+      "native_sumo_safety_interventions": 0,
+      "negotiation_batches": 1,
+      "learned_proposer_actions": 4,
+      "learned_responder_actions": 3,
+      "hard_validity_gate_results": {
+        "collision_free": true,
+        "blocked_zone_invariant": true,
+        "safe_sumo_speed_mode": true,
+        "reward_reconciled": true
+      },
+      "hard_mask_violations": 0,
+      "regulatory_invariant_violations": 0,
+      "protocol_invariant_failures": 0,
+      "route_truth_actor_fields_consumed": 0,
+      "sumo_steps": 5000,
+      "runtime_seconds": 5.732654400053434
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "E_IN_0_STRAIGHT",
+          "N_IN_0_LEFT",
+          "S_IN_0_LEFT",
+          "W_IN_0_LEFT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "total_team_travel_time_seconds": 800.0,
+      "scheduled_vehicles": 4,
+      "completed_vehicles": 0,
+      "unresolved_coordination_case": false,
+      "throughput": 0.0,
+      "collisions": 0,
+      "blocked_zone_violations": 0,
+      "native_sumo_safety_interventions": 0,
+      "negotiation_batches": 1,
+      "learned_proposer_actions": 7,
+      "learned_responder_actions": 5,
+      "hard_validity_gate_results": {
+        "collision_free": true,
+        "blocked_zone_invariant": true,
+        "safe_sumo_speed_mode": true,
+        "reward_reconciled": true
+      },
+      "hard_mask_violations": 0,
+      "regulatory_invariant_violations": 0,
+      "protocol_invariant_failures": 0,
+      "route_truth_actor_fields_consumed": 0,
+      "sumo_steps": 5000,
+      "runtime_seconds": 27.299642899888568
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "E_IN_0_STRAIGHT",
+          "N_IN_0_LEFT",
+          "S_IN_0_RIGHT",
+          "W_IN_0_LEFT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "total_team_travel_time_seconds": 644.6,
+      "scheduled_vehicles": 4,
+      "completed_vehicles": 1,
+      "unresolved_coordination_case": false,
+      "throughput": 0.005,
+      "collisions": 0,
+      "blocked_zone_violations": 0,
+      "native_sumo_safety_interventions": 0,
+      "negotiation_batches": 1,
+      "learned_proposer_actions": 7,
+      "learned_responder_actions": 7,
+      "hard_validity_gate_results": {
+        "collision_free": true,
+        "blocked_zone_invariant": true,
+        "safe_sumo_speed_mode": true,
+        "reward_reconciled": true
+      },
+      "hard_mask_violations": 0,
+      "regulatory_invariant_violations": 0,
+      "protocol_invariant_failures": 0,
+      "route_truth_actor_fields_consumed": 0,
+      "sumo_steps": 5000,
+      "runtime_seconds": 21.503468199982308
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "E_IN_0_STRAIGHT",
+          "N_IN_0_LEFT",
+          "S_IN_0_STRAIGHT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "total_team_travel_time_seconds": 600.0,
+      "scheduled_vehicles": 3,
+      "completed_vehicles": 0,
+      "unresolved_coordination_case": false,
+      "throughput": 0.0,
+      "collisions": 0,
+      "blocked_zone_violations": 0,
+      "native_sumo_safety_interventions": 0,
+      "negotiation_batches": 1,
+      "learned_proposer_actions": 3,
+      "learned_responder_actions": 3,
+      "hard_validity_gate_results": {
+        "collision_free": true,
+        "blocked_zone_invariant": true,
+        "safe_sumo_speed_mode": true,
+        "reward_reconciled": true
+      },
+      "hard_mask_violations": 0,
+      "regulatory_invariant_violations": 0,
+      "protocol_invariant_failures": 0,
+      "route_truth_actor_fields_consumed": 0,
+      "sumo_steps": 5000,
+      "runtime_seconds": 18.971781499916688
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "E_IN_0_STRAIGHT",
+          "N_IN_0_LEFT",
+          "S_IN_0_STRAIGHT",
+          "W_IN_0_RIGHT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "total_team_travel_time_seconds": 644.36,
+      "scheduled_vehicles": 4,
+      "completed_vehicles": 1,
+      "unresolved_coordination_case": false,
+      "throughput": 0.005,
+      "collisions": 0,
+      "blocked_zone_violations": 0,
+      "native_sumo_safety_interventions": 0,
+      "negotiation_batches": 1,
+      "learned_proposer_actions": 6,
+      "learned_responder_actions": 5,
+      "hard_validity_gate_results": {
+        "collision_free": true,
+        "blocked_zone_invariant": true,
+        "safe_sumo_speed_mode": true,
+        "reward_reconciled": true
+      },
+      "hard_mask_violations": 0,
+      "regulatory_invariant_violations": 0,
+      "protocol_invariant_failures": 0,
+      "route_truth_actor_fields_consumed": 0,
+      "sumo_steps": 5000,
+      "runtime_seconds": 21.166342600015923
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "E_IN_0_STRAIGHT",
+          "N_IN_0_RIGHT",
+          "S_IN_0_LEFT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "total_team_travel_time_seconds": 600.0,
+      "scheduled_vehicles": 3,
+      "completed_vehicles": 0,
+      "unresolved_coordination_case": false,
+      "throughput": 0.0,
+      "collisions": 0,
+      "blocked_zone_violations": 0,
+      "native_sumo_safety_interventions": 0,
+      "negotiation_batches": 1,
+      "learned_proposer_actions": 4,
+      "learned_responder_actions": 3,
+      "hard_validity_gate_results": {
+        "collision_free": true,
+        "blocked_zone_invariant": true,
+        "safe_sumo_speed_mode": true,
+        "reward_reconciled": true
+      },
+      "hard_mask_violations": 0,
+      "regulatory_invariant_violations": 0,
+      "protocol_invariant_failures": 0,
+      "route_truth_actor_fields_consumed": 0,
+      "sumo_steps": 5000,
+      "runtime_seconds": 19.921648900024593
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "E_IN_0_STRAIGHT",
+          "N_IN_0_RIGHT",
+          "S_IN_0_LEFT",
+          "W_IN_0_RIGHT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "total_team_travel_time_seconds": 196.84,
+      "scheduled_vehicles": 4,
+      "completed_vehicles": 4,
+      "unresolved_coordination_case": false,
+      "throughput": 0.02,
+      "collisions": 0,
+      "blocked_zone_violations": 0,
+      "native_sumo_safety_interventions": 0,
+      "negotiation_batches": 1,
+      "learned_proposer_actions": 7,
+      "learned_responder_actions": 6,
+      "hard_validity_gate_results": {
+        "collision_free": true,
+        "blocked_zone_invariant": true,
+        "safe_sumo_speed_mode": true,
+        "reward_reconciled": true
+      },
+      "hard_mask_violations": 0,
+      "regulatory_invariant_violations": 0,
+      "protocol_invariant_failures": 0,
+      "route_truth_actor_fields_consumed": 0,
+      "sumo_steps": 5000,
+      "runtime_seconds": 7.568736399989575
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "E_IN_0_STRAIGHT",
+          "N_IN_0_STRAIGHT",
+          "S_IN_0_LEFT",
+          "W_IN_0_LEFT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "total_team_travel_time_seconds": 199.8,
+      "scheduled_vehicles": 4,
+      "completed_vehicles": 4,
+      "unresolved_coordination_case": false,
+      "throughput": 0.02,
+      "collisions": 0,
+      "blocked_zone_violations": 0,
+      "native_sumo_safety_interventions": 0,
+      "negotiation_batches": 1,
+      "learned_proposer_actions": 6,
+      "learned_responder_actions": 6,
+      "hard_validity_gate_results": {
+        "collision_free": true,
+        "blocked_zone_invariant": true,
+        "safe_sumo_speed_mode": true,
+        "reward_reconciled": true
+      },
+      "hard_mask_violations": 0,
+      "regulatory_invariant_violations": 0,
+      "protocol_invariant_failures": 0,
+      "route_truth_actor_fields_consumed": 0,
+      "sumo_steps": 5000,
+      "runtime_seconds": 7.489951100083999
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "E_IN_0_STRAIGHT",
+          "N_IN_0_STRAIGHT",
+          "S_IN_0_STRAIGHT",
+          "W_IN_0_LEFT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "total_team_travel_time_seconds": 800.0,
+      "scheduled_vehicles": 4,
+      "completed_vehicles": 0,
+      "unresolved_coordination_case": false,
+      "throughput": 0.0,
+      "collisions": 0,
+      "blocked_zone_violations": 0,
+      "native_sumo_safety_interventions": 0,
+      "negotiation_batches": 1,
+      "learned_proposer_actions": 5,
+      "learned_responder_actions": 3,
+      "hard_validity_gate_results": {
+        "collision_free": true,
+        "blocked_zone_invariant": true,
+        "safe_sumo_speed_mode": true,
+        "reward_reconciled": true
+      },
+      "hard_mask_violations": 0,
+      "regulatory_invariant_violations": 0,
+      "protocol_invariant_failures": 0,
+      "route_truth_actor_fields_consumed": 0,
+      "sumo_steps": 5000,
+      "runtime_seconds": 23.82806659990456
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "N_IN_0_LEFT",
+          "S_IN_0_LEFT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "total_team_travel_time_seconds": 96.12,
+      "scheduled_vehicles": 2,
+      "completed_vehicles": 2,
+      "unresolved_coordination_case": false,
+      "throughput": 0.01,
+      "collisions": 0,
+      "blocked_zone_violations": 0,
+      "native_sumo_safety_interventions": 0,
+      "negotiation_batches": 1,
+      "learned_proposer_actions": 2,
+      "learned_responder_actions": 2,
+      "hard_validity_gate_results": {
+        "collision_free": true,
+        "blocked_zone_invariant": true,
+        "safe_sumo_speed_mode": true,
+        "reward_reconciled": true
+      },
+      "hard_mask_violations": 0,
+      "regulatory_invariant_violations": 0,
+      "protocol_invariant_failures": 0,
+      "route_truth_actor_fields_consumed": 0,
+      "sumo_steps": 5000,
+      "runtime_seconds": 4.368579900008626
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "N_IN_0_LEFT",
+          "S_IN_0_RIGHT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "total_team_travel_time_seconds": 400.0,
+      "scheduled_vehicles": 2,
+      "completed_vehicles": 0,
+      "unresolved_coordination_case": false,
+      "throughput": 0.0,
+      "collisions": 0,
+      "blocked_zone_violations": 0,
+      "native_sumo_safety_interventions": 0,
+      "negotiation_batches": 1,
+      "learned_proposer_actions": 2,
+      "learned_responder_actions": 1,
+      "hard_validity_gate_results": {
+        "collision_free": true,
+        "blocked_zone_invariant": true,
+        "safe_sumo_speed_mode": true,
+        "reward_reconciled": true
+      },
+      "hard_mask_violations": 0,
+      "regulatory_invariant_violations": 0,
+      "protocol_invariant_failures": 0,
+      "route_truth_actor_fields_consumed": 0,
+      "sumo_steps": 5000,
+      "runtime_seconds": 14.956816700054333
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "N_IN_0_LEFT",
+          "S_IN_0_RIGHT",
+          "W_IN_0_LEFT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "total_team_travel_time_seconds": 141.4,
+      "scheduled_vehicles": 3,
+      "completed_vehicles": 3,
+      "unresolved_coordination_case": false,
+      "throughput": 0.015,
+      "collisions": 0,
+      "blocked_zone_violations": 0,
+      "native_sumo_safety_interventions": 0,
+      "negotiation_batches": 1,
+      "learned_proposer_actions": 4,
+      "learned_responder_actions": 3,
+      "hard_validity_gate_results": {
+        "collision_free": true,
+        "blocked_zone_invariant": true,
+        "safe_sumo_speed_mode": true,
+        "reward_reconciled": true
+      },
+      "hard_mask_violations": 0,
+      "regulatory_invariant_violations": 0,
+      "protocol_invariant_failures": 0,
+      "route_truth_actor_fields_consumed": 0,
+      "sumo_steps": 5000,
+      "runtime_seconds": 5.71000570000615
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "N_IN_0_RIGHT",
+          "S_IN_0_LEFT",
+          "W_IN_0_STRAIGHT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "total_team_travel_time_seconds": 142.2,
+      "scheduled_vehicles": 3,
+      "completed_vehicles": 3,
+      "unresolved_coordination_case": false,
+      "throughput": 0.015,
+      "collisions": 0,
+      "blocked_zone_violations": 0,
+      "native_sumo_safety_interventions": 0,
+      "negotiation_batches": 1,
+      "learned_proposer_actions": 4,
+      "learned_responder_actions": 3,
+      "hard_validity_gate_results": {
+        "collision_free": true,
+        "blocked_zone_invariant": true,
+        "safe_sumo_speed_mode": true,
+        "reward_reconciled": true
+      },
+      "hard_mask_violations": 0,
+      "regulatory_invariant_violations": 0,
+      "protocol_invariant_failures": 0,
+      "route_truth_actor_fields_consumed": 0,
+      "sumo_steps": 5000,
+      "runtime_seconds": 5.690868300036527
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "N_IN_0_STRAIGHT",
+          "S_IN_0_LEFT",
+          "W_IN_0_LEFT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "total_team_travel_time_seconds": 600.0,
+      "scheduled_vehicles": 3,
+      "completed_vehicles": 0,
+      "unresolved_coordination_case": false,
+      "throughput": 0.0,
+      "collisions": 0,
+      "blocked_zone_violations": 0,
+      "native_sumo_safety_interventions": 0,
+      "negotiation_batches": 1,
+      "learned_proposer_actions": 3,
+      "learned_responder_actions": 1,
+      "hard_validity_gate_results": {
+        "collision_free": true,
+        "blocked_zone_invariant": true,
+        "safe_sumo_speed_mode": true,
+        "reward_reconciled": true
+      },
+      "hard_mask_violations": 0,
+      "regulatory_invariant_violations": 0,
+      "protocol_invariant_failures": 0,
+      "route_truth_actor_fields_consumed": 0,
+      "sumo_steps": 5000,
+      "runtime_seconds": 20.54362420004327
+    }
+  ],
+  "summary": {
+    "scenario_execution_count": 36,
+    "total": 16385.4,
+    "mean": 455.15,
+    "median": 549.58,
+    "standard_deviation": 254.69004890476407,
+    "minimum": 96.12,
+    "maximum": 800.0,
+    "completed_vehicles": 58,
+    "collisions": 0,
+    "blocked_zone_violations": 0,
+    "native_sumo_safety_interventions": 0,
+    "learned_proposer_actions": 192,
+    "learned_responder_actions": 154,
+    "runtime_seconds": 842.8330130999675
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "protocol_id": "FINAL_MAPPO_SELECTION_PROTOCOL_V2",
+  "status": "SELECTION_FROZEN",
+  "selected_candidate_id": "E5",
+  "selection_reason": "LOWEST_MEAN_VALIDATION_TTT_AMONG_ELIGIBLE",
+  "selection_timestamp_utc": "2026-08-26T08:11:56.575876+00:00",
+  "candidate_configuration": {
+    "candidate_id": "E5",
+    "ppo_update_epochs": 5,
+    "learning_rate": 0.0005,
+    "ppo_clip_epsilon": 0.2,
+    "gnn_hidden_dimension": 64,
+    "gnn_message_passing_layers": 3,
+    "gnn_training_mode": "FROZEN_GNN",
+    "parameter_sharing_strategy": "SHARED_REPRESENTATION_ROLE_SPECIFIC_HEADS",
+    "factor_aggregation": "PER_POLICY_FACTOR_EMPIRICAL_MEAN",
+    "optimizer_family": "ADAM"
+  },
+  "candidate_configuration_hash": "4aaf15fc47de6b98515d31dd26b61460623262c469ad1e6c4c5e12b97e8069e4",
+  "training_checkpoint_hashes": {
+    "0": "2ab2029fdd66f96c3ba0acf5e76487c96740161e898539f93c726228097eaf57",
+    "1": "9e2b20b1a42794672e33bcf391859bc755a49852f6e27abde912bdd1fe608392",
+    "2": "474a7ad39bf2a4571283b9b903e19fbec2376bdad91083b0f71e252c28c1ca24"
+  },
+  "configuration_selected_by_validation": true,
+  "selection_data_role": "VALIDATION",
+  "held_out_used_for_selection": false,
+  "globally_optimal_claim": false,
+  "exhaustive_hyperparameter_search": false,
+  "selected_best_among_tested_candidates": true,
+  "demo_replication_selected_by_performance": false,
+  "demo_replication_rule": "CANONICAL_REPLICATION_0",
+  "selected_policy_source": "results/final_mappo_selection_v2/training/E5/replication_0_state_2.pt",
+  "selected_policy_sha256": "2ab2029fdd66f96c3ba0acf5e76487c96740161e898539f93c726228097eaf57",
+  "source_checkpoint_sha256": "2ab2029fdd66f96c3ba0acf5e76487c96740161e898539f93c726228097eaf57"
+}
