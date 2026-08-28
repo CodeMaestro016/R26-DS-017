@@ -44,6 +44,7 @@ It does not directly select acceleration, braking, steering, or target speed. An
 - `run_selected_mappo_demo.py` is the final validation-selected E5 MAPPO research demonstration. It loads the frozen canonical-replication-0 selected policy and performs inference only.
 - `main.py` is the normal/legacy SUMO control-facing application. Its learned intention prediction can be shadow-only; it is not a substitute for the final selected MAPPO demo.
 - `run_research_demo.py` is retained for reproducibility of the earlier frozen research-prototype demonstration.
+- `run_panel_demo.py` is a one-process, continuous qualitative SUMO visualization for a live panel. It is presentation-only and does not replace validation, held-out evaluation, or model-selection evidence.
 - `python -m scripts.experiments.run_mappo_final_selection --help` exposes the completed model-selection workflow. Do not run training stages merely to launch the demo.
 
 ## Repository layout
@@ -93,6 +94,16 @@ python -m scripts.validation.validate_gnn_forward
 ```
 
 Standalone validators are retained for reproducibility; they are not final runtime entry points.
+
+## Live panel visualization
+
+Launch the deterministic rolling-traffic presentation with:
+
+```powershell
+python run_panel_demo.py --gui
+```
+
+Optional presentation controls are `--duration` and `--gui-delay-ms`. The latter changes display pacing only; the simulation step remains 0.04 seconds. New qualitative output is written only under `results/panel_demo/`.
 
 ## Research limitations
 
