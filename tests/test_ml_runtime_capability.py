@@ -6,7 +6,7 @@ import subprocess
 import sys
 
 from ml_runtime_capability import MLRuntimeCapability
-import validate_gnn_forward
+from scripts.validation import validate_gnn_forward
 
 
 def unavailable_capability():
@@ -47,7 +47,8 @@ def test_normal_runtime_and_base_package_have_no_pytorch_import():
     base_source = (root / "negotiation_learning" / "__init__.py").read_text(
         encoding="utf-8"
     ).lower()
-    validator_prefix = (root / "validate_gnn_forward.py").read_text(
+    validator_prefix = (root / "scripts" / "validation" /
+                        "validate_gnn_forward.py").read_text(
         encoding="utf-8"
     ).split("def main", 1)[0].lower()
     assert "import torch" not in main_source

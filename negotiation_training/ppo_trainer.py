@@ -74,7 +74,7 @@ def _context(snapshot):
 
 class MechanicalMAPPOTrainer:
     def __init__(self, rollout_path=ROLLOUT_PATH, *, rollout_payload=None,
-                 bundle=None, output_path=UPDATE_PATH):
+                 bundle=None, output_path=UPDATE_PATH, configuration=None):
         self.rollout_path = Path(rollout_path)
         if rollout_payload is None:
             self.rollout_bytes = self.rollout_path.read_bytes()
@@ -87,7 +87,9 @@ class MechanicalMAPPOTrainer:
         self.design = build_design()
         self.architecture = build_mechanical_pilot_architecture_contract()
         self.optimization = build_mechanical_adam_optimization_contract()
-        self.configuration = build_mechanical_pilot_configuration_audit()
+        self.configuration = (
+            configuration or build_mechanical_pilot_configuration_audit()
+        )
         self.bundle = bundle or build_mechanical_mappo_behavior_policy_bundle()
         self.actor_optimizer = None
         self.critic_optimizer = None

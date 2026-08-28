@@ -1,0 +1,12 @@
+MAPPO MODEL-SELECTION SUMMARY
+
+Search type: Controlled one-factor ablation
+Hyperparameter varied: PPO update epochs
+Candidates: 5 / 10 / 15
+Replications: 3 canonical replications
+Training horizon: 2 PPO update cycles
+Selection data: Validation only
+Primary metric: Total team travel time — lower is better
+Selected: E5
+Claim: Best-performing eligible configuration among predefined tested candidates.
+Not claimed: Global MAPPO optimality.

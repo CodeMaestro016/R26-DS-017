@@ -50,6 +50,50 @@ class CoupledNegotiationTrainingEnvironment:
     def reset(self):
         self._active_zone_markers = {}
 
+    def _terminal_coordination_status(self, branch,
+                                      negotiation_context_observed,
+                                      unresolved_reason):
+        """Keep missing semantic events fatal except for an opted-in baseline."""
+        if branch is not None:
+            return ("UNRESOLVED_COORDINATION_BASELINE" if unresolved_reason
+                    else "COMPLETE")
+        if (negotiation_context_observed and unresolved_reason and
+                getattr(self.action_provider,
+                        "allows_unresolved_coordination", False)):
+            return "UNRESOLVED_COORDINATION_BASELINE"
+        if (negotiation_context_observed and getattr(
+                self.action_provider,
+                "supports_event_driven_renegotiation", False)):
+            return "COMPLETE"
+        raise PhysicalReplayError("SEMANTIC_NEGOTIATION_EVENT_NOT_OBSERVED")
+
+    @staticmethod
+    def _decision_state_identity(states, edges, cleared_vehicle_zones):
+        edge_identity = tuple(sorted((edge["yielding_vehicle_id"],
+                                      edge["priority_vehicle_id"])
+                                     for edge in edges))
+        participants = tuple(sorted({vehicle for edge in edge_identity
+                                     for vehicle in edge}))
+        active_participants = tuple(vehicle for vehicle in participants
+                                    if vehicle in states)
+        return (active_participants, edge_identity,
+                tuple(sorted(cleared_vehicle_zones)))
+
+    @staticmethod
+    def _plan_invalidation_reasons(old_identity, new_identity):
+        if old_identity is None or old_identity == new_identity:
+            return ()
+        old_participants, old_edges, old_cleared = old_identity
+        new_participants, new_edges, new_cleared = new_identity
+        reasons = []
+        if old_participants != new_participants:
+            reasons.append("ACTIVE_PARTICIPANT_SET_CHANGED")
+        if old_edges != new_edges:
+            reasons.append("RELEVANT_PRECEDENCE_GRAPH_CHANGED")
+        if old_cleared != new_cleared:
+            reasons.append("CONFLICT_ZONE_CLEARED")
+        return tuple(reasons)
+
     @staticmethod
     def _edge_union(snapshots):
         values = {}
@@ -144,6 +188,17 @@ class CoupledNegotiationTrainingEnvironment:
         entry_events, clear_events, completion_events = [], [], []
         native_events, batches, encoded_shapes = [], [], []
         plan_count = 0
+        negotiation_context_observed = False
+        unresolved_reason = None
+        event_driven = bool(getattr(
+            self.action_provider, "supports_event_driven_renegotiation", False))
+        authoritative_state_identity = last_decision_identity = None
+        diagnostics = []
+        liveness = {"negotiation_decision_epochs": 0,
+                    "renegotiation_events": 0,
+                    "non_executable_negotiation_outcomes": 0,
+                    "executable_plans": 0,
+                    "safe_hold_activations": 0}
         episode_id = ("COUPLED_TRAINING_EPISODE_V1", specification.scenario_id)
         try:
             environment.start()
@@ -178,16 +233,102 @@ class CoupledNegotiationTrainingEnvironment:
                     traci.simulation.getEmergencyStoppingVehiclesIDList()))
                 if emergency: native_events.append((now, emergency))
 
-                if branch is None:
+                snapshots = edges = decision_identity = None
+                safe_decision_epoch = True
+                fallback_authority = None
+                transition_rejected = False
+                zone_observations = None
+                if event_driven and branch is not None:
+                    zone_observations = (
+                        PhysicalBranchReplayRunner._observe_zones(
+                            self, states, movements, zone_states, now,
+                            entry_events, clear_events, cleared))
+                if event_driven:
                     snapshots = PhysicalBranchReplayRunner._pipeline_step(
                         states, now, observations, entry_monitor, predictor,
                         graph_manager, occupancy, rules, negotiation, claim_bus,
                         encoder)
                     edges = self._edge_union(snapshots)
+                    decision_identity = self._decision_state_identity(
+                        states, edges, cleared)
+                    current_regulatory_zone_observations = {}
                     if edges:
+                        current_regulatory_graph = tuple(sorted(
+                            (edge["yielding_vehicle_id"],
+                             edge["priority_vehicle_id"]) for edge in edges))
+                        current_obligations = self.physical_mapper.map(
+                            current_regulatory_graph, tuple(sorted(states)),
+                            movements)
+                        current_zone_states = (
+                            PhysicalBranchReplayRunner._zone_definitions(
+                                self, states, movements,
+                                current_obligations.physical_execution_graph))
+                        current_regulatory_zone_observations = (
+                            PhysicalBranchReplayRunner._observe_zones(
+                                self, states, movements, current_zone_states,
+                                now, entry_events, clear_events, cleared))
+                    material_change = (
+                        branch is not None and authoritative_state_identity !=
+                        decision_identity)
+                    zone_currently_occupied = any(
+                        item["state"] == "CURRENTLY_OCCUPYING"
+                        for item in tuple((zone_observations or {}).values()) +
+                        tuple(current_regulatory_zone_observations.values()))
+                    safe_decision_epoch = not zone_currently_occupied
+                    reasons = self._plan_invalidation_reasons(
+                        authoritative_state_identity, decision_identity)
+                    prior_plan_non_executable = bool(
+                        plan0 is not None and
+                        (plan0.graph_status != "EXECUTABLE" or
+                         not plan0.ready_vehicle_ids))
+                    progress_boundary = "CONFLICT_ZONE_CLEARED" in reasons
+                    safe_authority_transition = (
+                        not zone_currently_occupied and
+                        (prior_plan_non_executable or progress_boundary))
+                    if material_change and safe_authority_transition:
+                        event = {"event": "PLAN_INVALIDATED", "timestamp": now,
+                                 "reasons": tuple(reasons),
+                                 "old_state_identity":
+                                     authoritative_state_identity,
+                                 "new_state_identity": decision_identity}
+                        diagnostics.append(event)
+                        print("PLAN_INVALIDATED " + ",".join(reasons))
+                        print("RENEGOTIATION_REQUIRED")
+                        liveness["renegotiation_events"] += 1
+                        fallback_authority = (
+                            branch, plan0, physical_obligations, zone_states,
+                            authoritative_state_identity, zone_observations)
+                        branch = plan0 = physical_obligations = None
+                        zone_states = {}
+                        zone_observations = None
+                        authoritative_state_identity = None
+
+                if branch is None:
+                    if snapshots is None:
+                        snapshots = PhysicalBranchReplayRunner._pipeline_step(
+                            states, now, observations, entry_monitor, predictor,
+                            graph_manager, occupancy, rules, negotiation,
+                            claim_bus, encoder)
+                        edges = self._edge_union(snapshots)
+                    if decision_identity is None:
+                        decision_identity = self._decision_state_identity(
+                            states, edges, cleared)
+                    if (edges and (not event_driven or safe_decision_epoch) and
+                            (not event_driven or
+                                   decision_identity != last_decision_identity)):
+                        negotiation_context_observed = True
+                        last_decision_identity = decision_identity
                         source_id = (specification.scenario_id, now,
                                      "COUPLED_JOINT_NEGOTIATION_CONTEXT")
                         batch_id = (episode_id, now, "JOINT_NEGOTIATION_BATCH")
+                        if event_driven:
+                            liveness["negotiation_decision_epochs"] += 1
+                            diagnostics.append({
+                                "event": "NEGOTIATION_EVENT_CREATED",
+                                "timestamp": now,
+                                "state_identity": decision_identity,
+                                "source_snapshot_id": source_id})
+                            print("NEGOTIATION_EVENT_CREATED")
                         encoded_graphs = tuple(
                             observations.get_ldm(
                                 snapshot["ego_id"]
@@ -217,10 +358,99 @@ class CoupledNegotiationTrainingEnvironment:
                                     movement_path_by_vehicle=movements,
                                     timestamp=now,
                                     source_protocol_state=branch.policy_status,
-                                    cleared_vehicle_zones=(),
+                                    cleared_vehicle_zones=tuple(sorted(cleared)),
                                     physical_obligation_set=physical_obligations)
                                 self.action_provider.record_physical_interpretation(
                                     batch_id, physical_obligations, plan0)
+                                if event_driven:
+                                    fallback_plan = (fallback_authority[1]
+                                                     if fallback_authority
+                                                     else None)
+                                    newly_blocked_ready = tuple(sorted(
+                                        set(fallback_plan.ready_vehicle_ids) &
+                                        set(plan0.blocked_vehicle_ids)
+                                    )) if fallback_plan else ()
+                                    candidate_execution_graph = (
+                                        physical_obligations.
+                                        physical_execution_graph)
+                                    candidate_zone_states = (
+                                        PhysicalBranchReplayRunner.
+                                        _zone_definitions(
+                                            self, states, movements,
+                                            candidate_execution_graph))
+                                    candidate_zone_observations = (
+                                        PhysicalBranchReplayRunner._observe_zones(
+                                            self, states, movements,
+                                            candidate_zone_states, now,
+                                            entry_events, clear_events, cleared))
+                                    blocked_permissions = {
+                                        (item.vehicle_id,
+                                         item.conflict_zone_id)
+                                        for item in plan0.vehicle_permissions
+                                        if item.permission_status ==
+                                        "BLOCKED_BY_PRECEDENCE"}
+                                    blocked_in_or_past_zone = tuple(sorted(
+                                        key for key in blocked_permissions
+                                        if (key in candidate_zone_observations and
+                                            candidate_zone_observations[key][
+                                                "state"] != "BEFORE_ZONE")))
+                                    if (newly_blocked_ready or
+                                            blocked_in_or_past_zone):
+                                        unsafe_vehicle_ids = tuple(sorted(
+                                            set(newly_blocked_ready) |
+                                            {item[0] for item in
+                                             blocked_in_or_past_zone}))
+                                        diagnostics.append({
+                                            "event":
+                                                "PLAN_NON_EXECUTABLE_TRANSITION",
+                                            "timestamp": now,
+                                            "reason":
+                                                "NEW_BLOCK_NOT_SAFE_TO_ACTIVATE",
+                                            "vehicle_ids": unsafe_vehicle_ids,
+                                            "blocked_in_or_past_zone":
+                                                blocked_in_or_past_zone})
+                                        print("PLAN_NON_EXECUTABLE_TRANSITION "
+                                              "NEW_BLOCK_NOT_SAFE_TO_ACTIVATE=" +
+                                              repr(unsafe_vehicle_ids))
+                                        print("SAFE_HOLD_ACTIVE")
+                                        liveness[
+                                            "non_executable_negotiation_outcomes"
+                                        ] += 1
+                                        liveness["safe_hold_activations"] += 1
+                                        (branch, plan0, physical_obligations,
+                                         zone_states,
+                                         authoritative_state_identity,
+                                         zone_observations) = fallback_authority
+                                        authoritative_state_identity = (
+                                            decision_identity)
+                                        transition_rejected = True
+                                    elif (plan0.graph_status == "EXECUTABLE" and
+                                            plan0.ready_vehicle_ids):
+                                        liveness["executable_plans"] += 1
+                                        diagnostics.append({
+                                            "event": "PLAN_EXECUTABLE",
+                                            "timestamp": now,
+                                            "ready_vehicle_ids":
+                                                plan0.ready_vehicle_ids,
+                                            "blocked_vehicle_ids":
+                                                plan0.blocked_vehicle_ids})
+                                        print("PLAN_EXECUTABLE VEHICLE_READY=" +
+                                              repr(plan0.ready_vehicle_ids))
+                                    else:
+                                        liveness[
+                                            "non_executable_negotiation_outcomes"
+                                        ] += 1
+                                        liveness["safe_hold_activations"] += 1
+                                        diagnostics.append({
+                                            "event": "PLAN_NON_EXECUTABLE",
+                                            "timestamp": now,
+                                            "graph_status": plan0.graph_status,
+                                            "blocked_vehicle_ids":
+                                                plan0.blocked_vehicle_ids})
+                                        print("PLAN_NON_EXECUTABLE " +
+                                              plan0.graph_status)
+                                        print("SAFE_HOLD_ACTIVE VEHICLE_BLOCKED=" +
+                                              repr(plan0.blocked_vehicle_ids))
                         else:
                             enumerator = JointNegotiationBranchEnumerator(self.planner)
                             possible = enumerator.enumerate(
@@ -238,7 +468,18 @@ class CoupledNegotiationTrainingEnvironment:
                                     source_id)
                                 branch = self.action_provider.select_joint_actions(
                                     possible, factor_contexts)
-                        if branch is not None:
+                                if (branch is None and getattr(
+                                        self.action_provider,
+                                        "allows_unresolved_coordination", False)):
+                                    unresolved_reason = (
+                                        "NO_EXECUTABLE_KEEP_REGULATORY_BRANCH")
+                            elif getattr(self.action_provider,
+                                         "allows_unresolved_coordination", False):
+                                unresolved_reason = (
+                                    "NO_EXECUTABLE_KEEP_REGULATORY_BRANCH")
+                        if branch is not None and not transition_rejected:
+                            if event_driven:
+                                authoritative_state_identity = decision_identity
                             if plan0 is None:
                                 plan0 = branch.execution_plan
                             execution_graph = (
@@ -262,12 +503,15 @@ class CoupledNegotiationTrainingEnvironment:
                             else:
                                 factors = self._factor_records(
                                     branch, batch_id, tuple(encoded_shapes))
-                            batches.append((batch_id, now, source_id, factors))
+                            batches.append((batch_id, now, source_id, factors,
+                                            branch, plan0))
 
                 if branch is not None:
-                    zone_observations = PhysicalBranchReplayRunner._observe_zones(
-                        self, states, movements, zone_states, now, entry_events,
-                        clear_events, cleared)
+                    if zone_observations is None:
+                        zone_observations = (
+                            PhysicalBranchReplayRunner._observe_zones(
+                                self, states, movements, zone_states, now,
+                                entry_events, clear_events, cleared))
                     plan = self.planner.plan(
                         source_snapshot_id=branch.source_snapshot_id,
                         effective_coordination_graph=branch.effective_precedence_graph,
@@ -283,8 +527,13 @@ class CoupledNegotiationTrainingEnvironment:
                         plan, states, zone_observations, now, commands,
                         command_audit, command_mode, SIM_TIME_STEP)
                     constraints.extend(step_records)
-            if branch is None:
-                raise PhysicalReplayError("SEMANTIC_NEGOTIATION_EVENT_NOT_OBSERVED")
+            completion_status = self._terminal_coordination_status(
+                branch, negotiation_context_observed, unresolved_reason)
+            completed_ids = {item[0] for item in completion_events}
+            unfinished_vehicle_ids = tuple(sorted(
+                set(movements) - completed_ids))
+            if event_driven and unfinished_vehicle_ids:
+                completion_status = "EPISODE_ENDED_UNFINISHED_VEHICLES"
             demand_records = ledger.finalize_episode(EPISODE_DURATION_SECONDS)
             measures = measure_vehicle_travel_times(
                 demand_records, EPISODE_DURATION_SECONDS)
@@ -294,7 +543,8 @@ class CoupledNegotiationTrainingEnvironment:
                        "uses_mappo_behavior_policy", False):
                 self.action_provider.finalize_episode(episode_id, reward)
             final_batches = []
-            for batch_id, timestamp, source_id, factors in batches:
+            for (batch_id, timestamp, source_id, factors, batch_branch,
+                 batch_plan) in batches:
                 factor_ids = tuple(item.decision_event_id for item in factors)
                 proposer = tuple(item for item in factors if item.role == "PROPOSER")
                 responder = tuple(item for item in factors if item.role == "RESPONDER")
@@ -302,12 +552,12 @@ class CoupledNegotiationTrainingEnvironment:
                     batch_id, episode_id, specification.scenario_id, timestamp,
                     source_id, tuple(item.decision_event_id for item in proposer),
                     tuple(item.decision_event_id for item in proposer),
-                    branch.proposer_assignment.proposals_created,
+                    batch_branch.proposer_assignment.proposals_created,
                     tuple(item.decision_event_id for item in responder),
                     tuple(item.decision_event_id for item in responder),
                     (source_id, "PROTOCOL_RESOLUTION"),
-                    (source_id, branch.effective_precedence_graph),
-                    plan0.plan_id, 0.0, EPISODE_DURATION_SECONDS, None,
+                    (source_id, batch_branch.effective_precedence_graph),
+                    batch_plan.plan_id, 0.0, EPISODE_DURATION_SECONDS, None,
                     "EPISODE_TERMINATED", reward, factors,
                     tuple(encoded_shapes),
                     ((sum(shape[0][0] for shape in encoded_shapes),
@@ -330,13 +580,28 @@ class CoupledNegotiationTrainingEnvironment:
                 len(completion_events),
                 sum(item[2] == "PRECEDENCE_SPEED_CAP" for item in commands),
                 plan_count, len(native_events), team_time, reward, reward, 0, 0,
-                "COMPLETE",
+                completion_status,
                 {"collision_free": True, "blocked_zone_invariant": True,
                  "safe_sumo_speed_mode": True, "reward_reconciled": True},
                 {"action_provider": self.action_provider.selection_rule,
                  "outcome_data_used": False, "fresh_sumo_process": True,
                  "fresh_ldm_state": True, "fresh_protocol_bus": True,
                  "fresh_demand_ledger": True, "optimizer_instances": 0,
-                 "backward_calls": 0, "parameter_updates": 0})
+                 "backward_calls": 0, "parameter_updates": 0,
+                 "unresolved_coordination_reason": unresolved_reason,
+                 "fabricated_negotiation_branches": 0,
+                 "vehicle_id_priority_decisions": 0,
+                 "neural_actor_calls": getattr(
+                     self.action_provider, "neural_actor_calls", None),
+                 "event_driven_renegotiation": event_driven,
+                 "liveness_metrics": {
+                     **liveness,
+                     "scheduled_vehicles": len(movements),
+                     "completed_vehicles": len(completion_events),
+                     "unfinished_vehicles": len(unfinished_vehicle_ids),
+                     "unfinished_vehicle_ids": unfinished_vehicle_ids,
+                     "all_scheduled_vehicles_completed":
+                         not unfinished_vehicle_ids},
+                 "liveness_diagnostics": tuple(diagnostics)})
         finally:
             environment.close()

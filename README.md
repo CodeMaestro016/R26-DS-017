@@ -1,529 +1,103 @@
-# Multi-Agent Right-of-Way — ONNX Shadow Integration
+# Multi-Agent Negotiation for Right-of-Way in Complex Intersections
 
-This project is the corrected prediction-integration checkpoint for:
+This final-year research project evaluates decentralized MAPPO negotiation for autonomous-vehicle right-of-way while preserving deterministic traffic-rule and physical-safety layers.
 
-> Multi-Agent Negotiation for Right-of-Way in Complex Intersections
+## Final demonstration
 
-It runs the trained two-stage GRU intention predictor inside the SUMO/TraCI
-application using CPU-only ONNX Runtime. TensorFlow is not required.
-
-## What this checkpoint does
-
-- Uses only autonomous vehicles.
-- Gives every AV a separate Local Dynamic Map.
-- Samples SUMO at 0.04 seconds to satisfy the trained model contract.
-- Keeps 50 genuine position samples per ego-target pair.
-- Recreates the locked 48x6 causal feature sequence.
-- Loads both ONNX GRUs with `CPUExecutionProvider`.
-- Applies the stored training-only scalers and UNKNOWN thresholds.
-- Stores predictions separately in every ego AV's LDM.
-- Logs primary, secondary and fused shadow predictions.
-- Sends intention predictions to the optional dashboard payload.
-- Keeps the prediction output out of vehicle control.
-
-## Why predictions are shadow-only
-
-The current negotiation manager is still the original rule-based baseline and
-the current risk module is only a provisional centre-arrival metric. The project
-does not yet contain:
-
-- lane-path conflict zones;
-- an explicit vehicle-to-vehicle negotiation protocol;
-- a distributed crossing scheduler;
-- an independent safety shield.
-
-Using learned predictions for control before these modules exist would mix a
-verified prediction model with unverified decision logic.
-
-## First-time setup on Windows
-
-1. Install SUMO and set the `SUMO_HOME` environment variable.
-2. Open a terminal in this project directory.
-3. Create and activate a Python virtual environment.
-4. Install the CPU requirements:
-
-   ```powershell
-   pip install -r requirements.txt
-   ```
-
-5. Build the expanded four-way network:
-
-   ```powershell
-   networks\build_network.bat
-   ```
-
-6. Run the tests:
-
-   ```powershell
-   python -m unittest discover -s tests -v
-   ```
-
-7. Start the project:
-
-   ```powershell
-   python main.py
-   ```
-
-   Alternatively:
-
-   ```powershell
-   run_project.bat
-   ```
-
-## Deterministic eligibility validation
-
-`VALIDATION_SCENARIO_ENABLED = True` in `config.py` selects a deterministic
-schedule of crossing approaches, balanced across LEFT, RIGHT and STRAIGHT.
-It retains SUMO safety checks and shadow-only inference. Run it on Windows:
+Install the Python dependencies, install SUMO separately, and run from the repository root:
 
 ```powershell
-cd "C:\Users\Iresha Nethmini\Documents\updated_sumo_intention_project_complete\updated_sumo_intention_project"
-python -m py_compile *.py tests\*.py
-python -m unittest discover -s tests -v
-python main.py
+python run_selected_mappo_demo.py --gui
 ```
 
-To return to normal cyclic traffic, set
-`VALIDATION_SCENARIO_ENABLED = False` in `config.py` and run `python main.py`.
+`run_project.bat` performs the same GUI launch and rebuilds the SUMO network first if the compiled network is absent.
 
-## Expected startup messages
-
-The runtime should report that:
-
-- both intention models loaded using `CPUExecutionProvider`;
-- SUMO started with 0.04-second steps;
-- shadow predictions are being produced.
-
-The prediction log is written to:
+## Architecture
 
 ```text
-results/shadow_prediction_events.csv
+SUMO
+  -> ego-local perception
+  -> per-vehicle Local Dynamic Map (LDM)
+  -> CPU ONNX GRU intention prediction
+  -> spatial/temporal conflict reasoning
+  -> German traffic-rule precedence
+  -> V2V precedence-claim exchange
+  -> joint-local negotiation graph
+  -> graph encoding and GNN
+  -> decentralized MAPPO proposer/responder actors
+  -> deterministic negotiation protocol
+  -> effective coordination graph
+  -> physical execution mapper and conflict-zone planner
+  -> SUMO-native speed constraints
+  -> safety and performance evaluation
 ```
 
-The log contains the SUMO route-derived manoeuvre label for evaluation only.
-That field is deliberately isolated from preprocessing, inference, risk and
-control. At the end of the run, the console reports:
+The learned policy changes semantic negotiation actions only:
 
-- `Shadow_Coverage`: the proportion of predictions not rejected as UNKNOWN;
-- `Shadow_Accepted_Accuracy`: accuracy among accepted predictions.
+- Proposer: `KEEP_CLAIM` or `RELINQUISH_CLAIM`.
+- Responder: `ACCEPT_RELINQUISHMENT` or `REJECT_RELINQUISHMENT`.
 
-These are the first useful measurements of cross-domain performance. The high
-accuracy measured on held-out inD data must not be assumed to transfer to SUMO.
+It does not directly select acceleration, braking, steering, or target speed. An edge `A -> B` means that A yields to B. Runtime actors use ego-local/joint-local information; route truth is not an actor input.
 
-## Important research notes
+## Entry points
 
-### Reference perception profile
+- `run_selected_mappo_demo.py` is the final validation-selected E5 MAPPO research demonstration. It loads the frozen canonical-replication-0 selected policy and performs inference only.
+- `main.py` is the normal/legacy SUMO control-facing application. Its learned intention prediction can be shadow-only; it is not a substitute for the final selected MAPPO demo.
+- `run_research_demo.py` is retained for reproducibility of the earlier frozen research-prototype demonstration.
+- `python -m scripts.experiments.run_mappo_final_selection --help` exposes the completed model-selection workflow. Do not run training stages merely to launch the demo.
 
-The virtual object sensor uses a Bosch corner-radar reference profile: a
-nominal maximum range of 160 m and an individual horizontal FOV of 150 degrees,
-with four overlapping units assumed. The interface consumes one fused
-360-degree object list. That is complete surround coverage, not one radar's FOV
-and not `4 x 150 degrees` because overlapping coverage cannot be added.
+## Repository layout
 
-The project's minimum observation distance is separately derived as 118.34 m
-from closing speed, required context time, and a provisional 35 m conservative
-margin. That margin is neither an ASAM OSI value nor a Bosch specification; it
-still needs justification through processing/stopping distance, braking,
-uncertainty, and sensitivity analysis. "Up to 160 m" does not imply perfect
-detection of every object at that distance. None of these reference values are
-universal AV-sensor or ASAM/ISO requirements.
+- Core root modules: SUMO environment, perception/LDM, intention prediction, evaluation, and legacy runtime integration.
+- `conflict/`: map paths, conflict graphs, conflict zones, and occupancy reasoning.
+- `traffic_rules/`: deterministic German regulatory precedence.
+- `negotiation_learning/`: semantic protocol, tensor encoding, GNN and MAPPO interfaces.
+- `negotiation_execution/`: coordination-to-physical mapping, planner, controller, and replay validation.
+- `negotiation_training/`: rollout, PPO, controlled experiments, selection, and inference providers.
+- `negotiation_objective/`: demand-aware travel-time objective and rewards.
+- `negotiation_scenarios/`: frozen scenario catalogue and manifests.
+- `experimentation/`: frozen experimental design and selection contracts.
+- `scripts/`: validation, experiment, and diagnostic commands.
+- `models/`: deployed ONNX intention models and training provenance.
+- `networks/`: SUMO network, routes, source XML and rebuild scripts.
+- `results/`: checkpoints and research evidence; do not treat it as disposable output.
+- `tests/`: scientific-contract and regression tests.
+- `docs/`: architecture, evidence, audit, and research documentation.
 
-Source: [Bosch Mobility corner radar sensor for heavy commercial vehicles](https://www.bosch-mobility.com/en/solutions/sensors/corner-radar-sensor-cv/).
+See [docs/PROJECT_STRUCTURE.md](docs/PROJECT_STRUCTURE.md) for module-level details.
 
-The perception profiles are:
+## Requirements
 
-- `IDEAL_BASELINE`: 160 m limit, no FOV filtering or occlusion, exact simulator values; unrealistic upper-performance baseline.
-- `GEOMETRIC_SENSOR`: 160 m limit, fused 360-degree FOV (150 degrees per reference radar), dynamic vehicle occlusion, exact values for visible targets; geometric visibility experiment.
-- `REALISTIC_OBJECT_SENSOR`: currently the same range, fused FOV, and occlusion as the geometric profile. Noise, missed detections, and latency are not implemented; it remains a future error-model placeholder.
-
-### Sampling
-
-The models require exactly 50 genuine observations separated by 0.04 seconds.
-The history validator rejects 0.5-second observations. It does not interpolate
-low-rate positions.
-
-### Route truth
-
-SUMO's route ID is retained for debugging and later evaluation only. It is not
-used by the ONNX predictor. A surrounding vehicle's true future route must not
-be exposed to the agent's decision pipeline because that would bypass the
-intention model.
-
-### Network
-
-The source network provides all 12 approach/maneuver combinations:
-
-- four straight routes;
-- four left-turn routes;
-- four right-turn routes.
-
-The included source files must be compiled with `netconvert` before the first
-run.
-
-The central source junction is `right_before_left`; the generated network is
-right-hand traffic and retains SUMO junction safety behavior.
-
-### Generalization
-
-The GRUs were trained using the inD Bendplatz cohort. This synthetic SUMO cross
-is a deployment and robustness test, not proof that the original test accuracy
-transfers unchanged to a new map.
-
-## Intention-aware local conflict graph
-
-Conflict detection now runs in shadow/read-only mode after prediction. At
-startup, `MapPathManager` reads the compiled SUMO network and discovers legal
-LEFT, RIGHT, and STRAIGHT connection paths for each incoming lane.
-`ConflictZoneManager` precomputes stable path-pair relationships and uses
-Shapely swept envelopes based on each vehicle's actual width. It adds no fixed
-safety or uncertainty buffer. `ConflictGraphManager` then independently builds
-an ego-centred graph from each AV's own LDM.
-
-Path IDs include the exact incoming lane (for example,
-`W_IN_0_STRAIGHT`) so multi-lane approaches cannot overwrite movements with
-the same manoeuvre. Duplicate IDs fail initialization explicitly.
-
-Topology and occupied geometry are separate. Lane connectivity identifies
-SAME_PATH, DIVERGING, MERGING, or POTENTIAL_CROSSING relationships. A
-POTENTIAL_CROSSING becomes CROSSING, and a coordinated zone ID is assigned,
-only when the actual width-buffered envelopes have a non-empty intersection:
-`Z_ij = P_i intersection P_j`. Centreline intersection is not required.
-SAME_PATH and DIVERGING relationships receive no high-level conflict-zone ID.
-Flat buffer end caps stop at map-path endpoints and round joins form continuous
-offsets around bends; neither adds metres beyond half the physical width.
-
-The static manager retains each complete Polygon, MultiPolygon, or
-GeometryCollection and distance-along-path intervals for both paths. Runtime
-decisions use LDM widths; the startup catalogue uses the explicit 1.8 m width
-of the project's SUMO AV type. Startup writes network-derived validation data
-to `results/conflict_map_paths.csv` and
-`results/conflict_zone_catalogue.csv`. `CONFLICT_DEBUG_OUTPUT` optionally
-prints one startup summary and is disabled by default.
-
-An ego obtains only its own navigation manoeuvre. A target path comes from its
-current lane plus the authoritative fused intention result. UNKNOWN, unavailable,
-or map-infeasible predictions conservatively retain every legal movement from
-the target lane. Target route ID, route index, and ground-truth manoeuvre are
-not consumed. When valid manoeuvre probabilities are available, the reported
-spatial-conflict probability is exactly the probability mass of map-conflicting
-classes; it is not collision risk and has no additional threshold or weight.
-
-The operational graph contains only CROSSING and MERGING relationships.
-DIVERGING and SAME_PATH relationships remain map diagnostics for later
-lane-following/safety layers. This module makes no TTC, arrival-time,
-right-of-way, priority, negotiation, or control decision.
-
-The design adopts conflict-zone/local-distributed reasoning from Liu et al.,
-“Distributed Conflict Resolution for Connected Autonomous Vehicles” (2018),
-DOI `10.1109/TIV.2017.2788209`; graph representation principles from Chen et
-al., “Conflict-Free Cooperation Method for Connected and Automated Vehicles at
-Unsignalized Intersections” (2022), DOI `10.1109/TITS.2022.3182403`; and broad
-architectural support from Zhong, Nejad, and Lee, “Autonomous and
-Semi-Autonomous Intersection Management: A Survey” (2020). The intention-aware,
-ego-local integration is project-specific; it is not claimed as those papers'
-exact method or as a globally novel first implementation.
-
-`ConflictEntryMonitor` remains separate and controls prediction timing and
-eligibility. The conflict graph performs only spatial path-conflict detection.
-
-When covariance-backed tracking is added later, envelopes can be expanded by
-statistically derived position uncertainty rather than a guessed distance.
-
-Existing safety score, collision, throughput, and travel-time outputs do not
-validate this graph: it remains shadow-only. Geometry is validated separately
-through actual-map and synthetic envelope-intersection tests.
-
-## Research architecture
-
-The current staged architecture is:
-
-`SUMO → Perception Interface → Local Dynamic Map → GRU Intention Prediction [ONNX CPU] → Map-Aware Conflict Graph → Temporal/Kinematic Reachability → German StVO Traffic Rule Engine → Local Regulatory Precedence Claims → Ideal V2V Regulatory-Claim Exchange [SHADOW] → Joint Local Precedence Graph [SHADOW] → Semantic GraphObservation → GNN-Ready NumPy Tensor Encoder [SHADOW] → CPU PyTorch Edge-Aware MPNN [FORWARD VALIDATION ONLY] → Claim-Level Negotiation Candidate Builder [SHADOW] → Deterministic Claim/Proposal/Protocol Semantic Encoder [NUMPY] → Hard Regulatory Action Mask [SHADOW] → Decentralized Proposal Actor Interface [UNTRAINED] → Decentralized Response Actor Interface [UNTRAINED] → Role-Aware Masked Categorical Policy [UNTRAINED] → Rollout Data Contract [SCHEMA ONLY] → Centralized Critic Interface [TRAINING ONLY, UNTRAINED] → Multi-Proposal Per-Claim Agreement Protocol [SHADOW] → Negotiated Precedence Overlays [SHADOW] → Future Event-Driven Transitions → Future Reward Design → Future MAPPO Optimization → Future Training → Future Safety Shield → Future Negotiated Controller`
-
-The existing `Legacy NegotiationManager` remains the control-facing baseline.
-The StVO engine is read-only shadow diagnostics and cannot issue actions or
-speed commands.
-
-The new negotiation environment is also shadow-only. The GNN forward path and
-untrained claim-level actor/critic interfaces exist, but MAPPO optimization,
-MARL training, reward design, active negotiation, and learned control are not
-implemented. Step 5E's basis and unselected parameters are documented in
-`docs/research_basis/negotiation_learning.md`.
-
-### Shadow MARL negotiation problem
-
-Each AV independently integrates only its own LDM snapshots. Conflict geometry
-selects physically relevant participants; kinematic output supplies nominal and
-physical reachability evidence; and StVO output supplies regulatory obligations.
-The precedence edge convention is `A → B` meaning A must yield to B.
-
-Standard strongly connected components expose directed regulatory cycles where
-pairwise duties do not yield an immediately executable order. For acyclic
-graphs, the normal yield-dependency topological order is reported separately
-from its reverse, the regulatory service order. Vehicle IDs only make equivalent
-graph serializations deterministic and never determine traffic priority.
-
-The semantic graph observation keeps hard legal/conflict evidence separate
-from optional future efficiency features. `KEEP_CLAIM` and
-`RELINQUISH_CLAIM` now apply to one explicit incoming `other → ego` claim and
-are not driving commands. Outgoing `ego → other` edges remain mandatory yield
-obligations and cannot be deleted by learning. Exact Boolean masks block policy
-authority when regulatory inputs disagree or are unresolved. No scalar reward
-exists. The two actions express a preference/proposal but lack counterparty
-acceptance evidence. Step 5E.1 now formalizes proposal plus explicit matching
-`ACCEPT`/`REJECT` under the ideal same-step message model. The response-choice
-policy remains `RESPONSE_POLICY_SEMANTICS_REQUIRE_RESEARCH_DECISION`; the
-runtime does not fabricate a response or execute an agreement.
-
-The proposal/response format is an engineering research abstraction, not a
-claim that German law mandates these V2V packets. The original StVO-derived
-graph remains immutable for audit; completed agreements appear in a separate
-claim-specific overlay and effective coordination graph. No timeout, retry,
-range, loss, latency, safety authorization, scheduler, or speed action is part
-of this protocol checkpoint.
-
-### Ideal same-step V2V claim exchange
-
-Communication is an ideal deterministic same-simulation-step V2V baseline. It
-exists to validate decentralized reasoning independently of wireless
-impairments. It has no communication radius, packet loss, latency, bandwidth,
-timeout, retransmission rule, or hop limit. Delay and loss remain future
-sensitivity experiments.
-
-The simulation uses two phases. First every eligible AV completes its own
-conflict, reachability, StVO, and local precedence reasoning and publishes only
-the directed claims derived from its own LDM. The message set is then frozen.
-Second, every AV independently assembles a joint local graph from the same-step
-claims. This prevents Python iteration order from changing information
-availability.
-
-Assembly begins with the ego's local participant nodes. A communicated edge is
-adopted when either endpoint is already relevant, both endpoints are added, and
-the operation repeats to a mathematical fixed point. Disconnected broadcasts
-remain excluded. Duplicate directed claims become one edge with all supporting
-senders. Opposite directed claims are both retained and diagnosed as
-`COMMUNICATED_PRECEDENCE_DISAGREEMENT`; they are never voted away. Claims with
-another regulatory profile or inconsistent source timestamps are non-authoritative
-and explicitly diagnosed when connected to the local component.
-
-The GNN observation now represents this joint local graph while retaining the
-original local and communicated edge sets for explanation. GNN tensor encoding,
-GNN layers, MAPPO, reward design, active messages, and vehicle control remain
-not implemented.
-
-### GNN-ready NumPy tensor encoding
-
-The heterogeneous semantic graph is converted deterministically into read-only
-NumPy arrays before learning is introduced. TensorFlow is not used, PyTorch is
-not yet required, and no neural GNN or MAPPO component exists in this checkpoint.
-The encoder is representation-only and shadow-only.
-
-Node physical and observational scalars remain in their original SI/semantic
-units. No guessed normalization divisor is applied. Statistical normalization
-is marked `NOT_FITTED_TRAINING_STATISTICS_REQUIRED` and will later be fitted
-from training rollouts only, then reused unchanged for validation and testing.
-
-Every scalar has a corresponding availability mask. Missing information uses a
-masked storage placeholder of `0.0`; that placeholder is not a physical zero.
-Thus an observed stopped vehicle has speed value `0.0`, mask `1`, while unknown
-speed has value `0.0`, mask `0`. Non-finite available values are rejected.
-
-Relative approach uses multi-hot membership over `RIGHT`, `LEFT`, `ONCOMING`,
-and `SAME_APPROACH`. Edge origin uses one-hot membership over `LOCAL`,
-`COMMUNICATED`, and `LOCAL_AND_COMMUNICATED`. Column order identifies tensor
-fields and implies no ordinal relationship. Rule, route, vehicle, path, lane,
-and conflict-zone IDs are not numeric learning features. Detailed multi-zone
-reachability evidence remains metadata because selecting or aggregating one
-zone would require a separately justified semantic rule.
-
-### CPU edge-aware MPNN forward validation
-
-The untrained `EdgeAwareMPNNEncoder` consumes only `EncodedGraphObservation`
-through a CPU tensor adapter; it does not query an LDM or SUMO. Node and edge
-availability masks are concatenated with their values before learnable
-projections, preserving observed zero versus missing information.
-
-Edges retain yielding-to-priority direction. Each message concatenates source
-node, target node, and edge embeddings. Incoming messages are combined at the
-priority node by permutation-invariant SUM, and node updates concatenate the
-current state with that aggregate. Nodes without incoming edges receive SUM's
-zero-vector identity; no self-loop is fabricated. Mean pooling over final node
-states produces the graph embedding, while ego identity metadata selects the
-ego embedding independently of node order.
-
-This checkpoint validates CPU forward passes and finite gradients only. Hidden
-dimension, message-passing depth, and activation are marked
-`REQUIRES_VALIDATION_EXPERIMENT`; test fixture values are not final choices.
-There is no optimizer, training, reward, MAPPO, checkpoint, normalization fit,
-CUDA requirement, PyTorch Geometric, TensorFlow, or connection to control.
-Run `python validate_gnn_forward.py` for the test-only validation report.
-
-Research status: Step 5C NumPy graph tensor encoding is implemented; Step 5D
-CPU PyTorch MPNN forward/gradient validation is implemented. GNN training,
-MAPPO, reward design, and active control are not implemented or connected.
-
-### Hardware-safe optional neural runtime
-
-TensorFlow is not part of this project. The mandatory local runtime remains
-lightweight: SUMO/TraCI, NumPy, and ONNX Runtime CPU. The intention predictor
-continues to use ONNX Runtime's CPU execution provider. Importing
-`negotiation_learning` and running `main.py` do not import PyTorch.
-
-PyTorch is an optional development/training dependency listed separately in
-`requirements-training.txt`. Use `python check_ml_runtime.py` before neural
-validation. `validate_gnn_forward.py` also performs this guarded check before
-importing PyTorch; when PyTorch is absent or its binary cannot load, it reports
-`PYTORCH_RUNTIME_VALIDATION_BLOCKED` without affecting SUMO or the NumPy graph
-interface.
-
-If local CPU PyTorch is unsuitable, future GNN/MAPPO development may run in
-Google Colab using the same framework-independent NumPy graph contract. After
-training and separate compatibility validation, the deployment goal is ONNX
-export and ONNX Runtime CPU inference locally. This checkpoint neither trains
-nor exports a neural model and does not claim future MAPPO ONNX compatibility.
-
-Hardware-safe commands:
+Create a virtual environment outside the repository or in the ignored `.venv/` directory, then install:
 
 ```powershell
-python check_ml_runtime.py
-python validate_gnn_forward.py
-python main.py
+python -m pip install -r requirements.txt
+python -m pip install -r requirements-training.txt
 ```
 
-## German StVO traffic-rule engine (shadow)
+SUMO must be installed externally and `SUMO_HOME` should identify its installation. Python packages do not supply the SUMO executable or `netconvert`.
 
-The fixed `DE_STVO_UNCONTROLLED_4WAY_V1` profile covers one unsignalized,
-equal-road, four-leg, right-hand-traffic intersection with autonomous passenger
-vehicles. Pedestrians, cyclists, trams, special bus lanes, emergency vehicles,
-rail crossings, roundabouts, field/forest roads, priority roads, signals, and
-priority signs are outside this experiment's ODD.
+Runtime dependencies include NumPy, ONNX Runtime, TraCI/SUMO tools, Requests and Shapely. PyTorch and pytest are development/research dependencies.
 
-The archived official XML and its SHA-256 provenance are under
-`docs/regulatory_sources/de_stvo/2026-08-11`. Runtime logic loads only the
-reviewed JSON catalogue. Active pairwise rules are StVO § 8(1), § 9(3), and
-§ 9(4). Section 8(2) and § 1 remain qualitative normative constraints; § 2 is
-an ODD validation source; § 11(1) is deferred until exit clearance is available;
-and § 11(3) only records that relinquishment requires explicit coordination.
+## Network and model assets
 
-Approach relation uses normalized static incoming-lane direction vectors.
-Parallel means `SAME_APPROACH`, antiparallel means `ONCOMING`, and the exact
-2-D cross-product sign distinguishes `RIGHT` from `LEFT`. Only a floating-point
-roundoff tolerance based on machine ULP is used; there is no angle parameter.
-Every spatially conflicting feasible target path is assessed independently and
-aggregated without prediction probabilities. Divergent candidate results are
-`UNRESOLVED_DUE_TO_TARGET_MANOEUVRE`. Priority is never safety permission.
+`intersection.sumocfg` references `networks/intersection.net.xml` and `networks/intersection.rou.xml`. Rebuild sources and Windows/POSIX build scripts are in `networks/`.
 
-## Future stages
+Deployed intention assets are under `models/intention/`, including two ONNX GRUs, feature/calibration contracts, verification evidence and preprocessing provenance. Selected MAPPO artifacts and final evidence are under `results/final_mappo_selection_v2/`.
 
-## Shadow conflict-zone temporal occupancy
+## Testing and validation
 
-`ConflictZoneOccupancyAssessor` runs immediately after each ego-local Conflict
-Graph and evaluates only its spatial edges. It uses front-bumper lane progress,
-actual vehicle length, current speed, and the width-specific projected zone
-interval for each explicit ego-path/target-path pair.
+```powershell
+python -m pytest -q
+python -m scripts.validation.validate_gnn_forward
+```
 
-Movement progress uses one front-bumper coordinate whose origin is the end of
-the incoming lane. On an incoming lane,
-`s_vehicle = -max(0, lane_length - lane_position)`. On any internal lane owned
-by the movement, the observed world point is projected onto the exact movement
-centerline used for zone intervals. On the known outgoing lane,
-`s_vehicle = path_length + lane_position`. Multi-internal-lane movements use
-the same continuous centerline coordinate throughout.
+Standalone validators are retained for reproducibility; they are not final runtime entry points.
 
-For zone interval `[s_start, s_end]`, remaining front-bumper distances are
-`d_entry = max(0, s_start - s_vehicle)` and
-`d_clear = max(0, s_end + vehicle_length - s_vehicle)`. This distinguishes
-BEFORE_ZONE, CURRENTLY_OCCUPYING, and CLEARED_ZONE without a threshold.
-Strictly positive finite current speed is held constant to calculate relative
-and absolute entry/clear times. Stopped or otherwise unusable speeds remain
-unresolved; current physical occupancy is still reported and no minimum-speed
-substitution is used.
+## Research limitations
 
-Occupancy intervals are closed: boundary contact counts as overlap. A separated
-result reports the exact non-negative time between the earlier clear time and
-later entry time, without a safe/unsafe threshold. UNKNOWN and unavailable
-intentions retain all conflicting candidate paths; any overlapping candidate
-makes temporal conflict possible, while unresolved candidates prevent a false
-no-conflict conclusion when no overlap is established.
-
-Once an observed internal or outgoing lane belongs to only a subset of UNKNOWN
-candidate movements, incompatible paths are rejected using current map
-localization—not route truth. An edge with no applicable calculation is
-explicitly unresolved and is never treated as temporal separation.
-
-The result is stored per ego and exposed for shadow diagnostics only. It is not
-used by the legacy risk assessor, negotiation manager, speed controller, or
-SUMO safety settings. No scalar weighted risk score is produced.
-
-### Physically bounded reachability
-
-The environment reads each active vehicle's runtime `accel`, normal `decel`,
-`emergencyDecel`, and `maxSpeed` limits through TraCI and propagates them
-through perception into every ego-local track. The current AV type explicitly
-configures these as 2.0 m/s², 4.5 m/s², 7.0 m/s², and 13.89 m/s respectively;
-they are simulation properties, not duplicated assessor parameters.
-
-The assessor retains nominal constant-speed timing and separately computes the
-earliest physically reachable entry and clearance time under maximum forward
-acceleration capped by the runtime maximum speed. A stopped vehicle therefore
-has a finite earliest reachability bound without a speed floor. Normal stop
-feasibility uses `d_stop = v² / (2 * comfortable_deceleration)`. Emergency
-deceleration is recorded for later safety-shield work but is not used as normal
-negotiation behavior.
-
-If normal braking can stop the vehicle before zone entry, the future arrival
-upper bound is explicitly `UNBOUNDED_CAN_STOP`; no finite latest arrival is
-fabricated. Reachability output distinguishes current occupancy, uncommitted
-future motion, physical possibility, and unresolved dynamics from the nominal
-constant-speed prediction.
-
-Conflict Graph edges expose both the complete feasible candidate set and a
-`spatially_conflicting_candidate_paths` subset proven by physical geometry.
-Temporal assessment consumes only that subset. Learned prediction probability
-does not remove a feasible spatially conflicting path at this safety-validation
-stage, and target route truth remains excluded.
-
-Acceleration-aware or uncertainty-aware timing, decision-facing risk
-assessment, right-of-way negotiation, scheduling, and an independent safety
-shield remain future work. The shadow outputs are not connected to control.
-# Step 5G event-driven transition semantics
-
-Step 5G adds event-driven, per-claim negotiation decision epochs and causal,
-replayable actor/critic transition snapshots. These interfaces are shadow-only:
-they contain no reward, timeout, discount, optimizer, training, or vehicle-control
-operation. Unchanged semantic opportunities are deduplicated independently of
-SUMO frame timestamps, while lifecycle identity permits a genuinely new claim
-instance to emit a new decision.
-
-## Step 5H.0 scheduled-demand accounting
-
-The project preserves three separate clocks: exogenous scheduled demand,
-authoritative SUMO network departure, and authoritative SUMO route arrival.
-Schedules are registered before `traci.vehicle.add`; departure and arrival are
-captured once from the same completed simulation step. This environment-level
-ledger is not an actor or critic observation and does not calculate reward.
-
-## Step 5H physical team objective
-
-The baseline cooperative objective minimizes exact total vehicle travel-time
-exposure from scheduled demand until SUMO arrival or episode-end censoring.
-The raw reward is its mathematical negative, in negative vehicle-seconds. It
-contains no action bonus, collision or regulatory penalty, fairness weight,
-throughput bonus, clipping, normalization, or learned parameter.
-
-## Step 5I return and MAPPO mathematics
-
-Complete episodes use the exact undiscounted suffix sum of Step 5H team
-rewards. This preserves the physical total-travel-time objective without a
-discount factor. The centralized value target is that exact return and the raw
-advantage is return minus centralized value. Per-policy-factor importance
-ratios are available, but GAE, PPO clipping configuration, loss aggregation,
-optimization, and parameter updates remain disabled.
-
-## Step 5J.1 experimental selection framework
-
-Choices fixed by mathematics, schemas, regulatory authority, and project
-semantics are separated from unresolved architecture and training-method
-choices. The framework records scenario roles, candidate provenance, seeds,
-metrics, hard validity gates, run identity, and selection evidence without
-assigning numerical candidates or executing training. Validation data may
-support future selection; held-out test data is structurally excluded.
+- Model selection is a bounded one-factor comparison of E5, E10 and E15 with three canonical replications and two PPO update cycles, not a global hyperparameter search.
+- The selected configuration is E5; demo replication 0 is canonical, not performance-selected.
+- The held-out deterministic no-negotiation baseline can fail predefined hard safety-validity gates. Aborted scenarios have no fabricated travel-time value.
+- Simulator and scenario coverage bound external validity; the results are not universal across intersections, populations, sensors, or jurisdictions.
+- SUMO-native safety interventions remain evidence and are not learned-policy actions.

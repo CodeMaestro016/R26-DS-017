@@ -143,7 +143,7 @@ def test_every_prior_methodological_blocker_remains(review):
 def test_validator_and_review_do_not_import_execution_runner_or_traci():
     sources = "\n".join(Path(path).read_text(encoding="utf-8") for path in (
         "negotiation_training/extended_evidence_review.py",
-        "validate_mappo_extended_evidence_review.py"))
+        "scripts/validation/validate_mappo_extended_evidence_review.py"))
     assert "ExtendedMAPLearningCurveRunner" not in sources
     assert "MechanicalMAPPOTrainer" not in sources
     assert "CoupledNegotiationTrainingEnvironment" not in sources

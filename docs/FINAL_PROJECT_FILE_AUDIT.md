@@ -1,5 +1,8 @@
 # Final Project File Audit
 
+> Organization update: standalone `validate_*.py` files listed by basename in
+> this historical audit now live under `scripts/validation/`.
+
 Audit date: 2026-08-18  
 Scope: the 767 non-`.git` files present before this audit. Git database internals were not project files and were excluded. The two audit outputs are not included in the counts. This was a read-only cleanup audit: files deleted = 0; moved = 0; renamed = 0; source modifications = 0.
 
@@ -56,8 +59,8 @@ Important dynamic references checked:
 | `main.py` | Full SUMO/ONNX shadow-system run | Final runtime | Yes |
 | `run_project.bat` | Windows launcher for `main.py` | Final runtime | Yes |
 | `run_research_demo.py` | Frozen three-scenario MAPPO demonstration | Final runtime/demo | Yes |
-| `check_ml_runtime.py` | Reports optional NumPy/PyTorch/ONNX capability | Historical validation utility | Yes, archive |
-| `validate_gnn_forward.py` | Explicitly untrained, test-only GNN forward gate | Research validation | Yes, archive |
+| `scripts/diagnostics/check_ml_runtime.py` | Reports optional NumPy/PyTorch/ONNX capability | Historical validation utility | Yes, retained |
+| `scripts/validation/validate_gnn_forward.py` | Explicitly untrained, test-only GNN forward gate | Research validation | Yes, retained |
 | `validate_controlled_pilot_design.py`, `validate_experimental_selection_framework.py` | Frozen experimental/pilot design gates | Research methodology | Yes, archive |
 | `validate_negotiation_scenario_coverage.py`, `validate_map_coordinate_frame.py` | Scenario and compiled-map validation | Research/SUMO validation | Yes, archive |
 | `validate_discrete_sumo_braking_semantics.py`, `validate_identical_condition_branch_replay.py`, `validate_negotiation_traffic_coupling.py`, `validate_coordination_physical_execution_mapping.py` | Physical coupling/control evidence | Research validation | Yes, archive |
@@ -143,7 +146,7 @@ File count: **49**. Compiled copies under `tests/__pycache__` are excluded here 
 
 | Path | Purpose | Referenced by |
 |---|---|---|
-| `README.md`; `PROJECT_STRUCTURE.md`; `VALIDATION_REPORT.md` | Setup, architecture, scope and validation history | Researchers/users |
+| `README.md`; `docs/PROJECT_STRUCTURE.md`; `docs/VALIDATION_REPORT.md` | Setup, architecture, scope and validation history | Researchers/users |
 | `requirements.txt`; `requirements-training.txt`; `.gitignore` | Runtime/training environment and repository hygiene | Setup/version control |
 | `docs/research_basis/*.md` | Map-frame and learning research basis | Thesis/provenance |
 | `docs/regulatory_sources/StVO.pdf` | Official-law source artifact | Regulatory provenance |
@@ -156,7 +159,7 @@ File count: **269**. The two XML files are byte-identical, but neither is marked
 
 | Path | Why historical | Needed for runtime? | Why retain |
 |---|---|---|---|
-| `check_ml_runtime.py` | Environment capability checkpoint | No | Reproduces dependency diagnosis |
+| `scripts/diagnostics/check_ml_runtime.py` | Environment capability checkpoint | No | Reproduces dependency diagnosis |
 | `joint_negotiation_validation.py` | Shared Step 5J evidence helper | No | Validators/tests still reference it |
 | `validate_*.py` (31 files) | Stage-specific validation/training/evidence runners | No, except manual validation | Reproduces research gates and generated evidence |
 

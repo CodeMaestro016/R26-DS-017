@@ -46,6 +46,8 @@ desktop.ini
 # Temporary files
 *.tmp
 *.temp
+*.log
+logs/
 
 # Project-specific obsolete artifact
 /conflict.zip
