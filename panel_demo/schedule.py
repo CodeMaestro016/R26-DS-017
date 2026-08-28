@@ -11,17 +11,26 @@ class PanelDemand:
 
 
 APPROACH_PATHS = {
-    # This opening mix keeps the live continuous stream moving while retaining
-    # conflicting paths; later waves cover every remaining legal movement.
-    "N": ("N_IN_0_RIGHT", "N_IN_0_STRAIGHT", "N_IN_0_LEFT"),
-    "E": ("E_IN_0_LEFT", "E_IN_0_RIGHT", "E_IN_0_STRAIGHT"),
+    # Phase 1: E-left/N-left (rule-resolved).
+    # Phase 2: E-straight/N-straight/S-right/W-left (training manifest MAPPO).
+    # Phase 3: E-right/N-right/S-straight/W-right (rule-resolved).
+    # Phase 4: S-left/W-straight (rule-resolved).
+    "N": ("N_IN_0_LEFT", "N_IN_0_STRAIGHT", "N_IN_0_RIGHT"),
+    "E": ("E_IN_0_LEFT", "E_IN_0_STRAIGHT", "E_IN_0_RIGHT"),
     "S": ("S_IN_0_RIGHT", "S_IN_0_STRAIGHT", "S_IN_0_LEFT"),
-    "W": ("W_IN_0_STRAIGHT", "W_IN_0_RIGHT", "W_IN_0_LEFT"),
+    "W": ("W_IN_0_LEFT", "W_IN_0_RIGHT", "W_IN_0_STRAIGHT"),
 }
+
+# Simultaneous admission with a fixed order; subsequent waves are admitted
+# only after the prior wave clears all four rolling approach slots.
+INITIAL_ADMISSION_SECONDS = {"N": 0.0, "E": 0.0, "S": 0.0, "W": 0.0}
+ADMISSION_ORDER = ("N", "E", "S", "W")
+ADMISSION_WAVES = (("N", "E"), ("N", "E", "S", "W"),
+                   ("N", "E", "S", "W"), ("S", "W"))
 
 
 def build_default_schedule():
-    """Use all 12 legal movements in a fixed evidence-backed wave order."""
+    """Use all 12 movements in four predeclared actor-safe phases."""
     return {approach: tuple(PanelDemand(approach, path, index)
                             for index, path in enumerate(paths))
             for approach, paths in APPROACH_PATHS.items()}

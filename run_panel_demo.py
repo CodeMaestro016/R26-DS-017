@@ -8,7 +8,7 @@ from panel_demo import run_panel_demo
 def main(argv=None):
     parser = argparse.ArgumentParser()
     parser.add_argument("--gui", action="store_true")
-    parser.add_argument("--duration", type=float, default=120.0,
+    parser.add_argument("--duration", type=float, default=220.0,
                         help="Presentation duration in simulation seconds.")
     parser.add_argument("--gui-delay-ms", type=int, default=0,
                         help="Display delay only; simulation timing is unchanged.")

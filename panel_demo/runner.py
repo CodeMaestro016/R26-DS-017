@@ -26,7 +26,9 @@ from predictor import IntentionPredictor
 from traffic_rules import TrafficRuleEngine
 
 from .reporting import write_panel_outputs
-from .schedule import build_default_schedule, validate_schedule
+from .schedule import (ADMISSION_ORDER, ADMISSION_WAVES,
+                       INITIAL_ADMISSION_SECONDS,
+                       build_default_schedule, validate_schedule)
 from .visualization import PanelDemoVisualizer
 
 
@@ -109,6 +111,7 @@ def _print_event(number, now, participants, status, original, outcome, plan,
         print("MAPPO_INVOCATION = NOT_REQUIRED" if status ==
               "REGULATORY_ORDER_RESOLVED" else "MAPPO_INVOCATION = BLOCKED")
     else:
+        print("MAPPO_INVOCATION = AUTHORIZED")
         print("PROPOSER: " + repr(
             outcome.proposer_assignment.claim_action_assignments))
         print("RESPONDER: " + repr(
@@ -120,7 +123,7 @@ def _print_event(number, now, participants, status, original, outcome, plan,
     print("-" * 60)
 
 
-def run_panel_demo(*, duration_seconds=120.0, use_gui=False, gui_delay_ms=0,
+def run_panel_demo(*, duration_seconds=220.0, use_gui=False, gui_delay_ms=0,
                    output_dir="results/panel_demo", schedule=None,
                    environment_factory=SUMOEnv):
     if duration_seconds <= 0:
@@ -148,6 +151,8 @@ def run_panel_demo(*, duration_seconds=120.0, use_gui=False, gui_delay_ms=0,
     authority = None
     cleared, entry_events, clear_events = set(), [], []
     last_attempt_identity = None
+    last_blocked_invocation = None
+    next_admission_wave = 0
     starts = closes = 0
     metrics = {"presentation_vehicles_scheduled": 12,
                "presentation_vehicles_completed": 0,
@@ -156,15 +161,30 @@ def run_panel_demo(*, duration_seconds=120.0, use_gui=False, gui_delay_ms=0,
                "renegotiation_events": 0, "safe_hold_activations": 0,
                "collisions": 0, "blocked_zone_violations": 0,
                "maximum_negotiation_participants": 0}
-    diagnostics = []
+    diagnostics, event_records = [], []
     _print_banner()
     try:
         environment.start(); starts += 1
         visualizer.configure_camera(paths)
         max_steps = int(round(float(duration_seconds) / SIM_TIME_STEP))
         while environment.step_count < max_steps:
-            for approach in sorted(slots):
-                if slots[approach] is None and queues[approach]:
+            wave_ready = all(vehicle_id is None
+                             for vehicle_id in slots.values())
+            wave_approaches = (set(ADMISSION_WAVES[next_admission_wave])
+                               if wave_ready and next_admission_wave <
+                               len(ADMISSION_WAVES) else set())
+            admitted_this_step = False
+            for approach in ADMISSION_ORDER:
+                initial_pending = (len(queues[approach]) == 3 and
+                                   not any(x.startswith(
+                                       f"PANEL_AV_{approach}_")
+                                           for x in spawned_ids))
+                release_time = (INITIAL_ADMISSION_SECONDS[approach]
+                                if initial_pending else 0.0)
+                if (approach in wave_approaches and
+                        slots[approach] is None and
+                        queues[approach] and
+                        environment.current_time >= release_time):
                     demand = queues[approach].pop(0)
                     vehicle_id = f"PANEL_AV_{approach}_{demand.sequence_index + 1:02d}"
                     route = derive_existing_route_id(paths,
@@ -179,8 +199,11 @@ def run_panel_demo(*, duration_seconds=120.0, use_gui=False, gui_delay_ms=0,
                     movements[vehicle_id] = demand.movement_path_id
                     vehicle_approaches[vehicle_id] = approach
                     spawned_ids.append(vehicle_id)
+                    admitted_this_step = True
                     print(f"VEHICLE_ADMITTED {vehicle_id} "
                           f"{demand.movement_path_id}")
+            if admitted_this_step:
+                next_admission_wave += 1
             states = environment.step(); now = environment.current_time
             for vehicle_id in environment.lifecycle_events.arrived_vehicle_ids:
                 if vehicle_id in vehicle_approaches:
@@ -241,27 +264,66 @@ def run_panel_demo(*, duration_seconds=120.0, use_gui=False, gui_delay_ms=0,
                     authority = None; zone_observations = None
 
             if original and authority is None and identity != last_attempt_identity:
-                last_attempt_identity = identity
                 source_id = (("PANEL_DEMO",), now,
                              "CONTINUOUS_JOINT_NEGOTIATION_CONTEXT")
                 outcome = None
+                invocation_block_reason = None
                 if status in NEGOTIABLE:
                     encoded = tuple(observations.get_ldm(x["ego_id"]).
                                     current_encoded_graph_observation
                                     for x in snapshots)
-                    outcome = provider.select_joint_actions(
-                        scenario_id=("PANEL_DEMO_PRESENTATION_ONLY",),
-                        episode_id=("PANEL_DEMO_ONE_PROCESS",),
-                        batch_id=(("PANEL_DEMO_ONE_PROCESS",), now),
-                        source_snapshot_id=source_id, original_edges=edges,
-                        active_vehicle_ids=participants, timestamp=now,
-                        regulatory_profile="DE_STVO_UNCONTROLLED_4WAY_V1",
-                        negotiation_status=status, encoded_graphs=encoded)
-                    if outcome is not None:
-                        metrics["mappo_decision_epochs"] += 1
+                    factors = provider._eligible_factors(
+                        participants, edges, status)
+                    encoded_egos = {item.ego_id for item in encoded}
+                    required_egos = ({claim.ego_id for claim, _ in factors} |
+                                     {claim.counterparty_id
+                                      for claim, _ in factors})
+                    missing_egos = tuple(sorted(required_egos - encoded_egos))
+                    if not factors:
+                        invocation_block_reason = "NO_ELIGIBLE_PROPOSER_FACTORS"
+                    elif missing_egos:
+                        invocation_block_reason = "RESPONDER_CONTEXT_INCOMPLETE"
+                    else:
+                        outcome = provider.select_joint_actions(
+                            scenario_id=("PANEL_DEMO_PRESENTATION_ONLY",),
+                            episode_id=("PANEL_DEMO_ONE_PROCESS",),
+                            batch_id=(("PANEL_DEMO_ONE_PROCESS",), now),
+                            source_snapshot_id=source_id,
+                            original_edges=edges,
+                            active_vehicle_ids=participants, timestamp=now,
+                            regulatory_profile=
+                                "DE_STVO_UNCONTROLLED_4WAY_V1",
+                            negotiation_status=status,
+                            encoded_graphs=encoded)
+                        if outcome is not None:
+                            metrics["mappo_decision_epochs"] += 1
+                    if invocation_block_reason:
+                        signature = (identity, invocation_block_reason,
+                                     missing_egos)
+                        if signature != last_blocked_invocation:
+                            print("MAPPO_INVOCATION = BLOCKED")
+                            print("Reason: " + invocation_block_reason)
+                            if missing_egos:
+                                print("Missing encoded egos: " +
+                                      repr(missing_egos))
+                            diagnostics.append({
+                                "event": "MAPPO_INVOCATION_BLOCKED",
+                                "timestamp": now,
+                                "reason": invocation_block_reason,
+                                "missing_encoded_egos": missing_egos})
+                            last_blocked_invocation = signature
                 elif status == "REGULATORY_ORDER_RESOLVED":
                     metrics["rule_resolved_events"] += 1
                     print("TRAFFIC_RULE_ORDER_ALREADY_RESOLVED")
+                if invocation_block_reason:
+                    # Do not freeze an incomplete authority or mark the live
+                    # state attempted; retry when every required local actor
+                    # context exists.
+                    outcome = None
+                    visualizer.update(states, participants, (), ())
+                    continue
+                last_attempt_identity = identity
+                last_blocked_invocation = None
                 effective = (outcome.effective_precedence_graph
                              if outcome is not None else original)
                 obligations = mapper.map(effective, tuple(states), movements)
@@ -287,6 +349,22 @@ def run_panel_demo(*, duration_seconds=120.0, use_gui=False, gui_delay_ms=0,
                 _print_event(metrics["negotiation_events"], now, participants,
                              status, original, outcome, plan,
                              len(completed_ids), 12)
+                event_records.append({
+                    "event_number": metrics["negotiation_events"],
+                    "timestamp": now, "status": status,
+                    "participants": participants,
+                    "mappo_invocation": ("AUTHORIZED" if outcome is not None
+                                         else "NOT_REQUIRED" if status ==
+                                         "REGULATORY_ORDER_RESOLVED" else
+                                         "BLOCKED"),
+                    "proposer_actions": (outcome.proposer_assignment.
+                        claim_action_assignments if outcome else ()),
+                    "responder_actions": (outcome.responder_assignment.
+                        response_action_assignments if outcome else ()),
+                    "original_regulatory_graph": original,
+                    "effective_coordination_graph": effective,
+                    "ready_vehicle_ids": plan.ready_vehicle_ids,
+                    "blocked_vehicle_ids": plan.blocked_vehicle_ids})
 
             if authority is not None:
                 if zone_observations is None:
@@ -341,11 +419,18 @@ def run_panel_demo(*, duration_seconds=120.0, use_gui=False, gui_delay_ms=0,
         "presentation_schedule": {key: [x.movement_path_id for x in value]
                                   for key, value in schedule.items()},
         "schedule_source": "PREDECLARED_PRESENTATION_ROLLING_APPROACH_SLOTS",
+        "mappo_demo_case_source":
+            "EXISTING_TRAINING_SIDE_ILLUSTRATIVE_CASE",
+        "mappo_demo_case_identifier": (
+            "TRAINING_MANIFEST_ROUTE_STRUCTURE",
+            ("E_IN_0_STRAIGHT", "N_IN_0_STRAIGHT",
+             "S_IN_0_RIGHT", "W_IN_0_LEFT")),
         "training_demo_case_search": False,
         "validation_or_held_out_search": False,
         "spawned_vehicle_ids": spawned_ids,
         "completed_vehicle_ids": completed_ids,
-        "metrics": metrics, "diagnostics": diagnostics}
+        "metrics": metrics, "events": event_records,
+        "diagnostics": diagnostics}
     if not result["policy_hash_unchanged"]:
         raise RuntimeError("SELECTED_POLICY_HASH_CHANGED_DURING_PANEL_DEMO")
     write_panel_outputs(result, output_dir)

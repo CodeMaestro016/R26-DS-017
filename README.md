@@ -105,6 +105,8 @@ python run_panel_demo.py --gui
 
 Optional presentation controls are `--duration` and `--gui-delay-ms`. The latter changes display pacing only; the simulation step remains 0.04 seconds. New qualitative output is written only under `results/panel_demo/`.
 
+The default duration is 220 seconds so all four predeclared continuous phases can finish without changing vehicle speed. The sequence includes ordinary rule-resolved traffic, one training-manifest route structure evaluated by the live selected-E5 actors, and continuing traffic that covers all 12 legal movements. A MAPPO epoch is counted only when authorized live semantic actions are actually returned.
+
 ## Research limitations
 
 - Model selection is a bounded one-factor comparison of E5, E10 and E15 with three canonical replications and two PPO update cycles, not a global hyperparameter search.

@@ -23,6 +23,13 @@ def test_selected_e5_checkpoint_loads_and_runtime_critic_is_disabled():
     assert provider.bundle.centralized_critic is None
 
 
+def test_default_panel_duration_covers_the_four_legitimate_phases():
+    assert inspect.signature(run_panel_demo).parameters[
+        "duration_seconds"].default == 220.0
+    cli = Path("run_panel_demo.py").read_text(encoding="utf-8")
+    assert 'default=220.0' in cli
+
+
 def test_no_training_optimizer_or_backward_path_exists_in_panel_runner():
     source = inspect.getsource(run_panel_demo).lower()
     assert "optimizer.step" not in source
@@ -78,12 +85,46 @@ def test_negotiable_cycle_uses_actual_selected_provider_actions():
     assert "outcome.responder_assignment.response_action_assignments" in source
 
 
+def test_incomplete_actor_context_is_diagnosed_and_retried():
+    source = inspect.getsource(run_panel_demo)
+    assert "RESPONDER_CONTEXT_INCOMPLETE" in source
+    assert "missing_encoded_egos" in source
+    assert "Do not freeze an incomplete authority" in source
+
+
+def test_mappo_epoch_count_requires_a_non_null_live_outcome():
+    source = inspect.getsource(run_panel_demo)
+    increment = 'metrics["mappo_decision_epochs"] += 1'
+    assert source.index("if outcome is not None:") < source.index(increment)
+
+
+def test_predeclared_case_is_from_training_manifest_not_held_out():
+    source = inspect.getsource(run_panel_demo)
+    assert "EXISTING_TRAINING_SIDE_ILLUSTRATIVE_CASE" in source
+    expected = {"E_IN_0_STRAIGHT", "N_IN_0_STRAIGHT",
+                "S_IN_0_RIGHT", "W_IN_0_LEFT"}
+    schedule = build_default_schedule()
+    actual = {schedule[approach][index].movement_path_id
+              for approach, index in (("E", 1), ("N", 1),
+                                      ("S", 0), ("W", 0))}
+    assert actual == expected
+
+
 def test_disagreement_is_conservatively_classified_and_not_policy_authorized():
     snapshots = ({"negotiation_status":
                   "COMMUNICATED_PRECEDENCE_DISAGREEMENT"},)
     assert _dynamic_status(snapshots, (("A", "B"),)) == (
         "COMMUNICATED_PRECEDENCE_DISAGREEMENT")
     assert "COMMUNICATED_PRECEDENCE_DISAGREEMENT" not in NEGOTIABLE
+
+
+def test_no_hard_coded_winner_or_semantic_action_exists():
+    source = inspect.getsource(run_panel_demo)
+    forbidden = ("smallest", "alphabetical", "timeout winner",
+                 'outcome = "RELINQUISH_CLAIM"',
+                 'outcome = "ACCEPT_RELINQUISHMENT"')
+    assert not any(item in source.lower() for item in forbidden[:3])
+    assert not any(item in source for item in forbidden[3:])
 
 
 def test_mappo_never_directly_issues_speed_commands():
