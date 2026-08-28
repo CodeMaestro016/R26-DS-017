@@ -4,6 +4,8 @@ import time
 
 
 class PanelDemoVisualizer:
+    PANEL_VIEW_HALF_EXTENT_METERS = 135.0
+    PANEL_FOCUSED_ZOOM = 2000.0
     BLUE = (30, 100, 255, 255)
     YELLOW = (255, 210, 0, 255)
     GREEN = (30, 200, 80, 255)
@@ -20,13 +22,22 @@ class PanelDemoVisualizer:
             return
         try:
             view = self.traci.gui.getIDList()[0]
-            boundary = path_manager.network.getBoundary()
-            center = ((boundary[0] + boundary[2]) / 2.0,
-                      (boundary[1] + boundary[3]) / 2.0)
+            center = self._intersection_center(path_manager)
             self.traci.gui.setOffset(view, *center)
-            self.traci.gui.setZoom(view, 900.0)
+            self.traci.gui.setZoom(view, self.PANEL_FOCUSED_ZOOM)
         except Exception:
-            return
+            pass
+
+    @staticmethod
+    def _intersection_center(path_manager):
+        """Derive the junction center from the 12 internal path geometries."""
+        points = tuple(point for path in path_manager.paths.values()
+                       for point in path.centerline_geometry)
+        if not points:
+            raise ValueError("PANEL_CAMERA_PATH_GEOMETRY_UNAVAILABLE")
+        xs, ys = zip(*points)
+        return ((min(xs) + max(xs)) / 2.0,
+                (min(ys) + max(ys)) / 2.0)
 
     def update(self, active_ids, negotiating=(), ready=(), blocked=()):
         if not self.enabled:

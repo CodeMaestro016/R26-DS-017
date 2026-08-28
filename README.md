@@ -105,6 +105,14 @@ python run_panel_demo.py --gui
 
 Optional presentation controls are `--duration` and `--gui-delay-ms`. The latter changes display pacing only; the simulation step remains 0.04 seconds. New qualitative output is written only under `results/panel_demo/`.
 
+For a comfortably paced viva display:
+
+```powershell
+python run_panel_demo.py --gui --gui-delay-ms 10
+```
+
+GUI mode immediately centers on the intersection using the movement-path geometry and applies a focused view that retains all four approaches. Camera, colors, and playback delay are display-only and do not affect simulation timestamps or control.
+
 The default duration is 220 seconds so all four predeclared continuous phases can finish without changing vehicle speed. The sequence includes ordinary rule-resolved traffic, one training-manifest route structure evaluated by the live selected-E5 actors, and continuing traffic that covers all 12 legal movements. A MAPPO epoch is counted only when authorized live semantic actions are actually returned.
 
 ## Research limitations

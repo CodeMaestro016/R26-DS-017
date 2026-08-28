@@ -151,6 +151,99 @@ def test_visualization_is_failure_isolated_and_has_no_return_to_control():
     assert "return plan" not in source and "setSpeed" not in source
 
 
+class _FakeGUI:
+    def __init__(self, fail_schema=False):
+        self.calls = []
+        self.fail_schema = fail_schema
+
+    def getIDList(self):
+        self.calls.append(("getIDList",))
+        return ("View #0",)
+
+    def setBoundary(self, *args):
+        self.calls.append(("setBoundary",) + args)
+
+    def setOffset(self, *args):
+        self.calls.append(("setOffset",) + args)
+
+    def setZoom(self, *args):
+        self.calls.append(("setZoom",) + args)
+
+    def setSchema(self, *args):
+        self.calls.append(("setSchema",) + args)
+        if self.fail_schema:
+            raise RuntimeError("unsupported scheme")
+
+
+class _FakeVehicle:
+    def __init__(self):
+        self.colors = {}
+
+    def getIDList(self):
+        return tuple("ABCD")
+
+    def setColor(self, vehicle_id, color):
+        self.colors[vehicle_id] = color
+
+
+def _visual_path_manager():
+    paths = {
+        name: SimpleNamespace(centerline_geometry=geometry)
+        for name, geometry in {
+            "N": ((300.0, 307.0), (300.0, 293.0)),
+            "E": ((307.0, 300.0), (293.0, 300.0)),
+        }.items()}
+    return SimpleNamespace(paths=paths)
+
+
+def test_camera_uses_intersection_geometry_and_focused_zoom():
+    gui = _FakeGUI()
+    visualizer = PanelDemoVisualizer(
+        SimpleNamespace(gui=gui, vehicle=_FakeVehicle()), enabled=True)
+    visualizer.configure_camera(_visual_path_manager())
+    assert ("setOffset", "View #0", 300.0, 300.0) in gui.calls
+    assert ("setZoom", "View #0", 2000.0) in gui.calls
+    assert not any(call[0] == "getBoundary" for call in gui.calls)
+
+
+def test_camera_is_gui_only_and_headless_invokes_no_gui_api():
+    gui = _FakeGUI()
+    visualizer = PanelDemoVisualizer(
+        SimpleNamespace(gui=gui, vehicle=_FakeVehicle()), enabled=False)
+    visualizer.configure_camera(_visual_path_manager())
+    visualizer.update(("A",), ("A",), (), ())
+    assert gui.calls == []
+
+
+def test_unsafe_programmatic_schema_selection_is_not_used():
+    gui = _FakeGUI(fail_schema=True)
+    visualizer = PanelDemoVisualizer(
+        SimpleNamespace(gui=gui, vehicle=_FakeVehicle()), enabled=True)
+    visualizer.configure_camera(_visual_path_manager())
+    assert any(call[0] == "setZoom" for call in gui.calls)
+    assert not any(call[0] == "setSchema" for call in gui.calls)
+
+
+def test_vehicle_color_legend_and_blocked_precedence_are_preserved():
+    vehicle = _FakeVehicle()
+    visualizer = PanelDemoVisualizer(
+        SimpleNamespace(gui=_FakeGUI(), vehicle=vehicle), enabled=True)
+    visualizer.update(tuple("ABCD"), negotiating=("B", "D"),
+                      ready=("C", "D"), blocked=("D",))
+    assert vehicle.colors == {
+        "A": PanelDemoVisualizer.BLUE,
+        "B": PanelDemoVisualizer.YELLOW,
+        "C": PanelDemoVisualizer.GREEN,
+        "D": PanelDemoVisualizer.RED}
+
+
+def test_visualization_contains_no_vehicle_motion_or_lifecycle_calls():
+    source = Path("panel_demo/visualization.py").read_text(encoding="utf-8")
+    forbidden = ("setSpeed", "slowDown", "moveTo", "moveToXY",
+                 "teleport", "vehicle.remove", "vehicle.add")
+    assert not any(token in source for token in forbidden)
+
+
 def test_route_truth_is_used_only_for_spawn_and_not_actor_arguments():
     source = inspect.getsource(run_panel_demo)
     call = source[source.index("provider.select_joint_actions"):]
