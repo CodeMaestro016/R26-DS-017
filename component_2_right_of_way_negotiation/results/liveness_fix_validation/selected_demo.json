@@ -1,0 +1,1695 @@
+{
+  "selected_candidate_id": "E5",
+  "demo_replication_rule": "CANONICAL_REPLICATION_0",
+  "training_operations": 0,
+  "held_out_scenarios_used": 0,
+  "scenario_results": [
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "E_IN_0_LEFT",
+          "N_IN_0_RIGHT",
+          "S_IN_0_LEFT",
+          "W_IN_0_RIGHT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "total_team_travel_time_seconds": 647.4,
+      "scheduled_vehicles": 4,
+      "completed_vehicles": 1,
+      "unresolved_coordination_case": false,
+      "episode_completion_status": "EPISODE_ENDED_UNFINISHED_VEHICLES",
+      "unresolved_coordination_reason": null,
+      "throughput": 0.005,
+      "collisions": 0,
+      "blocked_zone_violations": 0,
+      "native_sumo_safety_interventions": 0,
+      "negotiation_batches": 2,
+      "learned_proposer_actions": 15,
+      "learned_responder_actions": 9,
+      "neural_actor_calls": null,
+      "fabricated_negotiation_branches": 0,
+      "vehicle_id_priority_decisions": 0,
+      "liveness_metrics": {
+        "negotiation_decision_epochs": 5,
+        "renegotiation_events": 2,
+        "non_executable_negotiation_outcomes": 2,
+        "executable_plans": 1,
+        "safe_hold_activations": 2,
+        "scheduled_vehicles": 4,
+        "completed_vehicles": 1,
+        "unfinished_vehicles": 3,
+        "unfinished_vehicle_ids": [
+          "SCENARIO_AV_0",
+          "SCENARIO_AV_2",
+          "SCENARIO_AV_3"
+        ],
+        "all_scheduled_vehicles_completed": false
+      },
+      "liveness_diagnostics": [
+        {
+          "event": "NEGOTIATION_EVENT_CREATED",
+          "timestamp": 15.76,
+          "state_identity": [
+            [
+              "SCENARIO_AV_0",
+              "SCENARIO_AV_1",
+              "SCENARIO_AV_2",
+              "SCENARIO_AV_3"
+            ],
+            [
+              [
+                "SCENARIO_AV_0",
+                "SCENARIO_AV_1"
+              ],
+              [
+                "SCENARIO_AV_0",
+                "SCENARIO_AV_3"
+              ],
+              [
+                "SCENARIO_AV_1",
+                "SCENARIO_AV_3"
+              ],
+              [
+                "SCENARIO_AV_2",
+                "SCENARIO_AV_0"
+              ],
+              [
+                "SCENARIO_AV_3",
+                "SCENARIO_AV_0"
+              ],
+              [
+                "SCENARIO_AV_3",
+                "SCENARIO_AV_2"
+              ]
+            ],
+            []
+          ],
+          "source_snapshot_id": [
+            [
+              "NEGOTIATION_SCENARIO_V1",
+              "intersection.net.xml:9316",
+              "REGULATORY_CYCLE",
+              [
+                "E_IN_0_LEFT",
+                "N_IN_0_RIGHT",
+                "S_IN_0_LEFT",
+                "W_IN_0_RIGHT"
+              ],
+              "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+              "AV",
+              "DE_STVO_UNCONTROLLED_4WAY_V1"
+            ],
+            15.76,
+            "COUPLED_JOINT_NEGOTIATION_CONTEXT"
+          ]
+        },
+        {
+          "event": "NEGOTIATION_EVENT_CREATED",
+          "timestamp": 16.04,
+          "state_identity": [
+            [
+              "SCENARIO_AV_0",
+              "SCENARIO_AV_1",
+              "SCENARIO_AV_2",
+              "SCENARIO_AV_3"
+            ],
+            [
+              [
+                "SCENARIO_AV_0",
+                "SCENARIO_AV_1"
+              ],
+              [
+                "SCENARIO_AV_0",
+                "SCENARIO_AV_3"
+              ],
+              [
+                "SCENARIO_AV_1",
+                "SCENARIO_AV_3"
+              ],
+              [
+                "SCENARIO_AV_2",
+                "SCENARIO_AV_0"
+              ],
+              [
+                "SCENARIO_AV_2",
+                "SCENARIO_AV_1"
+              ],
+              [
+                "SCENARIO_AV_3",
+                "SCENARIO_AV_0"
+              ],
+              [
+                "SCENARIO_AV_3",
+                "SCENARIO_AV_2"
+              ]
+            ],
+            []
+          ],
+          "source_snapshot_id": [
+            [
+              "NEGOTIATION_SCENARIO_V1",
+              "intersection.net.xml:9316",
+              "REGULATORY_CYCLE",
+              [
+                "E_IN_0_LEFT",
+                "N_IN_0_RIGHT",
+                "S_IN_0_LEFT",
+                "W_IN_0_RIGHT"
+              ],
+              "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+              "AV",
+              "DE_STVO_UNCONTROLLED_4WAY_V1"
+            ],
+            16.04,
+            "COUPLED_JOINT_NEGOTIATION_CONTEXT"
+          ]
+        },
+        {
+          "event": "NEGOTIATION_EVENT_CREATED",
+          "timestamp": 16.8,
+          "state_identity": [
+            [
+              "SCENARIO_AV_0",
+              "SCENARIO_AV_1",
+              "SCENARIO_AV_2",
+              "SCENARIO_AV_3"
+            ],
+            [
+              [
+                "SCENARIO_AV_0",
+                "SCENARIO_AV_1"
+              ],
+              [
+                "SCENARIO_AV_0",
+                "SCENARIO_AV_3"
+              ],
+              [
+                "SCENARIO_AV_1",
+                "SCENARIO_AV_2"
+              ],
+              [
+                "SCENARIO_AV_1",
+                "SCENARIO_AV_3"
+              ],
+              [
+                "SCENARIO_AV_2",
+                "SCENARIO_AV_0"
+              ],
+              [
+                "SCENARIO_AV_2",
+                "SCENARIO_AV_1"
+              ],
+              [
+                "SCENARIO_AV_3",
+                "SCENARIO_AV_0"
+              ],
+              [
+                "SCENARIO_AV_3",
+                "SCENARIO_AV_2"
+              ]
+            ],
+            []
+          ],
+          "source_snapshot_id": [
+            [
+              "NEGOTIATION_SCENARIO_V1",
+              "intersection.net.xml:9316",
+              "REGULATORY_CYCLE",
+              [
+                "E_IN_0_LEFT",
+                "N_IN_0_RIGHT",
+                "S_IN_0_LEFT",
+                "W_IN_0_RIGHT"
+              ],
+              "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+              "AV",
+              "DE_STVO_UNCONTROLLED_4WAY_V1"
+            ],
+            16.8,
+            "COUPLED_JOINT_NEGOTIATION_CONTEXT"
+          ]
+        },
+        {
+          "event": "PLAN_NON_EXECUTABLE",
+          "timestamp": 16.8,
+          "graph_status": "EXECUTION_BLOCKED_PRECEDENCE_CYCLE",
+          "blocked_vehicle_ids": [
+            "SCENARIO_AV_0",
+            "SCENARIO_AV_1",
+            "SCENARIO_AV_2",
+            "SCENARIO_AV_3"
+          ]
+        },
+        {
+          "event": "PLAN_INVALIDATED",
+          "timestamp": 21.12,
+          "reasons": [
+            "RELEVANT_PRECEDENCE_GRAPH_CHANGED"
+          ],
+          "old_state_identity": [
+            [
+              "SCENARIO_AV_0",
+              "SCENARIO_AV_1",
+              "SCENARIO_AV_2",
+              "SCENARIO_AV_3"
+            ],
+            [
+              [
+                "SCENARIO_AV_0",
+                "SCENARIO_AV_1"
+              ],
+              [
+                "SCENARIO_AV_0",
+                "SCENARIO_AV_3"
+              ],
+              [
+                "SCENARIO_AV_1",
+                "SCENARIO_AV_2"
+              ],
+              [
+                "SCENARIO_AV_1",
+                "SCENARIO_AV_3"
+              ],
+              [
+                "SCENARIO_AV_2",
+                "SCENARIO_AV_0"
+              ],
+              [
+                "SCENARIO_AV_2",
+                "SCENARIO_AV_1"
+              ],
+              [
+                "SCENARIO_AV_3",
+                "SCENARIO_AV_0"
+              ],
+              [
+                "SCENARIO_AV_3",
+                "SCENARIO_AV_2"
+              ]
+            ],
+            []
+          ],
+          "new_state_identity": [
+            [
+              "SCENARIO_AV_0",
+              "SCENARIO_AV_1",
+              "SCENARIO_AV_2",
+              "SCENARIO_AV_3"
+            ],
+            [
+              [
+                "SCENARIO_AV_0",
+                "SCENARIO_AV_1"
+              ],
+              [
+                "SCENARIO_AV_0",
+                "SCENARIO_AV_3"
+              ],
+              [
+                "SCENARIO_AV_1",
+                "SCENARIO_AV_2"
+              ],
+              [
+                "SCENARIO_AV_1",
+                "SCENARIO_AV_3"
+              ],
+              [
+                "SCENARIO_AV_2",
+                "SCENARIO_AV_0"
+              ],
+              [
+                "SCENARIO_AV_2",
+                "SCENARIO_AV_1"
+              ],
+              [
+                "SCENARIO_AV_3",
+                "SCENARIO_AV_0"
+              ]
+            ],
+            []
+          ]
+        },
+        {
+          "event": "NEGOTIATION_EVENT_CREATED",
+          "timestamp": 21.12,
+          "state_identity": [
+            [
+              "SCENARIO_AV_0",
+              "SCENARIO_AV_1",
+              "SCENARIO_AV_2",
+              "SCENARIO_AV_3"
+            ],
+            [
+              [
+                "SCENARIO_AV_0",
+                "SCENARIO_AV_1"
+              ],
+              [
+                "SCENARIO_AV_0",
+                "SCENARIO_AV_3"
+              ],
+              [
+                "SCENARIO_AV_1",
+                "SCENARIO_AV_2"
+              ],
+              [
+                "SCENARIO_AV_1",
+                "SCENARIO_AV_3"
+              ],
+              [
+                "SCENARIO_AV_2",
+                "SCENARIO_AV_0"
+              ],
+              [
+                "SCENARIO_AV_2",
+                "SCENARIO_AV_1"
+              ],
+              [
+                "SCENARIO_AV_3",
+                "SCENARIO_AV_0"
+              ]
+            ],
+            []
+          ],
+          "source_snapshot_id": [
+            [
+              "NEGOTIATION_SCENARIO_V1",
+              "intersection.net.xml:9316",
+              "REGULATORY_CYCLE",
+              [
+                "E_IN_0_LEFT",
+                "N_IN_0_RIGHT",
+                "S_IN_0_LEFT",
+                "W_IN_0_RIGHT"
+              ],
+              "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+              "AV",
+              "DE_STVO_UNCONTROLLED_4WAY_V1"
+            ],
+            21.12,
+            "COUPLED_JOINT_NEGOTIATION_CONTEXT"
+          ]
+        },
+        {
+          "event": "PLAN_EXECUTABLE",
+          "timestamp": 21.12,
+          "ready_vehicle_ids": [
+            "SCENARIO_AV_0",
+            "SCENARIO_AV_1"
+          ],
+          "blocked_vehicle_ids": [
+            "SCENARIO_AV_2",
+            "SCENARIO_AV_3"
+          ]
+        },
+        {
+          "event": "PLAN_INVALIDATED",
+          "timestamp": 24.76,
+          "reasons": [
+            "RELEVANT_PRECEDENCE_GRAPH_CHANGED",
+            "CONFLICT_ZONE_CLEARED"
+          ],
+          "old_state_identity": [
+            [
+              "SCENARIO_AV_0",
+              "SCENARIO_AV_1",
+              "SCENARIO_AV_2",
+              "SCENARIO_AV_3"
+            ],
+            [
+              [
+                "SCENARIO_AV_0",
+                "SCENARIO_AV_1"
+              ],
+              [
+                "SCENARIO_AV_0",
+                "SCENARIO_AV_3"
+              ],
+              [
+                "SCENARIO_AV_1",
+                "SCENARIO_AV_2"
+              ],
+              [
+                "SCENARIO_AV_1",
+                "SCENARIO_AV_3"
+              ],
+              [
+                "SCENARIO_AV_2",
+                "SCENARIO_AV_0"
+              ],
+              [
+                "SCENARIO_AV_2",
+                "SCENARIO_AV_1"
+              ],
+              [
+                "SCENARIO_AV_3",
+                "SCENARIO_AV_0"
+              ]
+            ],
+            []
+          ],
+          "new_state_identity": [
+            [
+              "SCENARIO_AV_0",
+              "SCENARIO_AV_1",
+              "SCENARIO_AV_2",
+              "SCENARIO_AV_3"
+            ],
+            [
+              [
+                "SCENARIO_AV_0",
+                "SCENARIO_AV_3"
+              ],
+              [
+                "SCENARIO_AV_1",
+                "SCENARIO_AV_0"
+              ],
+              [
+                "SCENARIO_AV_1",
+                "SCENARIO_AV_2"
+              ],
+              [
+                "SCENARIO_AV_2",
+                "SCENARIO_AV_0"
+              ],
+              [
+                "SCENARIO_AV_2",
+                "SCENARIO_AV_1"
+              ],
+              [
+                "SCENARIO_AV_3",
+                "SCENARIO_AV_0"
+              ]
+            ],
+            [
+              [
+                "SCENARIO_AV_1",
+                "CZ_021"
+              ]
+            ]
+          ]
+        },
+        {
+          "event": "NEGOTIATION_EVENT_CREATED",
+          "timestamp": 24.76,
+          "state_identity": [
+            [
+              "SCENARIO_AV_0",
+              "SCENARIO_AV_1",
+              "SCENARIO_AV_2",
+              "SCENARIO_AV_3"
+            ],
+            [
+              [
+                "SCENARIO_AV_0",
+                "SCENARIO_AV_3"
+              ],
+              [
+                "SCENARIO_AV_1",
+                "SCENARIO_AV_0"
+              ],
+              [
+                "SCENARIO_AV_1",
+                "SCENARIO_AV_2"
+              ],
+              [
+                "SCENARIO_AV_2",
+                "SCENARIO_AV_0"
+              ],
+              [
+                "SCENARIO_AV_2",
+                "SCENARIO_AV_1"
+              ],
+              [
+                "SCENARIO_AV_3",
+                "SCENARIO_AV_0"
+              ]
+            ],
+            [
+              [
+                "SCENARIO_AV_1",
+                "CZ_021"
+              ]
+            ]
+          ],
+          "source_snapshot_id": [
+            [
+              "NEGOTIATION_SCENARIO_V1",
+              "intersection.net.xml:9316",
+              "REGULATORY_CYCLE",
+              [
+                "E_IN_0_LEFT",
+                "N_IN_0_RIGHT",
+                "S_IN_0_LEFT",
+                "W_IN_0_RIGHT"
+              ],
+              "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+              "AV",
+              "DE_STVO_UNCONTROLLED_4WAY_V1"
+            ],
+            24.76,
+            "COUPLED_JOINT_NEGOTIATION_CONTEXT"
+          ]
+        },
+        {
+          "event": "PLAN_NON_EXECUTABLE_TRANSITION",
+          "timestamp": 24.76,
+          "reason": "NEW_BLOCK_NOT_SAFE_TO_ACTIVATE",
+          "vehicle_ids": [
+            "SCENARIO_AV_1"
+          ],
+          "blocked_in_or_past_zone": [
+            [
+              "SCENARIO_AV_1",
+              "CZ_021"
+            ]
+          ]
+        }
+      ],
+      "hard_validity_gate_results": {
+        "collision_free": true,
+        "blocked_zone_invariant": true,
+        "safe_sumo_speed_mode": true,
+        "reward_reconciled": true
+      },
+      "hard_mask_violations": 0,
+      "regulatory_invariant_violations": 0,
+      "protocol_invariant_failures": 0,
+      "route_truth_actor_fields_consumed": 0,
+      "sumo_steps": 5000,
+      "runtime_seconds": 69.40378759999294
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "E_IN_0_LEFT",
+          "N_IN_0_LEFT",
+          "S_IN_0_LEFT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "total_team_travel_time_seconds": 150.32,
+      "scheduled_vehicles": 3,
+      "completed_vehicles": 3,
+      "unresolved_coordination_case": false,
+      "episode_completion_status": "COMPLETE",
+      "unresolved_coordination_reason": null,
+      "throughput": 0.015,
+      "collisions": 0,
+      "blocked_zone_violations": 0,
+      "native_sumo_safety_interventions": 0,
+      "negotiation_batches": 3,
+      "learned_proposer_actions": 8,
+      "learned_responder_actions": 6,
+      "neural_actor_calls": null,
+      "fabricated_negotiation_branches": 0,
+      "vehicle_id_priority_decisions": 0,
+      "liveness_metrics": {
+        "negotiation_decision_epochs": 7,
+        "renegotiation_events": 4,
+        "non_executable_negotiation_outcomes": 2,
+        "executable_plans": 3,
+        "safe_hold_activations": 2,
+        "scheduled_vehicles": 3,
+        "completed_vehicles": 3,
+        "unfinished_vehicles": 0,
+        "unfinished_vehicle_ids": [],
+        "all_scheduled_vehicles_completed": true
+      },
+      "liveness_diagnostics": [
+        {
+          "event": "NEGOTIATION_EVENT_CREATED",
+          "timestamp": 15.76,
+          "state_identity": [
+            [
+              "SCENARIO_AV_0",
+              "SCENARIO_AV_1",
+              "SCENARIO_AV_2"
+            ],
+            [
+              [
+                "SCENARIO_AV_0",
+                "SCENARIO_AV_1"
+              ],
+              [
+                "SCENARIO_AV_2",
+                "SCENARIO_AV_0"
+              ]
+            ],
+            []
+          ],
+          "source_snapshot_id": [
+            [
+              "NEGOTIATION_SCENARIO_V1",
+              "intersection.net.xml:9316",
+              "REGULATORY_CYCLE",
+              [
+                "E_IN_0_LEFT",
+                "N_IN_0_LEFT",
+                "S_IN_0_LEFT"
+              ],
+              "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+              "AV",
+              "DE_STVO_UNCONTROLLED_4WAY_V1"
+            ],
+            15.76,
+            "COUPLED_JOINT_NEGOTIATION_CONTEXT"
+          ]
+        },
+        {
+          "event": "NEGOTIATION_EVENT_CREATED",
+          "timestamp": 16.04,
+          "state_identity": [
+            [
+              "SCENARIO_AV_0",
+              "SCENARIO_AV_1",
+              "SCENARIO_AV_2"
+            ],
+            [
+              [
+                "SCENARIO_AV_0",
+                "SCENARIO_AV_1"
+              ],
+              [
+                "SCENARIO_AV_2",
+                "SCENARIO_AV_0"
+              ],
+              [
+                "SCENARIO_AV_2",
+                "SCENARIO_AV_1"
+              ]
+            ],
+            []
+          ],
+          "source_snapshot_id": [
+            [
+              "NEGOTIATION_SCENARIO_V1",
+              "intersection.net.xml:9316",
+              "REGULATORY_CYCLE",
+              [
+                "E_IN_0_LEFT",
+                "N_IN_0_LEFT",
+                "S_IN_0_LEFT"
+              ],
+              "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+              "AV",
+              "DE_STVO_UNCONTROLLED_4WAY_V1"
+            ],
+            16.04,
+            "COUPLED_JOINT_NEGOTIATION_CONTEXT"
+          ]
+        },
+        {
+          "event": "NEGOTIATION_EVENT_CREATED",
+          "timestamp": 16.8,
+          "state_identity": [
+            [
+              "SCENARIO_AV_0",
+              "SCENARIO_AV_1",
+              "SCENARIO_AV_2"
+            ],
+            [
+              [
+                "SCENARIO_AV_0",
+                "SCENARIO_AV_1"
+              ],
+              [
+                "SCENARIO_AV_1",
+                "SCENARIO_AV_2"
+              ],
+              [
+                "SCENARIO_AV_2",
+                "SCENARIO_AV_0"
+              ],
+              [
+                "SCENARIO_AV_2",
+                "SCENARIO_AV_1"
+              ]
+            ],
+            []
+          ],
+          "source_snapshot_id": [
+            [
+              "NEGOTIATION_SCENARIO_V1",
+              "intersection.net.xml:9316",
+              "REGULATORY_CYCLE",
+              [
+                "E_IN_0_LEFT",
+                "N_IN_0_LEFT",
+                "S_IN_0_LEFT"
+              ],
+              "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+              "AV",
+              "DE_STVO_UNCONTROLLED_4WAY_V1"
+            ],
+            16.8,
+            "COUPLED_JOINT_NEGOTIATION_CONTEXT"
+          ]
+        },
+        {
+          "event": "PLAN_EXECUTABLE",
+          "timestamp": 16.8,
+          "ready_vehicle_ids": [
+            "SCENARIO_AV_1"
+          ],
+          "blocked_vehicle_ids": [
+            "SCENARIO_AV_0",
+            "SCENARIO_AV_2"
+          ]
+        },
+        {
+          "event": "PLAN_INVALIDATED",
+          "timestamp": 24.84,
+          "reasons": [
+            "RELEVANT_PRECEDENCE_GRAPH_CHANGED",
+            "CONFLICT_ZONE_CLEARED"
+          ],
+          "old_state_identity": [
+            [
+              "SCENARIO_AV_0",
+              "SCENARIO_AV_1",
+              "SCENARIO_AV_2"
+            ],
+            [
+              [
+                "SCENARIO_AV_0",
+                "SCENARIO_AV_1"
+              ],
+              [
+                "SCENARIO_AV_1",
+                "SCENARIO_AV_2"
+              ],
+              [
+                "SCENARIO_AV_2",
+                "SCENARIO_AV_0"
+              ],
+              [
+                "SCENARIO_AV_2",
+                "SCENARIO_AV_1"
+              ]
+            ],
+            []
+          ],
+          "new_state_identity": [
+            [
+              "SCENARIO_AV_0",
+              "SCENARIO_AV_1",
+              "SCENARIO_AV_2"
+            ],
+            [
+              [
+                "SCENARIO_AV_0",
+                "SCENARIO_AV_1"
+              ],
+              [
+                "SCENARIO_AV_1",
+                "SCENARIO_AV_2"
+              ],
+              [
+                "SCENARIO_AV_2",
+                "SCENARIO_AV_0"
+              ]
+            ],
+            [
+              [
+                "SCENARIO_AV_1",
+                "CZ_001"
+              ],
+              [
+                "SCENARIO_AV_1",
+                "CZ_016"
+              ]
+            ]
+          ]
+        },
+        {
+          "event": "NEGOTIATION_EVENT_CREATED",
+          "timestamp": 24.84,
+          "state_identity": [
+            [
+              "SCENARIO_AV_0",
+              "SCENARIO_AV_1",
+              "SCENARIO_AV_2"
+            ],
+            [
+              [
+                "SCENARIO_AV_0",
+                "SCENARIO_AV_1"
+              ],
+              [
+                "SCENARIO_AV_1",
+                "SCENARIO_AV_2"
+              ],
+              [
+                "SCENARIO_AV_2",
+                "SCENARIO_AV_0"
+              ]
+            ],
+            [
+              [
+                "SCENARIO_AV_1",
+                "CZ_001"
+              ],
+              [
+                "SCENARIO_AV_1",
+                "CZ_016"
+              ]
+            ]
+          ],
+          "source_snapshot_id": [
+            [
+              "NEGOTIATION_SCENARIO_V1",
+              "intersection.net.xml:9316",
+              "REGULATORY_CYCLE",
+              [
+                "E_IN_0_LEFT",
+                "N_IN_0_LEFT",
+                "S_IN_0_LEFT"
+              ],
+              "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+              "AV",
+              "DE_STVO_UNCONTROLLED_4WAY_V1"
+            ],
+            24.84,
+            "COUPLED_JOINT_NEGOTIATION_CONTEXT"
+          ]
+        },
+        {
+          "event": "PLAN_NON_EXECUTABLE_TRANSITION",
+          "timestamp": 24.84,
+          "reason": "NEW_BLOCK_NOT_SAFE_TO_ACTIVATE",
+          "vehicle_ids": [
+            "SCENARIO_AV_1"
+          ],
+          "blocked_in_or_past_zone": [
+            [
+              "SCENARIO_AV_1",
+              "CZ_016"
+            ]
+          ]
+        },
+        {
+          "event": "PLAN_INVALIDATED",
+          "timestamp": 28.08,
+          "reasons": [
+            "CONFLICT_ZONE_CLEARED"
+          ],
+          "old_state_identity": [
+            [
+              "SCENARIO_AV_0",
+              "SCENARIO_AV_1",
+              "SCENARIO_AV_2"
+            ],
+            [
+              [
+                "SCENARIO_AV_0",
+                "SCENARIO_AV_1"
+              ],
+              [
+                "SCENARIO_AV_1",
+                "SCENARIO_AV_2"
+              ],
+              [
+                "SCENARIO_AV_2",
+                "SCENARIO_AV_0"
+              ]
+            ],
+            [
+              [
+                "SCENARIO_AV_1",
+                "CZ_001"
+              ],
+              [
+                "SCENARIO_AV_1",
+                "CZ_016"
+              ]
+            ]
+          ],
+          "new_state_identity": [
+            [
+              "SCENARIO_AV_0",
+              "SCENARIO_AV_1",
+              "SCENARIO_AV_2"
+            ],
+            [
+              [
+                "SCENARIO_AV_0",
+                "SCENARIO_AV_1"
+              ],
+              [
+                "SCENARIO_AV_1",
+                "SCENARIO_AV_2"
+              ],
+              [
+                "SCENARIO_AV_2",
+                "SCENARIO_AV_0"
+              ]
+            ],
+            [
+              [
+                "SCENARIO_AV_1",
+                "CZ_001"
+              ],
+              [
+                "SCENARIO_AV_1",
+                "CZ_016"
+              ],
+              [
+                "SCENARIO_AV_2",
+                "CZ_003"
+              ],
+              [
+                "SCENARIO_AV_2",
+                "CZ_016"
+              ]
+            ]
+          ]
+        },
+        {
+          "event": "NEGOTIATION_EVENT_CREATED",
+          "timestamp": 28.08,
+          "state_identity": [
+            [
+              "SCENARIO_AV_0",
+              "SCENARIO_AV_1",
+              "SCENARIO_AV_2"
+            ],
+            [
+              [
+                "SCENARIO_AV_0",
+                "SCENARIO_AV_1"
+              ],
+              [
+                "SCENARIO_AV_1",
+                "SCENARIO_AV_2"
+              ],
+              [
+                "SCENARIO_AV_2",
+                "SCENARIO_AV_0"
+              ]
+            ],
+            [
+              [
+                "SCENARIO_AV_1",
+                "CZ_001"
+              ],
+              [
+                "SCENARIO_AV_1",
+                "CZ_016"
+              ],
+              [
+                "SCENARIO_AV_2",
+                "CZ_003"
+              ],
+              [
+                "SCENARIO_AV_2",
+                "CZ_016"
+              ]
+            ]
+          ],
+          "source_snapshot_id": [
+            [
+              "NEGOTIATION_SCENARIO_V1",
+              "intersection.net.xml:9316",
+              "REGULATORY_CYCLE",
+              [
+                "E_IN_0_LEFT",
+                "N_IN_0_LEFT",
+                "S_IN_0_LEFT"
+              ],
+              "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+              "AV",
+              "DE_STVO_UNCONTROLLED_4WAY_V1"
+            ],
+            28.08,
+            "COUPLED_JOINT_NEGOTIATION_CONTEXT"
+          ]
+        },
+        {
+          "event": "PLAN_NON_EXECUTABLE_TRANSITION",
+          "timestamp": 28.08,
+          "reason": "NEW_BLOCK_NOT_SAFE_TO_ACTIVATE",
+          "vehicle_ids": [
+            "SCENARIO_AV_2"
+          ],
+          "blocked_in_or_past_zone": [
+            [
+              "SCENARIO_AV_2",
+              "CZ_003"
+            ]
+          ]
+        },
+        {
+          "event": "PLAN_INVALIDATED",
+          "timestamp": 30.52,
+          "reasons": [
+            "RELEVANT_PRECEDENCE_GRAPH_CHANGED",
+            "CONFLICT_ZONE_CLEARED"
+          ],
+          "old_state_identity": [
+            [
+              "SCENARIO_AV_0",
+              "SCENARIO_AV_1",
+              "SCENARIO_AV_2"
+            ],
+            [
+              [
+                "SCENARIO_AV_0",
+                "SCENARIO_AV_1"
+              ],
+              [
+                "SCENARIO_AV_1",
+                "SCENARIO_AV_2"
+              ],
+              [
+                "SCENARIO_AV_2",
+                "SCENARIO_AV_0"
+              ]
+            ],
+            [
+              [
+                "SCENARIO_AV_1",
+                "CZ_001"
+              ],
+              [
+                "SCENARIO_AV_1",
+                "CZ_016"
+              ],
+              [
+                "SCENARIO_AV_2",
+                "CZ_003"
+              ],
+              [
+                "SCENARIO_AV_2",
+                "CZ_016"
+              ]
+            ]
+          ],
+          "new_state_identity": [
+            [
+              "SCENARIO_AV_0",
+              "SCENARIO_AV_1",
+              "SCENARIO_AV_2"
+            ],
+            [
+              [
+                "SCENARIO_AV_0",
+                "SCENARIO_AV_1"
+              ],
+              [
+                "SCENARIO_AV_2",
+                "SCENARIO_AV_0"
+              ]
+            ],
+            [
+              [
+                "SCENARIO_AV_0",
+                "CZ_001"
+              ],
+              [
+                "SCENARIO_AV_1",
+                "CZ_001"
+              ],
+              [
+                "SCENARIO_AV_1",
+                "CZ_016"
+              ],
+              [
+                "SCENARIO_AV_2",
+                "CZ_003"
+              ],
+              [
+                "SCENARIO_AV_2",
+                "CZ_016"
+              ]
+            ]
+          ]
+        },
+        {
+          "event": "NEGOTIATION_EVENT_CREATED",
+          "timestamp": 30.52,
+          "state_identity": [
+            [
+              "SCENARIO_AV_0",
+              "SCENARIO_AV_1",
+              "SCENARIO_AV_2"
+            ],
+            [
+              [
+                "SCENARIO_AV_0",
+                "SCENARIO_AV_1"
+              ],
+              [
+                "SCENARIO_AV_2",
+                "SCENARIO_AV_0"
+              ]
+            ],
+            [
+              [
+                "SCENARIO_AV_0",
+                "CZ_001"
+              ],
+              [
+                "SCENARIO_AV_1",
+                "CZ_001"
+              ],
+              [
+                "SCENARIO_AV_1",
+                "CZ_016"
+              ],
+              [
+                "SCENARIO_AV_2",
+                "CZ_003"
+              ],
+              [
+                "SCENARIO_AV_2",
+                "CZ_016"
+              ]
+            ]
+          ],
+          "source_snapshot_id": [
+            [
+              "NEGOTIATION_SCENARIO_V1",
+              "intersection.net.xml:9316",
+              "REGULATORY_CYCLE",
+              [
+                "E_IN_0_LEFT",
+                "N_IN_0_LEFT",
+                "S_IN_0_LEFT"
+              ],
+              "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+              "AV",
+              "DE_STVO_UNCONTROLLED_4WAY_V1"
+            ],
+            30.52,
+            "COUPLED_JOINT_NEGOTIATION_CONTEXT"
+          ]
+        },
+        {
+          "event": "PLAN_EXECUTABLE",
+          "timestamp": 30.52,
+          "ready_vehicle_ids": [
+            "SCENARIO_AV_0",
+            "SCENARIO_AV_1",
+            "SCENARIO_AV_2"
+          ],
+          "blocked_vehicle_ids": []
+        },
+        {
+          "event": "PLAN_INVALIDATED",
+          "timestamp": 30.56,
+          "reasons": [
+            "CONFLICT_ZONE_CLEARED"
+          ],
+          "old_state_identity": [
+            [
+              "SCENARIO_AV_0",
+              "SCENARIO_AV_1",
+              "SCENARIO_AV_2"
+            ],
+            [
+              [
+                "SCENARIO_AV_0",
+                "SCENARIO_AV_1"
+              ],
+              [
+                "SCENARIO_AV_2",
+                "SCENARIO_AV_0"
+              ]
+            ],
+            [
+              [
+                "SCENARIO_AV_0",
+                "CZ_001"
+              ],
+              [
+                "SCENARIO_AV_1",
+                "CZ_001"
+              ],
+              [
+                "SCENARIO_AV_1",
+                "CZ_016"
+              ],
+              [
+                "SCENARIO_AV_2",
+                "CZ_003"
+              ],
+              [
+                "SCENARIO_AV_2",
+                "CZ_016"
+              ]
+            ]
+          ],
+          "new_state_identity": [
+            [
+              "SCENARIO_AV_0",
+              "SCENARIO_AV_1",
+              "SCENARIO_AV_2"
+            ],
+            [
+              [
+                "SCENARIO_AV_0",
+                "SCENARIO_AV_1"
+              ],
+              [
+                "SCENARIO_AV_2",
+                "SCENARIO_AV_0"
+              ]
+            ],
+            [
+              [
+                "SCENARIO_AV_0",
+                "CZ_001"
+              ],
+              [
+                "SCENARIO_AV_0",
+                "CZ_003"
+              ],
+              [
+                "SCENARIO_AV_1",
+                "CZ_001"
+              ],
+              [
+                "SCENARIO_AV_1",
+                "CZ_016"
+              ],
+              [
+                "SCENARIO_AV_2",
+                "CZ_003"
+              ],
+              [
+                "SCENARIO_AV_2",
+                "CZ_016"
+              ]
+            ]
+          ]
+        },
+        {
+          "event": "NEGOTIATION_EVENT_CREATED",
+          "timestamp": 30.56,
+          "state_identity": [
+            [
+              "SCENARIO_AV_0",
+              "SCENARIO_AV_1",
+              "SCENARIO_AV_2"
+            ],
+            [
+              [
+                "SCENARIO_AV_0",
+                "SCENARIO_AV_1"
+              ],
+              [
+                "SCENARIO_AV_2",
+                "SCENARIO_AV_0"
+              ]
+            ],
+            [
+              [
+                "SCENARIO_AV_0",
+                "CZ_001"
+              ],
+              [
+                "SCENARIO_AV_0",
+                "CZ_003"
+              ],
+              [
+                "SCENARIO_AV_1",
+                "CZ_001"
+              ],
+              [
+                "SCENARIO_AV_1",
+                "CZ_016"
+              ],
+              [
+                "SCENARIO_AV_2",
+                "CZ_003"
+              ],
+              [
+                "SCENARIO_AV_2",
+                "CZ_016"
+              ]
+            ]
+          ],
+          "source_snapshot_id": [
+            [
+              "NEGOTIATION_SCENARIO_V1",
+              "intersection.net.xml:9316",
+              "REGULATORY_CYCLE",
+              [
+                "E_IN_0_LEFT",
+                "N_IN_0_LEFT",
+                "S_IN_0_LEFT"
+              ],
+              "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+              "AV",
+              "DE_STVO_UNCONTROLLED_4WAY_V1"
+            ],
+            30.56,
+            "COUPLED_JOINT_NEGOTIATION_CONTEXT"
+          ]
+        },
+        {
+          "event": "PLAN_EXECUTABLE",
+          "timestamp": 30.56,
+          "ready_vehicle_ids": [
+            "SCENARIO_AV_0",
+            "SCENARIO_AV_1",
+            "SCENARIO_AV_2"
+          ],
+          "blocked_vehicle_ids": []
+        }
+      ],
+      "hard_validity_gate_results": {
+        "collision_free": true,
+        "blocked_zone_invariant": true,
+        "safe_sumo_speed_mode": true,
+        "reward_reconciled": true
+      },
+      "hard_mask_violations": 0,
+      "regulatory_invariant_violations": 0,
+      "protocol_invariant_failures": 0,
+      "route_truth_actor_fields_consumed": 0,
+      "sumo_steps": 5000,
+      "runtime_seconds": 12.336218799930066
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "E_IN_0_LEFT",
+          "N_IN_0_LEFT",
+          "S_IN_0_RIGHT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "total_team_travel_time_seconds": 600.0,
+      "scheduled_vehicles": 3,
+      "completed_vehicles": 0,
+      "unresolved_coordination_case": false,
+      "episode_completion_status": "EPISODE_ENDED_UNFINISHED_VEHICLES",
+      "unresolved_coordination_reason": null,
+      "throughput": 0.0,
+      "collisions": 0,
+      "blocked_zone_violations": 0,
+      "native_sumo_safety_interventions": 0,
+      "negotiation_batches": 2,
+      "learned_proposer_actions": 7,
+      "learned_responder_actions": 4,
+      "neural_actor_calls": null,
+      "fabricated_negotiation_branches": 0,
+      "vehicle_id_priority_decisions": 0,
+      "liveness_metrics": {
+        "negotiation_decision_epochs": 4,
+        "renegotiation_events": 1,
+        "non_executable_negotiation_outcomes": 1,
+        "executable_plans": 1,
+        "safe_hold_activations": 1,
+        "scheduled_vehicles": 3,
+        "completed_vehicles": 0,
+        "unfinished_vehicles": 3,
+        "unfinished_vehicle_ids": [
+          "SCENARIO_AV_0",
+          "SCENARIO_AV_1",
+          "SCENARIO_AV_2"
+        ],
+        "all_scheduled_vehicles_completed": false
+      },
+      "liveness_diagnostics": [
+        {
+          "event": "NEGOTIATION_EVENT_CREATED",
+          "timestamp": 15.76,
+          "state_identity": [
+            [
+              "SCENARIO_AV_0",
+              "SCENARIO_AV_1",
+              "SCENARIO_AV_2"
+            ],
+            [
+              [
+                "SCENARIO_AV_0",
+                "SCENARIO_AV_1"
+              ],
+              [
+                "SCENARIO_AV_2",
+                "SCENARIO_AV_0"
+              ]
+            ],
+            []
+          ],
+          "source_snapshot_id": [
+            [
+              "NEGOTIATION_SCENARIO_V1",
+              "intersection.net.xml:9316",
+              "REGULATORY_CYCLE",
+              [
+                "E_IN_0_LEFT",
+                "N_IN_0_LEFT",
+                "S_IN_0_RIGHT"
+              ],
+              "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+              "AV",
+              "DE_STVO_UNCONTROLLED_4WAY_V1"
+            ],
+            15.76,
+            "COUPLED_JOINT_NEGOTIATION_CONTEXT"
+          ]
+        },
+        {
+          "event": "NEGOTIATION_EVENT_CREATED",
+          "timestamp": 16.04,
+          "state_identity": [
+            [
+              "SCENARIO_AV_0",
+              "SCENARIO_AV_1",
+              "SCENARIO_AV_2"
+            ],
+            [
+              [
+                "SCENARIO_AV_0",
+                "SCENARIO_AV_1"
+              ],
+              [
+                "SCENARIO_AV_2",
+                "SCENARIO_AV_0"
+              ],
+              [
+                "SCENARIO_AV_2",
+                "SCENARIO_AV_1"
+              ]
+            ],
+            []
+          ],
+          "source_snapshot_id": [
+            [
+              "NEGOTIATION_SCENARIO_V1",
+              "intersection.net.xml:9316",
+              "REGULATORY_CYCLE",
+              [
+                "E_IN_0_LEFT",
+                "N_IN_0_LEFT",
+                "S_IN_0_RIGHT"
+              ],
+              "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+              "AV",
+              "DE_STVO_UNCONTROLLED_4WAY_V1"
+            ],
+            16.04,
+            "COUPLED_JOINT_NEGOTIATION_CONTEXT"
+          ]
+        },
+        {
+          "event": "NEGOTIATION_EVENT_CREATED",
+          "timestamp": 16.8,
+          "state_identity": [
+            [
+              "SCENARIO_AV_0",
+              "SCENARIO_AV_1",
+              "SCENARIO_AV_2"
+            ],
+            [
+              [
+                "SCENARIO_AV_0",
+                "SCENARIO_AV_1"
+              ],
+              [
+                "SCENARIO_AV_1",
+                "SCENARIO_AV_2"
+              ],
+              [
+                "SCENARIO_AV_2",
+                "SCENARIO_AV_0"
+              ],
+              [
+                "SCENARIO_AV_2",
+                "SCENARIO_AV_1"
+              ]
+            ],
+            []
+          ],
+          "source_snapshot_id": [
+            [
+              "NEGOTIATION_SCENARIO_V1",
+              "intersection.net.xml:9316",
+              "REGULATORY_CYCLE",
+              [
+                "E_IN_0_LEFT",
+                "N_IN_0_LEFT",
+                "S_IN_0_RIGHT"
+              ],
+              "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+              "AV",
+              "DE_STVO_UNCONTROLLED_4WAY_V1"
+            ],
+            16.8,
+            "COUPLED_JOINT_NEGOTIATION_CONTEXT"
+          ]
+        },
+        {
+          "event": "PLAN_NON_EXECUTABLE",
+          "timestamp": 16.8,
+          "graph_status": "EXECUTION_BLOCKED_PRECEDENCE_CYCLE",
+          "blocked_vehicle_ids": [
+            "SCENARIO_AV_1",
+            "SCENARIO_AV_2"
+          ]
+        },
+        {
+          "event": "PLAN_INVALIDATED",
+          "timestamp": 21.2,
+          "reasons": [
+            "RELEVANT_PRECEDENCE_GRAPH_CHANGED"
+          ],
+          "old_state_identity": [
+            [
+              "SCENARIO_AV_0",
+              "SCENARIO_AV_1",
+              "SCENARIO_AV_2"
+            ],
+            [
+              [
+                "SCENARIO_AV_0",
+                "SCENARIO_AV_1"
+              ],
+              [
+                "SCENARIO_AV_1",
+                "SCENARIO_AV_2"
+              ],
+              [
+                "SCENARIO_AV_2",
+                "SCENARIO_AV_0"
+              ],
+              [
+                "SCENARIO_AV_2",
+                "SCENARIO_AV_1"
+              ]
+            ],
+            []
+          ],
+          "new_state_identity": [
+            [
+              "SCENARIO_AV_0",
+              "SCENARIO_AV_1",
+              "SCENARIO_AV_2"
+            ],
+            [
+              [
+                "SCENARIO_AV_0",
+                "SCENARIO_AV_1"
+              ],
+              [
+                "SCENARIO_AV_1",
+                "SCENARIO_AV_2"
+              ],
+              [
+                "SCENARIO_AV_2",
+                "SCENARIO_AV_1"
+              ]
+            ],
+            []
+          ]
+        },
+        {
+          "event": "NEGOTIATION_EVENT_CREATED",
+          "timestamp": 21.2,
+          "state_identity": [
+            [
+              "SCENARIO_AV_0",
+              "SCENARIO_AV_1",
+              "SCENARIO_AV_2"
+            ],
+            [
+              [
+                "SCENARIO_AV_0",
+                "SCENARIO_AV_1"
+              ],
+              [
+                "SCENARIO_AV_1",
+                "SCENARIO_AV_2"
+              ],
+              [
+                "SCENARIO_AV_2",
+                "SCENARIO_AV_1"
+              ]
+            ],
+            []
+          ],
+          "source_snapshot_id": [
+            [
+              "NEGOTIATION_SCENARIO_V1",
+              "intersection.net.xml:9316",
+              "REGULATORY_CYCLE",
+              [
+                "E_IN_0_LEFT",
+                "N_IN_0_LEFT",
+                "S_IN_0_RIGHT"
+              ],
+              "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+              "AV",
+              "DE_STVO_UNCONTROLLED_4WAY_V1"
+            ],
+            21.2,
+            "COUPLED_JOINT_NEGOTIATION_CONTEXT"
+          ]
+        },
+        {
+          "event": "PLAN_EXECUTABLE",
+          "timestamp": 21.2,
+          "ready_vehicle_ids": [
+            "SCENARIO_AV_1"
+          ],
+          "blocked_vehicle_ids": [
+            "SCENARIO_AV_0",
+            "SCENARIO_AV_2"
+          ]
+        }
+      ],
+      "hard_validity_gate_results": {
+        "collision_free": true,
+        "blocked_zone_invariant": true,
+        "safe_sumo_speed_mode": true,
+        "reward_reconciled": true
+      },
+      "hard_mask_violations": 0,
+      "regulatory_invariant_violations": 0,
+      "protocol_invariant_failures": 0,
+      "route_truth_actor_fields_consumed": 0,
+      "sumo_steps": 5000,
+      "runtime_seconds": 66.97217750002164
+    }
+  ]
+}

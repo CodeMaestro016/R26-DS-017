@@ -1,0 +1,348 @@
+{
+  "checkpoint": "STEP_5J_3C_2C",
+  "source_evidence_identity": {
+    "evidence_tranche_identity": [
+      "EXTENDED_EVIDENCE_TRANCHE_V1",
+      "e45ae14f1e710c1fe9ae0e152fbb58436f6bebe98054e913f21650e9f9a1c885"
+    ],
+    "sha256": "9edaf07c9804e78b984a26cd321373644d2d5f2080b167c1b2c0de024beb2e5f",
+    "checkpoint": "STEP_5J_3C_2B",
+    "status": "EXTENDED_MULTI_UPDATE_EVIDENCE_ACQUIRED"
+  },
+  "status": "EXTENDED_EVIDENCE_REVIEW_COMPLETE",
+  "observed_structure": {
+    "replications": 3,
+    "policy_states_per_replication": 3,
+    "update_intervals_per_replication": 2,
+    "training_manifest_collections": 9,
+    "training_scenario_executions": 324,
+    "total_sumo_steps": 1620000
+  },
+  "learning_curve_evidence": {
+    "C0": [
+      19035.08,
+      14027.04,
+      18130.24
+    ],
+    "C1": [
+      19464.16,
+      11334.8,
+      17817.12
+    ],
+    "C2": [
+      18847.0,
+      11763.36,
+      16929.56
+    ],
+    "delta_0_to_1": [
+      429.0799999999981,
+      -2692.2400000000016,
+      -313.1200000000026
+    ],
+    "delta_1_to_2": [
+      -617.1599999999999,
+      428.5600000000013,
+      -887.5599999999977
+    ],
+    "delta_0_to_2": [
+      -188.08000000000175,
+      -2263.6800000000003,
+      -1200.6800000000003
+    ],
+    "descriptive_statistics": {
+      "C0": {
+        "values": [
+          19035.08,
+          14027.04,
+          18130.24
+        ],
+        "sample_mean": 17064.120000000003,
+        "sample_variance_n_minus_1": 7122575.051200002,
+        "sample_standard_deviation": 2668.8152898243075,
+        "minimum": 14027.04,
+        "maximum": 19035.08,
+        "median": 18130.24
+      },
+      "C1": {
+        "values": [
+          19464.16,
+          11334.8,
+          17817.12
+        ],
+        "sample_mean": 16205.359999999999,
+        "sample_variance_n_minus_1": 18469951.2256,
+        "sample_standard_deviation": 4297.668114873461,
+        "minimum": 11334.8,
+        "maximum": 19464.16,
+        "median": 17817.12
+      },
+      "C2": {
+        "values": [
+          18847.0,
+          11763.36,
+          16929.56
+        ],
+        "sample_mean": 15846.640000000001,
+        "sample_variance_n_minus_1": 13424025.707199998,
+        "sample_standard_deviation": 3663.8812354114316,
+        "minimum": 11763.36,
+        "maximum": 18847.0,
+        "median": 16929.56
+      },
+      "delta_0_to_1": {
+        "values": [
+          429.0799999999981,
+          -2692.2400000000016,
+          -313.1200000000026
+        ],
+        "sample_mean": -858.760000000002,
+        "sample_variance_n_minus_1": 2658951.892799999,
+        "sample_standard_deviation": 1630.6292934937724,
+        "minimum": -2692.2400000000016,
+        "maximum": 429.0799999999981,
+        "median": -313.1200000000026
+      },
+      "delta_1_to_2": {
+        "values": [
+          -617.1599999999999,
+          428.5600000000013,
+          -887.5599999999977
+        ],
+        "sample_mean": -358.7199999999987,
+        "sample_variance_n_minus_1": 483136.3887999998,
+        "sample_standard_deviation": 695.080131207906,
+        "minimum": -887.5599999999977,
+        "maximum": 428.5600000000013,
+        "median": -617.1599999999999
+      },
+      "delta_0_to_2": {
+        "values": [
+          -188.08000000000175,
+          -2263.6800000000003,
+          -1200.6800000000003
+        ],
+        "sample_mean": -1217.4800000000007,
+        "sample_variance_n_minus_1": 1077240.5199999984,
+        "sample_standard_deviation": 1037.9019799576445,
+        "minimum": -2263.6800000000003,
+        "maximum": -188.08000000000175,
+        "median": -1200.6800000000003
+      }
+    },
+    "latest_update_directions": [
+      "IMPROVEMENT",
+      "WORSENING",
+      "IMPROVEMENT"
+    ],
+    "latest_update_direction_consistent": false,
+    "mean_C0_greater_than_C1_greater_than_C2": true,
+    "all_replications_C2_lower_than_C0": true,
+    "mean_decrease_is_empirical_observation": true,
+    "mean_decrease_is_selection_rule": false,
+    "mean_decrease_proves_convergence": false
+  },
+  "training_budget_assessment": {
+    "status": "INSUFFICIENT_NO_PREDECLARED_STABILITY_CRITERION_AND_CURVE_STILL_EVOLVING",
+    "states_observed": 3,
+    "update_intervals_observed": 2,
+    "plateau_established": false,
+    "convergence_established": false,
+    "later_degradation_characterized": false,
+    "consistent_latest_update_direction": false,
+    "final_training_budget_justified": false,
+    "final_training_budget_selected": false,
+    "final_update_count": "NOT_SELECTED"
+  },
+  "replication_assessment": {
+    "status": "INSUFFICIENT_NO_PREDECLARED_REPLICATION_ADEQUACY_CRITERION",
+    "independent_replications": 3,
+    "all_retained": true,
+    "replications_discarded": 0,
+    "outliers_declared": 0,
+    "performance_selected_replications": 0,
+    "learning_trajectories_identical": false,
+    "seed_variability_observed": true,
+    "adequacy_criterion_predeclared": false,
+    "final_replication_count_justified": false,
+    "final_replication_count_selected": false,
+    "final_replication_count": "NOT_SELECTED"
+  },
+  "checkpoint_selection_assessment": {
+    "status": "REQUIRES_PREDECLARED_SELECTION_RULE",
+    "state_2_selected_because_mean_is_lowest": false,
+    "model_selected": false,
+    "final_checkpoint_selected": false,
+    "checkpoint_audits": [
+      {
+        "checkpoint_path": "results\\mappo_extended_resume\\replication_0_state_0.pt",
+        "checkpoint_identity": [
+          "EXTENDED_EVIDENCE_RESUME_CHECKPOINT_V1",
+          "ef44178ddd8cf975cbaf21472a28306818884ff2048334fb3946261d288a8de8"
+        ],
+        "best_model": false,
+        "final_model": false,
+        "selected_model": false,
+        "selection_eligible": false,
+        "purpose": "LONG_RUNNING_EXPERIMENT_RESUME_ONLY"
+      },
+      {
+        "checkpoint_path": "results\\mappo_extended_resume\\replication_0_state_1.pt",
+        "checkpoint_identity": [
+          "EXTENDED_EVIDENCE_RESUME_CHECKPOINT_V1",
+          "668852273d868365377330c9510d7947f825cfa6b89aa1eb54311f6a3149788b"
+        ],
+        "best_model": false,
+        "final_model": false,
+        "selected_model": false,
+        "selection_eligible": false,
+        "purpose": "LONG_RUNNING_EXPERIMENT_RESUME_ONLY"
+      },
+      {
+        "checkpoint_path": "results\\mappo_extended_resume\\replication_0_state_2.pt",
+        "checkpoint_identity": [
+          "EXTENDED_EVIDENCE_RESUME_CHECKPOINT_V1",
+          "7061abb4c884f82d5aa35be545b6c4bf74c86282d9521f2348af4d45ebb3a98b"
+        ],
+        "best_model": false,
+        "final_model": false,
+        "selected_model": false,
+        "selection_eligible": false,
+        "purpose": "LONG_RUNNING_EXPERIMENT_RESUME_ONLY"
+      },
+      {
+        "checkpoint_path": "results\\mappo_extended_resume\\replication_1_state_0.pt",
+        "checkpoint_identity": [
+          "EXTENDED_EVIDENCE_RESUME_CHECKPOINT_V1",
+          "d40301789a2311dba17b7225a47bcd4c71d4d71cef938fa5d4de735cfd3b0623"
+        ],
+        "best_model": false,
+        "final_model": false,
+        "selected_model": false,
+        "selection_eligible": false,
+        "purpose": "LONG_RUNNING_EXPERIMENT_RESUME_ONLY"
+      },
+      {
+        "checkpoint_path": "results\\mappo_extended_resume\\replication_1_state_1.pt",
+        "checkpoint_identity": [
+          "EXTENDED_EVIDENCE_RESUME_CHECKPOINT_V1",
+          "9eff1f3238a19518c28fd7ace2f918cac0621dc04e11579cf5a727d78bb35816"
+        ],
+        "best_model": false,
+        "final_model": false,
+        "selected_model": false,
+        "selection_eligible": false,
+        "purpose": "LONG_RUNNING_EXPERIMENT_RESUME_ONLY"
+      },
+      {
+        "checkpoint_path": "results\\mappo_extended_resume\\replication_1_state_2.pt",
+        "checkpoint_identity": [
+          "EXTENDED_EVIDENCE_RESUME_CHECKPOINT_V1",
+          "bbeb355da642015b2d256e00d7580f5d69f8acf51341cf4d5707021c6526ad2a"
+        ],
+        "best_model": false,
+        "final_model": false,
+        "selected_model": false,
+        "selection_eligible": false,
+        "purpose": "LONG_RUNNING_EXPERIMENT_RESUME_ONLY"
+      },
+      {
+        "checkpoint_path": "results\\mappo_extended_resume\\replication_2_state_0.pt",
+        "checkpoint_identity": [
+          "EXTENDED_EVIDENCE_RESUME_CHECKPOINT_V1",
+          "88bc34306538e1a92b0301ddea186652c061d8178acb8e399b380be34ad2c918"
+        ],
+        "best_model": false,
+        "final_model": false,
+        "selected_model": false,
+        "selection_eligible": false,
+        "purpose": "LONG_RUNNING_EXPERIMENT_RESUME_ONLY"
+      },
+      {
+        "checkpoint_path": "results\\mappo_extended_resume\\replication_2_state_1.pt",
+        "checkpoint_identity": [
+          "EXTENDED_EVIDENCE_RESUME_CHECKPOINT_V1",
+          "dc56b4b26d80da38b476ae4ae763eab46be32aeaa9a9d95a7ea4ccebf8b02b65"
+        ],
+        "best_model": false,
+        "final_model": false,
+        "selected_model": false,
+        "selection_eligible": false,
+        "purpose": "LONG_RUNNING_EXPERIMENT_RESUME_ONLY"
+      },
+      {
+        "checkpoint_path": "results\\mappo_extended_resume\\replication_2_state_2.pt",
+        "checkpoint_identity": [
+          "EXTENDED_EVIDENCE_RESUME_CHECKPOINT_V1",
+          "d93cbe06c50a554b3b17cef0e36008e6442034fccf694d43f39c25208202d2ad"
+        ],
+        "best_model": false,
+        "final_model": false,
+        "selected_model": false,
+        "selection_eligible": false,
+        "purpose": "LONG_RUNNING_EXPERIMENT_RESUME_ONLY"
+      }
+    ]
+  },
+  "statistical_rule_assessment": {
+    "status": "REQUIRES_PREDECLARATION",
+    "new_convergence_thresholds": 0,
+    "new_replication_adequacy_thresholds": 0,
+    "post_hoc_stopping_rule_created": false
+  },
+  "candidate_comparison_readiness": {
+    "status": "NOT_READY_SELECTION_PROTOCOL_INCOMPLETE",
+    "ready": false,
+    "candidate_comparisons_started": 0
+  },
+  "scenario_assessment": {
+    "new_unique_training_scenario_identities_required_now": false,
+    "repeated_on_policy_frozen_training_manifest_exposure": true,
+    "scenario_manifests_modified": false
+  },
+  "future_data_roles": {
+    "validation": "CONFIGURATION_AND_CHECKPOINT_COMPARISON_ONLY_AFTER_SELECTION_METHODOLOGY_IS_FROZEN",
+    "held_out": "FINAL_UNBIASED_EVALUATION_AFTER_ALL_CHOICES_ARE_FROZEN"
+  },
+  "safety_evidence": {
+    "collisions": 0,
+    "blocked_zone_violations": 0
+  },
+  "compute_evidence": {
+    "total_sumo_steps": 1620000,
+    "total_state_collection_wall_clock_seconds": 6254.401513000004,
+    "total_update_runtime_seconds": 8.384696399996756,
+    "total_runner_wall_clock_seconds": 6265.000598899991
+  },
+  "methodological_blocker_assessment": {
+    "TRAINING_BUDGET_SELECTION_CRITERION_REQUIRES_PREDECLARATION": "STILL_REQUIRES_PREDECLARATION",
+    "REPLICATION_COUNT_ADEQUACY_CRITERION_REQUIRES_PREDECLARATION": "STILL_REQUIRES_PREDECLARATION",
+    "CANDIDATE_COMPARISON_STATISTIC_REQUIRES_PREDECLARATION": "STILL_REQUIRES_PREDECLARATION",
+    "TIE_RULE_REQUIRES_PREDECLARATION": "STILL_REQUIRES_PREDECLARATION",
+    "CHECKPOINT_MODEL_SELECTION_RULE_REQUIRES_PREDECLARATION": "STILL_REQUIRES_PREDECLARATION",
+    "STATISTICAL_SELECTION_RULE_REQUIRES_PREDECLARATION": "STILL_REQUIRES_PREDECLARATION"
+  },
+  "methodological_blockers": [
+    "TRAINING_BUDGET_SELECTION_CRITERION_REQUIRES_PREDECLARATION",
+    "REPLICATION_COUNT_ADEQUACY_CRITERION_REQUIRES_PREDECLARATION",
+    "CANDIDATE_COMPARISON_STATISTIC_REQUIRES_PREDECLARATION",
+    "TIE_RULE_REQUIRES_PREDECLARATION",
+    "CHECKPOINT_MODEL_SELECTION_RULE_REQUIRES_PREDECLARATION",
+    "STATISTICAL_SELECTION_RULE_REQUIRES_PREDECLARATION"
+  ],
+  "new_hyperparameters": 0,
+  "new_training_executions": 0,
+  "new_sumo_executions": 0,
+  "validation_executions": 0,
+  "held_out_executions": 0,
+  "optimizer_instances": 0,
+  "optimizer_invocations": 0,
+  "backward_calls": 0,
+  "parameter_updates": 0,
+  "update_3_performed": false,
+  "replication_3_created": false,
+  "training_budget_status": "INSUFFICIENT_NO_PREDECLARED_STABILITY_CRITERION_AND_CURVE_STILL_EVOLVING",
+  "replication_status": "INSUFFICIENT_NO_PREDECLARED_REPLICATION_ADEQUACY_CRITERION",
+  "checkpoint_selection_status": "REQUIRES_PREDECLARED_SELECTION_RULE",
+  "next_checkpoint": "STEP_5J_3C_2D_PREDECLARED_SELECTION_PROTOCOL",
+  "next_checkpoint_reason": "PREDECLARE_AND_FREEZE_SELECTION_AND_TERMINATION_RULES_BEFORE_ACQUIRING_MORE_EVIDENCE"
+}

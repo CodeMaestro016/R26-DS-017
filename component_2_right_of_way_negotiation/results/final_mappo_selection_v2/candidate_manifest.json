@@ -1,0 +1,49 @@
+{
+  "protocol_id": "FINAL_MAPPO_SELECTION_PROTOCOL_V2",
+  "candidates": [
+    {
+      "candidate_id": "E5",
+      "ppo_update_epochs": 5,
+      "learning_rate": 0.0005,
+      "ppo_clip_epsilon": 0.2,
+      "gnn_hidden_dimension": 64,
+      "gnn_message_passing_layers": 3,
+      "gnn_training_mode": "FROZEN_GNN",
+      "parameter_sharing_strategy": "SHARED_REPRESENTATION_ROLE_SPECIFIC_HEADS",
+      "factor_aggregation": "PER_POLICY_FACTOR_EMPIRICAL_MEAN",
+      "optimizer_family": "ADAM",
+      "configuration_hash": "4aaf15fc47de6b98515d31dd26b61460623262c469ad1e6c4c5e12b97e8069e4",
+      "only_difference": "ppo_update_epochs"
+    },
+    {
+      "candidate_id": "E10",
+      "ppo_update_epochs": 10,
+      "learning_rate": 0.0005,
+      "ppo_clip_epsilon": 0.2,
+      "gnn_hidden_dimension": 64,
+      "gnn_message_passing_layers": 3,
+      "gnn_training_mode": "FROZEN_GNN",
+      "parameter_sharing_strategy": "SHARED_REPRESENTATION_ROLE_SPECIFIC_HEADS",
+      "factor_aggregation": "PER_POLICY_FACTOR_EMPIRICAL_MEAN",
+      "optimizer_family": "ADAM",
+      "configuration_hash": "4c69c89a33173c4e151ebbb938e86085d037d75e4ef003c33ed0e0b1f87f6a5b",
+      "only_difference": "ppo_update_epochs"
+    },
+    {
+      "candidate_id": "E15",
+      "ppo_update_epochs": 15,
+      "learning_rate": 0.0005,
+      "ppo_clip_epsilon": 0.2,
+      "gnn_hidden_dimension": 64,
+      "gnn_message_passing_layers": 3,
+      "gnn_training_mode": "FROZEN_GNN",
+      "parameter_sharing_strategy": "SHARED_REPRESENTATION_ROLE_SPECIFIC_HEADS",
+      "factor_aggregation": "PER_POLICY_FACTOR_EMPIRICAL_MEAN",
+      "optimizer_family": "ADAM",
+      "configuration_hash": "a3f550d105a126a72d25a37ee4cfdc052d7e56701b8a8da72c891e434515612b",
+      "only_difference": "ppo_update_epochs"
+    }
+  ],
+  "historical_contracts_mutated": false,
+  "historical_checkpoints_eligible": false
+}

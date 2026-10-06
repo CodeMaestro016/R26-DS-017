@@ -1,0 +1,79 @@
+{
+  "evidence_classification": "QUALITATIVE_PRESENTATION_ONLY",
+  "quantitative_model_selection_evidence": false,
+  "validation_evidence": false,
+  "held_out_evidence": false,
+  "selected_candidate_id": "E5",
+  "selected_policy_path": "results/final_mappo_selection_v2/selected_policy.pt",
+  "policy_sha256_before": "2ab2029fdd66f96c3ba0acf5e76487c96740161e898539f93c726228097eaf57",
+  "policy_sha256_after": "2ab2029fdd66f96c3ba0acf5e76487c96740161e898539f93c726228097eaf57",
+  "policy_hash_unchanged": true,
+  "selected_policy_modified": false,
+  "centralized_critic_used_for_action": false,
+  "centralized_critic_calls": 0,
+  "training_operations": 0,
+  "backward_calls": 0,
+  "optimizer_steps": 0,
+  "parameter_updates": 0,
+  "route_truth_actor_leakage": 0,
+  "held_out_scenarios_consumed": 0,
+  "sumo_start_count": 1,
+  "sumo_close_count": 1,
+  "simulation_step_seconds": 0.04,
+  "presentation_duration_seconds": 0.4,
+  "presentation_schedule": {
+    "N": [
+      "N_IN_0_LEFT",
+      "N_IN_0_STRAIGHT",
+      "N_IN_0_RIGHT"
+    ],
+    "E": [
+      "E_IN_0_LEFT",
+      "E_IN_0_STRAIGHT",
+      "E_IN_0_RIGHT"
+    ],
+    "S": [
+      "S_IN_0_RIGHT",
+      "S_IN_0_STRAIGHT",
+      "S_IN_0_LEFT"
+    ],
+    "W": [
+      "W_IN_0_LEFT",
+      "W_IN_0_RIGHT",
+      "W_IN_0_STRAIGHT"
+    ]
+  },
+  "schedule_source": "PREDECLARED_PRESENTATION_ROLLING_APPROACH_SLOTS",
+  "mappo_demo_case_source": "EXISTING_TRAINING_SIDE_ILLUSTRATIVE_CASE",
+  "mappo_demo_case_identifier": [
+    "TRAINING_MANIFEST_ROUTE_STRUCTURE",
+    [
+      "E_IN_0_STRAIGHT",
+      "N_IN_0_STRAIGHT",
+      "S_IN_0_RIGHT",
+      "W_IN_0_LEFT"
+    ]
+  ],
+  "training_demo_case_search": false,
+  "validation_or_held_out_search": false,
+  "spawned_vehicle_ids": [
+    "PANEL_AV_N_01",
+    "PANEL_AV_E_01"
+  ],
+  "completed_vehicle_ids": [],
+  "metrics": {
+    "presentation_vehicles_scheduled": 12,
+    "presentation_vehicles_completed": 0,
+    "unfinished_vehicles": 12,
+    "negotiation_events": 0,
+    "mappo_decision_epochs": 0,
+    "rule_resolved_events": 0,
+    "renegotiation_events": 0,
+    "safe_hold_activations": 0,
+    "collisions": 0,
+    "blocked_zone_violations": 0,
+    "maximum_negotiation_participants": 0
+  },
+  "events": [],
+  "diagnostics": []
+}

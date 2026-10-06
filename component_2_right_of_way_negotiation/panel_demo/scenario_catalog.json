@@ -1,0 +1,114 @@
+[
+  {
+    "scenario_id": "congested_four_approach",
+    "display_name": "Congested Four-Approach Queues",
+    "description": "16 traffic vehicles, four per approach, with up to four physical queue heads per negotiation event. Qualitative presentation only; larger negotiation graphs are not validated.",
+    "category": "CONGESTED_TRAFFIC",
+    "verified_tag": "PRESENTATION",
+    "difficulty": "DENSE TRAFFIC",
+    "evidence_classification": "QUALITATIVE_PRESENTATION_ONLY",
+    "source_type": "NEW_PREDECLARED_PRESENTATION_ONLY_SCHEDULE",
+    "admission_mode": "INDEPENDENT_DEMAND",
+    "demand_headway_seconds": 1.5,
+    "recommended_duration_seconds": 360.0,
+    "movement_waves": [
+      ["N_IN_0_STRAIGHT", "E_IN_0_STRAIGHT", "S_IN_0_RIGHT", "W_IN_0_LEFT"],
+      ["N_IN_0_LEFT", "E_IN_0_LEFT", "S_IN_0_STRAIGHT", "W_IN_0_RIGHT"],
+      ["N_IN_0_RIGHT", "E_IN_0_RIGHT", "S_IN_0_LEFT", "W_IN_0_STRAIGHT"],
+      ["N_IN_0_STRAIGHT", "E_IN_0_STRAIGHT", "S_IN_0_RIGHT", "W_IN_0_LEFT"]
+    ],
+    "movement_summary": "Four vehicles per approach, all twelve legal movements, independent safe insertion and physical queue-head promotion."
+  },
+  {
+    "scenario_id": "default_panel",
+    "display_name": "Complete Panel Demonstration",
+    "description": "The verified four-phase presentation covering rule-resolved, negotiation, mixed-manoeuvre and re-negotiation events.",
+    "category": "LIVENESS",
+    "verified_tag": "LIVENESS",
+    "difficulty": "FULL DEMO",
+    "evidence_classification": "QUALITATIVE_PRESENTATION_ONLY",
+    "source_type": "PREDECLARED_PRESENTATION_SCHEDULE_WITH_EXISTING_TRAINING_SIDE_ILLUSTRATION",
+    "movement_waves": [
+      ["N_IN_0_LEFT", "E_IN_0_LEFT"],
+      ["N_IN_0_STRAIGHT", "E_IN_0_STRAIGHT", "S_IN_0_RIGHT", "W_IN_0_LEFT"],
+      ["N_IN_0_RIGHT", "E_IN_0_RIGHT", "S_IN_0_STRAIGHT", "W_IN_0_RIGHT"],
+      ["S_IN_0_LEFT", "W_IN_0_STRAIGHT"]
+    ],
+    "movement_summary": "All twelve legal movements in four rolling waves."
+  },
+  {
+    "scenario_id": "yield_negotiation_demo",
+    "display_name": "Yield + Negotiation Demo",
+    "description": "A two-wave qualitative demonstration: traffic-rule yielding followed by the verified regulatory-cycle negotiation structure.",
+    "category": "COMBINED_PRESENTATION",
+    "verified_tag": "RECOMMENDED",
+    "difficulty": "MAIN DEMO",
+    "evidence_classification": "QUALITATIVE_PRESENTATION_ONLY",
+    "source_type": "REUSED_DEFAULT_PRESENTATION_PHASES",
+    "movement_waves": [
+      ["N_IN_0_LEFT", "E_IN_0_LEFT"],
+      ["N_IN_0_STRAIGHT", "E_IN_0_STRAIGHT", "S_IN_0_RIGHT", "W_IN_0_LEFT"]
+    ],
+    "movement_summary": "North/east left rule conflict, then north/east straight, south right and west left regulatory cycle."
+  },
+  {
+    "scenario_id": "rule_resolved_two",
+    "display_name": "Rule-Resolved Two-Vehicle Conflict",
+    "description": "Two conflicting AVs where deterministic traffic rules already provide an executable order.",
+    "category": "RULE_RESOLVED",
+    "verified_tag": "BASELINE",
+    "difficulty": "FOUNDATION",
+    "evidence_classification": "QUALITATIVE_PRESENTATION_ONLY",
+    "source_type": "REUSED_DEFAULT_PRESENTATION_PHASE",
+    "movement_waves": [["N_IN_0_LEFT", "E_IN_0_LEFT"]],
+    "movement_summary": "North left and east left."
+  },
+  {
+    "scenario_id": "four_way_simultaneous",
+    "display_name": "Four-Way Simultaneous Arrival",
+    "description": "Four AVs approach at the same time with mixed legal manoeuvres, creating dense multi-agent coordination.",
+    "category": "STRESS",
+    "verified_tag": "STRESS",
+    "difficulty": "HIGH",
+    "evidence_classification": "QUALITATIVE_PRESENTATION_ONLY",
+    "source_type": "REUSED_DEFAULT_PRESENTATION_PHASE",
+    "movement_waves": [["N_IN_0_RIGHT", "E_IN_0_RIGHT", "S_IN_0_STRAIGHT", "W_IN_0_RIGHT"]],
+    "movement_summary": "One simultaneous AV per approach; right and straight movements."
+  },
+  {
+    "scenario_id": "regulatory_cycle",
+    "display_name": "Regulatory Cycle",
+    "description": "The existing training-side illustrative route structure that naturally exercises rule-cycle detection and semantic negotiation when derived by the live pipeline.",
+    "category": "NEGOTIATION",
+    "verified_tag": "MAPPO NEGOTIATION",
+    "difficulty": "HIGH",
+    "evidence_classification": "QUALITATIVE_PRESENTATION_ONLY",
+    "source_type": "EXISTING_TRAINING_SIDE_ROUTE_STRUCTURE",
+    "movement_waves": [["N_IN_0_STRAIGHT", "E_IN_0_STRAIGHT", "S_IN_0_RIGHT", "W_IN_0_LEFT"]],
+    "movement_summary": "North/east straight, south right and west left."
+  },
+  {
+    "scenario_id": "multiple_left_turns",
+    "display_name": "Multiple Left Turns",
+    "description": "Three simultaneous legal left turns create overlapping crossing and merging relationships.",
+    "category": "STRESS",
+    "verified_tag": "LIVENESS",
+    "difficulty": "HIGH",
+    "evidence_classification": "QUALITATIVE_PRESENTATION_ONLY",
+    "source_type": "NEW_PREDECLARED_PRESENTATION_ONLY_SCHEDULE",
+    "movement_waves": [["N_IN_0_LEFT", "E_IN_0_LEFT", "S_IN_0_LEFT"]],
+    "movement_summary": "Three left turns from north, east and south."
+  },
+  {
+    "scenario_id": "mixed_manoeuvres",
+    "display_name": "Mixed Manoeuvre Conflict",
+    "description": "Straight, left and right movements from four approaches exercise heterogeneous graph relationships.",
+    "category": "STRESS",
+    "verified_tag": "RE-NEGOTIATION",
+    "difficulty": "HIGH",
+    "evidence_classification": "QUALITATIVE_PRESENTATION_ONLY",
+    "source_type": "NEW_PREDECLARED_PRESENTATION_ONLY_SCHEDULE",
+    "movement_waves": [["N_IN_0_STRAIGHT", "E_IN_0_LEFT", "S_IN_0_RIGHT", "W_IN_0_STRAIGHT"]],
+    "movement_summary": "North/west straight, east left and south right."
+  }
+]

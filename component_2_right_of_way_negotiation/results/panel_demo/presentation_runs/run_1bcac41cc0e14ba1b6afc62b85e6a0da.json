@@ -1,0 +1,3790 @@
+{
+  "schema": "QUALITATIVE_PRESENTATION_RUN_V1",
+  "evidence_classification": "QUALITATIVE_PRESENTATION_ONLY",
+  "validation_evidence": false,
+  "held_out_evidence": false,
+  "model_selection_evidence": false,
+  "run_id": "1bcac41cc0e14ba1b6afc62b85e6a0da",
+  "run_status": "COMPLETED",
+  "scenario_id": "yield_negotiation_demo",
+  "started_at_utc": "2026-10-05T13:31:49.569311+00:00",
+  "ended_at_utc": "2026-10-05T13:33:27.715455+00:00",
+  "simulation_time_seconds": 220.0,
+  "metrics": {
+    "presentation_vehicles_scheduled": 6,
+    "presentation_vehicles_completed": 6,
+    "unfinished_vehicles": 0,
+    "collisions": 0,
+    "blocked_zone_violations": 0,
+    "negotiation_events": 2,
+    "mappo_decision_epochs": 1,
+    "rule_resolved_events": 1,
+    "renegotiation_events": 2
+  },
+  "policy_hash_unchanged": true,
+  "vehicles": [
+    {
+      "id": "PANEL_AV_E_01",
+      "front_bumper_x": 298.4,
+      "front_bumper_y": 0.8655063729300423,
+      "angle_degrees": 180.0,
+      "length_m": 5.0,
+      "width_m": 1.8,
+      "speed_mps": 13.032987,
+      "display_state": "READY",
+      "execution_state": "READY",
+      "negotiation_involvement": false,
+      "acceleration_mps2": 0.0,
+      "local_perception": {
+        "observed_vehicle_ids": [],
+        "observed_vehicle_count": 0
+      },
+      "ldm": {
+        "track_count": 0,
+        "tracked_vehicle_ids": [],
+        "propagated_vehicle_ids": [],
+        "history_lengths": {}
+      },
+      "local_intention_predictions": [],
+      "conflict": {
+        "relevant": true,
+        "partners": [
+          "PANEL_AV_N_01"
+        ]
+      },
+      "local_precedence_edges": [],
+      "gnn": {
+        "encoded": false
+      },
+      "negotiation": {
+        "factors": []
+      },
+      "planner": {
+        "state": "READY"
+      },
+      "control": {
+        "speed_constraint_active": false,
+        "speed_cap_mps": null,
+        "source": "SUMO_NATIVE"
+      }
+    },
+    {
+      "id": "PANEL_AV_E_02",
+      "front_bumper_x": 0.8574878899076452,
+      "front_bumper_y": 301.6,
+      "angle_degrees": 270.0,
+      "length_m": 5.0,
+      "width_m": 1.8,
+      "speed_mps": 13.89,
+      "display_state": "READY",
+      "execution_state": "READY",
+      "negotiation_involvement": true,
+      "acceleration_mps2": 0.0,
+      "local_perception": {
+        "observed_vehicle_ids": [],
+        "observed_vehicle_count": 0
+      },
+      "ldm": {
+        "track_count": 0,
+        "tracked_vehicle_ids": [],
+        "propagated_vehicle_ids": [],
+        "history_lengths": {}
+      },
+      "local_intention_predictions": [],
+      "conflict": {
+        "relevant": true,
+        "partners": [
+          "PANEL_AV_N_02",
+          "PANEL_AV_S_01",
+          "PANEL_AV_W_01"
+        ]
+      },
+      "local_precedence_edges": [],
+      "gnn": {
+        "encoded": false
+      },
+      "negotiation": {
+        "factors": [
+          {
+            "decision_role": "PROPOSER",
+            "ego_id": "PANEL_AV_E_02",
+            "claim_identity": [
+              "PANEL_AV_S_01",
+              "PANEL_AV_E_02"
+            ],
+            "proposal_id": null,
+            "action_names": [
+              "KEEP_CLAIM",
+              "RELINQUISH_CLAIM"
+            ],
+            "hard_action_mask": [
+              true,
+              true
+            ],
+            "masked_probabilities": [
+              0.23284341394901276,
+              0.7671566009521484
+            ],
+            "selected_action": "RELINQUISH_CLAIM",
+            "selected_action_index": 1,
+            "selection_rule": "DETERMINISTIC_MASKED_ARGMAX_OF_SELECTED_E5_PRESENTATION_ONLY"
+          },
+          {
+            "decision_role": "PROPOSER",
+            "ego_id": "PANEL_AV_E_02",
+            "claim_identity": [
+              "PANEL_AV_W_01",
+              "PANEL_AV_E_02"
+            ],
+            "proposal_id": null,
+            "action_names": [
+              "KEEP_CLAIM",
+              "RELINQUISH_CLAIM"
+            ],
+            "hard_action_mask": [
+              true,
+              true
+            ],
+            "masked_probabilities": [
+              0.24233245849609375,
+              0.7576675415039062
+            ],
+            "selected_action": "RELINQUISH_CLAIM",
+            "selected_action_index": 1,
+            "selection_rule": "DETERMINISTIC_MASKED_ARGMAX_OF_SELECTED_E5_PRESENTATION_ONLY"
+          },
+          {
+            "decision_role": "RESPONDER",
+            "ego_id": "PANEL_AV_E_02",
+            "claim_identity": [
+              "PANEL_AV_E_02",
+              "PANEL_AV_N_02"
+            ],
+            "proposal_id": [
+              68.04,
+              "PANEL_AV_E_02",
+              "PANEL_AV_N_02",
+              "PANEL_AV_N_02",
+              "PANEL_AV_E_02"
+            ],
+            "action_names": [
+              "ACCEPT_RELINQUISHMENT",
+              "REJECT_RELINQUISHMENT"
+            ],
+            "hard_action_mask": [
+              true,
+              true
+            ],
+            "masked_probabilities": [
+              0.5487106442451477,
+              0.4512893557548523
+            ],
+            "selected_action": "ACCEPT_RELINQUISHMENT",
+            "selected_action_index": 0,
+            "selection_rule": "DETERMINISTIC_MASKED_ARGMAX_OF_SELECTED_E5_PRESENTATION_ONLY"
+          }
+        ]
+      },
+      "planner": {
+        "state": "READY"
+      },
+      "control": {
+        "speed_constraint_active": false,
+        "speed_cap_mps": null,
+        "source": "SUMO_NATIVE"
+      }
+    },
+    {
+      "id": "PANEL_AV_N_01",
+      "front_bumper_x": 599.7662909090919,
+      "front_bumper_y": 298.4,
+      "angle_degrees": 90.0,
+      "length_m": 5.0,
+      "width_m": 1.8,
+      "speed_mps": 13.89,
+      "display_state": "READY",
+      "execution_state": "READY",
+      "negotiation_involvement": false,
+      "acceleration_mps2": 0.0,
+      "local_perception": {
+        "observed_vehicle_ids": [],
+        "observed_vehicle_count": 0
+      },
+      "ldm": {
+        "track_count": 0,
+        "tracked_vehicle_ids": [],
+        "propagated_vehicle_ids": [],
+        "history_lengths": {}
+      },
+      "local_intention_predictions": [],
+      "conflict": {
+        "relevant": true,
+        "partners": [
+          "PANEL_AV_E_01"
+        ]
+      },
+      "local_precedence_edges": [],
+      "gnn": {
+        "encoded": false
+      },
+      "negotiation": {
+        "factors": []
+      },
+      "planner": {
+        "state": "READY"
+      },
+      "control": {
+        "speed_constraint_active": false,
+        "speed_cap_mps": null,
+        "source": "SUMO_NATIVE"
+      }
+    },
+    {
+      "id": "PANEL_AV_N_02",
+      "front_bumper_x": 298.4,
+      "front_bumper_y": 1.4873922077913448,
+      "angle_degrees": 180.0,
+      "length_m": 5.0,
+      "width_m": 1.8,
+      "speed_mps": 13.89,
+      "display_state": "READY",
+      "execution_state": "READY",
+      "negotiation_involvement": true,
+      "acceleration_mps2": 0.0,
+      "local_perception": {
+        "observed_vehicle_ids": [],
+        "observed_vehicle_count": 0
+      },
+      "ldm": {
+        "track_count": 0,
+        "tracked_vehicle_ids": [],
+        "propagated_vehicle_ids": [],
+        "history_lengths": {}
+      },
+      "local_intention_predictions": [],
+      "conflict": {
+        "relevant": true,
+        "partners": [
+          "PANEL_AV_E_02",
+          "PANEL_AV_S_01",
+          "PANEL_AV_W_01"
+        ]
+      },
+      "local_precedence_edges": [],
+      "gnn": {
+        "encoded": false
+      },
+      "negotiation": {
+        "factors": [
+          {
+            "decision_role": "PROPOSER",
+            "ego_id": "PANEL_AV_N_02",
+            "claim_identity": [
+              "PANEL_AV_E_02",
+              "PANEL_AV_N_02"
+            ],
+            "proposal_id": null,
+            "action_names": [
+              "KEEP_CLAIM",
+              "RELINQUISH_CLAIM"
+            ],
+            "hard_action_mask": [
+              true,
+              true
+            ],
+            "masked_probabilities": [
+              0.22450613975524902,
+              0.775493860244751
+            ],
+            "selected_action": "RELINQUISH_CLAIM",
+            "selected_action_index": 1,
+            "selection_rule": "DETERMINISTIC_MASKED_ARGMAX_OF_SELECTED_E5_PRESENTATION_ONLY"
+          },
+          {
+            "decision_role": "PROPOSER",
+            "ego_id": "PANEL_AV_N_02",
+            "claim_identity": [
+              "PANEL_AV_S_01",
+              "PANEL_AV_N_02"
+            ],
+            "proposal_id": null,
+            "action_names": [
+              "KEEP_CLAIM",
+              "RELINQUISH_CLAIM"
+            ],
+            "hard_action_mask": [
+              true,
+              true
+            ],
+            "masked_probabilities": [
+              0.23694086074829102,
+              0.763059139251709
+            ],
+            "selected_action": "RELINQUISH_CLAIM",
+            "selected_action_index": 1,
+            "selection_rule": "DETERMINISTIC_MASKED_ARGMAX_OF_SELECTED_E5_PRESENTATION_ONLY"
+          },
+          {
+            "decision_role": "RESPONDER",
+            "ego_id": "PANEL_AV_N_02",
+            "claim_identity": [
+              "PANEL_AV_N_02",
+              "PANEL_AV_W_01"
+            ],
+            "proposal_id": [
+              68.04,
+              "PANEL_AV_N_02",
+              "PANEL_AV_W_01",
+              "PANEL_AV_W_01",
+              "PANEL_AV_N_02"
+            ],
+            "action_names": [
+              "ACCEPT_RELINQUISHMENT",
+              "REJECT_RELINQUISHMENT"
+            ],
+            "hard_action_mask": [
+              true,
+              true
+            ],
+            "masked_probabilities": [
+              0.6027176380157471,
+              0.39728233218193054
+            ],
+            "selected_action": "ACCEPT_RELINQUISHMENT",
+            "selected_action_index": 0,
+            "selection_rule": "DETERMINISTIC_MASKED_ARGMAX_OF_SELECTED_E5_PRESENTATION_ONLY"
+          }
+        ]
+      },
+      "planner": {
+        "state": "READY"
+      },
+      "control": {
+        "speed_constraint_active": false,
+        "speed_cap_mps": null,
+        "source": "SUMO_NATIVE"
+      }
+    },
+    {
+      "id": "PANEL_AV_S_01",
+      "front_bumper_x": 599.0060847600012,
+      "front_bumper_y": 298.4,
+      "angle_degrees": 90.0,
+      "length_m": 5.0,
+      "width_m": 1.8,
+      "speed_mps": 13.89,
+      "display_state": "READY",
+      "execution_state": "READY",
+      "negotiation_involvement": true,
+      "acceleration_mps2": 0.0,
+      "local_perception": {
+        "observed_vehicle_ids": [],
+        "observed_vehicle_count": 0
+      },
+      "ldm": {
+        "track_count": 0,
+        "tracked_vehicle_ids": [],
+        "propagated_vehicle_ids": [],
+        "history_lengths": {}
+      },
+      "local_intention_predictions": [],
+      "conflict": {
+        "relevant": false,
+        "partners": []
+      },
+      "local_precedence_edges": [],
+      "gnn": {
+        "encoded": false
+      },
+      "negotiation": {
+        "factors": [
+          {
+            "decision_role": "PROPOSER",
+            "ego_id": "PANEL_AV_S_01",
+            "claim_identity": [
+              "PANEL_AV_W_01",
+              "PANEL_AV_S_01"
+            ],
+            "proposal_id": null,
+            "action_names": [
+              "KEEP_CLAIM",
+              "RELINQUISH_CLAIM"
+            ],
+            "hard_action_mask": [
+              true,
+              true
+            ],
+            "masked_probabilities": [
+              0.2332889884710312,
+              0.7667109966278076
+            ],
+            "selected_action": "RELINQUISH_CLAIM",
+            "selected_action_index": 1,
+            "selection_rule": "DETERMINISTIC_MASKED_ARGMAX_OF_SELECTED_E5_PRESENTATION_ONLY"
+          },
+          {
+            "decision_role": "RESPONDER",
+            "ego_id": "PANEL_AV_S_01",
+            "claim_identity": [
+              "PANEL_AV_S_01",
+              "PANEL_AV_E_02"
+            ],
+            "proposal_id": [
+              68.04,
+              "PANEL_AV_S_01",
+              "PANEL_AV_E_02",
+              "PANEL_AV_E_02",
+              "PANEL_AV_S_01"
+            ],
+            "action_names": [
+              "ACCEPT_RELINQUISHMENT",
+              "REJECT_RELINQUISHMENT"
+            ],
+            "hard_action_mask": [
+              true,
+              true
+            ],
+            "masked_probabilities": [
+              0.5429694652557373,
+              0.4570305347442627
+            ],
+            "selected_action": "ACCEPT_RELINQUISHMENT",
+            "selected_action_index": 0,
+            "selection_rule": "DETERMINISTIC_MASKED_ARGMAX_OF_SELECTED_E5_PRESENTATION_ONLY"
+          },
+          {
+            "decision_role": "RESPONDER",
+            "ego_id": "PANEL_AV_S_01",
+            "claim_identity": [
+              "PANEL_AV_S_01",
+              "PANEL_AV_N_02"
+            ],
+            "proposal_id": [
+              68.04,
+              "PANEL_AV_S_01",
+              "PANEL_AV_N_02",
+              "PANEL_AV_N_02",
+              "PANEL_AV_S_01"
+            ],
+            "action_names": [
+              "ACCEPT_RELINQUISHMENT",
+              "REJECT_RELINQUISHMENT"
+            ],
+            "hard_action_mask": [
+              true,
+              true
+            ],
+            "masked_probabilities": [
+              0.5449607372283936,
+              0.45503929257392883
+            ],
+            "selected_action": "ACCEPT_RELINQUISHMENT",
+            "selected_action_index": 0,
+            "selection_rule": "DETERMINISTIC_MASKED_ARGMAX_OF_SELECTED_E5_PRESENTATION_ONLY"
+          }
+        ]
+      },
+      "planner": {
+        "state": "READY"
+      },
+      "control": {
+        "speed_constraint_active": false,
+        "speed_cap_mps": null,
+        "source": "SUMO_NATIVE"
+      }
+    },
+    {
+      "id": "PANEL_AV_W_01",
+      "front_bumper_x": 301.6,
+      "front_bumper_y": 598.4327909375006,
+      "angle_degrees": 0.0,
+      "length_m": 5.0,
+      "width_m": 1.8,
+      "speed_mps": 11.54259,
+      "display_state": "READY",
+      "execution_state": "READY",
+      "negotiation_involvement": true,
+      "acceleration_mps2": 0.0,
+      "local_perception": {
+        "observed_vehicle_ids": [],
+        "observed_vehicle_count": 0
+      },
+      "ldm": {
+        "track_count": 0,
+        "tracked_vehicle_ids": [],
+        "propagated_vehicle_ids": [],
+        "history_lengths": {}
+      },
+      "local_intention_predictions": [],
+      "conflict": {
+        "relevant": true,
+        "partners": [
+          "PANEL_AV_E_02",
+          "PANEL_AV_N_02",
+          "PANEL_AV_S_01"
+        ]
+      },
+      "local_precedence_edges": [],
+      "gnn": {
+        "encoded": false
+      },
+      "negotiation": {
+        "factors": [
+          {
+            "decision_role": "PROPOSER",
+            "ego_id": "PANEL_AV_W_01",
+            "claim_identity": [
+              "PANEL_AV_N_02",
+              "PANEL_AV_W_01"
+            ],
+            "proposal_id": null,
+            "action_names": [
+              "KEEP_CLAIM",
+              "RELINQUISH_CLAIM"
+            ],
+            "hard_action_mask": [
+              true,
+              true
+            ],
+            "masked_probabilities": [
+              0.22906593978405,
+              0.7709340453147888
+            ],
+            "selected_action": "RELINQUISH_CLAIM",
+            "selected_action_index": 1,
+            "selection_rule": "DETERMINISTIC_MASKED_ARGMAX_OF_SELECTED_E5_PRESENTATION_ONLY"
+          },
+          {
+            "decision_role": "RESPONDER",
+            "ego_id": "PANEL_AV_W_01",
+            "claim_identity": [
+              "PANEL_AV_W_01",
+              "PANEL_AV_E_02"
+            ],
+            "proposal_id": [
+              68.04,
+              "PANEL_AV_W_01",
+              "PANEL_AV_E_02",
+              "PANEL_AV_E_02",
+              "PANEL_AV_W_01"
+            ],
+            "action_names": [
+              "ACCEPT_RELINQUISHMENT",
+              "REJECT_RELINQUISHMENT"
+            ],
+            "hard_action_mask": [
+              true,
+              true
+            ],
+            "masked_probabilities": [
+              0.5461450219154358,
+              0.4538550078868866
+            ],
+            "selected_action": "ACCEPT_RELINQUISHMENT",
+            "selected_action_index": 0,
+            "selection_rule": "DETERMINISTIC_MASKED_ARGMAX_OF_SELECTED_E5_PRESENTATION_ONLY"
+          },
+          {
+            "decision_role": "RESPONDER",
+            "ego_id": "PANEL_AV_W_01",
+            "claim_identity": [
+              "PANEL_AV_W_01",
+              "PANEL_AV_S_01"
+            ],
+            "proposal_id": [
+              68.04,
+              "PANEL_AV_W_01",
+              "PANEL_AV_S_01",
+              "PANEL_AV_S_01",
+              "PANEL_AV_W_01"
+            ],
+            "action_names": [
+              "ACCEPT_RELINQUISHMENT",
+              "REJECT_RELINQUISHMENT"
+            ],
+            "hard_action_mask": [
+              true,
+              true
+            ],
+            "masked_probabilities": [
+              0.5453625917434692,
+              0.454637348651886
+            ],
+            "selected_action": "ACCEPT_RELINQUISHMENT",
+            "selected_action_index": 0,
+            "selection_rule": "DETERMINISTIC_MASKED_ARGMAX_OF_SELECTED_E5_PRESENTATION_ONLY"
+          }
+        ]
+      },
+      "planner": {
+        "state": "READY"
+      },
+      "control": {
+        "speed_constraint_active": false,
+        "speed_cap_mps": null,
+        "source": "SUMO_NATIVE"
+      }
+    }
+  ],
+  "vehicle_process_traces": {
+    "PANEL_AV_E_01": [
+      {
+        "timestamp": 0.04,
+        "stage": "FIRST_OBSERVED",
+        "value": "Runtime state available"
+      },
+      {
+        "timestamp": 0.04,
+        "stage": "PLANNER",
+        "value": {
+          "state": "READY"
+        }
+      },
+      {
+        "timestamp": 0.04,
+        "stage": "CONTROL",
+        "value": {
+          "speed_constraint_active": false,
+          "speed_cap_mps": null,
+          "source": "SUMO_NATIVE"
+        }
+      },
+      {
+        "timestamp": 0.04,
+        "stage": "CONFLICT",
+        "value": {
+          "relevant": false,
+          "partners": []
+        }
+      },
+      {
+        "timestamp": 0.04,
+        "stage": "GNN",
+        "value": {
+          "encoded": false
+        }
+      },
+      {
+        "timestamp": 0.04,
+        "stage": "MAPPO",
+        "value": {
+          "factors": []
+        }
+      },
+      {
+        "timestamp": 15.88,
+        "stage": "PLANNER",
+        "value": {
+          "state": "BLOCKED"
+        }
+      },
+      {
+        "timestamp": 15.88,
+        "stage": "CONTROL",
+        "value": {
+          "speed_constraint_active": true,
+          "speed_cap_mps": 13.032987,
+          "source": "DETERMINISTIC_PRECEDENCE_CONTROLLER"
+        }
+      },
+      {
+        "timestamp": 16.84,
+        "stage": "CONFLICT",
+        "value": {
+          "relevant": true,
+          "partners": [
+            "PANEL_AV_N_01"
+          ]
+        }
+      },
+      {
+        "timestamp": 16.84,
+        "stage": "PRECEDENCE",
+        "value": [
+          [
+            "PANEL_AV_E_01",
+            "PANEL_AV_N_01"
+          ]
+        ]
+      },
+      {
+        "timestamp": 16.84,
+        "stage": "GNN",
+        "value": {
+          "encoded": true,
+          "node_count": 2,
+          "edge_count": 1,
+          "node_feature_dimension": 8,
+          "edge_feature_dimension": 9,
+          "missing_node_feature_count": 0,
+          "missing_edge_feature_count": 0,
+          "tensor_backend": "NUMPY",
+          "normalization_status": "NOT_FITTED_TRAINING_STATISTICS_REQUIRED",
+          "source_graph_scope": "JOINT_LOCAL_V2V",
+          "communication_model": "IDEAL_SAME_STEP_V2V"
+        }
+      },
+      {
+        "timestamp": 17.8,
+        "stage": "INTENTION",
+        "value": [
+          {
+            "target_id": "PANEL_AV_N_01",
+            "label": "UNKNOWN",
+            "confidence": null,
+            "stage": "WAITING",
+            "status": "WAITING_FOR_FINALIZATION"
+          }
+        ]
+      },
+      {
+        "timestamp": 20.36,
+        "stage": "INTENTION",
+        "value": [
+          {
+            "target_id": "PANEL_AV_N_01",
+            "label": "UNKNOWN",
+            "confidence": 0.8330482786229458,
+            "stage": "PRIMARY",
+            "status": "WAITING_FOR_FINALIZATION"
+          }
+        ]
+      },
+      {
+        "timestamp": 20.68,
+        "stage": "CONTROL",
+        "value": {
+          "speed_constraint_active": true,
+          "speed_cap_mps": 13.02776294520645,
+          "source": "DETERMINISTIC_PRECEDENCE_CONTROLLER"
+        }
+      },
+      {
+        "timestamp": 20.84,
+        "stage": "CONTROL",
+        "value": {
+          "speed_constraint_active": true,
+          "speed_cap_mps": 12.307762945206463,
+          "source": "DETERMINISTIC_PRECEDENCE_CONTROLLER"
+        }
+      },
+      {
+        "timestamp": 21.0,
+        "stage": "CONTROL",
+        "value": {
+          "speed_constraint_active": true,
+          "speed_cap_mps": 11.587762945206459,
+          "source": "DETERMINISTIC_PRECEDENCE_CONTROLLER"
+        }
+      },
+      {
+        "timestamp": 21.16,
+        "stage": "CONTROL",
+        "value": {
+          "speed_constraint_active": true,
+          "speed_cap_mps": 10.867762945206461,
+          "source": "DETERMINISTIC_PRECEDENCE_CONTROLLER"
+        }
+      },
+      {
+        "timestamp": 21.16,
+        "stage": "INTENTION",
+        "value": [
+          {
+            "target_id": "PANEL_AV_N_01",
+            "label": "UNKNOWN",
+            "confidence": 0.5165621849475663,
+            "stage": "SECONDARY",
+            "status": "HORIZON_DISAGREEMENT"
+          }
+        ]
+      },
+      {
+        "timestamp": 21.32,
+        "stage": "CONTROL",
+        "value": {
+          "speed_constraint_active": true,
+          "speed_cap_mps": 10.147762945206448,
+          "source": "DETERMINISTIC_PRECEDENCE_CONTROLLER"
+        }
+      },
+      {
+        "timestamp": 21.48,
+        "stage": "CONTROL",
+        "value": {
+          "speed_constraint_active": true,
+          "speed_cap_mps": 9.427762945206439,
+          "source": "DETERMINISTIC_PRECEDENCE_CONTROLLER"
+        }
+      },
+      {
+        "timestamp": 21.64,
+        "stage": "CONTROL",
+        "value": {
+          "speed_constraint_active": true,
+          "speed_cap_mps": 8.707762945206438,
+          "source": "DETERMINISTIC_PRECEDENCE_CONTROLLER"
+        }
+      },
+      {
+        "timestamp": 21.8,
+        "stage": "CONTROL",
+        "value": {
+          "speed_constraint_active": true,
+          "speed_cap_mps": 7.987762945206442,
+          "source": "DETERMINISTIC_PRECEDENCE_CONTROLLER"
+        }
+      },
+      {
+        "timestamp": 21.96,
+        "stage": "CONTROL",
+        "value": {
+          "speed_constraint_active": true,
+          "speed_cap_mps": 7.267762945206423,
+          "source": "DETERMINISTIC_PRECEDENCE_CONTROLLER"
+        }
+      },
+      {
+        "timestamp": 22.12,
+        "stage": "CONTROL",
+        "value": {
+          "speed_constraint_active": true,
+          "speed_cap_mps": 6.547762945206412,
+          "source": "DETERMINISTIC_PRECEDENCE_CONTROLLER"
+        }
+      },
+      {
+        "timestamp": 22.28,
+        "stage": "CONTROL",
+        "value": {
+          "speed_constraint_active": true,
+          "speed_cap_mps": 6.36776294520642,
+          "source": "DETERMINISTIC_PRECEDENCE_CONTROLLER"
+        }
+      },
+      {
+        "timestamp": 22.44,
+        "stage": "CONTROL",
+        "value": {
+          "speed_constraint_active": true,
+          "speed_cap_mps": 6.169971044811398,
+          "source": "DETERMINISTIC_PRECEDENCE_CONTROLLER"
+        }
+      },
+      {
+        "timestamp": 22.6,
+        "stage": "CONTROL",
+        "value": {
+          "speed_constraint_active": true,
+          "speed_cap_mps": 5.449971044811411,
+          "source": "DETERMINISTIC_PRECEDENCE_CONTROLLER"
+        }
+      },
+      {
+        "timestamp": 22.76,
+        "stage": "CONTROL",
+        "value": {
+          "speed_constraint_active": true,
+          "speed_cap_mps": 4.7299710448113945,
+          "source": "DETERMINISTIC_PRECEDENCE_CONTROLLER"
+        }
+      },
+      {
+        "timestamp": 22.92,
+        "stage": "CONTROL",
+        "value": {
+          "speed_constraint_active": true,
+          "speed_cap_mps": 4.009971044811387,
+          "source": "DETERMINISTIC_PRECEDENCE_CONTROLLER"
+        }
+      },
+      {
+        "timestamp": 23.08,
+        "stage": "CONTROL",
+        "value": {
+          "speed_constraint_active": true,
+          "speed_cap_mps": 3.289971044811397,
+          "source": "DETERMINISTIC_PRECEDENCE_CONTROLLER"
+        }
+      },
+      {
+        "timestamp": 23.24,
+        "stage": "CONTROL",
+        "value": {
+          "speed_constraint_active": true,
+          "speed_cap_mps": 2.5699710448113873,
+          "source": "DETERMINISTIC_PRECEDENCE_CONTROLLER"
+        }
+      },
+      {
+        "timestamp": 23.4,
+        "stage": "PLANNER",
+        "value": {
+          "state": "READY"
+        }
+      },
+      {
+        "timestamp": 23.4,
+        "stage": "CONTROL",
+        "value": {
+          "speed_constraint_active": false,
+          "speed_cap_mps": null,
+          "source": "SUMO_NATIVE"
+        }
+      },
+      {
+        "timestamp": 32.04,
+        "stage": "GNN",
+        "value": {
+          "encoded": false
+        }
+      },
+      {
+        "timestamp": 49.16,
+        "stage": "COMPLETED",
+        "value": "Vehicle left simulation"
+      }
+    ],
+    "PANEL_AV_E_02": [
+      {
+        "timestamp": 49.16,
+        "stage": "FIRST_OBSERVED",
+        "value": "Runtime state available"
+      },
+      {
+        "timestamp": 49.16,
+        "stage": "PLANNER",
+        "value": {
+          "state": "READY"
+        }
+      },
+      {
+        "timestamp": 49.16,
+        "stage": "CONTROL",
+        "value": {
+          "speed_constraint_active": false,
+          "speed_cap_mps": null,
+          "source": "SUMO_NATIVE"
+        }
+      },
+      {
+        "timestamp": 49.16,
+        "stage": "CONFLICT",
+        "value": {
+          "relevant": false,
+          "partners": []
+        }
+      },
+      {
+        "timestamp": 49.16,
+        "stage": "GNN",
+        "value": {
+          "encoded": false
+        }
+      },
+      {
+        "timestamp": 49.16,
+        "stage": "MAPPO",
+        "value": {
+          "factors": []
+        }
+      },
+      {
+        "timestamp": 68.04,
+        "stage": "CONFLICT",
+        "value": {
+          "relevant": true,
+          "partners": [
+            "PANEL_AV_N_02",
+            "PANEL_AV_S_01",
+            "PANEL_AV_W_01"
+          ]
+        }
+      },
+      {
+        "timestamp": 68.04,
+        "stage": "PRECEDENCE",
+        "value": [
+          [
+            "PANEL_AV_E_02",
+            "PANEL_AV_N_02"
+          ],
+          [
+            "PANEL_AV_N_02",
+            "PANEL_AV_W_01"
+          ],
+          [
+            "PANEL_AV_S_01",
+            "PANEL_AV_E_02"
+          ],
+          [
+            "PANEL_AV_S_01",
+            "PANEL_AV_N_02"
+          ],
+          [
+            "PANEL_AV_W_01",
+            "PANEL_AV_E_02"
+          ],
+          [
+            "PANEL_AV_W_01",
+            "PANEL_AV_S_01"
+          ]
+        ]
+      },
+      {
+        "timestamp": 68.04,
+        "stage": "GNN",
+        "value": {
+          "encoded": true,
+          "node_count": 4,
+          "edge_count": 6,
+          "node_feature_dimension": 8,
+          "edge_feature_dimension": 9,
+          "missing_node_feature_count": 0,
+          "missing_edge_feature_count": 20,
+          "tensor_backend": "NUMPY",
+          "normalization_status": "NOT_FITTED_TRAINING_STATISTICS_REQUIRED",
+          "source_graph_scope": "JOINT_LOCAL_V2V",
+          "communication_model": "IDEAL_SAME_STEP_V2V"
+        }
+      },
+      {
+        "timestamp": 68.04,
+        "stage": "MAPPO",
+        "value": {
+          "factors": [
+            {
+              "decision_role": "PROPOSER",
+              "ego_id": "PANEL_AV_E_02",
+              "claim_identity": [
+                "PANEL_AV_S_01",
+                "PANEL_AV_E_02"
+              ],
+              "proposal_id": null,
+              "action_names": [
+                "KEEP_CLAIM",
+                "RELINQUISH_CLAIM"
+              ],
+              "hard_action_mask": [
+                true,
+                true
+              ],
+              "masked_probabilities": [
+                0.23284341394901276,
+                0.7671566009521484
+              ],
+              "selected_action": "RELINQUISH_CLAIM",
+              "selected_action_index": 1,
+              "selection_rule": "DETERMINISTIC_MASKED_ARGMAX_OF_SELECTED_E5_PRESENTATION_ONLY"
+            },
+            {
+              "decision_role": "PROPOSER",
+              "ego_id": "PANEL_AV_E_02",
+              "claim_identity": [
+                "PANEL_AV_W_01",
+                "PANEL_AV_E_02"
+              ],
+              "proposal_id": null,
+              "action_names": [
+                "KEEP_CLAIM",
+                "RELINQUISH_CLAIM"
+              ],
+              "hard_action_mask": [
+                true,
+                true
+              ],
+              "masked_probabilities": [
+                0.24233245849609375,
+                0.7576675415039062
+              ],
+              "selected_action": "RELINQUISH_CLAIM",
+              "selected_action_index": 1,
+              "selection_rule": "DETERMINISTIC_MASKED_ARGMAX_OF_SELECTED_E5_PRESENTATION_ONLY"
+            },
+            {
+              "decision_role": "RESPONDER",
+              "ego_id": "PANEL_AV_E_02",
+              "claim_identity": [
+                "PANEL_AV_E_02",
+                "PANEL_AV_N_02"
+              ],
+              "proposal_id": [
+                68.04,
+                "PANEL_AV_E_02",
+                "PANEL_AV_N_02",
+                "PANEL_AV_N_02",
+                "PANEL_AV_E_02"
+              ],
+              "action_names": [
+                "ACCEPT_RELINQUISHMENT",
+                "REJECT_RELINQUISHMENT"
+              ],
+              "hard_action_mask": [
+                true,
+                true
+              ],
+              "masked_probabilities": [
+                0.5487106442451477,
+                0.4512893557548523
+              ],
+              "selected_action": "ACCEPT_RELINQUISHMENT",
+              "selected_action_index": 0,
+              "selection_rule": "DETERMINISTIC_MASKED_ARGMAX_OF_SELECTED_E5_PRESENTATION_ONLY"
+            }
+          ]
+        }
+      },
+      {
+        "timestamp": 68.04,
+        "stage": "INTENTION",
+        "value": [
+          {
+            "target_id": "PANEL_AV_N_02",
+            "label": "UNKNOWN",
+            "confidence": null,
+            "stage": "WAITING",
+            "status": "WAITING_FOR_FINALIZATION"
+          },
+          {
+            "target_id": "PANEL_AV_S_01",
+            "label": "UNKNOWN",
+            "confidence": null,
+            "stage": "WAITING",
+            "status": "WAITING_FOR_FINALIZATION"
+          }
+        ]
+      },
+      {
+        "timestamp": 69.0,
+        "stage": "INTENTION",
+        "value": [
+          {
+            "target_id": "PANEL_AV_N_02",
+            "label": "UNKNOWN",
+            "confidence": null,
+            "stage": "WAITING",
+            "status": "WAITING_FOR_FINALIZATION"
+          },
+          {
+            "target_id": "PANEL_AV_S_01",
+            "label": "UNKNOWN",
+            "confidence": 0.9668301767120309,
+            "stage": "PRIMARY",
+            "status": "WAITING_FOR_FINALIZATION"
+          }
+        ]
+      },
+      {
+        "timestamp": 69.48,
+        "stage": "INTENTION",
+        "value": [
+          {
+            "target_id": "PANEL_AV_N_02",
+            "label": "UNKNOWN",
+            "confidence": 0.8330482786229458,
+            "stage": "PRIMARY",
+            "status": "WAITING_FOR_FINALIZATION"
+          },
+          {
+            "target_id": "PANEL_AV_S_01",
+            "label": "UNKNOWN",
+            "confidence": 0.9668301767120309,
+            "stage": "PRIMARY",
+            "status": "WAITING_FOR_FINALIZATION"
+          }
+        ]
+      },
+      {
+        "timestamp": 69.8,
+        "stage": "INTENTION",
+        "value": [
+          {
+            "target_id": "PANEL_AV_N_02",
+            "label": "UNKNOWN",
+            "confidence": 0.8330482786229458,
+            "stage": "PRIMARY",
+            "status": "WAITING_FOR_FINALIZATION"
+          },
+          {
+            "target_id": "PANEL_AV_S_01",
+            "label": "RIGHT",
+            "confidence": 0.8885810859540062,
+            "stage": "SECONDARY",
+            "status": "CONFIRMED_AGREEMENT"
+          }
+        ]
+      },
+      {
+        "timestamp": 70.28,
+        "stage": "CONFLICT",
+        "value": {
+          "relevant": true,
+          "partners": [
+            "PANEL_AV_N_02",
+            "PANEL_AV_W_01"
+          ]
+        }
+      },
+      {
+        "timestamp": 70.28,
+        "stage": "PRECEDENCE",
+        "value": [
+          [
+            "PANEL_AV_E_02",
+            "PANEL_AV_N_02"
+          ],
+          [
+            "PANEL_AV_N_02",
+            "PANEL_AV_W_01"
+          ],
+          [
+            "PANEL_AV_S_01",
+            "PANEL_AV_N_02"
+          ],
+          [
+            "PANEL_AV_W_01",
+            "PANEL_AV_E_02"
+          ],
+          [
+            "PANEL_AV_W_01",
+            "PANEL_AV_S_01"
+          ]
+        ]
+      },
+      {
+        "timestamp": 70.28,
+        "stage": "GNN",
+        "value": {
+          "encoded": true,
+          "node_count": 4,
+          "edge_count": 5,
+          "node_feature_dimension": 8,
+          "edge_feature_dimension": 9,
+          "missing_node_feature_count": 0,
+          "missing_edge_feature_count": 20,
+          "tensor_backend": "NUMPY",
+          "normalization_status": "NOT_FITTED_TRAINING_STATISTICS_REQUIRED",
+          "source_graph_scope": "JOINT_LOCAL_V2V",
+          "communication_model": "IDEAL_SAME_STEP_V2V"
+        }
+      },
+      {
+        "timestamp": 70.28,
+        "stage": "INTENTION",
+        "value": [
+          {
+            "target_id": "PANEL_AV_N_02",
+            "label": "UNKNOWN",
+            "confidence": 0.5165621849475663,
+            "stage": "SECONDARY",
+            "status": "HORIZON_DISAGREEMENT"
+          },
+          {
+            "target_id": "PANEL_AV_S_01",
+            "label": "RIGHT",
+            "confidence": 0.8885810859540062,
+            "stage": "SECONDARY",
+            "status": "CONFIRMED_AGREEMENT"
+          }
+        ]
+      },
+      {
+        "timestamp": 70.76,
+        "stage": "PRECEDENCE",
+        "value": [
+          [
+            "PANEL_AV_E_02",
+            "PANEL_AV_N_02"
+          ],
+          [
+            "PANEL_AV_N_02",
+            "PANEL_AV_W_01"
+          ],
+          [
+            "PANEL_AV_W_01",
+            "PANEL_AV_E_02"
+          ],
+          [
+            "PANEL_AV_W_01",
+            "PANEL_AV_S_01"
+          ]
+        ]
+      },
+      {
+        "timestamp": 70.76,
+        "stage": "GNN",
+        "value": {
+          "encoded": true,
+          "node_count": 4,
+          "edge_count": 4,
+          "node_feature_dimension": 8,
+          "edge_feature_dimension": 9,
+          "missing_node_feature_count": 0,
+          "missing_edge_feature_count": 15,
+          "tensor_backend": "NUMPY",
+          "normalization_status": "NOT_FITTED_TRAINING_STATISTICS_REQUIRED",
+          "source_graph_scope": "JOINT_LOCAL_V2V",
+          "communication_model": "IDEAL_SAME_STEP_V2V"
+        }
+      },
+      {
+        "timestamp": 71.72,
+        "stage": "CONFLICT",
+        "value": {
+          "relevant": true,
+          "partners": [
+            "PANEL_AV_N_02",
+            "PANEL_AV_S_01",
+            "PANEL_AV_W_01"
+          ]
+        }
+      },
+      {
+        "timestamp": 71.72,
+        "stage": "PRECEDENCE",
+        "value": [
+          [
+            "PANEL_AV_E_02",
+            "PANEL_AV_N_02"
+          ],
+          [
+            "PANEL_AV_E_02",
+            "PANEL_AV_S_01"
+          ],
+          [
+            "PANEL_AV_N_02",
+            "PANEL_AV_S_01"
+          ],
+          [
+            "PANEL_AV_N_02",
+            "PANEL_AV_W_01"
+          ],
+          [
+            "PANEL_AV_S_01",
+            "PANEL_AV_W_01"
+          ],
+          [
+            "PANEL_AV_W_01",
+            "PANEL_AV_E_02"
+          ],
+          [
+            "PANEL_AV_W_01",
+            "PANEL_AV_S_01"
+          ]
+        ]
+      },
+      {
+        "timestamp": 71.72,
+        "stage": "GNN",
+        "value": {
+          "encoded": true,
+          "node_count": 4,
+          "edge_count": 7,
+          "node_feature_dimension": 8,
+          "edge_feature_dimension": 9,
+          "missing_node_feature_count": 0,
+          "missing_edge_feature_count": 25,
+          "tensor_backend": "NUMPY",
+          "normalization_status": "NOT_FITTED_TRAINING_STATISTICS_REQUIRED",
+          "source_graph_scope": "JOINT_LOCAL_V2V",
+          "communication_model": "IDEAL_SAME_STEP_V2V"
+        }
+      },
+      {
+        "timestamp": 74.6,
+        "stage": "PRECEDENCE",
+        "value": [
+          [
+            "PANEL_AV_E_02",
+            "PANEL_AV_N_02"
+          ],
+          [
+            "PANEL_AV_E_02",
+            "PANEL_AV_S_01"
+          ],
+          [
+            "PANEL_AV_N_02",
+            "PANEL_AV_S_01"
+          ],
+          [
+            "PANEL_AV_N_02",
+            "PANEL_AV_W_01"
+          ],
+          [
+            "PANEL_AV_S_01",
+            "PANEL_AV_W_01"
+          ],
+          [
+            "PANEL_AV_W_01",
+            "PANEL_AV_E_02"
+          ]
+        ]
+      },
+      {
+        "timestamp": 74.6,
+        "stage": "GNN",
+        "value": {
+          "encoded": true,
+          "node_count": 4,
+          "edge_count": 6,
+          "node_feature_dimension": 8,
+          "edge_feature_dimension": 9,
+          "missing_node_feature_count": 0,
+          "missing_edge_feature_count": 20,
+          "tensor_backend": "NUMPY",
+          "normalization_status": "NOT_FITTED_TRAINING_STATISTICS_REQUIRED",
+          "source_graph_scope": "JOINT_LOCAL_V2V",
+          "communication_model": "IDEAL_SAME_STEP_V2V"
+        }
+      },
+      {
+        "timestamp": 77.48,
+        "stage": "PRECEDENCE",
+        "value": [
+          [
+            "PANEL_AV_E_02",
+            "PANEL_AV_N_02"
+          ],
+          [
+            "PANEL_AV_E_02",
+            "PANEL_AV_S_01"
+          ],
+          [
+            "PANEL_AV_S_01",
+            "PANEL_AV_W_01"
+          ],
+          [
+            "PANEL_AV_W_01",
+            "PANEL_AV_E_02"
+          ]
+        ]
+      },
+      {
+        "timestamp": 77.48,
+        "stage": "GNN",
+        "value": {
+          "encoded": true,
+          "node_count": 4,
+          "edge_count": 4,
+          "node_feature_dimension": 8,
+          "edge_feature_dimension": 9,
+          "missing_node_feature_count": 0,
+          "missing_edge_feature_count": 10,
+          "tensor_backend": "NUMPY",
+          "normalization_status": "NOT_FITTED_TRAINING_STATISTICS_REQUIRED",
+          "source_graph_scope": "JOINT_LOCAL_V2V",
+          "communication_model": "IDEAL_SAME_STEP_V2V"
+        }
+      },
+      {
+        "timestamp": 83.28,
+        "stage": "GNN",
+        "value": {
+          "encoded": false
+        }
+      },
+      {
+        "timestamp": 95.6,
+        "stage": "COMPLETED",
+        "value": "Vehicle left simulation"
+      }
+    ],
+    "PANEL_AV_N_01": [
+      {
+        "timestamp": 0.04,
+        "stage": "FIRST_OBSERVED",
+        "value": "Runtime state available"
+      },
+      {
+        "timestamp": 0.04,
+        "stage": "PLANNER",
+        "value": {
+          "state": "READY"
+        }
+      },
+      {
+        "timestamp": 0.04,
+        "stage": "CONTROL",
+        "value": {
+          "speed_constraint_active": false,
+          "speed_cap_mps": null,
+          "source": "SUMO_NATIVE"
+        }
+      },
+      {
+        "timestamp": 0.04,
+        "stage": "CONFLICT",
+        "value": {
+          "relevant": false,
+          "partners": []
+        }
+      },
+      {
+        "timestamp": 0.04,
+        "stage": "GNN",
+        "value": {
+          "encoded": false
+        }
+      },
+      {
+        "timestamp": 0.04,
+        "stage": "MAPPO",
+        "value": {
+          "factors": []
+        }
+      },
+      {
+        "timestamp": 15.88,
+        "stage": "CONFLICT",
+        "value": {
+          "relevant": true,
+          "partners": [
+            "PANEL_AV_E_01"
+          ]
+        }
+      },
+      {
+        "timestamp": 15.88,
+        "stage": "PRECEDENCE",
+        "value": [
+          [
+            "PANEL_AV_E_01",
+            "PANEL_AV_N_01"
+          ]
+        ]
+      },
+      {
+        "timestamp": 15.88,
+        "stage": "GNN",
+        "value": {
+          "encoded": true,
+          "node_count": 2,
+          "edge_count": 1,
+          "node_feature_dimension": 8,
+          "edge_feature_dimension": 9,
+          "missing_node_feature_count": 0,
+          "missing_edge_feature_count": 0,
+          "tensor_backend": "NUMPY",
+          "normalization_status": "NOT_FITTED_TRAINING_STATISTICS_REQUIRED",
+          "source_graph_scope": "JOINT_LOCAL_V2V",
+          "communication_model": "IDEAL_SAME_STEP_V2V"
+        }
+      },
+      {
+        "timestamp": 19.24,
+        "stage": "INTENTION",
+        "value": [
+          {
+            "target_id": "PANEL_AV_E_01",
+            "label": "UNKNOWN",
+            "confidence": null,
+            "stage": "WAITING",
+            "status": "WAITING_FOR_FINALIZATION"
+          }
+        ]
+      },
+      {
+        "timestamp": 21.64,
+        "stage": "INTENTION",
+        "value": [
+          {
+            "target_id": "PANEL_AV_E_01",
+            "label": "UNKNOWN",
+            "confidence": 0.8451705714502435,
+            "stage": "PRIMARY",
+            "status": "WAITING_FOR_FINALIZATION"
+          }
+        ]
+      },
+      {
+        "timestamp": 22.44,
+        "stage": "INTENTION",
+        "value": [
+          {
+            "target_id": "PANEL_AV_E_01",
+            "label": "UNKNOWN",
+            "confidence": 0.7446247588903563,
+            "stage": "SECONDARY",
+            "status": "HORIZON_DISAGREEMENT"
+          }
+        ]
+      },
+      {
+        "timestamp": 28.84,
+        "stage": "GNN",
+        "value": {
+          "encoded": false
+        }
+      },
+      {
+        "timestamp": 45.0,
+        "stage": "COMPLETED",
+        "value": "Vehicle left simulation"
+      }
+    ],
+    "PANEL_AV_N_02": [
+      {
+        "timestamp": 49.16,
+        "stage": "FIRST_OBSERVED",
+        "value": "Runtime state available"
+      },
+      {
+        "timestamp": 49.16,
+        "stage": "PLANNER",
+        "value": {
+          "state": "READY"
+        }
+      },
+      {
+        "timestamp": 49.16,
+        "stage": "CONTROL",
+        "value": {
+          "speed_constraint_active": false,
+          "speed_cap_mps": null,
+          "source": "SUMO_NATIVE"
+        }
+      },
+      {
+        "timestamp": 49.16,
+        "stage": "CONFLICT",
+        "value": {
+          "relevant": false,
+          "partners": []
+        }
+      },
+      {
+        "timestamp": 49.16,
+        "stage": "GNN",
+        "value": {
+          "encoded": false
+        }
+      },
+      {
+        "timestamp": 49.16,
+        "stage": "MAPPO",
+        "value": {
+          "factors": []
+        }
+      },
+      {
+        "timestamp": 68.04,
+        "stage": "CONFLICT",
+        "value": {
+          "relevant": true,
+          "partners": [
+            "PANEL_AV_E_02",
+            "PANEL_AV_S_01",
+            "PANEL_AV_W_01"
+          ]
+        }
+      },
+      {
+        "timestamp": 68.04,
+        "stage": "PRECEDENCE",
+        "value": [
+          [
+            "PANEL_AV_E_02",
+            "PANEL_AV_N_02"
+          ],
+          [
+            "PANEL_AV_N_02",
+            "PANEL_AV_W_01"
+          ],
+          [
+            "PANEL_AV_S_01",
+            "PANEL_AV_E_02"
+          ],
+          [
+            "PANEL_AV_S_01",
+            "PANEL_AV_N_02"
+          ],
+          [
+            "PANEL_AV_W_01",
+            "PANEL_AV_E_02"
+          ],
+          [
+            "PANEL_AV_W_01",
+            "PANEL_AV_S_01"
+          ]
+        ]
+      },
+      {
+        "timestamp": 68.04,
+        "stage": "GNN",
+        "value": {
+          "encoded": true,
+          "node_count": 4,
+          "edge_count": 6,
+          "node_feature_dimension": 8,
+          "edge_feature_dimension": 9,
+          "missing_node_feature_count": 0,
+          "missing_edge_feature_count": 20,
+          "tensor_backend": "NUMPY",
+          "normalization_status": "NOT_FITTED_TRAINING_STATISTICS_REQUIRED",
+          "source_graph_scope": "JOINT_LOCAL_V2V",
+          "communication_model": "IDEAL_SAME_STEP_V2V"
+        }
+      },
+      {
+        "timestamp": 68.04,
+        "stage": "MAPPO",
+        "value": {
+          "factors": [
+            {
+              "decision_role": "PROPOSER",
+              "ego_id": "PANEL_AV_N_02",
+              "claim_identity": [
+                "PANEL_AV_E_02",
+                "PANEL_AV_N_02"
+              ],
+              "proposal_id": null,
+              "action_names": [
+                "KEEP_CLAIM",
+                "RELINQUISH_CLAIM"
+              ],
+              "hard_action_mask": [
+                true,
+                true
+              ],
+              "masked_probabilities": [
+                0.22450613975524902,
+                0.775493860244751
+              ],
+              "selected_action": "RELINQUISH_CLAIM",
+              "selected_action_index": 1,
+              "selection_rule": "DETERMINISTIC_MASKED_ARGMAX_OF_SELECTED_E5_PRESENTATION_ONLY"
+            },
+            {
+              "decision_role": "PROPOSER",
+              "ego_id": "PANEL_AV_N_02",
+              "claim_identity": [
+                "PANEL_AV_S_01",
+                "PANEL_AV_N_02"
+              ],
+              "proposal_id": null,
+              "action_names": [
+                "KEEP_CLAIM",
+                "RELINQUISH_CLAIM"
+              ],
+              "hard_action_mask": [
+                true,
+                true
+              ],
+              "masked_probabilities": [
+                0.23694086074829102,
+                0.763059139251709
+              ],
+              "selected_action": "RELINQUISH_CLAIM",
+              "selected_action_index": 1,
+              "selection_rule": "DETERMINISTIC_MASKED_ARGMAX_OF_SELECTED_E5_PRESENTATION_ONLY"
+            },
+            {
+              "decision_role": "RESPONDER",
+              "ego_id": "PANEL_AV_N_02",
+              "claim_identity": [
+                "PANEL_AV_N_02",
+                "PANEL_AV_W_01"
+              ],
+              "proposal_id": [
+                68.04,
+                "PANEL_AV_N_02",
+                "PANEL_AV_W_01",
+                "PANEL_AV_W_01",
+                "PANEL_AV_N_02"
+              ],
+              "action_names": [
+                "ACCEPT_RELINQUISHMENT",
+                "REJECT_RELINQUISHMENT"
+              ],
+              "hard_action_mask": [
+                true,
+                true
+              ],
+              "masked_probabilities": [
+                0.6027176380157471,
+                0.39728233218193054
+              ],
+              "selected_action": "ACCEPT_RELINQUISHMENT",
+              "selected_action_index": 0,
+              "selection_rule": "DETERMINISTIC_MASKED_ARGMAX_OF_SELECTED_E5_PRESENTATION_ONLY"
+            }
+          ]
+        }
+      },
+      {
+        "timestamp": 68.04,
+        "stage": "INTENTION",
+        "value": [
+          {
+            "target_id": "PANEL_AV_E_02",
+            "label": "UNKNOWN",
+            "confidence": null,
+            "stage": "WAITING",
+            "status": "WAITING_FOR_FINALIZATION"
+          },
+          {
+            "target_id": "PANEL_AV_S_01",
+            "label": "UNKNOWN",
+            "confidence": null,
+            "stage": "WAITING",
+            "status": "WAITING_FOR_FINALIZATION"
+          }
+        ]
+      },
+      {
+        "timestamp": 69.0,
+        "stage": "INTENTION",
+        "value": [
+          {
+            "target_id": "PANEL_AV_E_02",
+            "label": "UNKNOWN",
+            "confidence": null,
+            "stage": "WAITING",
+            "status": "WAITING_FOR_FINALIZATION"
+          },
+          {
+            "target_id": "PANEL_AV_S_01",
+            "label": "UNKNOWN",
+            "confidence": 0.9668301767120309,
+            "stage": "PRIMARY",
+            "status": "WAITING_FOR_FINALIZATION"
+          }
+        ]
+      },
+      {
+        "timestamp": 69.48,
+        "stage": "INTENTION",
+        "value": [
+          {
+            "target_id": "PANEL_AV_E_02",
+            "label": "UNKNOWN",
+            "confidence": 0.8330482786229458,
+            "stage": "PRIMARY",
+            "status": "WAITING_FOR_FINALIZATION"
+          },
+          {
+            "target_id": "PANEL_AV_S_01",
+            "label": "UNKNOWN",
+            "confidence": 0.9668301767120309,
+            "stage": "PRIMARY",
+            "status": "WAITING_FOR_FINALIZATION"
+          }
+        ]
+      },
+      {
+        "timestamp": 69.8,
+        "stage": "INTENTION",
+        "value": [
+          {
+            "target_id": "PANEL_AV_E_02",
+            "label": "UNKNOWN",
+            "confidence": 0.8330482786229458,
+            "stage": "PRIMARY",
+            "status": "WAITING_FOR_FINALIZATION"
+          },
+          {
+            "target_id": "PANEL_AV_S_01",
+            "label": "RIGHT",
+            "confidence": 0.8885810859540062,
+            "stage": "SECONDARY",
+            "status": "CONFIRMED_AGREEMENT"
+          }
+        ]
+      },
+      {
+        "timestamp": 70.28,
+        "stage": "CONFLICT",
+        "value": {
+          "relevant": true,
+          "partners": [
+            "PANEL_AV_E_02",
+            "PANEL_AV_W_01"
+          ]
+        }
+      },
+      {
+        "timestamp": 70.28,
+        "stage": "PRECEDENCE",
+        "value": [
+          [
+            "PANEL_AV_E_02",
+            "PANEL_AV_N_02"
+          ],
+          [
+            "PANEL_AV_N_02",
+            "PANEL_AV_W_01"
+          ],
+          [
+            "PANEL_AV_S_01",
+            "PANEL_AV_N_02"
+          ],
+          [
+            "PANEL_AV_W_01",
+            "PANEL_AV_E_02"
+          ],
+          [
+            "PANEL_AV_W_01",
+            "PANEL_AV_S_01"
+          ]
+        ]
+      },
+      {
+        "timestamp": 70.28,
+        "stage": "GNN",
+        "value": {
+          "encoded": true,
+          "node_count": 4,
+          "edge_count": 5,
+          "node_feature_dimension": 8,
+          "edge_feature_dimension": 9,
+          "missing_node_feature_count": 0,
+          "missing_edge_feature_count": 15,
+          "tensor_backend": "NUMPY",
+          "normalization_status": "NOT_FITTED_TRAINING_STATISTICS_REQUIRED",
+          "source_graph_scope": "JOINT_LOCAL_V2V",
+          "communication_model": "IDEAL_SAME_STEP_V2V"
+        }
+      },
+      {
+        "timestamp": 70.44,
+        "stage": "INTENTION",
+        "value": [
+          {
+            "target_id": "PANEL_AV_E_02",
+            "label": "RIGHT",
+            "confidence": 0.9695557256554133,
+            "stage": "SECONDARY",
+            "status": "CONFIRMED_AGREEMENT"
+          },
+          {
+            "target_id": "PANEL_AV_S_01",
+            "label": "RIGHT",
+            "confidence": 0.8885810859540062,
+            "stage": "SECONDARY",
+            "status": "CONFIRMED_AGREEMENT"
+          }
+        ]
+      },
+      {
+        "timestamp": 70.76,
+        "stage": "PRECEDENCE",
+        "value": [
+          [
+            "PANEL_AV_E_02",
+            "PANEL_AV_N_02"
+          ],
+          [
+            "PANEL_AV_N_02",
+            "PANEL_AV_W_01"
+          ],
+          [
+            "PANEL_AV_W_01",
+            "PANEL_AV_E_02"
+          ],
+          [
+            "PANEL_AV_W_01",
+            "PANEL_AV_S_01"
+          ]
+        ]
+      },
+      {
+        "timestamp": 70.76,
+        "stage": "GNN",
+        "value": {
+          "encoded": true,
+          "node_count": 4,
+          "edge_count": 4,
+          "node_feature_dimension": 8,
+          "edge_feature_dimension": 9,
+          "missing_node_feature_count": 0,
+          "missing_edge_feature_count": 10,
+          "tensor_backend": "NUMPY",
+          "normalization_status": "NOT_FITTED_TRAINING_STATISTICS_REQUIRED",
+          "source_graph_scope": "JOINT_LOCAL_V2V",
+          "communication_model": "IDEAL_SAME_STEP_V2V"
+        }
+      },
+      {
+        "timestamp": 71.72,
+        "stage": "CONFLICT",
+        "value": {
+          "relevant": true,
+          "partners": [
+            "PANEL_AV_E_02",
+            "PANEL_AV_S_01",
+            "PANEL_AV_W_01"
+          ]
+        }
+      },
+      {
+        "timestamp": 71.72,
+        "stage": "PRECEDENCE",
+        "value": [
+          [
+            "PANEL_AV_E_02",
+            "PANEL_AV_N_02"
+          ],
+          [
+            "PANEL_AV_E_02",
+            "PANEL_AV_S_01"
+          ],
+          [
+            "PANEL_AV_N_02",
+            "PANEL_AV_S_01"
+          ],
+          [
+            "PANEL_AV_N_02",
+            "PANEL_AV_W_01"
+          ],
+          [
+            "PANEL_AV_S_01",
+            "PANEL_AV_W_01"
+          ],
+          [
+            "PANEL_AV_W_01",
+            "PANEL_AV_E_02"
+          ],
+          [
+            "PANEL_AV_W_01",
+            "PANEL_AV_S_01"
+          ]
+        ]
+      },
+      {
+        "timestamp": 71.72,
+        "stage": "GNN",
+        "value": {
+          "encoded": true,
+          "node_count": 4,
+          "edge_count": 7,
+          "node_feature_dimension": 8,
+          "edge_feature_dimension": 9,
+          "missing_node_feature_count": 0,
+          "missing_edge_feature_count": 20,
+          "tensor_backend": "NUMPY",
+          "normalization_status": "NOT_FITTED_TRAINING_STATISTICS_REQUIRED",
+          "source_graph_scope": "JOINT_LOCAL_V2V",
+          "communication_model": "IDEAL_SAME_STEP_V2V"
+        }
+      },
+      {
+        "timestamp": 73.8,
+        "stage": "GNN",
+        "value": {
+          "encoded": true,
+          "node_count": 4,
+          "edge_count": 7,
+          "node_feature_dimension": 8,
+          "edge_feature_dimension": 9,
+          "missing_node_feature_count": 0,
+          "missing_edge_feature_count": 25,
+          "tensor_backend": "NUMPY",
+          "normalization_status": "NOT_FITTED_TRAINING_STATISTICS_REQUIRED",
+          "source_graph_scope": "JOINT_LOCAL_V2V",
+          "communication_model": "IDEAL_SAME_STEP_V2V"
+        }
+      },
+      {
+        "timestamp": 74.6,
+        "stage": "PRECEDENCE",
+        "value": [
+          [
+            "PANEL_AV_E_02",
+            "PANEL_AV_N_02"
+          ],
+          [
+            "PANEL_AV_E_02",
+            "PANEL_AV_S_01"
+          ],
+          [
+            "PANEL_AV_N_02",
+            "PANEL_AV_S_01"
+          ],
+          [
+            "PANEL_AV_N_02",
+            "PANEL_AV_W_01"
+          ],
+          [
+            "PANEL_AV_S_01",
+            "PANEL_AV_W_01"
+          ],
+          [
+            "PANEL_AV_W_01",
+            "PANEL_AV_E_02"
+          ]
+        ]
+      },
+      {
+        "timestamp": 74.6,
+        "stage": "GNN",
+        "value": {
+          "encoded": true,
+          "node_count": 4,
+          "edge_count": 6,
+          "node_feature_dimension": 8,
+          "edge_feature_dimension": 9,
+          "missing_node_feature_count": 0,
+          "missing_edge_feature_count": 20,
+          "tensor_backend": "NUMPY",
+          "normalization_status": "NOT_FITTED_TRAINING_STATISTICS_REQUIRED",
+          "source_graph_scope": "JOINT_LOCAL_V2V",
+          "communication_model": "IDEAL_SAME_STEP_V2V"
+        }
+      },
+      {
+        "timestamp": 77.48,
+        "stage": "GNN",
+        "value": {
+          "encoded": false
+        }
+      },
+      {
+        "timestamp": 93.52,
+        "stage": "COMPLETED",
+        "value": "Vehicle left simulation"
+      }
+    ],
+    "PANEL_AV_S_01": [
+      {
+        "timestamp": 49.16,
+        "stage": "FIRST_OBSERVED",
+        "value": "Runtime state available"
+      },
+      {
+        "timestamp": 49.16,
+        "stage": "PLANNER",
+        "value": {
+          "state": "READY"
+        }
+      },
+      {
+        "timestamp": 49.16,
+        "stage": "CONTROL",
+        "value": {
+          "speed_constraint_active": false,
+          "speed_cap_mps": null,
+          "source": "SUMO_NATIVE"
+        }
+      },
+      {
+        "timestamp": 49.16,
+        "stage": "CONFLICT",
+        "value": {
+          "relevant": false,
+          "partners": []
+        }
+      },
+      {
+        "timestamp": 49.16,
+        "stage": "GNN",
+        "value": {
+          "encoded": false
+        }
+      },
+      {
+        "timestamp": 49.16,
+        "stage": "MAPPO",
+        "value": {
+          "factors": []
+        }
+      },
+      {
+        "timestamp": 68.04,
+        "stage": "CONFLICT",
+        "value": {
+          "relevant": true,
+          "partners": [
+            "PANEL_AV_N_02",
+            "PANEL_AV_W_01"
+          ]
+        }
+      },
+      {
+        "timestamp": 68.04,
+        "stage": "PRECEDENCE",
+        "value": [
+          [
+            "PANEL_AV_E_02",
+            "PANEL_AV_N_02"
+          ],
+          [
+            "PANEL_AV_N_02",
+            "PANEL_AV_W_01"
+          ],
+          [
+            "PANEL_AV_S_01",
+            "PANEL_AV_E_02"
+          ],
+          [
+            "PANEL_AV_S_01",
+            "PANEL_AV_N_02"
+          ],
+          [
+            "PANEL_AV_W_01",
+            "PANEL_AV_E_02"
+          ],
+          [
+            "PANEL_AV_W_01",
+            "PANEL_AV_S_01"
+          ]
+        ]
+      },
+      {
+        "timestamp": 68.04,
+        "stage": "GNN",
+        "value": {
+          "encoded": true,
+          "node_count": 4,
+          "edge_count": 6,
+          "node_feature_dimension": 8,
+          "edge_feature_dimension": 9,
+          "missing_node_feature_count": 0,
+          "missing_edge_feature_count": 20,
+          "tensor_backend": "NUMPY",
+          "normalization_status": "NOT_FITTED_TRAINING_STATISTICS_REQUIRED",
+          "source_graph_scope": "JOINT_LOCAL_V2V",
+          "communication_model": "IDEAL_SAME_STEP_V2V"
+        }
+      },
+      {
+        "timestamp": 68.04,
+        "stage": "MAPPO",
+        "value": {
+          "factors": [
+            {
+              "decision_role": "PROPOSER",
+              "ego_id": "PANEL_AV_S_01",
+              "claim_identity": [
+                "PANEL_AV_W_01",
+                "PANEL_AV_S_01"
+              ],
+              "proposal_id": null,
+              "action_names": [
+                "KEEP_CLAIM",
+                "RELINQUISH_CLAIM"
+              ],
+              "hard_action_mask": [
+                true,
+                true
+              ],
+              "masked_probabilities": [
+                0.2332889884710312,
+                0.7667109966278076
+              ],
+              "selected_action": "RELINQUISH_CLAIM",
+              "selected_action_index": 1,
+              "selection_rule": "DETERMINISTIC_MASKED_ARGMAX_OF_SELECTED_E5_PRESENTATION_ONLY"
+            },
+            {
+              "decision_role": "RESPONDER",
+              "ego_id": "PANEL_AV_S_01",
+              "claim_identity": [
+                "PANEL_AV_S_01",
+                "PANEL_AV_E_02"
+              ],
+              "proposal_id": [
+                68.04,
+                "PANEL_AV_S_01",
+                "PANEL_AV_E_02",
+                "PANEL_AV_E_02",
+                "PANEL_AV_S_01"
+              ],
+              "action_names": [
+                "ACCEPT_RELINQUISHMENT",
+                "REJECT_RELINQUISHMENT"
+              ],
+              "hard_action_mask": [
+                true,
+                true
+              ],
+              "masked_probabilities": [
+                0.5429694652557373,
+                0.4570305347442627
+              ],
+              "selected_action": "ACCEPT_RELINQUISHMENT",
+              "selected_action_index": 0,
+              "selection_rule": "DETERMINISTIC_MASKED_ARGMAX_OF_SELECTED_E5_PRESENTATION_ONLY"
+            },
+            {
+              "decision_role": "RESPONDER",
+              "ego_id": "PANEL_AV_S_01",
+              "claim_identity": [
+                "PANEL_AV_S_01",
+                "PANEL_AV_N_02"
+              ],
+              "proposal_id": [
+                68.04,
+                "PANEL_AV_S_01",
+                "PANEL_AV_N_02",
+                "PANEL_AV_N_02",
+                "PANEL_AV_S_01"
+              ],
+              "action_names": [
+                "ACCEPT_RELINQUISHMENT",
+                "REJECT_RELINQUISHMENT"
+              ],
+              "hard_action_mask": [
+                true,
+                true
+              ],
+              "masked_probabilities": [
+                0.5449607372283936,
+                0.45503929257392883
+              ],
+              "selected_action": "ACCEPT_RELINQUISHMENT",
+              "selected_action_index": 0,
+              "selection_rule": "DETERMINISTIC_MASKED_ARGMAX_OF_SELECTED_E5_PRESENTATION_ONLY"
+            }
+          ]
+        }
+      },
+      {
+        "timestamp": 68.04,
+        "stage": "INTENTION",
+        "value": [
+          {
+            "target_id": "PANEL_AV_E_02",
+            "label": "UNKNOWN",
+            "confidence": null,
+            "stage": "WAITING",
+            "status": "WAITING_FOR_FINALIZATION"
+          },
+          {
+            "target_id": "PANEL_AV_N_02",
+            "label": "UNKNOWN",
+            "confidence": null,
+            "stage": "WAITING",
+            "status": "WAITING_FOR_FINALIZATION"
+          }
+        ]
+      },
+      {
+        "timestamp": 69.48,
+        "stage": "INTENTION",
+        "value": [
+          {
+            "target_id": "PANEL_AV_E_02",
+            "label": "UNKNOWN",
+            "confidence": 0.8330482786229458,
+            "stage": "PRIMARY",
+            "status": "WAITING_FOR_FINALIZATION"
+          },
+          {
+            "target_id": "PANEL_AV_N_02",
+            "label": "UNKNOWN",
+            "confidence": 0.8330482786229458,
+            "stage": "PRIMARY",
+            "status": "WAITING_FOR_FINALIZATION"
+          }
+        ]
+      },
+      {
+        "timestamp": 70.28,
+        "stage": "PRECEDENCE",
+        "value": [
+          [
+            "PANEL_AV_E_02",
+            "PANEL_AV_N_02"
+          ],
+          [
+            "PANEL_AV_N_02",
+            "PANEL_AV_W_01"
+          ],
+          [
+            "PANEL_AV_S_01",
+            "PANEL_AV_N_02"
+          ],
+          [
+            "PANEL_AV_W_01",
+            "PANEL_AV_E_02"
+          ],
+          [
+            "PANEL_AV_W_01",
+            "PANEL_AV_S_01"
+          ]
+        ]
+      },
+      {
+        "timestamp": 70.28,
+        "stage": "GNN",
+        "value": {
+          "encoded": true,
+          "node_count": 4,
+          "edge_count": 5,
+          "node_feature_dimension": 8,
+          "edge_feature_dimension": 9,
+          "missing_node_feature_count": 0,
+          "missing_edge_feature_count": 15,
+          "tensor_backend": "NUMPY",
+          "normalization_status": "NOT_FITTED_TRAINING_STATISTICS_REQUIRED",
+          "source_graph_scope": "JOINT_LOCAL_V2V",
+          "communication_model": "IDEAL_SAME_STEP_V2V"
+        }
+      },
+      {
+        "timestamp": 70.28,
+        "stage": "INTENTION",
+        "value": [
+          {
+            "target_id": "PANEL_AV_E_02",
+            "label": "UNKNOWN",
+            "confidence": 0.8330482786229458,
+            "stage": "PRIMARY",
+            "status": "WAITING_FOR_FINALIZATION"
+          },
+          {
+            "target_id": "PANEL_AV_N_02",
+            "label": "UNKNOWN",
+            "confidence": 0.5165621849475663,
+            "stage": "SECONDARY",
+            "status": "HORIZON_DISAGREEMENT"
+          }
+        ]
+      },
+      {
+        "timestamp": 70.44,
+        "stage": "INTENTION",
+        "value": [
+          {
+            "target_id": "PANEL_AV_E_02",
+            "label": "RIGHT",
+            "confidence": 0.9695557256554133,
+            "stage": "SECONDARY",
+            "status": "CONFIRMED_AGREEMENT"
+          },
+          {
+            "target_id": "PANEL_AV_N_02",
+            "label": "UNKNOWN",
+            "confidence": 0.5165621849475663,
+            "stage": "SECONDARY",
+            "status": "HORIZON_DISAGREEMENT"
+          }
+        ]
+      },
+      {
+        "timestamp": 70.76,
+        "stage": "CONFLICT",
+        "value": {
+          "relevant": true,
+          "partners": [
+            "PANEL_AV_W_01"
+          ]
+        }
+      },
+      {
+        "timestamp": 70.76,
+        "stage": "PRECEDENCE",
+        "value": [
+          [
+            "PANEL_AV_E_02",
+            "PANEL_AV_N_02"
+          ],
+          [
+            "PANEL_AV_N_02",
+            "PANEL_AV_W_01"
+          ],
+          [
+            "PANEL_AV_W_01",
+            "PANEL_AV_E_02"
+          ],
+          [
+            "PANEL_AV_W_01",
+            "PANEL_AV_S_01"
+          ]
+        ]
+      },
+      {
+        "timestamp": 70.76,
+        "stage": "GNN",
+        "value": {
+          "encoded": true,
+          "node_count": 4,
+          "edge_count": 4,
+          "node_feature_dimension": 8,
+          "edge_feature_dimension": 9,
+          "missing_node_feature_count": 0,
+          "missing_edge_feature_count": 15,
+          "tensor_backend": "NUMPY",
+          "normalization_status": "NOT_FITTED_TRAINING_STATISTICS_REQUIRED",
+          "source_graph_scope": "JOINT_LOCAL_V2V",
+          "communication_model": "IDEAL_SAME_STEP_V2V"
+        }
+      },
+      {
+        "timestamp": 71.72,
+        "stage": "PRECEDENCE",
+        "value": [
+          [
+            "PANEL_AV_E_02",
+            "PANEL_AV_N_02"
+          ],
+          [
+            "PANEL_AV_E_02",
+            "PANEL_AV_S_01"
+          ],
+          [
+            "PANEL_AV_N_02",
+            "PANEL_AV_S_01"
+          ],
+          [
+            "PANEL_AV_N_02",
+            "PANEL_AV_W_01"
+          ],
+          [
+            "PANEL_AV_S_01",
+            "PANEL_AV_W_01"
+          ],
+          [
+            "PANEL_AV_W_01",
+            "PANEL_AV_E_02"
+          ],
+          [
+            "PANEL_AV_W_01",
+            "PANEL_AV_S_01"
+          ]
+        ]
+      },
+      {
+        "timestamp": 71.72,
+        "stage": "GNN",
+        "value": {
+          "encoded": true,
+          "node_count": 4,
+          "edge_count": 7,
+          "node_feature_dimension": 8,
+          "edge_feature_dimension": 9,
+          "missing_node_feature_count": 0,
+          "missing_edge_feature_count": 30,
+          "tensor_backend": "NUMPY",
+          "normalization_status": "NOT_FITTED_TRAINING_STATISTICS_REQUIRED",
+          "source_graph_scope": "JOINT_LOCAL_V2V",
+          "communication_model": "IDEAL_SAME_STEP_V2V"
+        }
+      },
+      {
+        "timestamp": 74.6,
+        "stage": "CONFLICT",
+        "value": {
+          "relevant": false,
+          "partners": []
+        }
+      },
+      {
+        "timestamp": 74.6,
+        "stage": "PRECEDENCE",
+        "value": [
+          [
+            "PANEL_AV_E_02",
+            "PANEL_AV_N_02"
+          ],
+          [
+            "PANEL_AV_E_02",
+            "PANEL_AV_S_01"
+          ],
+          [
+            "PANEL_AV_N_02",
+            "PANEL_AV_S_01"
+          ],
+          [
+            "PANEL_AV_N_02",
+            "PANEL_AV_W_01"
+          ],
+          [
+            "PANEL_AV_S_01",
+            "PANEL_AV_W_01"
+          ],
+          [
+            "PANEL_AV_W_01",
+            "PANEL_AV_E_02"
+          ]
+        ]
+      },
+      {
+        "timestamp": 74.6,
+        "stage": "GNN",
+        "value": {
+          "encoded": true,
+          "node_count": 4,
+          "edge_count": 6,
+          "node_feature_dimension": 8,
+          "edge_feature_dimension": 9,
+          "missing_node_feature_count": 0,
+          "missing_edge_feature_count": 30,
+          "tensor_backend": "NUMPY",
+          "normalization_status": "NOT_FITTED_TRAINING_STATISTICS_REQUIRED",
+          "source_graph_scope": "JOINT_LOCAL_V2V",
+          "communication_model": "IDEAL_SAME_STEP_V2V"
+        }
+      },
+      {
+        "timestamp": 77.48,
+        "stage": "PRECEDENCE",
+        "value": [
+          [
+            "PANEL_AV_E_02",
+            "PANEL_AV_N_02"
+          ],
+          [
+            "PANEL_AV_E_02",
+            "PANEL_AV_S_01"
+          ],
+          [
+            "PANEL_AV_S_01",
+            "PANEL_AV_W_01"
+          ],
+          [
+            "PANEL_AV_W_01",
+            "PANEL_AV_E_02"
+          ]
+        ]
+      },
+      {
+        "timestamp": 77.48,
+        "stage": "GNN",
+        "value": {
+          "encoded": true,
+          "node_count": 4,
+          "edge_count": 4,
+          "node_feature_dimension": 8,
+          "edge_feature_dimension": 9,
+          "missing_node_feature_count": 0,
+          "missing_edge_feature_count": 20,
+          "tensor_backend": "NUMPY",
+          "normalization_status": "NOT_FITTED_TRAINING_STATISTICS_REQUIRED",
+          "source_graph_scope": "JOINT_LOCAL_V2V",
+          "communication_model": "IDEAL_SAME_STEP_V2V"
+        }
+      },
+      {
+        "timestamp": 77.64,
+        "stage": "GNN",
+        "value": {
+          "encoded": false
+        }
+      },
+      {
+        "timestamp": 93.68,
+        "stage": "COMPLETED",
+        "value": "Vehicle left simulation"
+      }
+    ],
+    "PANEL_AV_W_01": [
+      {
+        "timestamp": 49.16,
+        "stage": "FIRST_OBSERVED",
+        "value": "Runtime state available"
+      },
+      {
+        "timestamp": 49.16,
+        "stage": "PLANNER",
+        "value": {
+          "state": "READY"
+        }
+      },
+      {
+        "timestamp": 49.16,
+        "stage": "CONTROL",
+        "value": {
+          "speed_constraint_active": false,
+          "speed_cap_mps": null,
+          "source": "SUMO_NATIVE"
+        }
+      },
+      {
+        "timestamp": 49.16,
+        "stage": "CONFLICT",
+        "value": {
+          "relevant": false,
+          "partners": []
+        }
+      },
+      {
+        "timestamp": 49.16,
+        "stage": "GNN",
+        "value": {
+          "encoded": false
+        }
+      },
+      {
+        "timestamp": 49.16,
+        "stage": "MAPPO",
+        "value": {
+          "factors": []
+        }
+      },
+      {
+        "timestamp": 68.04,
+        "stage": "CONFLICT",
+        "value": {
+          "relevant": true,
+          "partners": [
+            "PANEL_AV_E_02",
+            "PANEL_AV_N_02",
+            "PANEL_AV_S_01"
+          ]
+        }
+      },
+      {
+        "timestamp": 68.04,
+        "stage": "PRECEDENCE",
+        "value": [
+          [
+            "PANEL_AV_E_02",
+            "PANEL_AV_N_02"
+          ],
+          [
+            "PANEL_AV_N_02",
+            "PANEL_AV_W_01"
+          ],
+          [
+            "PANEL_AV_S_01",
+            "PANEL_AV_E_02"
+          ],
+          [
+            "PANEL_AV_S_01",
+            "PANEL_AV_N_02"
+          ],
+          [
+            "PANEL_AV_W_01",
+            "PANEL_AV_E_02"
+          ],
+          [
+            "PANEL_AV_W_01",
+            "PANEL_AV_S_01"
+          ]
+        ]
+      },
+      {
+        "timestamp": 68.04,
+        "stage": "GNN",
+        "value": {
+          "encoded": true,
+          "node_count": 4,
+          "edge_count": 6,
+          "node_feature_dimension": 8,
+          "edge_feature_dimension": 9,
+          "missing_node_feature_count": 0,
+          "missing_edge_feature_count": 15,
+          "tensor_backend": "NUMPY",
+          "normalization_status": "NOT_FITTED_TRAINING_STATISTICS_REQUIRED",
+          "source_graph_scope": "JOINT_LOCAL_V2V",
+          "communication_model": "IDEAL_SAME_STEP_V2V"
+        }
+      },
+      {
+        "timestamp": 68.04,
+        "stage": "MAPPO",
+        "value": {
+          "factors": [
+            {
+              "decision_role": "PROPOSER",
+              "ego_id": "PANEL_AV_W_01",
+              "claim_identity": [
+                "PANEL_AV_N_02",
+                "PANEL_AV_W_01"
+              ],
+              "proposal_id": null,
+              "action_names": [
+                "KEEP_CLAIM",
+                "RELINQUISH_CLAIM"
+              ],
+              "hard_action_mask": [
+                true,
+                true
+              ],
+              "masked_probabilities": [
+                0.22906593978405,
+                0.7709340453147888
+              ],
+              "selected_action": "RELINQUISH_CLAIM",
+              "selected_action_index": 1,
+              "selection_rule": "DETERMINISTIC_MASKED_ARGMAX_OF_SELECTED_E5_PRESENTATION_ONLY"
+            },
+            {
+              "decision_role": "RESPONDER",
+              "ego_id": "PANEL_AV_W_01",
+              "claim_identity": [
+                "PANEL_AV_W_01",
+                "PANEL_AV_E_02"
+              ],
+              "proposal_id": [
+                68.04,
+                "PANEL_AV_W_01",
+                "PANEL_AV_E_02",
+                "PANEL_AV_E_02",
+                "PANEL_AV_W_01"
+              ],
+              "action_names": [
+                "ACCEPT_RELINQUISHMENT",
+                "REJECT_RELINQUISHMENT"
+              ],
+              "hard_action_mask": [
+                true,
+                true
+              ],
+              "masked_probabilities": [
+                0.5461450219154358,
+                0.4538550078868866
+              ],
+              "selected_action": "ACCEPT_RELINQUISHMENT",
+              "selected_action_index": 0,
+              "selection_rule": "DETERMINISTIC_MASKED_ARGMAX_OF_SELECTED_E5_PRESENTATION_ONLY"
+            },
+            {
+              "decision_role": "RESPONDER",
+              "ego_id": "PANEL_AV_W_01",
+              "claim_identity": [
+                "PANEL_AV_W_01",
+                "PANEL_AV_S_01"
+              ],
+              "proposal_id": [
+                68.04,
+                "PANEL_AV_W_01",
+                "PANEL_AV_S_01",
+                "PANEL_AV_S_01",
+                "PANEL_AV_W_01"
+              ],
+              "action_names": [
+                "ACCEPT_RELINQUISHMENT",
+                "REJECT_RELINQUISHMENT"
+              ],
+              "hard_action_mask": [
+                true,
+                true
+              ],
+              "masked_probabilities": [
+                0.5453625917434692,
+                0.454637348651886
+              ],
+              "selected_action": "ACCEPT_RELINQUISHMENT",
+              "selected_action_index": 0,
+              "selection_rule": "DETERMINISTIC_MASKED_ARGMAX_OF_SELECTED_E5_PRESENTATION_ONLY"
+            }
+          ]
+        }
+      },
+      {
+        "timestamp": 68.04,
+        "stage": "INTENTION",
+        "value": [
+          {
+            "target_id": "PANEL_AV_E_02",
+            "label": "UNKNOWN",
+            "confidence": null,
+            "stage": "WAITING",
+            "status": "WAITING_FOR_FINALIZATION"
+          },
+          {
+            "target_id": "PANEL_AV_N_02",
+            "label": "UNKNOWN",
+            "confidence": null,
+            "stage": "WAITING",
+            "status": "WAITING_FOR_FINALIZATION"
+          },
+          {
+            "target_id": "PANEL_AV_S_01",
+            "label": "UNKNOWN",
+            "confidence": null,
+            "stage": "WAITING",
+            "status": "WAITING_FOR_FINALIZATION"
+          }
+        ]
+      },
+      {
+        "timestamp": 69.8,
+        "stage": "INTENTION",
+        "value": [
+          {
+            "target_id": "PANEL_AV_E_02",
+            "label": "UNKNOWN",
+            "confidence": null,
+            "stage": "WAITING",
+            "status": "WAITING_FOR_FINALIZATION"
+          },
+          {
+            "target_id": "PANEL_AV_N_02",
+            "label": "UNKNOWN",
+            "confidence": null,
+            "stage": "WAITING",
+            "status": "WAITING_FOR_FINALIZATION"
+          },
+          {
+            "target_id": "PANEL_AV_S_01",
+            "label": "UNKNOWN",
+            "confidence": null,
+            "stage": "WAITING",
+            "status": "BOTH_STAGES_MISSING"
+          }
+        ]
+      },
+      {
+        "timestamp": 70.28,
+        "stage": "CONFLICT",
+        "value": {
+          "relevant": true,
+          "partners": [
+            "PANEL_AV_E_02",
+            "PANEL_AV_N_02"
+          ]
+        }
+      },
+      {
+        "timestamp": 70.28,
+        "stage": "PRECEDENCE",
+        "value": [
+          [
+            "PANEL_AV_E_02",
+            "PANEL_AV_N_02"
+          ],
+          [
+            "PANEL_AV_N_02",
+            "PANEL_AV_W_01"
+          ],
+          [
+            "PANEL_AV_S_01",
+            "PANEL_AV_N_02"
+          ],
+          [
+            "PANEL_AV_W_01",
+            "PANEL_AV_E_02"
+          ],
+          [
+            "PANEL_AV_W_01",
+            "PANEL_AV_S_01"
+          ]
+        ]
+      },
+      {
+        "timestamp": 70.28,
+        "stage": "GNN",
+        "value": {
+          "encoded": true,
+          "node_count": 4,
+          "edge_count": 5,
+          "node_feature_dimension": 8,
+          "edge_feature_dimension": 9,
+          "missing_node_feature_count": 0,
+          "missing_edge_feature_count": 15,
+          "tensor_backend": "NUMPY",
+          "normalization_status": "NOT_FITTED_TRAINING_STATISTICS_REQUIRED",
+          "source_graph_scope": "JOINT_LOCAL_V2V",
+          "communication_model": "IDEAL_SAME_STEP_V2V"
+        }
+      },
+      {
+        "timestamp": 70.28,
+        "stage": "INTENTION",
+        "value": [
+          {
+            "target_id": "PANEL_AV_E_02",
+            "label": "UNKNOWN",
+            "confidence": null,
+            "stage": "WAITING",
+            "status": "WAITING_FOR_FINALIZATION"
+          },
+          {
+            "target_id": "PANEL_AV_N_02",
+            "label": "UNKNOWN",
+            "confidence": 0.5165621849475663,
+            "stage": "SECONDARY",
+            "status": "PRIMARY_MISSING"
+          },
+          {
+            "target_id": "PANEL_AV_S_01",
+            "label": "UNKNOWN",
+            "confidence": null,
+            "stage": "WAITING",
+            "status": "BOTH_STAGES_MISSING"
+          }
+        ]
+      },
+      {
+        "timestamp": 70.44,
+        "stage": "INTENTION",
+        "value": [
+          {
+            "target_id": "PANEL_AV_E_02",
+            "label": "UNKNOWN",
+            "confidence": 0.9695557256554133,
+            "stage": "SECONDARY",
+            "status": "PRIMARY_MISSING"
+          },
+          {
+            "target_id": "PANEL_AV_N_02",
+            "label": "UNKNOWN",
+            "confidence": 0.5165621849475663,
+            "stage": "SECONDARY",
+            "status": "PRIMARY_MISSING"
+          },
+          {
+            "target_id": "PANEL_AV_S_01",
+            "label": "UNKNOWN",
+            "confidence": null,
+            "stage": "WAITING",
+            "status": "BOTH_STAGES_MISSING"
+          }
+        ]
+      },
+      {
+        "timestamp": 70.76,
+        "stage": "PRECEDENCE",
+        "value": [
+          [
+            "PANEL_AV_E_02",
+            "PANEL_AV_N_02"
+          ],
+          [
+            "PANEL_AV_N_02",
+            "PANEL_AV_W_01"
+          ],
+          [
+            "PANEL_AV_W_01",
+            "PANEL_AV_E_02"
+          ],
+          [
+            "PANEL_AV_W_01",
+            "PANEL_AV_S_01"
+          ]
+        ]
+      },
+      {
+        "timestamp": 70.76,
+        "stage": "GNN",
+        "value": {
+          "encoded": true,
+          "node_count": 4,
+          "edge_count": 4,
+          "node_feature_dimension": 8,
+          "edge_feature_dimension": 9,
+          "missing_node_feature_count": 0,
+          "missing_edge_feature_count": 10,
+          "tensor_backend": "NUMPY",
+          "normalization_status": "NOT_FITTED_TRAINING_STATISTICS_REQUIRED",
+          "source_graph_scope": "JOINT_LOCAL_V2V",
+          "communication_model": "IDEAL_SAME_STEP_V2V"
+        }
+      },
+      {
+        "timestamp": 71.72,
+        "stage": "CONFLICT",
+        "value": {
+          "relevant": true,
+          "partners": [
+            "PANEL_AV_E_02",
+            "PANEL_AV_N_02",
+            "PANEL_AV_S_01"
+          ]
+        }
+      },
+      {
+        "timestamp": 71.72,
+        "stage": "PRECEDENCE",
+        "value": [
+          [
+            "PANEL_AV_E_02",
+            "PANEL_AV_N_02"
+          ],
+          [
+            "PANEL_AV_E_02",
+            "PANEL_AV_S_01"
+          ],
+          [
+            "PANEL_AV_N_02",
+            "PANEL_AV_S_01"
+          ],
+          [
+            "PANEL_AV_N_02",
+            "PANEL_AV_W_01"
+          ],
+          [
+            "PANEL_AV_S_01",
+            "PANEL_AV_W_01"
+          ],
+          [
+            "PANEL_AV_W_01",
+            "PANEL_AV_E_02"
+          ],
+          [
+            "PANEL_AV_W_01",
+            "PANEL_AV_S_01"
+          ]
+        ]
+      },
+      {
+        "timestamp": 71.72,
+        "stage": "GNN",
+        "value": {
+          "encoded": true,
+          "node_count": 4,
+          "edge_count": 7,
+          "node_feature_dimension": 8,
+          "edge_feature_dimension": 9,
+          "missing_node_feature_count": 0,
+          "missing_edge_feature_count": 20,
+          "tensor_backend": "NUMPY",
+          "normalization_status": "NOT_FITTED_TRAINING_STATISTICS_REQUIRED",
+          "source_graph_scope": "JOINT_LOCAL_V2V",
+          "communication_model": "IDEAL_SAME_STEP_V2V"
+        }
+      },
+      {
+        "timestamp": 72.36,
+        "stage": "GNN",
+        "value": {
+          "encoded": true,
+          "node_count": 4,
+          "edge_count": 7,
+          "node_feature_dimension": 8,
+          "edge_feature_dimension": 9,
+          "missing_node_feature_count": 0,
+          "missing_edge_feature_count": 25,
+          "tensor_backend": "NUMPY",
+          "normalization_status": "NOT_FITTED_TRAINING_STATISTICS_REQUIRED",
+          "source_graph_scope": "JOINT_LOCAL_V2V",
+          "communication_model": "IDEAL_SAME_STEP_V2V"
+        }
+      },
+      {
+        "timestamp": 74.6,
+        "stage": "PRECEDENCE",
+        "value": [
+          [
+            "PANEL_AV_E_02",
+            "PANEL_AV_N_02"
+          ],
+          [
+            "PANEL_AV_E_02",
+            "PANEL_AV_S_01"
+          ],
+          [
+            "PANEL_AV_N_02",
+            "PANEL_AV_S_01"
+          ],
+          [
+            "PANEL_AV_N_02",
+            "PANEL_AV_W_01"
+          ],
+          [
+            "PANEL_AV_S_01",
+            "PANEL_AV_W_01"
+          ],
+          [
+            "PANEL_AV_W_01",
+            "PANEL_AV_E_02"
+          ]
+        ]
+      },
+      {
+        "timestamp": 74.6,
+        "stage": "GNN",
+        "value": {
+          "encoded": true,
+          "node_count": 4,
+          "edge_count": 6,
+          "node_feature_dimension": 8,
+          "edge_feature_dimension": 9,
+          "missing_node_feature_count": 0,
+          "missing_edge_feature_count": 20,
+          "tensor_backend": "NUMPY",
+          "normalization_status": "NOT_FITTED_TRAINING_STATISTICS_REQUIRED",
+          "source_graph_scope": "JOINT_LOCAL_V2V",
+          "communication_model": "IDEAL_SAME_STEP_V2V"
+        }
+      },
+      {
+        "timestamp": 77.48,
+        "stage": "PRECEDENCE",
+        "value": [
+          [
+            "PANEL_AV_E_02",
+            "PANEL_AV_N_02"
+          ],
+          [
+            "PANEL_AV_E_02",
+            "PANEL_AV_S_01"
+          ],
+          [
+            "PANEL_AV_S_01",
+            "PANEL_AV_W_01"
+          ],
+          [
+            "PANEL_AV_W_01",
+            "PANEL_AV_E_02"
+          ]
+        ]
+      },
+      {
+        "timestamp": 77.48,
+        "stage": "GNN",
+        "value": {
+          "encoded": true,
+          "node_count": 4,
+          "edge_count": 4,
+          "node_feature_dimension": 8,
+          "edge_feature_dimension": 9,
+          "missing_node_feature_count": 0,
+          "missing_edge_feature_count": 10,
+          "tensor_backend": "NUMPY",
+          "normalization_status": "NOT_FITTED_TRAINING_STATISTICS_REQUIRED",
+          "source_graph_scope": "JOINT_LOCAL_V2V",
+          "communication_model": "IDEAL_SAME_STEP_V2V"
+        }
+      },
+      {
+        "timestamp": 83.28,
+        "stage": "GNN",
+        "value": {
+          "encoded": false
+        }
+      },
+      {
+        "timestamp": 102.64,
+        "stage": "COMPLETED",
+        "value": "Vehicle left simulation"
+      }
+    ]
+  },
+  "event_timeline": [
+    {
+      "timestamp": 15.76,
+      "event": "REGULATORY_ORDER_RESOLVED",
+      "mappo_invocation": "NOT_REQUIRED",
+      "participants": [
+        "PANEL_AV_E_01",
+        "PANEL_AV_N_01"
+      ],
+      "original_graph": [
+        [
+          "PANEL_AV_E_01",
+          "PANEL_AV_N_01"
+        ]
+      ],
+      "proposer_actions": [],
+      "responder_actions": [],
+      "effective_graph": [
+        [
+          "PANEL_AV_E_01",
+          "PANEL_AV_N_01"
+        ]
+      ],
+      "ready": [
+        "PANEL_AV_N_01"
+      ],
+      "blocked": [
+        "PANEL_AV_E_01"
+      ],
+      "policy_factors": []
+    },
+    {
+      "event": "PLAN_INVALIDATED",
+      "timestamp": 31.96,
+      "reasons": [
+        "ACTIVE_PARTICIPANT_SET_CHANGED",
+        "RELEVANT_PRECEDENCE_GRAPH_CHANGED",
+        "CONFLICT_ZONE_CLEARED"
+      ]
+    },
+    {
+      "event": "MAPPO_INVOCATION_BLOCKED",
+      "timestamp": 64.84,
+      "reason": "RESPONDER_CONTEXT_INCOMPLETE",
+      "missing_encoded_egos": [
+        "PANEL_AV_W_01"
+      ]
+    },
+    {
+      "timestamp": 68.04,
+      "event": "NEGOTIATION_REQUIRED_REGULATORY_CYCLE",
+      "mappo_invocation": "AUTHORIZED",
+      "participants": [
+        "PANEL_AV_E_02",
+        "PANEL_AV_N_02",
+        "PANEL_AV_S_01",
+        "PANEL_AV_W_01"
+      ],
+      "original_graph": [
+        [
+          "PANEL_AV_E_02",
+          "PANEL_AV_N_02"
+        ],
+        [
+          "PANEL_AV_N_02",
+          "PANEL_AV_W_01"
+        ],
+        [
+          "PANEL_AV_S_01",
+          "PANEL_AV_E_02"
+        ],
+        [
+          "PANEL_AV_S_01",
+          "PANEL_AV_N_02"
+        ],
+        [
+          "PANEL_AV_W_01",
+          "PANEL_AV_E_02"
+        ],
+        [
+          "PANEL_AV_W_01",
+          "PANEL_AV_S_01"
+        ]
+      ],
+      "proposer_actions": [
+        [
+          [
+            "PANEL_AV_E_02",
+            "PANEL_AV_N_02"
+          ],
+          "RELINQUISH_CLAIM"
+        ],
+        [
+          [
+            "PANEL_AV_N_02",
+            "PANEL_AV_W_01"
+          ],
+          "RELINQUISH_CLAIM"
+        ],
+        [
+          [
+            "PANEL_AV_S_01",
+            "PANEL_AV_E_02"
+          ],
+          "RELINQUISH_CLAIM"
+        ],
+        [
+          [
+            "PANEL_AV_S_01",
+            "PANEL_AV_N_02"
+          ],
+          "RELINQUISH_CLAIM"
+        ],
+        [
+          [
+            "PANEL_AV_W_01",
+            "PANEL_AV_E_02"
+          ],
+          "RELINQUISH_CLAIM"
+        ],
+        [
+          [
+            "PANEL_AV_W_01",
+            "PANEL_AV_S_01"
+          ],
+          "RELINQUISH_CLAIM"
+        ]
+      ],
+      "responder_actions": [
+        [
+          [
+            68.04,
+            "PANEL_AV_E_02",
+            "PANEL_AV_N_02",
+            "PANEL_AV_N_02",
+            "PANEL_AV_E_02"
+          ],
+          "ACCEPT_RELINQUISHMENT"
+        ],
+        [
+          [
+            68.04,
+            "PANEL_AV_N_02",
+            "PANEL_AV_W_01",
+            "PANEL_AV_W_01",
+            "PANEL_AV_N_02"
+          ],
+          "ACCEPT_RELINQUISHMENT"
+        ],
+        [
+          [
+            68.04,
+            "PANEL_AV_S_01",
+            "PANEL_AV_E_02",
+            "PANEL_AV_E_02",
+            "PANEL_AV_S_01"
+          ],
+          "ACCEPT_RELINQUISHMENT"
+        ],
+        [
+          [
+            68.04,
+            "PANEL_AV_S_01",
+            "PANEL_AV_N_02",
+            "PANEL_AV_N_02",
+            "PANEL_AV_S_01"
+          ],
+          "ACCEPT_RELINQUISHMENT"
+        ],
+        [
+          [
+            68.04,
+            "PANEL_AV_W_01",
+            "PANEL_AV_E_02",
+            "PANEL_AV_E_02",
+            "PANEL_AV_W_01"
+          ],
+          "ACCEPT_RELINQUISHMENT"
+        ],
+        [
+          [
+            68.04,
+            "PANEL_AV_W_01",
+            "PANEL_AV_S_01",
+            "PANEL_AV_S_01",
+            "PANEL_AV_W_01"
+          ],
+          "ACCEPT_RELINQUISHMENT"
+        ]
+      ],
+      "effective_graph": [],
+      "ready": [
+        "PANEL_AV_E_02",
+        "PANEL_AV_N_02",
+        "PANEL_AV_S_01",
+        "PANEL_AV_W_01"
+      ],
+      "blocked": [],
+      "policy_factors": [
+        {
+          "decision_role": "PROPOSER",
+          "ego_id": "PANEL_AV_N_02",
+          "claim_identity": [
+            "PANEL_AV_E_02",
+            "PANEL_AV_N_02"
+          ],
+          "proposal_id": null,
+          "action_names": [
+            "KEEP_CLAIM",
+            "RELINQUISH_CLAIM"
+          ],
+          "hard_action_mask": [
+            true,
+            true
+          ],
+          "masked_probabilities": [
+            0.22450613975524902,
+            0.775493860244751
+          ],
+          "selected_action": "RELINQUISH_CLAIM",
+          "selected_action_index": 1,
+          "selection_rule": "DETERMINISTIC_MASKED_ARGMAX_OF_SELECTED_E5_PRESENTATION_ONLY"
+        },
+        {
+          "decision_role": "PROPOSER",
+          "ego_id": "PANEL_AV_W_01",
+          "claim_identity": [
+            "PANEL_AV_N_02",
+            "PANEL_AV_W_01"
+          ],
+          "proposal_id": null,
+          "action_names": [
+            "KEEP_CLAIM",
+            "RELINQUISH_CLAIM"
+          ],
+          "hard_action_mask": [
+            true,
+            true
+          ],
+          "masked_probabilities": [
+            0.22906593978405,
+            0.7709340453147888
+          ],
+          "selected_action": "RELINQUISH_CLAIM",
+          "selected_action_index": 1,
+          "selection_rule": "DETERMINISTIC_MASKED_ARGMAX_OF_SELECTED_E5_PRESENTATION_ONLY"
+        },
+        {
+          "decision_role": "PROPOSER",
+          "ego_id": "PANEL_AV_E_02",
+          "claim_identity": [
+            "PANEL_AV_S_01",
+            "PANEL_AV_E_02"
+          ],
+          "proposal_id": null,
+          "action_names": [
+            "KEEP_CLAIM",
+            "RELINQUISH_CLAIM"
+          ],
+          "hard_action_mask": [
+            true,
+            true
+          ],
+          "masked_probabilities": [
+            0.23284341394901276,
+            0.7671566009521484
+          ],
+          "selected_action": "RELINQUISH_CLAIM",
+          "selected_action_index": 1,
+          "selection_rule": "DETERMINISTIC_MASKED_ARGMAX_OF_SELECTED_E5_PRESENTATION_ONLY"
+        },
+        {
+          "decision_role": "PROPOSER",
+          "ego_id": "PANEL_AV_N_02",
+          "claim_identity": [
+            "PANEL_AV_S_01",
+            "PANEL_AV_N_02"
+          ],
+          "proposal_id": null,
+          "action_names": [
+            "KEEP_CLAIM",
+            "RELINQUISH_CLAIM"
+          ],
+          "hard_action_mask": [
+            true,
+            true
+          ],
+          "masked_probabilities": [
+            0.23694086074829102,
+            0.763059139251709
+          ],
+          "selected_action": "RELINQUISH_CLAIM",
+          "selected_action_index": 1,
+          "selection_rule": "DETERMINISTIC_MASKED_ARGMAX_OF_SELECTED_E5_PRESENTATION_ONLY"
+        },
+        {
+          "decision_role": "PROPOSER",
+          "ego_id": "PANEL_AV_E_02",
+          "claim_identity": [
+            "PANEL_AV_W_01",
+            "PANEL_AV_E_02"
+          ],
+          "proposal_id": null,
+          "action_names": [
+            "KEEP_CLAIM",
+            "RELINQUISH_CLAIM"
+          ],
+          "hard_action_mask": [
+            true,
+            true
+          ],
+          "masked_probabilities": [
+            0.24233245849609375,
+            0.7576675415039062
+          ],
+          "selected_action": "RELINQUISH_CLAIM",
+          "selected_action_index": 1,
+          "selection_rule": "DETERMINISTIC_MASKED_ARGMAX_OF_SELECTED_E5_PRESENTATION_ONLY"
+        },
+        {
+          "decision_role": "PROPOSER",
+          "ego_id": "PANEL_AV_S_01",
+          "claim_identity": [
+            "PANEL_AV_W_01",
+            "PANEL_AV_S_01"
+          ],
+          "proposal_id": null,
+          "action_names": [
+            "KEEP_CLAIM",
+            "RELINQUISH_CLAIM"
+          ],
+          "hard_action_mask": [
+            true,
+            true
+          ],
+          "masked_probabilities": [
+            0.2332889884710312,
+            0.7667109966278076
+          ],
+          "selected_action": "RELINQUISH_CLAIM",
+          "selected_action_index": 1,
+          "selection_rule": "DETERMINISTIC_MASKED_ARGMAX_OF_SELECTED_E5_PRESENTATION_ONLY"
+        },
+        {
+          "decision_role": "RESPONDER",
+          "ego_id": "PANEL_AV_E_02",
+          "claim_identity": [
+            "PANEL_AV_E_02",
+            "PANEL_AV_N_02"
+          ],
+          "proposal_id": [
+            68.04,
+            "PANEL_AV_E_02",
+            "PANEL_AV_N_02",
+            "PANEL_AV_N_02",
+            "PANEL_AV_E_02"
+          ],
+          "action_names": [
+            "ACCEPT_RELINQUISHMENT",
+            "REJECT_RELINQUISHMENT"
+          ],
+          "hard_action_mask": [
+            true,
+            true
+          ],
+          "masked_probabilities": [
+            0.5487106442451477,
+            0.4512893557548523
+          ],
+          "selected_action": "ACCEPT_RELINQUISHMENT",
+          "selected_action_index": 0,
+          "selection_rule": "DETERMINISTIC_MASKED_ARGMAX_OF_SELECTED_E5_PRESENTATION_ONLY"
+        },
+        {
+          "decision_role": "RESPONDER",
+          "ego_id": "PANEL_AV_N_02",
+          "claim_identity": [
+            "PANEL_AV_N_02",
+            "PANEL_AV_W_01"
+          ],
+          "proposal_id": [
+            68.04,
+            "PANEL_AV_N_02",
+            "PANEL_AV_W_01",
+            "PANEL_AV_W_01",
+            "PANEL_AV_N_02"
+          ],
+          "action_names": [
+            "ACCEPT_RELINQUISHMENT",
+            "REJECT_RELINQUISHMENT"
+          ],
+          "hard_action_mask": [
+            true,
+            true
+          ],
+          "masked_probabilities": [
+            0.6027176380157471,
+            0.39728233218193054
+          ],
+          "selected_action": "ACCEPT_RELINQUISHMENT",
+          "selected_action_index": 0,
+          "selection_rule": "DETERMINISTIC_MASKED_ARGMAX_OF_SELECTED_E5_PRESENTATION_ONLY"
+        },
+        {
+          "decision_role": "RESPONDER",
+          "ego_id": "PANEL_AV_S_01",
+          "claim_identity": [
+            "PANEL_AV_S_01",
+            "PANEL_AV_E_02"
+          ],
+          "proposal_id": [
+            68.04,
+            "PANEL_AV_S_01",
+            "PANEL_AV_E_02",
+            "PANEL_AV_E_02",
+            "PANEL_AV_S_01"
+          ],
+          "action_names": [
+            "ACCEPT_RELINQUISHMENT",
+            "REJECT_RELINQUISHMENT"
+          ],
+          "hard_action_mask": [
+            true,
+            true
+          ],
+          "masked_probabilities": [
+            0.5429694652557373,
+            0.4570305347442627
+          ],
+          "selected_action": "ACCEPT_RELINQUISHMENT",
+          "selected_action_index": 0,
+          "selection_rule": "DETERMINISTIC_MASKED_ARGMAX_OF_SELECTED_E5_PRESENTATION_ONLY"
+        },
+        {
+          "decision_role": "RESPONDER",
+          "ego_id": "PANEL_AV_S_01",
+          "claim_identity": [
+            "PANEL_AV_S_01",
+            "PANEL_AV_N_02"
+          ],
+          "proposal_id": [
+            68.04,
+            "PANEL_AV_S_01",
+            "PANEL_AV_N_02",
+            "PANEL_AV_N_02",
+            "PANEL_AV_S_01"
+          ],
+          "action_names": [
+            "ACCEPT_RELINQUISHMENT",
+            "REJECT_RELINQUISHMENT"
+          ],
+          "hard_action_mask": [
+            true,
+            true
+          ],
+          "masked_probabilities": [
+            0.5449607372283936,
+            0.45503929257392883
+          ],
+          "selected_action": "ACCEPT_RELINQUISHMENT",
+          "selected_action_index": 0,
+          "selection_rule": "DETERMINISTIC_MASKED_ARGMAX_OF_SELECTED_E5_PRESENTATION_ONLY"
+        },
+        {
+          "decision_role": "RESPONDER",
+          "ego_id": "PANEL_AV_W_01",
+          "claim_identity": [
+            "PANEL_AV_W_01",
+            "PANEL_AV_E_02"
+          ],
+          "proposal_id": [
+            68.04,
+            "PANEL_AV_W_01",
+            "PANEL_AV_E_02",
+            "PANEL_AV_E_02",
+            "PANEL_AV_W_01"
+          ],
+          "action_names": [
+            "ACCEPT_RELINQUISHMENT",
+            "REJECT_RELINQUISHMENT"
+          ],
+          "hard_action_mask": [
+            true,
+            true
+          ],
+          "masked_probabilities": [
+            0.5461450219154358,
+            0.4538550078868866
+          ],
+          "selected_action": "ACCEPT_RELINQUISHMENT",
+          "selected_action_index": 0,
+          "selection_rule": "DETERMINISTIC_MASKED_ARGMAX_OF_SELECTED_E5_PRESENTATION_ONLY"
+        },
+        {
+          "decision_role": "RESPONDER",
+          "ego_id": "PANEL_AV_W_01",
+          "claim_identity": [
+            "PANEL_AV_W_01",
+            "PANEL_AV_S_01"
+          ],
+          "proposal_id": [
+            68.04,
+            "PANEL_AV_W_01",
+            "PANEL_AV_S_01",
+            "PANEL_AV_S_01",
+            "PANEL_AV_W_01"
+          ],
+          "action_names": [
+            "ACCEPT_RELINQUISHMENT",
+            "REJECT_RELINQUISHMENT"
+          ],
+          "hard_action_mask": [
+            true,
+            true
+          ],
+          "masked_probabilities": [
+            0.5453625917434692,
+            0.454637348651886
+          ],
+          "selected_action": "ACCEPT_RELINQUISHMENT",
+          "selected_action_index": 0,
+          "selection_rule": "DETERMINISTIC_MASKED_ARGMAX_OF_SELECTED_E5_PRESENTATION_ONLY"
+        }
+      ]
+    },
+    {
+      "event": "PLAN_INVALIDATED",
+      "timestamp": 79.44,
+      "reasons": [
+        "ACTIVE_PARTICIPANT_SET_CHANGED",
+        "RELEVANT_PRECEDENCE_GRAPH_CHANGED"
+      ]
+    },
+    {
+      "event": "MAPPO_INVOCATION_BLOCKED",
+      "timestamp": 79.44,
+      "reason": "RESPONDER_CONTEXT_INCOMPLETE",
+      "missing_encoded_egos": [
+        "PANEL_AV_E_02",
+        "PANEL_AV_S_01"
+      ]
+    }
+  ]
+}

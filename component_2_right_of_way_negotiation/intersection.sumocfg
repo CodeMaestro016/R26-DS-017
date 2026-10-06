@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <input>
+        <net-file value="networks/intersection.net.xml"/>
+        <route-files value="networks/intersection.rou.xml"/>
+    </input>
+    <time>
+        <step-length value="0.04"/>
+    </time>
+    <processing>
+        <collision.action value="warn"/>
+    </processing>
+</configuration>
+

@@ -1,0 +1,49 @@
+{
+  "status": "SMOKE_TEST_ONLY",
+  "evidence_classification": [
+    "NOT_MODEL_SELECTION_EVIDENCE",
+    "NOT_VALIDATION_EVIDENCE",
+    "NOT_HELD_OUT_EVIDENCE"
+  ],
+  "held_out_scenarios_consumed": 0,
+  "candidate_contracts": [
+    {
+      "candidate_id": "E5",
+      "ppo_update_epochs": 5,
+      "learning_rate": 0.0005,
+      "ppo_clip_epsilon": 0.2,
+      "gnn_hidden_dimension": 64,
+      "gnn_message_passing_layers": 3,
+      "gnn_training_mode": "FROZEN_GNN",
+      "parameter_sharing_strategy": "SHARED_REPRESENTATION_ROLE_SPECIFIC_HEADS",
+      "factor_aggregation": "PER_POLICY_FACTOR_EMPIRICAL_MEAN",
+      "optimizer_family": "ADAM"
+    },
+    {
+      "candidate_id": "E10",
+      "ppo_update_epochs": 10,
+      "learning_rate": 0.0005,
+      "ppo_clip_epsilon": 0.2,
+      "gnn_hidden_dimension": 64,
+      "gnn_message_passing_layers": 3,
+      "gnn_training_mode": "FROZEN_GNN",
+      "parameter_sharing_strategy": "SHARED_REPRESENTATION_ROLE_SPECIFIC_HEADS",
+      "factor_aggregation": "PER_POLICY_FACTOR_EMPIRICAL_MEAN",
+      "optimizer_family": "ADAM"
+    },
+    {
+      "candidate_id": "E15",
+      "ppo_update_epochs": 15,
+      "learning_rate": 0.0005,
+      "ppo_clip_epsilon": 0.2,
+      "gnn_hidden_dimension": 64,
+      "gnn_message_passing_layers": 3,
+      "gnn_training_mode": "FROZEN_GNN",
+      "parameter_sharing_strategy": "SHARED_REPRESENTATION_ROLE_SPECIFIC_HEADS",
+      "factor_aggregation": "PER_POLICY_FACTOR_EMPIRICAL_MEAN",
+      "optimizer_family": "ADAM"
+    }
+  ],
+  "synthetic_workload_only": true,
+  "protocol_hash": "8aa295e53e9a1a446f2fad6dba4c5d416b432e199ba91b3f188061484d51ce7b"
+}

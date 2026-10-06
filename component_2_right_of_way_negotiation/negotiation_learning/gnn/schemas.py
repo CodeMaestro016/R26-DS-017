@@ -1,0 +1,11 @@
+"""Architecture choices requiring later controlled experiments."""
+
+ARCHITECTURE_HYPERPARAMETER_REGISTRY = {
+    "hidden_dim": "REQUIRES_VALIDATION_EXPERIMENT",
+    "num_message_passing_layers": "REQUIRES_VALIDATION_EXPERIMENT",
+    "activation": "REQUIRES_VALIDATION_EXPERIMENT",
+}
+
+ACTIVATION_VALIDATION_STATUS = (
+    "ARCHITECTURE_COMPONENT_PENDING_HYPERPARAMETER_EVALUATION"
+)

@@ -1,0 +1,14 @@
+{
+  "evidence_classification": "QUALITATIVE_PRESENTATION_ONLY",
+  "audit_completed_at_utc": "2026-08-30T15:27:58.111526+00:00",
+  "command": "run_panel_demo.py --scenario <id> --duration 120 --web-live",
+  "selection_source": "CURRENT_PREDECLARED_PRESENTATION_INPUTS_ONLY",
+  "validation_or_held_out_consumed": 0,
+  "scenarios": [
+    {"scenario_id":"yield_negotiation_demo","simulation_seconds":220,"actual_status":"RULE_RESOLVED_THEN_NEGOTIATION_REQUIRED_REGULATORY_CYCLE","mappo_authorized_events":1,"completed":6,"scheduled":6,"collisions":0,"blocked_zone_violations":0},
+    {"scenario_id":"rule_resolved_two","simulation_seconds":120,"actual_status":"REGULATORY_ORDER_RESOLVED","mappo_authorized_events":0,"completed":2,"scheduled":2,"collisions":0,"blocked_zone_violations":0},
+    {"scenario_id":"four_way_simultaneous","simulation_seconds":120,"actual_status":"COMMUNICATED_PRECEDENCE_DISAGREEMENT_NO_MAPPO","mappo_authorized_events":0,"completed":4,"scheduled":4,"collisions":0,"blocked_zone_violations":0},
+    {"scenario_id":"regulatory_cycle","simulation_seconds":120,"actual_status":"NEGOTIATION_REQUIRED_REGULATORY_CYCLE","mappo_authorized_events":1,"completed":4,"scheduled":4,"collisions":0,"blocked_zone_violations":0},
+    {"scenario_id":"mixed_manoeuvres","simulation_seconds":120,"actual_status":"NEGOTIATION_REQUIRED_REGULATORY_CYCLE","mappo_authorized_events":1,"completed":4,"scheduled":4,"collisions":0,"blocked_zone_violations":0}
+  ]
+}
