@@ -47,6 +47,12 @@ It does not directly select acceleration, braking, steering, or target speed. An
 
 ## Entry points
 
+- `run_final_evaluation.py` performs the separate frozen post-training evaluation
+  of the current ego-local runtime. See [scope and metric definitions](docs/FINAL_EVALUATION_SCOPE.md)
+  and [Windows commands and report guide](docs/FINAL_EVALUATION_GUIDE.md).
+  Prepare first, run the smoke suite, then explicitly launch the 165-episode
+  final suite. No retraining or held-out tuning is performed.
+
 - `run_selected_mappo_demo.py` is the final validation-selected E5 MAPPO research demonstration. It loads the frozen canonical-replication-0 selected policy and performs inference only.
 - `main.py` is the normal/legacy SUMO control-facing application. Its learned intention prediction can be shadow-only; it is not a substitute for the final selected MAPPO demo.
 - `run_research_demo.py` is retained for reproducibility of the earlier frozen research-prototype demonstration.

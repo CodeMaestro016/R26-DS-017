@@ -11,8 +11,9 @@ from traffic_accounting import SimulationLifecycleEvents
 
 
 class SUMOEnv:
-    def __init__(self, use_gui=False):
+    def __init__(self, use_gui=False, extra_options=()):
         self.use_gui = use_gui
+        self.extra_options = tuple(extra_options)
         self.step_count = 0
         self.current_time = 0.0
         self.lifecycle_events = SimulationLifecycleEvents(0.0, (), ())
@@ -44,6 +45,7 @@ class SUMOEnv:
             "--duration-log.disable",
             "true",
         ]
+        base_command_options.extend(self.extra_options)
         command_options = list(base_command_options)
 
         if self.use_gui:

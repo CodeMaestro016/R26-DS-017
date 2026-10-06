@@ -6,6 +6,7 @@ import hashlib
 from pathlib import Path
 from itertools import combinations
 from types import SimpleNamespace
+from time import perf_counter_ns
 
 import traci
 
@@ -209,7 +210,14 @@ def run_panel_demo(*, duration_seconds=220.0, use_gui=False, gui_delay_ms=0,
                    browser_state_path="results/panel_demo/runtime/live_state.json",
                    scenario_id="default_panel", admission_waves=None,
                    admission_mode="ROLLING_WAVES",
-                   stop_request_path=None, presentation_run_id=None):
+                   stop_request_path=None, presentation_run_id=None,
+                   runtime_observer=None, provider_factory=None,
+                   persist_presentation=True, return_failed_result=False):
+    """Shared control loop; optional evaluation hooks observe, never grant entry.
+
+    Default arguments retain the qualitative presentation contract. A separate
+    quantitative wrapper supplies a predeclared semantic provider and telemetry.
+    """
     if duration_seconds <= 0:
         raise ValueError("PANEL_DURATION_MUST_BE_POSITIVE")
     if admission_mode not in {"ROLLING_WAVES", "INDEPENDENT_DEMAND"}:
@@ -226,6 +234,8 @@ def run_panel_demo(*, duration_seconds=220.0, use_gui=False, gui_delay_ms=0,
     for module in (bundle.gnn, bundle.proposer_actor, bundle.responder_actor):
         module.eval()
     provider = PanelDeterministicInferenceProvider(bundle, sampling_seed=0)
+    if provider_factory is not None:
+        provider = provider_factory(bundle)
     paths = MapPathManager()
     zones = ConflictZoneManager(paths)
     # Reuse geometry/audit utilities without constructing a training runtime
@@ -337,6 +347,9 @@ def run_panel_demo(*, duration_seconds=220.0, use_gui=False, gui_delay_ms=0,
             if admitted_this_step:
                 next_admission_wave += 1
             states = environment.step(); now = environment.current_time
+            if runtime_observer is not None:
+                runtime_observer.observe(now, states, environment.lifecycle_events,
+                                         movements, paths, zones, traci)
             for vehicle_id in environment.lifecycle_events.departed_vehicle_ids:
                 if vehicle_id in vehicle_approaches:
                     spawned_ids.append(vehicle_id)
@@ -435,6 +448,7 @@ def run_panel_demo(*, duration_seconds=220.0, use_gui=False, gui_delay_ms=0,
                     elif missing_egos:
                         invocation_block_reason = "RESPONDER_CONTEXT_INCOMPLETE"
                     else:
+                        inference_started = perf_counter_ns()
                         outcome = provider.select_joint_actions(
                             scenario_id=("PANEL_DEMO_PRESENTATION_ONLY",),
                             episode_id=("PANEL_DEMO_ONE_PROCESS",),
@@ -446,8 +460,11 @@ def run_panel_demo(*, duration_seconds=220.0, use_gui=False, gui_delay_ms=0,
                                 "DE_STVO_UNCONTROLLED_4WAY_V1",
                             negotiation_status=status,
                             encoded_graphs=encoded)
+                        if runtime_observer is not None:
+                            runtime_observer.inference(perf_counter_ns() - inference_started)
                         if outcome is not None:
-                            metrics["mappo_decision_epochs"] += 1
+                            if getattr(provider, "uses_mappo_behavior_policy", True):
+                                metrics["mappo_decision_epochs"] += 1
                     if invocation_block_reason:
                         signature = (identity, invocation_block_reason,
                                      missing_egos)
@@ -530,7 +547,9 @@ def run_panel_demo(*, duration_seconds=220.0, use_gui=False, gui_delay_ms=0,
             for ego, state in sorted(states.items()):
                 own_snapshot = next((s for s in snapshots if s["ego_id"] == ego), None)
                 complete = (authority is not None and ego in authority.member_ids
-                            and authority.status not in BLOCKED)
+                            and authority.status not in BLOCKED and
+                            not (getattr(provider, "rules_only", False) and
+                                 authority.status in NEGOTIABLE))
                 if authority is None and not original:
                     complete = (own_snapshot is not None and
                         own_snapshot["negotiation_status"] in
@@ -546,9 +565,13 @@ def run_panel_demo(*, duration_seconds=220.0, use_gui=False, gui_delay_ms=0,
                     ego_controllers[ego] = DecentralizedEgoExecutionController(paths, zones)
                 ego_controller = ego_controllers[ego]
                 try:
+                    execution_started = perf_counter_ns()
                     decision = ego_controller.decide(context)
                     decision = ego_controller.constrain(context, decision,
                         traci.vehicle, SIM_TIME_STEP)
+                    if runtime_observer is not None:
+                        runtime_observer.execution(perf_counter_ns() - execution_started,
+                                                   decision)
                 except RuntimeError as error:
                     if str(error) == "BLOCKED_VEHICLE_ENTERED_CONFLICT_ZONE":
                         metrics["blocked_zone_violations"] += 1
@@ -679,7 +702,9 @@ def run_panel_demo(*, duration_seconds=220.0, use_gui=False, gui_delay_ms=0,
             browser.presentation_vehicle_history())
     if not result["policy_hash_unchanged"]:
         raise RuntimeError("SELECTED_POLICY_HASH_CHANGED_DURING_PANEL_DEMO")
-    write_panel_outputs(result, output_dir)
-    if failure is not None:
+    result["runtime_error"] = str(failure) if failure else None
+    if persist_presentation:
+        write_panel_outputs(result, output_dir)
+    if failure is not None and not return_failed_result:
         raise failure
     return result
