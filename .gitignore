@@ -216,3 +216,25 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Project data and generated artifacts
+/Adaptive_Intent_Prediction/datasets/
+/Adaptive_Intent_Prediction/inputs/
+/Adaptive_Intent_Prediction/outputs/
+
+# Local Python environments
+/Adaptive_Intent_Prediction/*_env/
+
+# Large model and dataset files
+/Adaptive_Intent_Prediction/*.pt
+/Adaptive_Intent_Prediction/*.pth
+/Adaptive_Intent_Prediction/*.onnx
+/Adaptive_Intent_Prediction/*.h5
+/Adaptive_Intent_Prediction/*.pkl
+/Adaptive_Intent_Prediction/*.pickle
+/Adaptive_Intent_Prediction/*.npy
+/Adaptive_Intent_Prediction/*.npz
+/Adaptive_Intent_Prediction/*.parquet
+
+# Generated archives
+/Adaptive_Intent_Prediction/**/*.zip
