@@ -1,0 +1,1124 @@
+{
+  "scenario_rows": [
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "E_IN_0_LEFT",
+          "N_IN_0_LEFT",
+          "S_IN_0_LEFT",
+          "W_IN_0_RIGHT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "baseline_status": "COMPLETE",
+      "baseline_hard_validity_eligible": true,
+      "baseline_safety_failure_type": null,
+      "mappo_travel_time": 605.7066666666667,
+      "baseline_travel_time": 196.28,
+      "difference_mappo_minus_baseline": 409.42666666666673,
+      "mappo_mean_completion": 1.3333333333333333,
+      "baseline_completion": 4,
+      "mappo_collisions": 0,
+      "baseline_collisions": 0,
+      "mappo_blocked_zone_violations": 0,
+      "baseline_blocked_zone_violations": 0,
+      "mappo_native_sumo_safety_interventions": 0,
+      "baseline_native_sumo_safety_interventions": 0,
+      "baseline_unresolved_coordination_case": true
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "E_IN_0_LEFT",
+          "N_IN_0_LEFT",
+          "S_IN_0_RIGHT",
+          "W_IN_0_RIGHT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "baseline_status": "COMPLETE",
+      "baseline_hard_validity_eligible": true,
+      "baseline_safety_failure_type": null,
+      "mappo_travel_time": 699.2666666666667,
+      "baseline_travel_time": 186.51999999999998,
+      "difference_mappo_minus_baseline": 512.7466666666667,
+      "mappo_mean_completion": 0.6666666666666666,
+      "baseline_completion": 4,
+      "mappo_collisions": 0,
+      "baseline_collisions": 0,
+      "mappo_blocked_zone_violations": 0,
+      "baseline_blocked_zone_violations": 0,
+      "mappo_native_sumo_safety_interventions": 0,
+      "baseline_native_sumo_safety_interventions": 0,
+      "baseline_unresolved_coordination_case": true
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "E_IN_0_LEFT",
+          "N_IN_0_LEFT",
+          "S_IN_0_RIGHT",
+          "W_IN_0_STRAIGHT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "baseline_status": "COMPLETE",
+      "baseline_hard_validity_eligible": true,
+      "baseline_safety_failure_type": null,
+      "mappo_travel_time": 800.0,
+      "baseline_travel_time": 191.51999999999998,
+      "difference_mappo_minus_baseline": 608.48,
+      "mappo_mean_completion": 0,
+      "baseline_completion": 4,
+      "mappo_collisions": 0,
+      "baseline_collisions": 0,
+      "mappo_blocked_zone_violations": 0,
+      "baseline_blocked_zone_violations": 0,
+      "mappo_native_sumo_safety_interventions": 0,
+      "baseline_native_sumo_safety_interventions": 0,
+      "baseline_unresolved_coordination_case": true
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "E_IN_0_LEFT",
+          "N_IN_0_LEFT",
+          "S_IN_0_STRAIGHT",
+          "W_IN_0_LEFT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "baseline_status": "COMPLETE",
+      "baseline_hard_validity_eligible": true,
+      "baseline_safety_failure_type": null,
+      "mappo_travel_time": 453.66666666666663,
+      "baseline_travel_time": 212.8,
+      "difference_mappo_minus_baseline": 240.86666666666662,
+      "mappo_mean_completion": 2.3333333333333335,
+      "baseline_completion": 4,
+      "mappo_collisions": 0,
+      "baseline_collisions": 0,
+      "mappo_blocked_zone_violations": 0,
+      "baseline_blocked_zone_violations": 0,
+      "mappo_native_sumo_safety_interventions": 0,
+      "baseline_native_sumo_safety_interventions": 0,
+      "baseline_unresolved_coordination_case": true
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "E_IN_0_LEFT",
+          "N_IN_0_LEFT",
+          "S_IN_0_STRAIGHT",
+          "W_IN_0_STRAIGHT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "baseline_status": "COMPLETE",
+      "baseline_hard_validity_eligible": true,
+      "baseline_safety_failure_type": null,
+      "mappo_travel_time": 602.6533333333333,
+      "baseline_travel_time": 209.48,
+      "difference_mappo_minus_baseline": 393.1733333333333,
+      "mappo_mean_completion": 1.3333333333333333,
+      "baseline_completion": 4,
+      "mappo_collisions": 0,
+      "baseline_collisions": 0,
+      "mappo_blocked_zone_violations": 0,
+      "baseline_blocked_zone_violations": 0,
+      "mappo_native_sumo_safety_interventions": 0,
+      "baseline_native_sumo_safety_interventions": 0,
+      "baseline_unresolved_coordination_case": true
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "E_IN_0_LEFT",
+          "N_IN_0_RIGHT",
+          "S_IN_0_LEFT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "baseline_status": "COMPLETE",
+      "baseline_hard_validity_eligible": true,
+      "baseline_safety_failure_type": null,
+      "mappo_travel_time": 242.88,
+      "baseline_travel_time": 141.16,
+      "difference_mappo_minus_baseline": 101.72,
+      "mappo_mean_completion": 2.3333333333333335,
+      "baseline_completion": 3,
+      "mappo_collisions": 0,
+      "baseline_collisions": 0,
+      "mappo_blocked_zone_violations": 0,
+      "baseline_blocked_zone_violations": 0,
+      "mappo_native_sumo_safety_interventions": 0,
+      "baseline_native_sumo_safety_interventions": 0,
+      "baseline_unresolved_coordination_case": true
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "E_IN_0_LEFT",
+          "N_IN_0_RIGHT",
+          "S_IN_0_LEFT",
+          "W_IN_0_LEFT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "baseline_status": "COMPLETE",
+      "baseline_hard_validity_eligible": true,
+      "baseline_safety_failure_type": null,
+      "mappo_travel_time": 498.8933333333333,
+      "baseline_travel_time": 201.4,
+      "difference_mappo_minus_baseline": 297.49333333333334,
+      "mappo_mean_completion": 2,
+      "baseline_completion": 4,
+      "mappo_collisions": 0,
+      "baseline_collisions": 0,
+      "mappo_blocked_zone_violations": 0,
+      "baseline_blocked_zone_violations": 0,
+      "mappo_native_sumo_safety_interventions": 0,
+      "baseline_native_sumo_safety_interventions": 0,
+      "baseline_unresolved_coordination_case": true
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "E_IN_0_LEFT",
+          "N_IN_0_RIGHT",
+          "S_IN_0_LEFT",
+          "W_IN_0_STRAIGHT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "baseline_status": "COMPLETE",
+      "baseline_hard_validity_eligible": true,
+      "baseline_safety_failure_type": null,
+      "mappo_travel_time": 707.4933333333333,
+      "baseline_travel_time": 200.64,
+      "difference_mappo_minus_baseline": 506.85333333333335,
+      "mappo_mean_completion": 0.6666666666666666,
+      "baseline_completion": 4,
+      "mappo_collisions": 0,
+      "baseline_collisions": 0,
+      "mappo_blocked_zone_violations": 0,
+      "baseline_blocked_zone_violations": 0,
+      "mappo_native_sumo_safety_interventions": 0,
+      "baseline_native_sumo_safety_interventions": 0,
+      "baseline_unresolved_coordination_case": true
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "E_IN_0_LEFT",
+          "N_IN_0_RIGHT",
+          "S_IN_0_RIGHT",
+          "W_IN_0_RIGHT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "baseline_status": "COMPLETE",
+      "baseline_hard_validity_eligible": true,
+      "baseline_safety_failure_type": null,
+      "mappo_travel_time": 388.74666666666667,
+      "baseline_travel_time": 182.24,
+      "difference_mappo_minus_baseline": 206.50666666666666,
+      "mappo_mean_completion": 2.6666666666666665,
+      "baseline_completion": 4,
+      "mappo_collisions": 0,
+      "baseline_collisions": 0,
+      "mappo_blocked_zone_violations": 0,
+      "baseline_blocked_zone_violations": 0,
+      "mappo_native_sumo_safety_interventions": 0,
+      "baseline_native_sumo_safety_interventions": 0,
+      "baseline_unresolved_coordination_case": true
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "E_IN_0_LEFT",
+          "N_IN_0_RIGHT",
+          "S_IN_0_STRAIGHT",
+          "W_IN_0_STRAIGHT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "baseline_status": "COMPLETE",
+      "baseline_hard_validity_eligible": true,
+      "baseline_safety_failure_type": null,
+      "mappo_travel_time": 498.1333333333333,
+      "baseline_travel_time": 199.16,
+      "difference_mappo_minus_baseline": 298.97333333333336,
+      "mappo_mean_completion": 2,
+      "baseline_completion": 4,
+      "mappo_collisions": 0,
+      "baseline_collisions": 0,
+      "mappo_blocked_zone_violations": 0,
+      "baseline_blocked_zone_violations": 0,
+      "mappo_native_sumo_safety_interventions": 0,
+      "baseline_native_sumo_safety_interventions": 0,
+      "baseline_unresolved_coordination_case": true
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "E_IN_0_LEFT",
+          "N_IN_0_RIGHT",
+          "W_IN_0_RIGHT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "baseline_status": "COMPLETE",
+      "baseline_hard_validity_eligible": true,
+      "baseline_safety_failure_type": null,
+      "mappo_travel_time": 241.41333333333333,
+      "baseline_travel_time": 138.12,
+      "difference_mappo_minus_baseline": 103.29333333333332,
+      "mappo_mean_completion": 2.3333333333333335,
+      "baseline_completion": 3,
+      "mappo_collisions": 0,
+      "baseline_collisions": 0,
+      "mappo_blocked_zone_violations": 0,
+      "baseline_blocked_zone_violations": 0,
+      "mappo_native_sumo_safety_interventions": 0,
+      "baseline_native_sumo_safety_interventions": 0,
+      "baseline_unresolved_coordination_case": true
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "E_IN_0_LEFT",
+          "N_IN_0_STRAIGHT",
+          "S_IN_0_RIGHT",
+          "W_IN_0_LEFT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "baseline_status": "COMPLETE",
+      "baseline_hard_validity_eligible": true,
+      "baseline_safety_failure_type": null,
+      "mappo_travel_time": 491.93333333333334,
+      "baseline_travel_time": 186.6,
+      "difference_mappo_minus_baseline": 305.33333333333337,
+      "mappo_mean_completion": 2,
+      "baseline_completion": 4,
+      "mappo_collisions": 0,
+      "baseline_collisions": 0,
+      "mappo_blocked_zone_violations": 0,
+      "baseline_blocked_zone_violations": 0,
+      "mappo_native_sumo_safety_interventions": 0,
+      "baseline_native_sumo_safety_interventions": 0,
+      "baseline_unresolved_coordination_case": true
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "E_IN_0_LEFT",
+          "N_IN_0_STRAIGHT",
+          "W_IN_0_RIGHT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "baseline_status": "COMPLETE",
+      "baseline_hard_validity_eligible": true,
+      "baseline_safety_failure_type": null,
+      "mappo_travel_time": 600.0,
+      "baseline_travel_time": 141.07999999999998,
+      "difference_mappo_minus_baseline": 458.92,
+      "mappo_mean_completion": 0,
+      "baseline_completion": 3,
+      "mappo_collisions": 0,
+      "baseline_collisions": 0,
+      "mappo_blocked_zone_violations": 0,
+      "baseline_blocked_zone_violations": 0,
+      "mappo_native_sumo_safety_interventions": 0,
+      "baseline_native_sumo_safety_interventions": 0,
+      "baseline_unresolved_coordination_case": true
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "E_IN_0_LEFT",
+          "S_IN_0_LEFT",
+          "W_IN_0_STRAIGHT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "baseline_status": "COMPLETE",
+      "baseline_hard_validity_eligible": true,
+      "baseline_safety_failure_type": null,
+      "mappo_travel_time": 304.0,
+      "baseline_travel_time": 148.76,
+      "difference_mappo_minus_baseline": 155.24,
+      "mappo_mean_completion": 2,
+      "baseline_completion": 3,
+      "mappo_collisions": 0,
+      "baseline_collisions": 0,
+      "mappo_blocked_zone_violations": 0,
+      "baseline_blocked_zone_violations": 0,
+      "mappo_native_sumo_safety_interventions": 0,
+      "baseline_native_sumo_safety_interventions": 0,
+      "baseline_unresolved_coordination_case": true
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "E_IN_0_LEFT",
+          "S_IN_0_RIGHT",
+          "W_IN_0_LEFT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "baseline_status": "HARD_SAFETY_FAILURE",
+      "baseline_hard_validity_eligible": false,
+      "baseline_safety_failure_type": "BLOCKED_VEHICLE_ENTERED_CONFLICT_ZONE",
+      "mappo_travel_time": 241.98666666666665,
+      "baseline_travel_time": null,
+      "difference_mappo_minus_baseline": null,
+      "mappo_mean_completion": 2.3333333333333335,
+      "baseline_completion": null,
+      "mappo_collisions": 0,
+      "baseline_collisions": null,
+      "mappo_blocked_zone_violations": 0,
+      "baseline_blocked_zone_violations": null,
+      "mappo_native_sumo_safety_interventions": 0,
+      "baseline_native_sumo_safety_interventions": null,
+      "baseline_unresolved_coordination_case": false
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "E_IN_0_LEFT",
+          "W_IN_0_RIGHT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "baseline_status": "COMPLETE",
+      "baseline_hard_validity_eligible": true,
+      "baseline_safety_failure_type": null,
+      "mappo_travel_time": 299.24,
+      "baseline_travel_time": 97.72,
+      "difference_mappo_minus_baseline": 201.52,
+      "mappo_mean_completion": 0.6666666666666666,
+      "baseline_completion": 2,
+      "mappo_collisions": 0,
+      "baseline_collisions": 0,
+      "mappo_blocked_zone_violations": 0,
+      "baseline_blocked_zone_violations": 0,
+      "mappo_native_sumo_safety_interventions": 0,
+      "baseline_native_sumo_safety_interventions": 0,
+      "baseline_unresolved_coordination_case": false
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "E_IN_0_RIGHT",
+          "N_IN_0_LEFT",
+          "S_IN_0_RIGHT",
+          "W_IN_0_STRAIGHT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "baseline_status": "COMPLETE",
+      "baseline_hard_validity_eligible": true,
+      "baseline_safety_failure_type": null,
+      "mappo_travel_time": 491.1466666666667,
+      "baseline_travel_time": 184.56,
+      "difference_mappo_minus_baseline": 306.5866666666667,
+      "mappo_mean_completion": 2,
+      "baseline_completion": 4,
+      "mappo_collisions": 0,
+      "baseline_collisions": 0,
+      "mappo_blocked_zone_violations": 0,
+      "baseline_blocked_zone_violations": 0,
+      "mappo_native_sumo_safety_interventions": 0,
+      "baseline_native_sumo_safety_interventions": 0,
+      "baseline_unresolved_coordination_case": true
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "E_IN_0_RIGHT",
+          "N_IN_0_RIGHT",
+          "S_IN_0_LEFT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "baseline_status": "COMPLETE",
+      "baseline_hard_validity_eligible": true,
+      "baseline_safety_failure_type": null,
+      "mappo_travel_time": 140.72,
+      "baseline_travel_time": 140.72,
+      "difference_mappo_minus_baseline": 0.0,
+      "mappo_mean_completion": 3,
+      "baseline_completion": 3,
+      "mappo_collisions": 0,
+      "baseline_collisions": 0,
+      "mappo_blocked_zone_violations": 0,
+      "baseline_blocked_zone_violations": 0,
+      "mappo_native_sumo_safety_interventions": 0,
+      "baseline_native_sumo_safety_interventions": 0,
+      "baseline_unresolved_coordination_case": true
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "E_IN_0_RIGHT",
+          "N_IN_0_RIGHT",
+          "S_IN_0_LEFT",
+          "W_IN_0_LEFT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "baseline_status": "COMPLETE",
+      "baseline_hard_validity_eligible": true,
+      "baseline_safety_failure_type": null,
+      "mappo_travel_time": 394.96,
+      "baseline_travel_time": 192.44,
+      "difference_mappo_minus_baseline": 202.51999999999998,
+      "mappo_mean_completion": 2.6666666666666665,
+      "baseline_completion": 4,
+      "mappo_collisions": 0,
+      "baseline_collisions": 0,
+      "mappo_blocked_zone_violations": 0,
+      "baseline_blocked_zone_violations": 0,
+      "mappo_native_sumo_safety_interventions": 0,
+      "baseline_native_sumo_safety_interventions": 0,
+      "baseline_unresolved_coordination_case": true
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "E_IN_0_RIGHT",
+          "N_IN_0_RIGHT",
+          "S_IN_0_RIGHT",
+          "W_IN_0_LEFT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "baseline_status": "COMPLETE",
+      "baseline_hard_validity_eligible": true,
+      "baseline_safety_failure_type": null,
+      "mappo_travel_time": 388.8,
+      "baseline_travel_time": 182.4,
+      "difference_mappo_minus_baseline": 206.4,
+      "mappo_mean_completion": 2.6666666666666665,
+      "baseline_completion": 4,
+      "mappo_collisions": 0,
+      "baseline_collisions": 0,
+      "mappo_blocked_zone_violations": 0,
+      "baseline_blocked_zone_violations": 0,
+      "mappo_native_sumo_safety_interventions": 0,
+      "baseline_native_sumo_safety_interventions": 0,
+      "baseline_unresolved_coordination_case": true
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "E_IN_0_RIGHT",
+          "N_IN_0_STRAIGHT",
+          "S_IN_0_RIGHT",
+          "W_IN_0_LEFT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "baseline_status": "COMPLETE",
+      "baseline_hard_validity_eligible": true,
+      "baseline_safety_failure_type": null,
+      "mappo_travel_time": 338.88,
+      "baseline_travel_time": 185.4,
+      "difference_mappo_minus_baseline": 153.48,
+      "mappo_mean_completion": 3,
+      "baseline_completion": 4,
+      "mappo_collisions": 0,
+      "baseline_collisions": 0,
+      "mappo_blocked_zone_violations": 0,
+      "baseline_blocked_zone_violations": 0,
+      "mappo_native_sumo_safety_interventions": 0,
+      "baseline_native_sumo_safety_interventions": 0,
+      "baseline_unresolved_coordination_case": true
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "E_IN_0_RIGHT",
+          "N_IN_0_STRAIGHT",
+          "S_IN_0_STRAIGHT",
+          "W_IN_0_LEFT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "baseline_status": "COMPLETE",
+      "baseline_hard_validity_eligible": true,
+      "baseline_safety_failure_type": null,
+      "mappo_travel_time": 595.7866666666666,
+      "baseline_travel_time": 191.84,
+      "difference_mappo_minus_baseline": 403.9466666666666,
+      "mappo_mean_completion": 1.3333333333333333,
+      "baseline_completion": 4,
+      "mappo_collisions": 0,
+      "baseline_collisions": 0,
+      "mappo_blocked_zone_violations": 0,
+      "baseline_blocked_zone_violations": 0,
+      "mappo_native_sumo_safety_interventions": 0,
+      "baseline_native_sumo_safety_interventions": 0,
+      "baseline_unresolved_coordination_case": true
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "E_IN_0_RIGHT",
+          "N_IN_0_STRAIGHT",
+          "W_IN_0_LEFT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "baseline_status": "COMPLETE",
+      "baseline_hard_validity_eligible": true,
+      "baseline_safety_failure_type": null,
+      "mappo_travel_time": 293.8666666666667,
+      "baseline_travel_time": 140.8,
+      "difference_mappo_minus_baseline": 153.06666666666666,
+      "mappo_mean_completion": 2,
+      "baseline_completion": 3,
+      "mappo_collisions": 0,
+      "baseline_collisions": 0,
+      "mappo_blocked_zone_violations": 0,
+      "baseline_blocked_zone_violations": 0,
+      "mappo_native_sumo_safety_interventions": 0,
+      "baseline_native_sumo_safety_interventions": 0,
+      "baseline_unresolved_coordination_case": true
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "E_IN_0_RIGHT",
+          "S_IN_0_LEFT",
+          "W_IN_0_LEFT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "baseline_status": "COMPLETE",
+      "baseline_hard_validity_eligible": true,
+      "baseline_safety_failure_type": null,
+      "mappo_travel_time": 243.86666666666665,
+      "baseline_travel_time": 142.0,
+      "difference_mappo_minus_baseline": 101.86666666666665,
+      "mappo_mean_completion": 2.3333333333333335,
+      "baseline_completion": 3,
+      "mappo_collisions": 0,
+      "baseline_collisions": 0,
+      "mappo_blocked_zone_violations": 0,
+      "baseline_blocked_zone_violations": 0,
+      "mappo_native_sumo_safety_interventions": 0,
+      "baseline_native_sumo_safety_interventions": 0,
+      "baseline_unresolved_coordination_case": true
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "E_IN_0_STRAIGHT",
+          "N_IN_0_LEFT",
+          "S_IN_0_LEFT",
+          "W_IN_0_RIGHT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "baseline_status": "COMPLETE",
+      "baseline_hard_validity_eligible": true,
+      "baseline_safety_failure_type": null,
+      "mappo_travel_time": 342.8933333333333,
+      "baseline_travel_time": 193.24,
+      "difference_mappo_minus_baseline": 149.6533333333333,
+      "mappo_mean_completion": 3,
+      "baseline_completion": 4,
+      "mappo_collisions": 0,
+      "baseline_collisions": 0,
+      "mappo_blocked_zone_violations": 0,
+      "baseline_blocked_zone_violations": 0,
+      "mappo_native_sumo_safety_interventions": 0,
+      "baseline_native_sumo_safety_interventions": 0,
+      "baseline_unresolved_coordination_case": true
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "E_IN_0_STRAIGHT",
+          "N_IN_0_LEFT",
+          "S_IN_0_LEFT",
+          "W_IN_0_STRAIGHT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "baseline_status": "COMPLETE",
+      "baseline_hard_validity_eligible": true,
+      "baseline_safety_failure_type": null,
+      "mappo_travel_time": 603.5066666666667,
+      "baseline_travel_time": 210.8,
+      "difference_mappo_minus_baseline": 392.70666666666665,
+      "mappo_mean_completion": 1.3333333333333333,
+      "baseline_completion": 4,
+      "mappo_collisions": 0,
+      "baseline_collisions": 0,
+      "mappo_blocked_zone_violations": 0,
+      "baseline_blocked_zone_violations": 0,
+      "mappo_native_sumo_safety_interventions": 0,
+      "baseline_native_sumo_safety_interventions": 0,
+      "baseline_unresolved_coordination_case": true
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "E_IN_0_STRAIGHT",
+          "N_IN_0_LEFT",
+          "S_IN_0_STRAIGHT",
+          "W_IN_0_STRAIGHT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "baseline_status": "COMPLETE",
+      "baseline_hard_validity_eligible": true,
+      "baseline_safety_failure_type": null,
+      "mappo_travel_time": 407.88,
+      "baseline_travel_time": 211.92000000000002,
+      "difference_mappo_minus_baseline": 195.95999999999998,
+      "mappo_mean_completion": 2.6666666666666665,
+      "baseline_completion": 4,
+      "mappo_collisions": 0,
+      "baseline_collisions": 0,
+      "mappo_blocked_zone_violations": 0,
+      "baseline_blocked_zone_violations": 0,
+      "mappo_native_sumo_safety_interventions": 0,
+      "baseline_native_sumo_safety_interventions": 0,
+      "baseline_unresolved_coordination_case": true
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "E_IN_0_STRAIGHT",
+          "N_IN_0_LEFT",
+          "W_IN_0_LEFT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "baseline_status": "COMPLETE",
+      "baseline_hard_validity_eligible": true,
+      "baseline_safety_failure_type": null,
+      "mappo_travel_time": 300.41333333333336,
+      "baseline_travel_time": 148.44,
+      "difference_mappo_minus_baseline": 151.97333333333336,
+      "mappo_mean_completion": 2,
+      "baseline_completion": 3,
+      "mappo_collisions": 0,
+      "baseline_collisions": 0,
+      "mappo_blocked_zone_violations": 0,
+      "baseline_blocked_zone_violations": 0,
+      "mappo_native_sumo_safety_interventions": 0,
+      "baseline_native_sumo_safety_interventions": 0,
+      "baseline_unresolved_coordination_case": true
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "E_IN_0_STRAIGHT",
+          "N_IN_0_RIGHT",
+          "S_IN_0_LEFT",
+          "W_IN_0_STRAIGHT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "baseline_status": "COMPLETE",
+      "baseline_hard_validity_eligible": true,
+      "baseline_safety_failure_type": null,
+      "mappo_travel_time": 751.6133333333333,
+      "baseline_travel_time": 201.2,
+      "difference_mappo_minus_baseline": 550.4133333333334,
+      "mappo_mean_completion": 0.3333333333333333,
+      "baseline_completion": 4,
+      "mappo_collisions": 0,
+      "baseline_collisions": 0,
+      "mappo_blocked_zone_violations": 0,
+      "baseline_blocked_zone_violations": 0,
+      "mappo_native_sumo_safety_interventions": 0,
+      "baseline_native_sumo_safety_interventions": 0,
+      "baseline_unresolved_coordination_case": true
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "E_IN_0_STRAIGHT",
+          "N_IN_0_STRAIGHT",
+          "S_IN_0_STRAIGHT",
+          "W_IN_0_STRAIGHT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "baseline_status": "COMPLETE",
+      "baseline_hard_validity_eligible": true,
+      "baseline_safety_failure_type": null,
+      "mappo_travel_time": 601.9866666666667,
+      "baseline_travel_time": 202.64,
+      "difference_mappo_minus_baseline": 399.3466666666667,
+      "mappo_mean_completion": 1.3333333333333333,
+      "baseline_completion": 4,
+      "mappo_collisions": 0,
+      "baseline_collisions": 0,
+      "mappo_blocked_zone_violations": 0,
+      "baseline_blocked_zone_violations": 0,
+      "mappo_native_sumo_safety_interventions": 0,
+      "baseline_native_sumo_safety_interventions": 0,
+      "baseline_unresolved_coordination_case": true
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "E_IN_0_STRAIGHT",
+          "N_IN_0_STRAIGHT",
+          "W_IN_0_LEFT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "baseline_status": "COMPLETE",
+      "baseline_hard_validity_eligible": true,
+      "baseline_safety_failure_type": null,
+      "mappo_travel_time": 451.68,
+      "baseline_travel_time": 146.68,
+      "difference_mappo_minus_baseline": 305.0,
+      "mappo_mean_completion": 1,
+      "baseline_completion": 3,
+      "mappo_collisions": 0,
+      "baseline_collisions": 0,
+      "mappo_blocked_zone_violations": 0,
+      "baseline_blocked_zone_violations": 0,
+      "mappo_native_sumo_safety_interventions": 0,
+      "baseline_native_sumo_safety_interventions": 0,
+      "baseline_unresolved_coordination_case": true
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "N_IN_0_LEFT",
+          "S_IN_0_LEFT",
+          "W_IN_0_LEFT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "baseline_status": "COMPLETE",
+      "baseline_hard_validity_eligible": true,
+      "baseline_safety_failure_type": null,
+      "mappo_travel_time": 300.88,
+      "baseline_travel_time": 152.12,
+      "difference_mappo_minus_baseline": 148.76,
+      "mappo_mean_completion": 2,
+      "baseline_completion": 3,
+      "mappo_collisions": 0,
+      "baseline_collisions": 0,
+      "mappo_blocked_zone_violations": 0,
+      "baseline_blocked_zone_violations": 0,
+      "mappo_native_sumo_safety_interventions": 0,
+      "baseline_native_sumo_safety_interventions": 0,
+      "baseline_unresolved_coordination_case": false
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "N_IN_0_LEFT",
+          "S_IN_0_RIGHT",
+          "W_IN_0_RIGHT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "baseline_status": "COMPLETE",
+      "baseline_hard_validity_eligible": true,
+      "baseline_safety_failure_type": null,
+      "mappo_travel_time": 140.88,
+      "baseline_travel_time": 140.88,
+      "difference_mappo_minus_baseline": 0.0,
+      "mappo_mean_completion": 3,
+      "baseline_completion": 3,
+      "mappo_collisions": 0,
+      "baseline_collisions": 0,
+      "mappo_blocked_zone_violations": 0,
+      "baseline_blocked_zone_violations": 0,
+      "mappo_native_sumo_safety_interventions": 0,
+      "baseline_native_sumo_safety_interventions": 0,
+      "baseline_unresolved_coordination_case": true
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "N_IN_0_LEFT",
+          "S_IN_0_RIGHT",
+          "W_IN_0_STRAIGHT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "baseline_status": "COMPLETE",
+      "baseline_hard_validity_eligible": true,
+      "baseline_safety_failure_type": null,
+      "mappo_travel_time": 300.0,
+      "baseline_travel_time": 152.48,
+      "difference_mappo_minus_baseline": 147.52,
+      "mappo_mean_completion": 2,
+      "baseline_completion": 3,
+      "mappo_collisions": 0,
+      "baseline_collisions": 0,
+      "mappo_blocked_zone_violations": 0,
+      "baseline_blocked_zone_violations": 0,
+      "mappo_native_sumo_safety_interventions": 0,
+      "baseline_native_sumo_safety_interventions": 0,
+      "baseline_unresolved_coordination_case": false
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "N_IN_0_RIGHT",
+          "S_IN_0_LEFT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "baseline_status": "COMPLETE",
+      "baseline_hard_validity_eligible": true,
+      "baseline_safety_failure_type": null,
+      "mappo_travel_time": 194.84,
+      "baseline_travel_time": 400.0,
+      "difference_mappo_minus_baseline": -205.16,
+      "mappo_mean_completion": 1.3333333333333333,
+      "baseline_completion": 0,
+      "mappo_collisions": 0,
+      "baseline_collisions": 0,
+      "mappo_blocked_zone_violations": 0,
+      "baseline_blocked_zone_violations": 0,
+      "mappo_native_sumo_safety_interventions": 0,
+      "baseline_native_sumo_safety_interventions": 0,
+      "baseline_unresolved_coordination_case": false
+    },
+    {
+      "scenario_id": [
+        "NEGOTIATION_SCENARIO_V1",
+        "intersection.net.xml:9316",
+        "REGULATORY_CYCLE",
+        [
+          "N_IN_0_RIGHT",
+          "S_IN_0_LEFT",
+          "W_IN_0_LEFT"
+        ],
+        "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+        "AV",
+        "DE_STVO_UNCONTROLLED_4WAY_V1"
+      ],
+      "baseline_status": "COMPLETE",
+      "baseline_hard_validity_eligible": true,
+      "baseline_safety_failure_type": null,
+      "mappo_travel_time": 398.5466666666667,
+      "baseline_travel_time": 142.0,
+      "difference_mappo_minus_baseline": 256.5466666666667,
+      "mappo_mean_completion": 1.3333333333333333,
+      "baseline_completion": 3,
+      "mappo_collisions": 0,
+      "baseline_collisions": 0,
+      "mappo_blocked_zone_violations": 0,
+      "baseline_blocked_zone_violations": 0,
+      "mappo_native_sumo_safety_interventions": 0,
+      "baseline_native_sumo_safety_interventions": 0,
+      "baseline_unresolved_coordination_case": true
+    }
+  ],
+  "baseline_safety_eligible": false,
+  "baseline_hard_safety_failure_count": 1,
+  "baseline_hard_safety_failure_scenario_ids": [
+    [
+      "NEGOTIATION_SCENARIO_V1",
+      "intersection.net.xml:9316",
+      "REGULATORY_CYCLE",
+      [
+        "E_IN_0_LEFT",
+        "S_IN_0_RIGHT",
+        "W_IN_0_LEFT"
+      ],
+      "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+      "AV",
+      "DE_STVO_UNCONTROLLED_4WAY_V1"
+    ]
+  ],
+  "efficiency_comparison_scope": "DESCRIPTIVE_MATCHED_COMPLETED_SCENARIO_SUBSET_ONLY",
+  "matched_completed_scenario_count": 35,
+  "matched_completed_subset_mean_difference": 252.03238095238095,
+  "overall_mean_difference": null,
+  "truthful_conclusion": "The deterministic no-negotiation baseline failed the predefined hard safety-validity gate in 1 held-out scenario(s). Therefore a full safety-valid overall efficiency comparison is not available. The selected MAPPO configuration remained eligible under the recorded held-out hard safety gates."
+}

@@ -1,0 +1,70 @@
+{
+  "classification": "QUALITATIVE_ADDITIONAL_NO_NEGOTIATION_COMPARISON",
+  "same_demand": true,
+  "safety_enabled_both": true,
+  "unsafe_uncoordinated_mode_deployed": false,
+  "modes": [
+    {
+      "scenario": "final_coordination_failure",
+      "label": "5. Coordination Failure Stress Test (6\u20137 Vehicles)",
+      "mode": "PROPOSED_MAPPO_RULES_SAFETY",
+      "status": "COMPLETED",
+      "scheduled": 6,
+      "spawned": 6,
+      "completed": 6,
+      "mappo_calls": 1,
+      "collisions": 0,
+      "blocked_zone_violations": 0,
+      "unauthorized_entries": 0,
+      "mean_wait_seconds": 5.033333333333334,
+      "max_wait_seconds": 12.16,
+      "approach_wait_gap_seconds": 11.24,
+      "throughput": 5.593536357986327,
+      "completion_time_seconds": 64.36,
+      "wall_seconds": 33.27134589990601,
+      "deadlock_observed": false,
+      "safe_hold_activations": 13,
+      "mappo_outcomes_accepted": 0,
+      "safety_fallback_epochs": 1,
+      "rule_resolved_outcomes": 3,
+      "participant_events": [
+        {
+          "time": 23.24,
+          "ids": [
+            "PANEL_AV_E_01",
+            "PANEL_AV_N_01",
+            "PANEL_AV_W_01"
+          ],
+          "outcome": "MAPPO_WITH_SAFETY_FALLBACK"
+        }
+      ]
+    },
+    {
+      "scenario": "final_coordination_failure",
+      "label": "5. Coordination Failure Stress Test (6\u20137 Vehicles)",
+      "mode": "EXISTING_RULES_ONLY_PROVIDER_ADDITIONAL_QUALITATIVE_COMPARISON",
+      "status": "INCOMPLETE",
+      "scheduled": 6,
+      "spawned": 6,
+      "completed": 1,
+      "mappo_calls": 0,
+      "collisions": 0,
+      "blocked_zone_violations": 0,
+      "unauthorized_entries": 0,
+      "mean_wait_seconds": 162.95333333333332,
+      "max_wait_seconds": 197.8,
+      "approach_wait_gap_seconds": 197.8,
+      "throughput": 0.2727272727272727,
+      "completion_time_seconds": null,
+      "wall_seconds": 183.3527792999521,
+      "deadlock_observed": true,
+      "safe_hold_activations": 8,
+      "mappo_outcomes_accepted": 0,
+      "safety_fallback_epochs": 0,
+      "rule_resolved_outcomes": 1,
+      "participant_events": [],
+      "observed_duration_seconds": 220.0,
+      "safe_degradation_observed": true
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "scenario_id": [
+    "NEGOTIATION_SCENARIO_V1",
+    "intersection.net.xml:9316",
+    "REGULATORY_CYCLE",
+    [
+      "E_IN_0_LEFT",
+      "S_IN_0_RIGHT",
+      "W_IN_0_LEFT"
+    ],
+    "ISOLATED_LDM_IN_APPROACH_ZONE_STEP_ALIGNMENT",
+    "AV",
+    "DE_STVO_UNCONTROLLED_4WAY_V1"
+  ],
+  "status": "HARD_SAFETY_FAILURE",
+  "hard_validity_eligible": false,
+  "safety_failure_type": "BLOCKED_VEHICLE_ENTERED_CONFLICT_ZONE",
+  "safety_failure_provenance": {
+    "exception_type": "PhysicalReplayError",
+    "failure_message": "BLOCKED_VEHICLE_ENTERED_CONFLICT_ZONE",
+    "raw_evidence": [
+      "SCENARIO_AV_2",
+      "CZ_005",
+      23.32
+    ],
+    "vehicle_id": "SCENARIO_AV_2",
+    "conflict_zone_id": "CZ_005",
+    "simulation_time": 23.32
+  },
+  "total_team_travel_time_seconds": null
+}

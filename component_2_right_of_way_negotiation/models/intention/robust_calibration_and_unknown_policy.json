@@ -1,0 +1,64 @@
+{
+  "policy_name": "robust_two_stage_gru_unknown_policy",
+  "policy_version": 2,
+  "replaces_policy": "cell22_youden_j_policy",
+  "models_retrained": false,
+  "architecture_search_performed": false,
+  "selection_data": {
+    "validation_recordings": [
+      15,
+      16
+    ],
+    "test_recordings": [
+      17
+    ],
+    "test_used_for_calibration_decision": false,
+    "test_used_for_threshold_selection": false
+  },
+  "calibration_stability_gate": {
+    "combined_validation_nll_must_not_worsen": true,
+    "combined_validation_brier_must_not_worsen": true,
+    "each_validation_recording_nll_must_not_worsen": true,
+    "fallback": "raw_softmax_probabilities_temperature_1.0"
+  },
+  "threshold_selection": {
+    "method": "maximum_equal_weight_harmonic_operational_score",
+    "score_components": [
+      "accepted_accuracy",
+      "overall_coverage",
+      "minimum_true_class_coverage",
+      "minimum_validation_recording_coverage"
+    ],
+    "eligibility_requirements": [
+      "every_manoeuvre_class_has_at_least_one_accepted_validation_example",
+      "every_validation_recording_has_at_least_one_accepted_example"
+    ],
+    "invented_minimum_coverage_target": false
+  },
+  "class_mapping": {
+    "0": "LEFT",
+    "1": "RIGHT",
+    "2": "STRAIGHT"
+  },
+  "unknown_class_index": -1,
+  "unknown_class_label": "UNKNOWN",
+  "primary_1.0s": {
+    "role": "early_primary_prediction",
+    "lead_time_seconds": 1.0,
+    "probability_state": "raw",
+    "temperature": 1.0,
+    "unknown_threshold": 0.4367631896451938
+  },
+  "secondary_0.5s": {
+    "role": "later_confirmation_prediction",
+    "lead_time_seconds": 0.5,
+    "probability_state": "raw",
+    "temperature": 1.0,
+    "unknown_threshold": 0.38727051114510663
+  },
+  "runtime_safety_guidance": {
+    "below_threshold": "return_UNKNOWN",
+    "unknown_behavior": "preserve_probability_vector; increase_LDM_uncertainty; use_conservative_negotiation",
+    "horizon_disagreement": "do_not_force_a_confident_label"
+  }
+}

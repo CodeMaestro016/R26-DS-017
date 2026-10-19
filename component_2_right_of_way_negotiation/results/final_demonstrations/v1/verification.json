@@ -1,0 +1,1016 @@
+{
+  "classification": "QUALITATIVE_PRESENTATION_ONLY_NOT_FROZEN_EVALUATION",
+  "rows": [
+    {
+      "scenario": "rule_resolved_two",
+      "label": "1. Rule-Based Right-of-Way (2 Vehicles)",
+      "mode": "PROPOSED_MAPPO_RULES_SAFETY",
+      "status": "COMPLETED",
+      "scheduled": 2,
+      "spawned": 2,
+      "completed": 2,
+      "mappo_calls": 0,
+      "collisions": 0,
+      "blocked_zone_violations": 0,
+      "unauthorized_entries": 0,
+      "mean_wait_seconds": 0.1999999999999993,
+      "max_wait_seconds": 0.3999999999999986,
+      "approach_wait_gap_seconds": null,
+      "throughput": 2.3696682464454977,
+      "completion_time_seconds": 50.64,
+      "wall_seconds": 11.268647299846634,
+      "deadlock_observed": false,
+      "safe_hold_activations": 3,
+      "mappo_outcomes_accepted": 0,
+      "safety_fallback_epochs": 0,
+      "rule_resolved_outcomes": 1,
+      "participant_events": []
+    },
+    {
+      "scenario": "final_four_agent_stress",
+      "label": "2. Four-Vehicle MAPPO Negotiation \u2014 Worst-Case Stress",
+      "mode": "PROPOSED_MAPPO_RULES_SAFETY",
+      "status": "COMPLETED",
+      "scheduled": 4,
+      "spawned": 4,
+      "completed": 4,
+      "mappo_calls": 3,
+      "collisions": 0,
+      "blocked_zone_violations": 0,
+      "unauthorized_entries": 0,
+      "mean_wait_seconds": 5.700000000000001,
+      "max_wait_seconds": 12.040000000000003,
+      "approach_wait_gap_seconds": 12.040000000000003,
+      "throughput": 4.013377926421405,
+      "completion_time_seconds": 59.8,
+      "wall_seconds": 39.0886901000049,
+      "deadlock_observed": false,
+      "safe_hold_activations": 13,
+      "mappo_outcomes_accepted": 0,
+      "safety_fallback_epochs": 3,
+      "rule_resolved_outcomes": 1,
+      "participant_events": [
+        {
+          "time": 15.76,
+          "ids": [
+            "PANEL_AV_N_01",
+            "PANEL_AV_S_01",
+            "PANEL_AV_W_01"
+          ],
+          "outcome": "MAPPO_WITH_SAFETY_FALLBACK"
+        },
+        {
+          "time": 16.84,
+          "ids": [
+            "PANEL_AV_E_01",
+            "PANEL_AV_N_01",
+            "PANEL_AV_S_01",
+            "PANEL_AV_W_01"
+          ],
+          "outcome": "MAPPO_WITH_SAFETY_FALLBACK"
+        },
+        {
+          "time": 25.32,
+          "ids": [
+            "PANEL_AV_N_01",
+            "PANEL_AV_S_01",
+            "PANEL_AV_W_01"
+          ],
+          "outcome": "MAPPO_WITH_SAFETY_FALLBACK"
+        }
+      ]
+    },
+    {
+      "scenario": "mixed_manoeuvres",
+      "label": "3. Mixed Manoeuvre Coordination (4 Vehicles)",
+      "mode": "PROPOSED_MAPPO_RULES_SAFETY",
+      "status": "COMPLETED",
+      "scheduled": 4,
+      "spawned": 4,
+      "completed": 4,
+      "mappo_calls": 0,
+      "collisions": 0,
+      "blocked_zone_violations": 0,
+      "unauthorized_entries": 0,
+      "mean_wait_seconds": 3.829999999999999,
+      "max_wait_seconds": 8.719999999999995,
+      "approach_wait_gap_seconds": 8.719999999999995,
+      "throughput": 4.07055630936228,
+      "completion_time_seconds": 58.96,
+      "wall_seconds": 24.69312999979593,
+      "deadlock_observed": false,
+      "safe_hold_activations": 9,
+      "mappo_outcomes_accepted": 0,
+      "safety_fallback_epochs": 0,
+      "rule_resolved_outcomes": 3,
+      "participant_events": []
+    },
+    {
+      "scenario": "congested_four_approach",
+      "label": "4. Congested Four-Way Traffic (16 Vehicles)",
+      "mode": "PROPOSED_MAPPO_RULES_SAFETY",
+      "status": "COMPLETED",
+      "scheduled": 16,
+      "spawned": 16,
+      "completed": 16,
+      "mappo_calls": 9,
+      "collisions": 0,
+      "blocked_zone_violations": 0,
+      "unauthorized_entries": 0,
+      "mean_wait_seconds": 15.557500000000001,
+      "max_wait_seconds": 35.96000000000001,
+      "approach_wait_gap_seconds": 9.76,
+      "throughput": 9.803921568627452,
+      "completion_time_seconds": 97.92,
+      "wall_seconds": 222.64654020010494,
+      "deadlock_observed": true,
+      "safe_hold_activations": 46,
+      "mappo_outcomes_accepted": 0,
+      "safety_fallback_epochs": 9,
+      "rule_resolved_outcomes": 3,
+      "participant_events": [
+        {
+          "time": 23.24,
+          "ids": [
+            "PANEL_AV_E_01",
+            "PANEL_AV_N_01",
+            "PANEL_AV_S_02",
+            "PANEL_AV_W_01"
+          ],
+          "outcome": "MAPPO_WITH_SAFETY_FALLBACK"
+        },
+        {
+          "time": 26.96,
+          "ids": [
+            "PANEL_AV_E_02",
+            "PANEL_AV_N_01",
+            "PANEL_AV_S_02",
+            "PANEL_AV_W_01"
+          ],
+          "outcome": "MAPPO_WITH_SAFETY_FALLBACK"
+        },
+        {
+          "time": 31.4,
+          "ids": [
+            "PANEL_AV_E_02",
+            "PANEL_AV_N_02",
+            "PANEL_AV_S_02",
+            "PANEL_AV_W_01"
+          ],
+          "outcome": "MAPPO_WITH_SAFETY_FALLBACK"
+        },
+        {
+          "time": 35.84,
+          "ids": [
+            "PANEL_AV_E_02",
+            "PANEL_AV_N_02",
+            "PANEL_AV_S_02",
+            "PANEL_AV_W_02"
+          ],
+          "outcome": "MAPPO_WITH_SAFETY_FALLBACK"
+        },
+        {
+          "time": 40.28,
+          "ids": [
+            "PANEL_AV_E_02",
+            "PANEL_AV_N_02",
+            "PANEL_AV_S_03",
+            "PANEL_AV_W_03"
+          ],
+          "outcome": "MAPPO_WITH_SAFETY_FALLBACK"
+        },
+        {
+          "time": 44.72,
+          "ids": [
+            "PANEL_AV_E_02",
+            "PANEL_AV_N_03",
+            "PANEL_AV_S_03",
+            "PANEL_AV_W_03"
+          ],
+          "outcome": "MAPPO_WITH_SAFETY_FALLBACK"
+        },
+        {
+          "time": 48.52,
+          "ids": [
+            "PANEL_AV_E_02",
+            "PANEL_AV_N_04",
+            "PANEL_AV_S_03",
+            "PANEL_AV_W_03"
+          ],
+          "outcome": "MAPPO_WITH_SAFETY_FALLBACK"
+        },
+        {
+          "time": 52.96,
+          "ids": [
+            "PANEL_AV_E_02",
+            "PANEL_AV_N_04",
+            "PANEL_AV_S_03",
+            "PANEL_AV_W_04"
+          ],
+          "outcome": "MAPPO_WITH_SAFETY_FALLBACK"
+        },
+        {
+          "time": 57.48,
+          "ids": [
+            "PANEL_AV_E_03",
+            "PANEL_AV_N_04",
+            "PANEL_AV_S_03",
+            "PANEL_AV_W_04"
+          ],
+          "outcome": "MAPPO_WITH_SAFETY_FALLBACK"
+        }
+      ]
+    },
+    {
+      "scenario": "final_coordination_failure",
+      "label": "5. Coordination Failure Stress Test (6\u20137 Vehicles)",
+      "mode": "PROPOSED_MAPPO_RULES_SAFETY",
+      "status": "COMPLETED",
+      "scheduled": 6,
+      "spawned": 6,
+      "completed": 6,
+      "mappo_calls": 1,
+      "collisions": 0,
+      "blocked_zone_violations": 0,
+      "unauthorized_entries": 0,
+      "mean_wait_seconds": 5.033333333333334,
+      "max_wait_seconds": 12.16,
+      "approach_wait_gap_seconds": 11.24,
+      "throughput": 5.593536357986327,
+      "completion_time_seconds": 64.36,
+      "wall_seconds": 33.27134589990601,
+      "deadlock_observed": false,
+      "safe_hold_activations": 13,
+      "mappo_outcomes_accepted": 0,
+      "safety_fallback_epochs": 1,
+      "rule_resolved_outcomes": 3,
+      "participant_events": [
+        {
+          "time": 23.24,
+          "ids": [
+            "PANEL_AV_E_01",
+            "PANEL_AV_N_01",
+            "PANEL_AV_W_01"
+          ],
+          "outcome": "MAPPO_WITH_SAFETY_FALLBACK"
+        }
+      ]
+    }
+  ],
+  "comparison": {
+    "scenario": "final_coordination_failure",
+    "label": "5. Coordination Failure Stress Test (6\u20137 Vehicles)",
+    "mode": "EXISTING_RULES_ONLY_PROVIDER_ADDITIONAL_QUALITATIVE_COMPARISON",
+    "status": "INCOMPLETE",
+    "scheduled": 6,
+    "spawned": 6,
+    "completed": 1,
+    "mappo_calls": 0,
+    "collisions": 0,
+    "blocked_zone_violations": 0,
+    "unauthorized_entries": 0,
+    "mean_wait_seconds": 162.95333333333332,
+    "max_wait_seconds": 197.8,
+    "approach_wait_gap_seconds": 197.8,
+    "throughput": 0.2727272727272727,
+    "completion_time_seconds": null,
+    "wall_seconds": 183.3527792999521,
+    "deadlock_observed": true,
+    "safe_hold_activations": 8,
+    "mappo_outcomes_accepted": 0,
+    "safety_fallback_epochs": 0,
+    "rule_resolved_outcomes": 1,
+    "participant_events": [],
+    "observed_duration_seconds": 220.0,
+    "safe_degradation_observed": true
+  },
+  "queue_before": {
+    "total_available_gap_standing_vehicle_seconds": 30.96,
+    "per_approach_available_gap_standing_seconds": {
+      "N": 0.0,
+      "E": 9.0,
+      "S": 7.44,
+      "W": 14.52
+    },
+    "per_approach_longest_available_gap_standing_seconds": {
+      "N": 0.0,
+      "E": 4.92,
+      "S": 4.2,
+      "W": 5.64
+    },
+    "maximum_available_gap_standing_seconds": 5.64,
+    "native_follower_samples": 0,
+    "follower_samples": 4417,
+    "moving_follower_samples_by_approach": {
+      "N": 624,
+      "E": 697,
+      "S": 595,
+      "W": 673
+    },
+    "minimum_incoming_follower_bumper_gap_m": {
+      "N": 2.609937204058838,
+      "E": 2.5010037148064157,
+      "S": 2.5011075025856258,
+      "W": 2.5133479269201757
+    },
+    "first_incorrect_condition": {
+      "time": 31.72,
+      "vehicle": {
+        "id": "PANEL_AV_W_02",
+        "approach": "W",
+        "position": [
+          285.28980650839634,
+          298.4
+        ],
+        "lane": "w_in_0",
+        "lane_position": 285.28980650839634,
+        "speed": 0.011379849449644097,
+        "leader_id": "PANEL_AV_W_01",
+        "leader_position": [
+          292.8877232575041,
+          298.41253189392916
+        ],
+        "leader_speed": 0.56,
+        "bumper_gap_m": 2.5987934916037716,
+        "traci_gap_excluding_min_gap": 0.0987934916037716,
+        "min_gap_m": 2.5,
+        "distance_to_stop_m": 7.5101934916036726,
+        "native_follow_speed_mps": 0.0913798494496441,
+        "native_stop_speed_mps": 0.0913798494496441,
+        "native_speed_without_traci": 0.011379849449644097,
+        "speed_mode": 31,
+        "native_stop_state": 0,
+        "queue_head": false,
+        "safe_advancement_available": false,
+        "avoidable_standing_sample": false,
+        "movement_authority": "TRACI_SPEED_CAP_WITH_NATIVE_SAFETY",
+        "previous_step_decision": {
+          "permission": "SAFE_HOLD",
+          "reason": "FOLLOWER_AWAITING_NEGOTIATED_ADMISSION",
+          "eligible": false,
+          "requested_speed": 0.011379849449644097,
+          "restrictions": [
+            {
+              "vehicle_id": "PANEL_AV_W_02",
+              "conflict_zone_id": "JUNCTION_ENTRY",
+              "distance_to_zone_entry": 7.510648685581657,
+              "comfortable_deceleration_mps2": 4.5,
+              "current_speed_mps": 0.011379849449644097,
+              "requested_speed_cap_mps": 0.011379849449644097,
+              "physically_feasible": true,
+              "provenance": "{'feasibility_model': 'SUMO_NATIVE_CAR_FOLLOWING_STOP_SPEED', 'integration_model': 'SUMO_SEMI_IMPLICIT_EULER', 'continuous_equation_role': 'DIAGNOSTIC_REFERENCE_ONLY', 'comfortable_minimum_role': 'DIAGNOSTIC_REFERENCE_ONLY', 'runtime_authority': 'SUMO_PROCESS_TRACI_SPEED_CONTROL', 'precommand_python_feasibility_rejection': 'False', 'emergency_deceleration_used_for_precedence': 'False', 'arbitrary_margin_meters': '0', 'arbitrary_time_margin_seconds': '0', 'numeric_tolerance': '0'}",
+              "simulation_step_seconds": 0.04,
+              "action_step_length_seconds": 0.04,
+              "continuous_reference_cap_mps": 8.221668819055832,
+              "discrete_euler_brake_gap_m": 0.0,
+              "sumo_stop_speed_mps": 0.0913798494496441,
+              "comfortable_min_next_speed_mps": 0.0,
+              "native_sumo_speed_without_traci_mps": 0.011379849449644097,
+              "requested_precedence_speed_mps": 0.011379849449644097,
+              "comfortable_feasible": null,
+              "integration_method": "SUMO_SEMI_IMPLICIT_EULER",
+              "comfortable_feasibility_status": "DELEGATED_TO_SUMO_NATIVE_SPEED_MODE_ENFORCEMENT",
+              "actual_realized_next_speed_mps": null,
+              "actual_realized_acceleration_mps2": null,
+              "sumo_max_deceleration_enforcement_active": true,
+              "sumo_safe_speed_enforcement_active": true,
+              "sumo_max_acceleration_enforcement_active": true,
+              "sumo_junction_priority_enforcement_active": true,
+              "runtime_authority": "SUMO_PROCESS_TRACI_SPEED_CONTROL",
+              "precommand_python_feasibility_rejection": false,
+              "speed_mode": 31
+            }
+          ],
+          "admission": "HELD_BEFORE_ZONE"
+        }
+      }
+    },
+    "episodes": [
+      {
+        "follower": "PANEL_AV_W_02",
+        "leader": "PANEL_AV_W_01",
+        "approach": "W",
+        "start": 31.72,
+        "end": 35.92,
+        "delay_seconds": 4.2,
+        "response_observed": true,
+        "ended_by_promotion_or_opportunity_loss": false
+      },
+      {
+        "follower": "PANEL_AV_S_03",
+        "leader": "PANEL_AV_S_02",
+        "approach": "S",
+        "start": 36.16,
+        "end": 40.36,
+        "delay_seconds": 4.2,
+        "response_observed": false,
+        "ended_by_promotion_or_opportunity_loss": true
+      },
+      {
+        "follower": "PANEL_AV_W_03",
+        "leader": "PANEL_AV_W_02",
+        "approach": "W",
+        "start": 40.48,
+        "end": 45.16,
+        "delay_seconds": 4.68,
+        "response_observed": false,
+        "ended_by_promotion_or_opportunity_loss": true
+      },
+      {
+        "follower": "PANEL_AV_W_04",
+        "leader": "PANEL_AV_W_03",
+        "approach": "W",
+        "start": 51.4,
+        "end": 57.04,
+        "delay_seconds": 5.64,
+        "response_observed": false,
+        "ended_by_promotion_or_opportunity_loss": true
+      },
+      {
+        "follower": "PANEL_AV_E_03",
+        "leader": "PANEL_AV_E_02",
+        "approach": "E",
+        "start": 57.4,
+        "end": 61.48,
+        "delay_seconds": 4.08,
+        "response_observed": false,
+        "ended_by_promotion_or_opportunity_loss": true
+      },
+      {
+        "follower": "PANEL_AV_E_04",
+        "leader": "PANEL_AV_E_03",
+        "approach": "E",
+        "start": 61.84,
+        "end": 66.76,
+        "delay_seconds": 4.92,
+        "response_observed": true,
+        "ended_by_promotion_or_opportunity_loss": false
+      },
+      {
+        "follower": "PANEL_AV_S_04",
+        "leader": "PANEL_AV_S_03",
+        "approach": "S",
+        "start": 77.32,
+        "end": 80.56,
+        "delay_seconds": 3.24,
+        "response_observed": false,
+        "ended_by_promotion_or_opportunity_loss": true
+      }
+    ],
+    "sampling_seconds": 0.12,
+    "definition": "Stopped <0.1 m/s, moving leader >0.5 m/s; native follow and entry-stop speeds permit at least half an actual acceleration step; gap >= measured minGap; not already at native stop. Diagnostic only, never grants authority."
+  },
+  "queue_after": {
+    "total_available_gap_standing_vehicle_seconds": 0.36,
+    "per_approach_available_gap_standing_seconds": {
+      "N": 0.12,
+      "E": 0.0,
+      "S": 0.12,
+      "W": 0.12
+    },
+    "per_approach_longest_available_gap_standing_seconds": {
+      "N": 0.12,
+      "E": 0.0,
+      "S": 0.12,
+      "W": 0.12
+    },
+    "maximum_available_gap_standing_seconds": 0.12,
+    "native_follower_samples": 4136,
+    "follower_samples": 4136,
+    "moving_follower_samples_by_approach": {
+      "N": 797,
+      "E": 763,
+      "S": 678,
+      "W": 846
+    },
+    "minimum_incoming_follower_bumper_gap_m": {
+      "N": 2.5011666380151496,
+      "E": 2.5010038722309105,
+      "S": 2.501003877503706,
+      "W": 2.501340874633229
+    },
+    "first_incorrect_condition": {
+      "time": 31.72,
+      "vehicle": {
+        "id": "PANEL_AV_W_02",
+        "approach": "W",
+        "position": [
+          285.2976322159182,
+          298.4
+        ],
+        "lane": "w_in_0",
+        "lane_position": 285.2976322159182,
+        "speed": 0.08788310841861022,
+        "leader_id": "PANEL_AV_W_01",
+        "leader_position": [
+          292.8877232575041,
+          298.41253189392916
+        ],
+        "leader_speed": 0.56,
+        "bumper_gap_m": 2.590967784081897,
+        "traci_gap_excluding_min_gap": 0.09096778408189721,
+        "min_gap_m": 2.5,
+        "distance_to_stop_m": 7.502367784081798,
+        "native_follow_speed_mps": 0.1678831084186102,
+        "native_stop_speed_mps": 0.1678831084186102,
+        "native_speed_without_traci": 0.08788310841861022,
+        "speed_mode": 31,
+        "native_stop_state": 0,
+        "queue_head": false,
+        "safe_advancement_available": true,
+        "avoidable_standing_sample": true,
+        "movement_authority": "SUMO_NATIVE_FOLLOWING_WITH_ENTRY_STOP",
+        "previous_step_decision": {
+          "permission": "SAFE_HOLD",
+          "reason": "FOLLOWER_AWAITING_NEGOTIATED_ADMISSION",
+          "eligible": false,
+          "requested_speed": null,
+          "restrictions": [],
+          "admission": "HELD_BEFORE_ZONE"
+        }
+      }
+    },
+    "episodes": [
+      {
+        "follower": "PANEL_AV_W_02",
+        "leader": "PANEL_AV_W_01",
+        "approach": "W",
+        "start": 31.72,
+        "end": 31.84,
+        "delay_seconds": 0.12,
+        "response_observed": true,
+        "ended_by_promotion_or_opportunity_loss": false
+      },
+      {
+        "follower": "PANEL_AV_S_03",
+        "leader": "PANEL_AV_S_02",
+        "approach": "S",
+        "start": 36.16,
+        "end": 36.28,
+        "delay_seconds": 0.12,
+        "response_observed": true,
+        "ended_by_promotion_or_opportunity_loss": false
+      },
+      {
+        "follower": "PANEL_AV_N_03",
+        "leader": "PANEL_AV_N_02",
+        "approach": "N",
+        "start": 40.6,
+        "end": 40.72,
+        "delay_seconds": 0.12,
+        "response_observed": true,
+        "ended_by_promotion_or_opportunity_loss": false
+      }
+    ],
+    "sampling_seconds": 0.12,
+    "definition": "Stopped <0.1 m/s, moving leader >0.5 m/s; native follow and entry-stop speeds permit at least half an actual acceleration step; gap >= measured minGap; not already at native stop. Diagnostic only, never grants authority."
+  },
+  "geometry": [
+    {
+      "scenario": "rule_resolved_two",
+      "movements": [
+        "N_IN_0_LEFT",
+        "E_IN_0_LEFT"
+      ],
+      "physical_conflict_pairs": [
+        {
+          "first": "N_IN_0_LEFT",
+          "second": "E_IN_0_LEFT",
+          "zone": "CZ_001"
+        }
+      ]
+    },
+    {
+      "scenario": "final_four_agent_stress",
+      "movements": [
+        "N_IN_0_LEFT",
+        "E_IN_0_LEFT",
+        "S_IN_0_LEFT",
+        "W_IN_0_LEFT"
+      ],
+      "physical_conflict_pairs": [
+        {
+          "first": "N_IN_0_LEFT",
+          "second": "E_IN_0_LEFT",
+          "zone": "CZ_001"
+        },
+        {
+          "first": "N_IN_0_LEFT",
+          "second": "S_IN_0_LEFT",
+          "zone": "CZ_016"
+        },
+        {
+          "first": "N_IN_0_LEFT",
+          "second": "W_IN_0_LEFT",
+          "zone": "CZ_019"
+        },
+        {
+          "first": "E_IN_0_LEFT",
+          "second": "S_IN_0_LEFT",
+          "zone": "CZ_003"
+        },
+        {
+          "first": "E_IN_0_LEFT",
+          "second": "W_IN_0_LEFT",
+          "zone": "CZ_005"
+        },
+        {
+          "first": "S_IN_0_LEFT",
+          "second": "W_IN_0_LEFT",
+          "zone": "CZ_026"
+        }
+      ]
+    },
+    {
+      "scenario": "mixed_manoeuvres",
+      "movements": [
+        "N_IN_0_STRAIGHT",
+        "E_IN_0_LEFT",
+        "S_IN_0_RIGHT",
+        "W_IN_0_STRAIGHT"
+      ],
+      "physical_conflict_pairs": [
+        {
+          "first": "N_IN_0_STRAIGHT",
+          "second": "E_IN_0_LEFT",
+          "zone": "CZ_002"
+        },
+        {
+          "first": "N_IN_0_STRAIGHT",
+          "second": "W_IN_0_STRAIGHT",
+          "zone": "CZ_025"
+        },
+        {
+          "first": "E_IN_0_LEFT",
+          "second": "W_IN_0_STRAIGHT",
+          "zone": "CZ_007"
+        },
+        {
+          "first": "S_IN_0_RIGHT",
+          "second": "W_IN_0_STRAIGHT",
+          "zone": "CZ_028"
+        }
+      ]
+    },
+    {
+      "scenario": "congested_four_approach",
+      "movements": [
+        "N_IN_0_STRAIGHT",
+        "N_IN_0_LEFT",
+        "N_IN_0_RIGHT",
+        "N_IN_0_STRAIGHT",
+        "E_IN_0_STRAIGHT",
+        "E_IN_0_LEFT",
+        "E_IN_0_RIGHT",
+        "E_IN_0_STRAIGHT",
+        "S_IN_0_RIGHT",
+        "S_IN_0_STRAIGHT",
+        "S_IN_0_LEFT",
+        "S_IN_0_RIGHT",
+        "W_IN_0_LEFT",
+        "W_IN_0_RIGHT",
+        "W_IN_0_STRAIGHT",
+        "W_IN_0_LEFT"
+      ],
+      "physical_conflict_pairs": [
+        {
+          "first": "N_IN_0_STRAIGHT",
+          "second": "E_IN_0_STRAIGHT",
+          "zone": "CZ_012"
+        },
+        {
+          "first": "N_IN_0_STRAIGHT",
+          "second": "E_IN_0_LEFT",
+          "zone": "CZ_002"
+        },
+        {
+          "first": "N_IN_0_STRAIGHT",
+          "second": "E_IN_0_STRAIGHT",
+          "zone": "CZ_012"
+        },
+        {
+          "first": "N_IN_0_STRAIGHT",
+          "second": "S_IN_0_LEFT",
+          "zone": "CZ_022"
+        },
+        {
+          "first": "N_IN_0_STRAIGHT",
+          "second": "W_IN_0_LEFT",
+          "zone": "CZ_023"
+        },
+        {
+          "first": "N_IN_0_STRAIGHT",
+          "second": "W_IN_0_RIGHT",
+          "zone": "CZ_024"
+        },
+        {
+          "first": "N_IN_0_STRAIGHT",
+          "second": "W_IN_0_STRAIGHT",
+          "zone": "CZ_025"
+        },
+        {
+          "first": "N_IN_0_STRAIGHT",
+          "second": "W_IN_0_LEFT",
+          "zone": "CZ_023"
+        },
+        {
+          "first": "N_IN_0_LEFT",
+          "second": "E_IN_0_STRAIGHT",
+          "zone": "CZ_010"
+        },
+        {
+          "first": "N_IN_0_LEFT",
+          "second": "E_IN_0_LEFT",
+          "zone": "CZ_001"
+        },
+        {
+          "first": "N_IN_0_LEFT",
+          "second": "E_IN_0_STRAIGHT",
+          "zone": "CZ_010"
+        },
+        {
+          "first": "N_IN_0_LEFT",
+          "second": "S_IN_0_RIGHT",
+          "zone": "CZ_017"
+        },
+        {
+          "first": "N_IN_0_LEFT",
+          "second": "S_IN_0_STRAIGHT",
+          "zone": "CZ_018"
+        },
+        {
+          "first": "N_IN_0_LEFT",
+          "second": "S_IN_0_LEFT",
+          "zone": "CZ_016"
+        },
+        {
+          "first": "N_IN_0_LEFT",
+          "second": "S_IN_0_RIGHT",
+          "zone": "CZ_017"
+        },
+        {
+          "first": "N_IN_0_LEFT",
+          "second": "W_IN_0_LEFT",
+          "zone": "CZ_019"
+        },
+        {
+          "first": "N_IN_0_LEFT",
+          "second": "W_IN_0_STRAIGHT",
+          "zone": "CZ_020"
+        },
+        {
+          "first": "N_IN_0_LEFT",
+          "second": "W_IN_0_LEFT",
+          "zone": "CZ_019"
+        },
+        {
+          "first": "N_IN_0_RIGHT",
+          "second": "E_IN_0_STRAIGHT",
+          "zone": "CZ_011"
+        },
+        {
+          "first": "N_IN_0_RIGHT",
+          "second": "E_IN_0_STRAIGHT",
+          "zone": "CZ_011"
+        },
+        {
+          "first": "N_IN_0_RIGHT",
+          "second": "S_IN_0_LEFT",
+          "zone": "CZ_021"
+        },
+        {
+          "first": "N_IN_0_STRAIGHT",
+          "second": "E_IN_0_STRAIGHT",
+          "zone": "CZ_012"
+        },
+        {
+          "first": "N_IN_0_STRAIGHT",
+          "second": "E_IN_0_LEFT",
+          "zone": "CZ_002"
+        },
+        {
+          "first": "N_IN_0_STRAIGHT",
+          "second": "E_IN_0_STRAIGHT",
+          "zone": "CZ_012"
+        },
+        {
+          "first": "N_IN_0_STRAIGHT",
+          "second": "S_IN_0_LEFT",
+          "zone": "CZ_022"
+        },
+        {
+          "first": "N_IN_0_STRAIGHT",
+          "second": "W_IN_0_LEFT",
+          "zone": "CZ_023"
+        },
+        {
+          "first": "N_IN_0_STRAIGHT",
+          "second": "W_IN_0_RIGHT",
+          "zone": "CZ_024"
+        },
+        {
+          "first": "N_IN_0_STRAIGHT",
+          "second": "W_IN_0_STRAIGHT",
+          "zone": "CZ_025"
+        },
+        {
+          "first": "N_IN_0_STRAIGHT",
+          "second": "W_IN_0_LEFT",
+          "zone": "CZ_023"
+        },
+        {
+          "first": "E_IN_0_STRAIGHT",
+          "second": "S_IN_0_STRAIGHT",
+          "zone": "CZ_014"
+        },
+        {
+          "first": "E_IN_0_STRAIGHT",
+          "second": "S_IN_0_LEFT",
+          "zone": "CZ_013"
+        },
+        {
+          "first": "E_IN_0_STRAIGHT",
+          "second": "W_IN_0_LEFT",
+          "zone": "CZ_015"
+        },
+        {
+          "first": "E_IN_0_STRAIGHT",
+          "second": "W_IN_0_LEFT",
+          "zone": "CZ_015"
+        },
+        {
+          "first": "E_IN_0_LEFT",
+          "second": "S_IN_0_STRAIGHT",
+          "zone": "CZ_004"
+        },
+        {
+          "first": "E_IN_0_LEFT",
+          "second": "S_IN_0_LEFT",
+          "zone": "CZ_003"
+        },
+        {
+          "first": "E_IN_0_LEFT",
+          "second": "W_IN_0_LEFT",
+          "zone": "CZ_005"
+        },
+        {
+          "first": "E_IN_0_LEFT",
+          "second": "W_IN_0_RIGHT",
+          "zone": "CZ_006"
+        },
+        {
+          "first": "E_IN_0_LEFT",
+          "second": "W_IN_0_STRAIGHT",
+          "zone": "CZ_007"
+        },
+        {
+          "first": "E_IN_0_LEFT",
+          "second": "W_IN_0_LEFT",
+          "zone": "CZ_005"
+        },
+        {
+          "first": "E_IN_0_RIGHT",
+          "second": "S_IN_0_STRAIGHT",
+          "zone": "CZ_008"
+        },
+        {
+          "first": "E_IN_0_RIGHT",
+          "second": "W_IN_0_LEFT",
+          "zone": "CZ_009"
+        },
+        {
+          "first": "E_IN_0_RIGHT",
+          "second": "W_IN_0_LEFT",
+          "zone": "CZ_009"
+        },
+        {
+          "first": "E_IN_0_STRAIGHT",
+          "second": "S_IN_0_STRAIGHT",
+          "zone": "CZ_014"
+        },
+        {
+          "first": "E_IN_0_STRAIGHT",
+          "second": "S_IN_0_LEFT",
+          "zone": "CZ_013"
+        },
+        {
+          "first": "E_IN_0_STRAIGHT",
+          "second": "W_IN_0_LEFT",
+          "zone": "CZ_015"
+        },
+        {
+          "first": "E_IN_0_STRAIGHT",
+          "second": "W_IN_0_LEFT",
+          "zone": "CZ_015"
+        },
+        {
+          "first": "S_IN_0_RIGHT",
+          "second": "W_IN_0_STRAIGHT",
+          "zone": "CZ_028"
+        },
+        {
+          "first": "S_IN_0_STRAIGHT",
+          "second": "W_IN_0_LEFT",
+          "zone": "CZ_029"
+        },
+        {
+          "first": "S_IN_0_STRAIGHT",
+          "second": "W_IN_0_STRAIGHT",
+          "zone": "CZ_030"
+        },
+        {
+          "first": "S_IN_0_STRAIGHT",
+          "second": "W_IN_0_LEFT",
+          "zone": "CZ_029"
+        },
+        {
+          "first": "S_IN_0_LEFT",
+          "second": "W_IN_0_LEFT",
+          "zone": "CZ_026"
+        },
+        {
+          "first": "S_IN_0_LEFT",
+          "second": "W_IN_0_STRAIGHT",
+          "zone": "CZ_027"
+        },
+        {
+          "first": "S_IN_0_LEFT",
+          "second": "W_IN_0_LEFT",
+          "zone": "CZ_026"
+        },
+        {
+          "first": "S_IN_0_RIGHT",
+          "second": "W_IN_0_STRAIGHT",
+          "zone": "CZ_028"
+        }
+      ]
+    },
+    {
+      "scenario": "final_coordination_failure",
+      "movements": [
+        "N_IN_0_STRAIGHT",
+        "N_IN_0_LEFT",
+        "E_IN_0_STRAIGHT",
+        "E_IN_0_RIGHT",
+        "S_IN_0_RIGHT",
+        "W_IN_0_LEFT"
+      ],
+      "physical_conflict_pairs": [
+        {
+          "first": "N_IN_0_STRAIGHT",
+          "second": "E_IN_0_STRAIGHT",
+          "zone": "CZ_012"
+        },
+        {
+          "first": "N_IN_0_STRAIGHT",
+          "second": "W_IN_0_LEFT",
+          "zone": "CZ_023"
+        },
+        {
+          "first": "N_IN_0_LEFT",
+          "second": "E_IN_0_STRAIGHT",
+          "zone": "CZ_010"
+        },
+        {
+          "first": "N_IN_0_LEFT",
+          "second": "S_IN_0_RIGHT",
+          "zone": "CZ_017"
+        },
+        {
+          "first": "N_IN_0_LEFT",
+          "second": "W_IN_0_LEFT",
+          "zone": "CZ_019"
+        },
+        {
+          "first": "E_IN_0_STRAIGHT",
+          "second": "W_IN_0_LEFT",
+          "zone": "CZ_015"
+        },
+        {
+          "first": "E_IN_0_RIGHT",
+          "second": "W_IN_0_LEFT",
+          "zone": "CZ_009"
+        }
+      ]
+    }
+  ],
+  "historical_files_unchanged": 2334,
+  "source_identity": {
+    "negotiation_execution/ego_controller.py": "a4eb3914801f8ef9726502d4f272bee455c6350a10f9f1068d3942ea40bc869a",
+    "negotiation_execution/native_hold.py": "fa032432ef00d905e73dbdabcf69d14bf58c85a9a9005d65c1b576de137e3597",
+    "runtime_simulation/runner.py": "90676017cf06a39507af8d6307d26708e29c279ad8c3ca46ba7dcf90a5345c1f",
+    "negotiation_execution/mandatory_fallback.py": "dad7a9041cd57d6bcedaa0d904c0c87049f85ed554b75955a9256de65029dcea"
+  },
+  "policy_sha256": "2ab2029fdd66f96c3ba0acf5e76487c96740161e898539f93c726228097eaf57",
+  "browser": {
+    "five_scenario_functional_checks": "PASS",
+    "full_session_shutdown": "PARTIAL_WINDOWS_TIMEOUT_FORCED_CLEANUP",
+    "full_session_frames": 494,
+    "full_session_receipt": "browser_v4/receipt.json",
+    "final_comparison_panel_and_single_scenario_shutdown": "PASS",
+    "final_comparison_frames": 90,
+    "final_comparison_receipt": "browser_v5/receipt.json",
+    "page_errors": [],
+    "remaining_owned_processes": []
+  }
+}

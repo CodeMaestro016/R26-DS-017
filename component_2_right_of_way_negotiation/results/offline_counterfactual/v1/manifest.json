@@ -1,0 +1,88 @@
+{
+  "protocol": {
+    "version": "ISOLATED_UNCOORDINATED_COUNTERFACTUAL_V1",
+    "classification": "OFFLINE_UNSAFE_COUNTERFACTUAL_NOT_PROPOSED_SYSTEM",
+    "scenario_id": "final_coordination_failure",
+    "seed": 42,
+    "step_seconds": 0.04,
+    "budget_seconds": 220,
+    "speed_mode": 38,
+    "desired_speed": "min(actual_vehicle_max_speed, actual_lane_allowed_speed)",
+    "excluded": [
+      "MAPPO",
+      "traffic-rule execution",
+      "ego entry authorization",
+      "safety shield",
+      "explicit junction entry stops",
+      "SUMO safe-following-speed enforcement",
+      "SUMO junction priority enforcement"
+    ],
+    "retained": [
+      "original routes and demand",
+      "original vehicle type and dimensions",
+      "original acceleration and deceleration limits",
+      "original road network",
+      "native safe insertion",
+      "speed-limit enforcement",
+      "SUMO collision detection"
+    ],
+    "collision_check_junctions": true,
+    "collision_mingap_factor": 0,
+    "collision_action": "warn",
+    "termination": "first simulator-detected physical collision, all trips complete, or budget",
+    "notes": "Physical-body collision detection (zero minimum-gap expansion), not a modified vehicle footprint. No crash-response dynamics or trajectories beyond the first collision are claimed. The protected runner has no unsafe-mode option."
+  },
+  "protocol_sha256": "540ae09208f89b07b51958fed240539177a9302cd5b73cd5dce46fd5e6fe21c2",
+  "assets": {
+    "intersection.sumocfg": "d1c5e3c8a9f59992567dc8e819b0659793777b12e1c211b462fa2706db227624",
+    "networks\\intersection.net.xml": "1be878a66a845e146da9c677444bea8df3eac4f37cf29f20eab493bb94be9613",
+    "networks\\intersection.rou.xml": "8c0f5d4c2ca6fca45fb040f85d90a14f5e2f454320e82ebd56f143f30dd56f2a",
+    "runtime_simulation\\final_demonstrations.json": "531ca8d9b0542f39973fa35ced1805a2df0ed96861aaf6d1494e94938175aca1"
+  },
+  "schedule": {
+    "N": [
+      {
+        "approach": "N",
+        "movement_path_id": "N_IN_0_STRAIGHT",
+        "sequence_index": 0,
+        "scheduled_departure_seconds": 0.0
+      },
+      {
+        "approach": "N",
+        "movement_path_id": "N_IN_0_LEFT",
+        "sequence_index": 1,
+        "scheduled_departure_seconds": 1.5
+      }
+    ],
+    "E": [
+      {
+        "approach": "E",
+        "movement_path_id": "E_IN_0_STRAIGHT",
+        "sequence_index": 0,
+        "scheduled_departure_seconds": 0.0
+      },
+      {
+        "approach": "E",
+        "movement_path_id": "E_IN_0_RIGHT",
+        "sequence_index": 1,
+        "scheduled_departure_seconds": 1.5
+      }
+    ],
+    "S": [
+      {
+        "approach": "S",
+        "movement_path_id": "S_IN_0_RIGHT",
+        "sequence_index": 0,
+        "scheduled_departure_seconds": 0.0
+      }
+    ],
+    "W": [
+      {
+        "approach": "W",
+        "movement_path_id": "W_IN_0_LEFT",
+        "sequence_index": 0,
+        "scheduled_departure_seconds": 0.0
+      }
+    ]
+  }
+}

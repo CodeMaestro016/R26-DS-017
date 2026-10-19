@@ -1,0 +1,52 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Scalability Validation</title><style>body{font:15px system-ui;margin:32px;color:#183047}table{border-collapse:collapse;max-width:100%;font-size:12px}td,th{padding:7px;border:1px solid #cad4de;text-align:left;overflow-wrap:anywhere}pre{white-space:pre-wrap}img{width:min(640px,100%)}</style></head><body><h1>Scalability / Operational Boundary</h1><p>SCALABILITY_VALIDATION_V2 uses fixed 0.4-second staggered NESW round-robin departures and unchanged V1 legal movements. This avoids identical initial requested departure times; it does not guarantee separated junction arrivals or prevent deadlock. The seven-point targeted study varies total scheduled vehicles from 4 to 40 under the same intersection, policy, rules and demand-prefix family. V1 remains separate historical evidence. One episode per load provides no confidence intervals or universal capacity estimate.</p><p>Manifest: 7b8ad8d40ccf1c0ab9996c7eca4d1c11fc8587a63c07258ac10ae4e93eedfda2</p><h2>Operational Boundary Observation</h2><p>Study incomplete: 0/7 scientific cases recorded. Preflight is excluded from trends.</p><p>No exact capacity threshold between tested points is inferred. Incomplete waits and travel exposure are censored; read them with stop time, insertion and completion counts.</p><table><tr><th>Load</th><th>Scheduled</th><th>Spawned</th><th>Completed</th><th>Completion %</th><th>Collisions</th><th>Blocked violations</th><th>Mean wait</th><th>Max wait</th><th>Throughput</th><th>MAPPO calls</th><th>Fallback %</th><th>Result</th></tr><tr><td>SV-04</td><td>4</td><td>N/A</td><td>N/A</td><td>N/A</td><td>N/A</td><td>N/A</td><td>N/A</td><td>N/A</td><td>N/A</td><td>N/A</td><td>N/A</td><td>NOT_RUN</td></tr><tr><td>SV-08</td><td>8</td><td>N/A</td><td>N/A</td><td>N/A</td><td>N/A</td><td>N/A</td><td>N/A</td><td>N/A</td><td>N/A</td><td>N/A</td><td>N/A</td><td>NOT_RUN</td></tr><tr><td>SV-12</td><td>12</td><td>N/A</td><td>N/A</td><td>N/A</td><td>N/A</td><td>N/A</td><td>N/A</td><td>N/A</td><td>N/A</td><td>N/A</td><td>N/A</td><td>NOT_RUN</td></tr><tr><td>SV-16</td><td>16</td><td>N/A</td><td>N/A</td><td>N/A</td><td>N/A</td><td>N/A</td><td>N/A</td><td>N/A</td><td>N/A</td><td>N/A</td><td>N/A</td><td>NOT_RUN</td></tr><tr><td>SV-24</td><td>24</td><td>N/A</td><td>N/A</td><td>N/A</td><td>N/A</td><td>N/A</td><td>N/A</td><td>N/A</td><td>N/A</td><td>N/A</td><td>N/A</td><td>NOT_RUN</td></tr><tr><td>SV-32</td><td>32</td><td>N/A</td><td>N/A</td><td>N/A</td><td>N/A</td><td>N/A</td><td>N/A</td><td>N/A</td><td>N/A</td><td>N/A</td><td>N/A</td><td>NOT_RUN</td></tr><tr><td>SV-40</td><td>40</td><td>N/A</td><td>N/A</td><td>N/A</td><td>N/A</td><td>N/A</td><td>N/A</td><td>N/A</td><td>N/A</td><td>N/A</td><td>N/A</td><td>NOT_RUN</td></tr></table><p><img src="plots/completion.png" alt="completion.png"></p><p><img src="plots/mean_wait.png" alt="mean_wait.png"></p><p><img src="plots/max_wait.png" alt="max_wait.png"></p><p><img src="plots/throughput.png" alt="throughput.png"></p><p><img src="plots/active_queue.png" alt="active_queue.png"></p><p><img src="plots/mappo.png" alt="mappo.png"></p><p><img src="plots/fallback.png" alt="fallback.png"></p><h2>Preflight — excluded from scientific results</h2><pre>{
+  &quot;automatic_run_allowed&quot;: false,
+  &quot;evidence_classification&quot;: &quot;PREFLIGHT_NOT_SCIENTIFIC_RESULT&quot;,
+  &quot;evidence_family&quot;: &quot;SCALABILITY_VALIDATION_V2&quot;,
+  &quot;full_study_started&quot;: false,
+  &quot;historical_dense_reference&quot;: {
+    &quot;path&quot;: &quot;results\\panel_validation\\v2\\runs\\20261008T175551068657Z_095c9470\\result.json&quot;,
+    &quot;simulated_seconds&quot;: 180.0,
+    &quot;wall_seconds&quot;: 501.1883240000461,
+    &quot;workload_factor&quot;: 2.5
+  },
+  &quot;integrity&quot;: {
+    &quot;backward_calls&quot;: 0,
+    &quot;centralized_critic_runtime_calls&quot;: 0,
+    &quot;centralized_execution_graph_used_for_control&quot;: false,
+    &quot;decentralized_execution&quot;: true,
+    &quot;frozen_sources_unchanged&quot;: true,
+    &quot;global_execution_calls&quot;: 0,
+    &quot;modules_in_evaluation_mode&quot;: true,
+    &quot;optimizer_steps&quot;: 0,
+    &quot;parameter_updates&quot;: 0,
+    &quot;policy_hash_unchanged&quot;: true,
+    &quot;policy_sha256_after&quot;: &quot;2ab2029fdd66f96c3ba0acf5e76487c96740161e898539f93c726228097eaf57&quot;,
+    &quot;policy_sha256_before&quot;: &quot;2ab2029fdd66f96c3ba0acf5e76487c96740161e898539f93c726228097eaf57&quot;,
+    &quot;state_dict_unchanged&quot;: true,
+    &quot;training_operations&quot;: 0,
+    &quot;valid&quot;: true
+  },
+  &quot;manifest_hash&quot;: &quot;7b8ad8d40ccf1c0ab9996c7eca4d1c11fc8587a63c07258ac10ae4e93eedfda2&quot;,
+  &quot;metrics&quot;: {
+    &quot;blocked_zone_violation_count&quot;: 0,
+    &quot;collision_count&quot;: 0,
+    &quot;deadlock_detected&quot;: true,
+    &quot;deadlock_observed&quot;: true,
+    &quot;insertion_delayed_vehicle_count&quot;: 0,
+    &quot;mappo_inference_call_count&quot;: 1,
+    &quot;maximum_negotiation_participants&quot;: 4,
+    &quot;native_emergency_braking_events&quot;: 0,
+    &quot;never_spawned_before_budget&quot;: 0,
+    &quot;termination_reason&quot;: &quot;DEADLOCK_CONFIRMED&quot;,
+    &quot;timeout&quot;: false,
+    &quot;total_vehicles_completed&quot;: 0,
+    &quot;total_vehicles_scheduled&quot;: 4,
+    &quot;total_vehicles_spawned&quot;: 4
+  },
+  &quot;observed_simulated_seconds&quot;: 38.56,
+  &quot;projected_full_budget_wall_seconds&quot;: 8770.795670000805,
+  &quot;projection_method&quot;: &quot;Maximum of preflight wall/sim ratio and preserved PV-04A wall/sim ratio * 40/16, multiplied by 1260 sim seconds. Conservative planning estimate, not a guarantee; ignores possible early stops.&quot;,
+  &quot;run_id&quot;: &quot;20261009T073517867706Z_b8f9f892&quot;,
+  &quot;traffic_classification&quot;: &quot;SAFE_DEGRADATION&quot;,
+  &quot;wall_clock_seconds&quot;: 32.9929470999632
+}</pre></body></html>

@@ -1,0 +1,79 @@
+{
+  "replay_sha256": "fe7314076f2ee490cf07eb84165944b95c46ab558353ced83f587f732014bbd9",
+  "classification": "OFFLINE_UNSAFE_COUNTERFACTUAL_NOT_PROPOSED_SYSTEM",
+  "version": "ISOLATED_UNCOORDINATED_COUNTERFACTUAL_V1",
+  "scenario_id": "final_coordination_failure",
+  "command": [
+    "C:\\Program Files (x86)\\Eclipse\\Sumo\\bin\\sumo.EXE",
+    "-c",
+    "C:\\Users\\Iresha Nethmini\\Documents\\R26-DS-017\\component_2_right_of_way_negotiation\\intersection.sumocfg",
+    "--seed",
+    "42",
+    "--step-length",
+    ".04",
+    "--time-to-teleport",
+    "-1",
+    "--collision.action",
+    "warn",
+    "--collision.check-junctions",
+    "true",
+    "--collision.mingap-factor",
+    "0",
+    "--collision-output",
+    "C:\\Users\\Iresha Nethmini\\Documents\\R26-DS-017\\component_2_right_of_way_negotiation\\results\\offline_counterfactual\\v1\\sumo_collisions.xml",
+    "--no-step-log",
+    "true",
+    "--log",
+    "C:\\Users\\Iresha Nethmini\\Documents\\R26-DS-017\\component_2_right_of_way_negotiation\\results\\offline_counterfactual\\v1\\sumo.log",
+    "--duration-log.disable",
+    "true"
+  ],
+  "sumo_version": [
+    22,
+    "SUMO 1.26.0"
+  ],
+  "seed": 42,
+  "scheduled": 6,
+  "spawned": 6,
+  "completed": 0,
+  "departure_times": {
+    "PANEL_AV_N_01": 0.04,
+    "PANEL_AV_E_01": 0.04,
+    "PANEL_AV_S_01": 0.04,
+    "PANEL_AV_W_01": 0.04,
+    "PANEL_AV_N_02": 1.56,
+    "PANEL_AV_E_02": 1.56
+  },
+  "completion_times": {},
+  "simulation_time": 24.28,
+  "mappo_calls": 0,
+  "collision_count": 1,
+  "collision_events": [
+    {
+      "timestamp": 24.28,
+      "collider": "PANEL_AV_N_02",
+      "victim": "PANEL_AV_W_01",
+      "type": "junction",
+      "lane": ":center_2_0",
+      "lane_position": 5.693640960000353,
+      "position": [
+        299.87889383875984,
+        301.801843602067
+      ],
+      "position_source": "SUMO collision lane/position converted by SUMO convert2D",
+      "movements": [
+        "N_IN_0_LEFT",
+        "W_IN_0_LEFT"
+      ],
+      "collider_speed": 10.954368000000004,
+      "victim_speed": 8.999868000000005
+    }
+  ],
+  "outcome": "ACTUAL_SIMULATOR_COLLISION",
+  "deadlock_observed": false,
+  "mean_waiting_seconds": 0.0,
+  "throughput_vehicles_per_minute": 0.0,
+  "waiting_by_vehicle": {},
+  "detection": "SUMO junction collision checks enabled; collision.mingap-factor=0 means body overlap rather than a minimum-gap warning",
+  "manifest_sha256": "fe771c97151bcf08e0174913b921eea4f69ab8439137f5d8e6ef1f98eeaf066d"
+}

@@ -1,0 +1,36 @@
+{
+  "feature_source": "causal_backward_differences_from_position_history",
+  "published_inD_velocity_or_acceleration_used": false,
+  "position_history_shape": [
+    50,
+    2
+  ],
+  "position_columns": [
+    "x_m",
+    "y_m"
+  ],
+  "frame_interval_seconds": 0.04,
+  "sampling_frequency_hz": 25.0,
+  "nominal_observation_window_seconds": 2.0,
+  "causal_sequence_shape": [
+    48,
+    6
+  ],
+  "causal_feature_names": [
+    "position_derived_speed_mps",
+    "position_derived_acceleration_magnitude_mps2",
+    "approach_longitudinal_velocity_mps",
+    "approach_lateral_velocity_mps",
+    "approach_longitudinal_acceleration_mps2",
+    "approach_lateral_acceleration_mps2"
+  ],
+  "approach_direction_estimation": "position_at_frame_10_minus_position_at_frame_0",
+  "differencing": {
+    "velocity": "backward_first_difference",
+    "acceleration": "backward_difference_of_backward_velocity",
+    "future_frames_used": false
+  },
+  "primary_prediction_lead_time_seconds": 1.0,
+  "secondary_prediction_lead_time_seconds": 0.5,
+  "sumo_integration_warning": "The current 0.5-second SUMO history does not satisfy this 0.04-second input contract. Do not silently interpolate four low-rate observations into fifty measurements."
+}
