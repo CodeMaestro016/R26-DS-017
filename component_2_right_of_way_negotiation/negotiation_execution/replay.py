@@ -325,7 +325,7 @@ class PhysicalBranchReplayRunner:
     @staticmethod
     def _pipeline_step(states, now, observations, entry_monitor, predictor,
                        graph_manager, occupancy, rules, negotiation, claim_bus,
-                       encoder, negotiation_eligible_ids=None):
+                       encoder, negotiation_eligible_ids=None, movement_protocol=None):
         observations.update(states, now)
         truth = {vehicle_id: state.get("route_id", "")
                  for vehicle_id, state in states.items()}
@@ -337,6 +337,12 @@ class PhysicalBranchReplayRunner:
         local = {}
         eligible = (set(states) if negotiation_eligible_ids is None
                     else set(negotiation_eligible_ids))
+        if movement_protocol is not None:
+            movement_protocol.begin_step(now)
+            for sender in sorted(eligible):
+                sender_ldm = observations.get_ldm(sender)
+                if sender_ldm is not None:
+                    movement_protocol.publish(sender, movement_protocol.author(sender_ldm, now))
         reasoning_ldms = {}
         for ego_id in states:
             if ego_id not in eligible:
@@ -353,6 +359,8 @@ class PhysicalBranchReplayRunner:
                               if key in eligible}
             reasoning_ldms[ego_id] = ldm
             ldm.current_conflict_graph = graph_manager.build_local_graph(ldm, now)
+            if movement_protocol is not None:
+                ldm.current_conflict_graph = movement_protocol.reconcile(ldm, ldm.current_conflict_graph, now)
             ldm.current_temporal_assessment = occupancy.assess_ldm(ldm, now)
             ldm.current_regulatory_assessment = rules.assess_ldm(ldm, now)
             local[ego_id], messages = negotiation.build_local_claims(ldm, now)
@@ -364,6 +372,11 @@ class PhysicalBranchReplayRunner:
             snapshot = negotiation.build_snapshot(
                 ldm, now, claim_bus.current_messages(now, receiver_id=ego_id),
                 local[ego_id])
+            if movement_protocol is not None:
+                snapshot["movement_declaration_errors"] = ldm.current_movement_declaration_errors
+                snapshot["movement_declaration_protocol"] = movement_protocol.epoch[0]
+                if ldm.current_movement_declaration_errors:
+                    snapshot["negotiation_status"] = "NEGOTIATION_BLOCKED_REGULATORY_INPUT_UNRESOLVED"
             ldm.current_encoded_graph_observation = encoder.encode(
                 snapshot["graph_observation"])
             if negotiation_eligible_ids is not None:

@@ -1,6 +1,3 @@
-"""Qualitative continuous SUMO panel demonstration."""
-
-from .runner import run_panel_demo
-from .schedule import build_default_schedule
-
-__all__ = ["run_panel_demo", "build_default_schedule"]
+"""Legacy import alias; implementation is runtime_simulation."""
+from naming_compat import alias_package
+alias_package(__name__, "runtime_simulation")

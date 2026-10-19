@@ -61,6 +61,16 @@ class RegulatoryPrecedenceGraphBuilder:
                 ))
                 continue
             if status == "NO_PAIRWISE_PRECEDENCE_RULE":
+                if regulatory.get("execution_interpretation") == "EGO_LOCAL_V2":
+                    # Mutual voluntary admission claims, not legal priority.
+                    record = self._edge_record(ldm.ego_id, target_id, conflict_edge,
+                        temporal_by_target.get(target_id), rule)
+                    record.update(applicable_rule_ids=("DE-STVO-11-3",),
+                        source_sections=("§ 11",), hard_constraint_evidence={
+                            "mandatory_regulatory_yield": False,
+                            "physical_candidate_conflict": True,
+                            "negotiation_eligible_ambiguity": True})
+                    edges.append(record)
                 continue
             if status == "EGO_MUST_YIELD":
                 yielding, priority = ldm.ego_id, target_id
@@ -105,6 +115,8 @@ class RegulatoryPrecedenceGraphBuilder:
             source_conflict_graph_timestamp=float(conflict["timestamp"]),
             source_regulatory_assessment_timestamp=float(regulatory["timestamp"]),
             source_observation_age_seconds=edge.get("source_observation_age_seconds"),
+            negotiation_eligible_ambiguity=bool(edge.get("hard_constraint_evidence", {}).get(
+                "negotiation_eligible_ambiguity", False)),
         ) for edge in local_graph["precedence_edges"])
 
     @classmethod

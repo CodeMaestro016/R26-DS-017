@@ -65,6 +65,17 @@ def test_turning_oncoming_and_left_oncoming_right_rules():
     assert {"DE-STVO-9-3", "DE-STVO-9-4"}.issubset(left_right["applicable_rule_ids"])
 
 
+def test_v2_oncoming_turn_rules_are_symmetric_and_do_not_invent_mutual_yield():
+    engine=TrafficRuleEngine(MapPathManager(),runtime_v2=True)
+    assert assessment(engine,"W_IN_0_LEFT","E_IN_0_LEFT")["regulatory_status"]=="NO_PAIRWISE_PRECEDENCE_RULE"
+    assert assessment(engine,"W_IN_0_RIGHT","E_IN_0_RIGHT")["regulatory_status"]=="NO_PAIRWISE_PRECEDENCE_RULE"
+    assert assessment(engine,"W_IN_0_RIGHT","E_IN_0_LEFT")["regulatory_status"]=="EGO_HAS_PRECEDENCE_UNDER_RULE"
+    assert assessment(engine,"W_IN_0_LEFT","E_IN_0_RIGHT")["regulatory_status"]=="EGO_MUST_YIELD"
+    assert assessment(engine,"W_IN_0_STRAIGHT","E_IN_0_RIGHT")["regulatory_status"]=="EGO_HAS_PRECEDENCE_UNDER_RULE"
+    mixed=assessment(engine,"W_IN_0_LEFT","E_IN_0_LEFT","E_IN_0_RIGHT","E_IN_0_STRAIGHT")
+    assert mixed["regulatory_status"]=="UNRESOLVED_DUE_TO_TARGET_MANOEUVRE"
+
+
 def test_only_graph_spatial_edges_create_assessments():
     engine = TrafficRuleEngine(MapPathManager())
     empty = {"ego_id": "ego", "ego_path_id": "W_IN_0_STRAIGHT", "edges": ()}

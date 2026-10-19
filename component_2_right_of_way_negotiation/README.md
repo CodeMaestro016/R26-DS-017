@@ -2,6 +2,36 @@
 
 This final-year research project evaluates decentralized MAPPO negotiation for autonomous-vehicle right-of-way while preserving deterministic traffic-rule and physical-safety layers.
 
+The active live runtime now uses the approved
+`CONDITIONAL_CLAIM_RECONCILIATION_V1` movement-declaration protocol with unchanged
+E5 weights. [Implementation and assumptions](docs/APPROVED_RECONCILIATION_IMPLEMENTATION_REPORT.md)
+and [measured verification](docs/APPROVED_RECONCILIATION_VERIFICATION.md) document
+4/4 four-way and 12/12 rolling completion. The dense scenario remains partial:
+5/16 completed, followed by a genuine mandatory/fallback dependency cycle.
+These new diagnostics are separate from frozen historical studies; no completed
+final evaluation or 16/16 dense success is claimed for this revision.
+
+## Active implementation structure
+
+| Package | Purpose |
+|---|---|
+| `runtime_simulation/` | Continuous SUMO runtime simulation and telemetry |
+| `targeted_validation/` | Reproducible scenario-based validation |
+| `post_training_evaluation/` | Extended post-training evaluation and baseline comparison |
+| `scalability_validation/` | Traffic-load and operational-boundary evaluation |
+
+See [naming migration and compatibility](docs/NAMING_MIGRATION.md) for preferred
+commands and preserved historical paths. The extended 165-episode study is not
+represented as completed. Old package/script names remain thin compatibility
+aliases; historical evidence retains its original names and values.
+
+Final viva preparation is documented in
+[FINAL_VIVA_RUNBOOK.md](docs/final_readiness/FINAL_VIVA_RUNBOOK.md).
+The [preflight](docs/final_readiness/FINAL_EVALUATION_PREFLIGHT.md) verifies
+34/165 legacy final episodes; the current V2 final study remains blocked by
+acceptance review. Older successful 16-vehicle presentations do not override
+the targeted 1/16 and 0/16 dense liveness results. Broader scalability is unrun.
+
 ## Final demonstration
 
 Install the Python dependencies, install SUMO separately, and run from this Component 2 directory:
@@ -47,16 +77,16 @@ It does not directly select acceleration, braking, steering, or target speed. An
 
 ## Entry points
 
-- `run_final_evaluation.py` performs the separate frozen post-training evaluation
-  of the current ego-local runtime. See [scope and metric definitions](docs/FINAL_EVALUATION_SCOPE.md)
-  and [Windows commands and report guide](docs/FINAL_EVALUATION_GUIDE.md).
+- `run_post_training_evaluation.py` performs the separate frozen post-training evaluation
+  of the current ego-local runtime. See [scope and metric definitions](docs/POST_TRAINING_EVALUATION_SCOPE.md)
+  and [Windows commands and report guide](docs/POST_TRAINING_EVALUATION_GUIDE.md).
   Prepare first, run the smoke suite, then explicitly launch the 165-episode
   final suite. No retraining or held-out tuning is performed.
 
 - `run_selected_mappo_demo.py` is the final validation-selected E5 MAPPO research demonstration. It loads the frozen canonical-replication-0 selected policy and performs inference only.
 - `main.py` is the normal/legacy SUMO control-facing application. Its learned intention prediction can be shadow-only; it is not a substitute for the final selected MAPPO demo.
 - `run_research_demo.py` is retained for reproducibility of the earlier frozen research-prototype demonstration.
-- `run_panel_demo.py` is a one-process, continuous qualitative SUMO visualization for a live panel. It is presentation-only and does not replace validation, held-out evaluation, or model-selection evidence.
+- `run_runtime_simulation.py` is a one-process, continuous qualitative SUMO visualization for a live panel. It is presentation-only and does not replace validation, held-out evaluation, or model-selection evidence.
 - `python -m scripts.experiments.run_mappo_final_selection --help` exposes the completed model-selection workflow. Do not run training stages merely to launch the demo.
 
 ## Repository layout
@@ -112,15 +142,15 @@ Standalone validators are retained for reproducibility; they are not final runti
 Launch the deterministic rolling-traffic presentation with:
 
 ```powershell
-python run_panel_demo.py --gui
+python run_runtime_simulation.py --gui
 ```
 
-Optional presentation controls are `--duration` and `--gui-delay-ms`. The latter changes display pacing only; the simulation step remains 0.04 seconds. New qualitative output is written only under `results/panel_demo/`.
+Optional presentation controls are `--duration` and `--gui-delay-ms`. The latter changes display pacing only; the simulation step remains 0.04 seconds. New qualitative output is written only under `results/runtime_simulation/`.
 
 For a comfortably paced viva display:
 
 ```powershell
-python run_panel_demo.py --gui --gui-delay-ms 10
+python run_runtime_simulation.py --gui --gui-delay-ms 10
 ```
 
 GUI launches load `gui/panel_real_world.xml` at SUMO startup. Headless launches do not receive GUI settings.
@@ -134,13 +164,14 @@ The default duration is 220 seconds so all four predeclared continuous phases ca
 From this component directory:
 
 ```powershell
-python run_panel_demo.py --scenario congested_four_approach --gui --gui-delay-ms 10
+python run_runtime_simulation.py --scenario congested_four_approach --gui --gui-delay-ms 10
 ```
 
 The new scenario schedules 16 traffic vehicles (four per approach) with 1.5-second
 demand headways and a 360-second simulation budget. SUMO may delay unsafe
 insertions; actual departures and insertion delays are recorded separately.
-The demo ends once all scheduled vehicles complete. All twelve legal movements
+The run can finish at its fixed budget, on user Stop, or when all vehicles
+complete; full discharge is not guaranteed. All twelve legal movements
 are represented. A wider display camera keeps queued followers visible.
 
 Only the physically front-most eligible vehicle on each incoming lane enters
@@ -163,7 +194,7 @@ not physical permission inputs. Speed mode remains 31.
 For a headless web/showcase presentation:
 
 ```powershell
-python run_panel_demo.py --scenario congested_four_approach --web-live --presentation-delay-ms 10
+python run_runtime_simulation.py --scenario congested_four_approach --web-live --presentation-delay-ms 10
 ```
 
 Or start `python socialmind_drive_showcase\app.py` from the repository root,
@@ -171,13 +202,31 @@ open Component 2's live view, select **Congested Four-Approach Queues**, and
 press **Run Scenario**. The UI shows active/moving traffic, approach depths,
 current participants, peak active traffic, collisions, and execution mode.
 
-Use `--output-dir results/panel_demo/congested_ego_local_verification` to keep
+Use `--output-dir results/runtime_simulation/congested_ego_local_verification` to keep
 new qualitative results separate. These runs are not original validation,
 held-out evaluation, or evidence of policy performance on >4-node graphs.
 Historical training, selection, and physical evidence-replay paths are retained
 for reproducibility; this new execution mode belongs to the panel runtime.
 
 ## Research limitations
+
+Scenario 5 also has a clearly separated, read-only unsafe counterfactual replay.
+Its authentic SUMO collision and the stable-sidebar scroll verification are
+documented in [Scenario 5 counterfactual and sidebar report](docs/SCENARIO5_COUNTERFACTUAL_AND_SIDEBAR_REPORT.md).
+The ordinary Run button retains the protected primary method.
+
+The final live selector now contains exactly five qualitative demonstrations.
+See [Final queue-following and five-scenario report](docs/FINAL_FIVE_DEMONSTRATIONS_REPORT.md)
+for the separately versioned native-following correction, identical-demand
+before/after measurements, actual E5 usage and protected/rules-only comparison.
+The scientific scenario catalogue and prior evaluations remain preserved.
+
+The live website uses a presentation-only approach/entry/clearance lifecycle.
+Blue approach bodies, current red/green permissions, timestamped yellow MAPPO
+outlines and removal of scene-exited vehicles are documented in
+[Live presentation lifecycle verification](docs/LIVE_PRESENTATION_LIFECYCLE_REPORT.md).
+SUMO active/completed counts and scientific control remain separate from the
+current display list.
 
 - Model selection is a bounded one-factor comparison of E5, E10 and E15 with three canonical replications and two PPO update cycles, not a global hyperparameter search.
 - The selected configuration is E5; demo replication 0 is canonical, not performance-selected.

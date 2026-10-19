@@ -1,0 +1,57 @@
+[
+  {
+    "scenario_id": "rule_resolved_two",
+    "final_label": "1. Rule-Based Right-of-Way (2 Vehicles)",
+    "demonstrates": "Conflicting north/east left turns; mandatory yielding and safe crossing.",
+    "mappo_expectation": "Not required when rules resolve the conflict",
+    "demo_kind": "NORMAL PROTECTED DEMONSTRATION"
+  },
+  {
+    "scenario_id": "final_four_agent_stress",
+    "final_label": "2. Four-Vehicle MAPPO Negotiation — Worst-Case Stress",
+    "demonstrates": "Four synchronized legal left turns. A predeclared four-agent stress candidate, not a claim of a globally proven worst case.",
+    "mappo_expectation": "Expected only on a genuinely eligible unresolved regulatory cycle",
+    "demo_kind": "NORMAL PROTECTED STRESS DEMONSTRATION",
+    "definition": {
+      "scenario_id": "final_four_agent_stress", "display_name": "Four-Vehicle MAPPO Stress",
+      "description": "Fixed four-left-turn candidate, declared before running; retains mandatory rules and all safety layers.",
+      "category": "NEGOTIATION", "verified_tag": "PREDECLARED STRESS", "difficulty": "HIGH",
+      "evidence_classification": "QUALITATIVE_PRESENTATION_ONLY", "source_type": "FINAL_DEMONSTRATIONS_V1_PREDECLARED",
+      "admission_mode": "INDEPENDENT_DEMAND", "demand_headway_seconds": 0,
+      "recommended_duration_seconds": 220,
+      "movement_waves": [["N_IN_0_LEFT", "E_IN_0_LEFT", "S_IN_0_LEFT", "W_IN_0_LEFT"]],
+      "movement_summary": "One simultaneous legal left turn from each approach."
+    }
+  },
+  {
+    "scenario_id": "mixed_manoeuvres",
+    "final_label": "3. Mixed Manoeuvre Coordination (4 Vehicles)",
+    "demonstrates": "North/west straight, east left and south right; heterogeneous physical conflicts and precedence.",
+    "mappo_expectation": "Conditional on actual eligibility; rules remain authoritative",
+    "demo_kind": "NORMAL PROTECTED DEMONSTRATION"
+  },
+  {
+    "scenario_id": "congested_four_approach",
+    "final_label": "4. Congested Four-Way Traffic (16 Vehicles)",
+    "demonstrates": "Original four vehicles per approach and unchanged 1.5-second demand; native following, physical queue-head promotion and repeated negotiation.",
+    "mappo_expectation": "Conditional, up to four current participants",
+    "demo_kind": "NORMAL PROTECTED DENSE DEMONSTRATION"
+  },
+  {
+    "scenario_id": "final_coordination_failure",
+    "final_label": "5. Coordination Failure Stress Test (6–7 Vehicles)",
+    "demonstrates": "Exactly six vehicles. Protected execution versus an offline rules-only/no-negotiation comparison on identical frozen demand. Both retain safety; no unsafe mode is deployed.",
+    "mappo_expectation": "Conditional in protected mode; zero in rules-only comparison",
+    "demo_kind": "CONTROLLED FAILURE COMPARISON — QUALITATIVE, NOT FROZEN EVALUATION",
+    "definition": {
+      "scenario_id": "final_coordination_failure", "display_name": "Coordination Failure Comparison (6 Vehicles)",
+      "description": "Fixed regulatory-cycle first wave plus north-left/east-right followers at 1.5 seconds. Run Scenario always uses the protected method.",
+      "category": "CONTROLLED_FAILURE", "verified_tag": "PROTECTED PRIMARY / OFFLINE COMPARISON", "difficulty": "STRESS",
+      "evidence_classification": "QUALITATIVE_PRESENTATION_ONLY", "source_type": "FINAL_DEMONSTRATIONS_V1_PREDECLARED",
+      "admission_mode": "INDEPENDENT_DEMAND", "demand_headway_seconds": 1.5,
+      "recommended_duration_seconds": 220,
+      "movement_waves": [["N_IN_0_STRAIGHT", "E_IN_0_STRAIGHT", "S_IN_0_RIGHT", "W_IN_0_LEFT"], ["N_IN_0_LEFT", "E_IN_0_RIGHT"]],
+      "movement_summary": "N straight/left, E straight/right, S right, W left; six vehicles with protected and rules-only comparison modes."
+    }
+  }
+]

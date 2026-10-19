@@ -7,6 +7,7 @@ from pathlib import Path
 import contextlib
 import io
 import shutil
+from functools import wraps
 
 import pytest
 import torch
@@ -14,11 +15,11 @@ import torch
 from negotiation_execution import (EgoExecutionContext, EgoCoordinationCommitment,
     ExecutionStateMessage, DecentralizedEgoExecutionController,
     ConflictZoneExecutionPlanner)
-from panel_demo.queue_heads import select_queue_heads, approach_queue_depth
-from panel_demo.scenarios import get_scenario
-from panel_demo.schedule import validate_presentation_schedule
-from panel_demo.runner import run_panel_demo, POLICY_PATH, _deliver_pair_commitments
-from panel_demo import runner as panel_runner
+from runtime_simulation.queue_heads import select_queue_heads, approach_queue_depth
+from runtime_simulation.scenarios import get_scenario
+from runtime_simulation.schedule import validate_presentation_schedule
+from runtime_simulation.runner import run_runtime_simulation, POLICY_PATH, _deliver_pair_commitments
+from runtime_simulation import runner as panel_runner
 from negotiation_learning import GraphTensorEncoder
 from config import SAFE_SUMO_SPEED_MODE
 
@@ -80,6 +81,34 @@ def test_priority_ego_proceeds_without_consuming_other_decisions(controller):
     assert not decision.blocked_zones
     assert decision.decentralized_execution
     assert not decision.centralized_execution_graph_used_for_control
+
+
+def test_follower_advancement_uses_native_stop_without_granting_entry(controller):
+    own=replace(context(),strict_admission=True,negotiation_eligible=False,
+        ego_state=dict(state(),road_id='n_in',lane_length=100.))
+    held=controller.decide(own)
+    calls=[]
+    api=SimpleNamespace(getSpeedMode=lambda _:31,getLaneIndex=lambda _:0,
+        setStop=lambda *a,**kw:calls.append((a,kw)))
+    following=controller.constrain(own,held,api,.04)
+    assert following.permission=='SAFE_HOLD'
+    assert following.blocked_zones==held.blocked_zones
+    assert following.requested_speed_mps is None and not following.speed_constraints
+    assert controller.native_hold.synchronize(own,following,controller.paths,api)=='NATIVE_HOLD_INSTALLED'
+    assert calls[0][1]['pos']==99.999 and calls[0][1]['duration']>360
+    # Physical intrusion is still a hard error even for an ineligible follower.
+    with pytest.raises(RuntimeError,match='BLOCKED_VEHICLE_ENTERED_CONFLICT_ZONE'):
+        controller.decide(replace(own,ego_state=state(progress=1.,lane=':N')))
+
+
+def test_promoted_head_without_coordination_retains_speed_constraint(controller):
+    own=replace(context(),strict_admission=True,negotiation_eligible=True,coordination_complete=False)
+    held=controller.decide(own)
+    api=SimpleNamespace(getSpeedMode=lambda _:31,getActionStepLength=lambda _:.04,
+        getStopSpeed=lambda *args:2.,getSpeedWithoutTraCI=lambda _:4.)
+    decision=controller.constrain(own,held,api,.04)
+    assert decision.permission=='SAFE_HOLD' and decision.requested_speed_mps==2.
+    assert decision.speed_constraints
 
 
 @pytest.mark.parametrize("change", ["missing_coordination", "stale_coordination",
@@ -172,7 +201,20 @@ def test_many_live_vehicles_do_not_expand_frontline(controller):
     assert approach_queue_depth(states, controller.paths, movements) == dict.fromkeys("NESW", 4)
 
 
+def _fixture_errors_are_not_known_liveness_failures(function):
+    @wraps(function)
+    def checked(*args, **kwargs):
+        try:
+            return function(*args, **kwargs)
+        except AssertionError as error:
+            # xfail(raises=AssertionError) must never consume safety, policy,
+            # simulator or live-state contract failures in fixture setup.
+            raise RuntimeError("DENSE_FIXTURE_CONTRACT_BREACH:" + str(error)) from error
+    return checked
+
+
 @pytest.fixture(scope="module")
+@_fixture_errors_are_not_known_liveness_failures
 def congested_run(tmp_path_factory):
     if not shutil.which("sumo"):
         pytest.skip("Real SUMO executable is required for presentation integration")
@@ -204,7 +246,7 @@ def congested_run(tmp_path_factory):
         patch.setattr(torch.optim.Adam, "step", forbidden)
         patch.setattr(ConflictZoneExecutionPlanner, "plan", forbidden)
         with contextlib.redirect_stdout(io.StringIO()):
-            result = run_panel_demo(duration_seconds=360,
+            result = run_runtime_simulation(duration_seconds=360,
                 schedule=scenario.schedule(), admission_waves=scenario.admission_waves,
                 admission_mode=scenario.admission_mode, scenario_id=scenario.scenario_id,
                 output_dir=root, web_live=True, browser_state_path=root / "live_state.json")
@@ -213,6 +255,39 @@ def congested_run(tmp_path_factory):
             assert all(torch.equal(original[key], value) for key, value in module.state_dict().items())
     assert not forbidden_calls
     assert sha256(POLICY_PATH.read_bytes()).hexdigest() == before
+    # These checks are outside expected-failure test bodies: unsafe behavior,
+    # execution/integrity regressions and corrupt live output must always fail.
+    import json
+    live = json.loads((root / "live_state.json").read_text())
+    metrics = result["metrics"]
+    assert metrics["collisions"] == metrics["blocked_zone_violations"] == 0
+    assert metrics["maximum_negotiation_participants"] <= 4
+    assert metrics["centralized_critic_runtime_calls"] == 0
+    assert result["policy_hash_unchanged"] and result["decentralized_execution"]
+    assert not result["centralized_execution_graph_used_for_control"]
+    assert all(result[k] == 0 for k in ("training_operations", "backward_calls", "optimizer_steps", "parameter_updates"))
+    assert live["run_metrics"] == json.loads(json.dumps(metrics))
+    assert live["completed"] == metrics["total_vehicles_completed"]
+    assert metrics["total_vehicles_scheduled"] == metrics["total_vehicles_spawned"] == 16
+    assert metrics["maximum_simultaneous_active_vehicles"] >= 10
+    assert metrics["maximum_simultaneously_moving_vehicles"] > 4
+    assert all(metrics["maximum_per_approach_queue_depth"][a] > 1 for a in "NESW")
+    assert metrics["maximum_approaches_with_multiple_queued_vehicles"] == 4
+    assert len(result["actual_departure_seconds"]) == 16
+    assert not result["pending_insertion_vehicle_ids"]
+    if result["run_status"] != "COMPLETED":
+        assert result["run_status"] == "INCOMPLETE"
+        if result.get("movement_declaration_protocol") == "CONDITIONAL_CLAIM_RECONCILIATION_V1":
+            # Approved reconciliation fixes the old zero-discharge condition.
+            # Keep partial progress distinct from the unchanged 16/16 test below.
+            assert 5 <= metrics["total_vehicles_completed"] < 16
+            assert metrics["current_active_vehicle_count"] == 16 - metrics["total_vehicles_completed"]
+            assert len(set(result["completed_vehicle_ids"])) == metrics["total_vehicles_completed"]
+            assert metrics["mappo_decision_epochs"] > 0
+            assert any(e["status"] == "NEGOTIATION_REQUIRED_REGULATORY_CYCLE" for e in result["events"])
+        else:
+            assert metrics["total_vehicles_completed"] == 0 and metrics["current_active_vehicle_count"] == 16
+            assert result["events"] and all(e["status"] == "COMMUNICATED_PRECEDENCE_DISAGREEMENT" for e in result["events"])
     return result, root
 
 
@@ -249,3 +324,22 @@ def test_live_state_exports_measured_counts_and_execution_flags(congested_run):
     assert live["run_metrics"]["current_active_vehicle_count"] == 0
     assert live["completed"] == 16
     assert not live["participants"] and not live["vehicles"]
+
+
+def test_dense_safety_and_decentralized_integrity_are_not_expected_failures(congested_run):
+    result, _ = congested_run
+    m = result["metrics"]
+    assert m["collisions"] == m["blocked_zone_violations"] == 0
+    assert m["maximum_negotiation_participants"] <= 4
+    assert result["policy_hash_unchanged"] and result["decentralized_execution"]
+    assert not result["centralized_execution_graph_used_for_control"]
+    assert m["centralized_critic_runtime_calls"] == 0
+
+
+def test_dense_live_state_preserves_actual_progress_even_when_incomplete(congested_run):
+    import json
+    result, root = congested_run
+    live = json.loads((root / "live_state.json").read_text())
+    assert live["run_metrics"] == json.loads(json.dumps(result["metrics"]))
+    assert live["completed"] == result["metrics"]["total_vehicles_completed"]
+    assert live["run_metrics"]["current_active_vehicle_count"] == result["metrics"]["current_active_vehicle_count"]

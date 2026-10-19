@@ -65,6 +65,36 @@ def test_one_local_claim_remains_independently_inspectable():
     assert result["communicated_precedence_edges"] == ()
 
 
+def test_v2_valid_mutual_voluntary_claims_are_negotiable_not_disagreement():
+    a=replace(claim("A","A","B"),applicable_rule_ids=("DE-STVO-11-3",),
+        source_sections=("§ 11",),negotiation_eligible_ambiguity=True)
+    b=replace(a,sender_id="B",yielding_vehicle_id="B",priority_vehicle_id="A")
+    result=JointLocalPrecedenceGraphAssembler(runtime_v2=True).assemble("A",7.,empty_local("A"),(a,b))
+    assert not result["communicated_disagreements"]
+    assert result["negotiation_eligible_ambiguities"]==(("A","B"),)
+    assert NegotiationEnvironment.classify_status(result) is NegotiationStatus.NEGOTIATION_REQUIRED_REGULATORY_CYCLE
+    from negotiation_training.mappo_provider import MAPPOBehaviorActionProvider
+    factors=MAPPOBehaviorActionProvider._eligible_factors(("A","B"),
+        result["joint_precedence_edges"], "NEGOTIATION_REQUIRED_REGULATORY_CYCLE")
+    assert len(factors)==2 and all(mask.feasibility==(True,True) for _,mask in factors)
+
+
+@pytest.mark.parametrize("changes", [dict(timestamp=6.),dict(source_conflict_graph_timestamp=6.),
+    dict(shared_conflict_zone_ids=()),dict(applicable_rule_ids=()),dict(sender_id="unrelated"),
+    dict(source_observation_age_seconds=None),dict(source_observation_age_seconds=float("nan")),
+    dict(applicable_rule_ids=("UNSUPPORTED_RULE",))])
+def test_v2_missing_or_incompatible_source_cannot_be_negotiated(changes):
+    message=replace(claim("B","B","A"),**changes)
+    result=JointLocalPrecedenceGraphAssembler(runtime_v2=True).assemble("A",7.,empty_local("A"),(message,))
+    assert result["source_snapshot_mismatches"] and not result["joint_precedence_edges"]
+
+
+def test_v2_mandatory_local_peer_reciprocal_is_blocked_even_with_one_received_claim():
+    result=JointLocalPrecedenceGraphAssembler(runtime_v2=True).assemble("A",7.,
+        local_graph("A","A","B"),(claim("B","B","A"),))
+    assert NegotiationEnvironment.classify_status(result) is NegotiationStatus.COMMUNICATED_PRECEDENCE_DISAGREEMENT
+
+
 def test_duplicate_claims_merge_and_preserve_all_supporting_senders():
     messages = (claim("A", "A", "B"), claim("B", "A", "B"))
     result = assemble("A", local_graph("A", "A", "B"), messages)

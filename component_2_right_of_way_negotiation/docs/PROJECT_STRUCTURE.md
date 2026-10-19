@@ -1,5 +1,18 @@
 # Project Structure
 
+## Active simulation and evaluation packages
+
+| Package | Purpose |
+|---|---|
+| `runtime_simulation/` | Continuous SUMO runtime simulation and telemetry |
+| `targeted_validation/` | Reproducible scenario-based validation |
+| `post_training_evaluation/` | Extended post-training evaluation and baseline comparison |
+| `scalability_validation/` | Traffic-load and operational-boundary evaluation |
+
+The [naming migration](NAMING_MIGRATION.md) records compatibility aliases and
+historical paths. Existing scientific reports and provenance remain unchanged;
+the 165-episode extended study is not claimed to be completed.
+
 ## Runtime entry points
 
 | File | Purpose | Input | Output | Method | Phase |

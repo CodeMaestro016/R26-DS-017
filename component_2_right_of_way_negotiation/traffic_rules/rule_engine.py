@@ -10,8 +10,9 @@ from .rule_models import RegulatoryAssessment, RegulatoryStatus, RuleRecord
 class TrafficRuleEngine:
     """Evaluate local candidate paths without route truth or probabilities."""
 
-    def __init__(self, path_manager, context=None, profile_file=None):
+    def __init__(self, path_manager, context=None, profile_file=None, runtime_v2=False):
         self.path_manager = path_manager
+        self.runtime_v2 = bool(runtime_v2)
         self.context = context or RegulatoryContext()
         profile_file = profile_file or Path(__file__).with_name("profiles") / "de_stvo_uncontrolled_4way_v1.json"
         payload = json.loads(Path(profile_file).read_text(encoding="utf-8"))
@@ -75,6 +76,23 @@ class TrafficRuleEngine:
             rule_ids.append("DE-STVO-9-4")
             status = RegulatoryStatus.EGO_MUST_YIELD
 
+        if self.runtime_v2 and relation == "ONCOMING":
+            # Correct current runtime only; historical CTDE/replay stays frozen.
+            rule_ids = []
+            status = RegulatoryStatus.NO_PAIRWISE_PRECEDENCE_RULE
+            if ego_path.manoeuvre in {"LEFT", "RIGHT"} and target_path.manoeuvre == "STRAIGHT":
+                rule_ids = ["DE-STVO-9-3"]
+                status = RegulatoryStatus.EGO_MUST_YIELD
+            elif ego_path.manoeuvre == "LEFT" and target_path.manoeuvre == "RIGHT":
+                rule_ids = ["DE-STVO-9-3", "DE-STVO-9-4"]
+                status = RegulatoryStatus.EGO_MUST_YIELD
+            elif ego_path.manoeuvre == "STRAIGHT" and target_path.manoeuvre in {"LEFT", "RIGHT"}:
+                rule_ids = ["DE-STVO-9-3"]
+                status = RegulatoryStatus.EGO_HAS_PRECEDENCE_UNDER_RULE
+            elif ego_path.manoeuvre == "RIGHT" and target_path.manoeuvre == "LEFT":
+                rule_ids = ["DE-STVO-9-4"]
+                status = RegulatoryStatus.EGO_HAS_PRECEDENCE_UNDER_RULE
+
         sections = tuple(dict.fromkeys(
             self._rules_by_id[rule_id].section for rule_id in rule_ids
         ))
@@ -113,6 +131,7 @@ class TrafficRuleEngine:
             self._count(assessment)
         return {"ego_id": ldm.ego_id, "timestamp": float(current_time),
                 "regulatory_profile": self.context.profile_id,
+                "execution_interpretation": "EGO_LOCAL_V2" if self.runtime_v2 else "HISTORICAL_V1",
                 "assessments": tuple(results)}
 
     def _aggregate(self, ego_id, target_id, timestamp, ego_path_id, candidates):

@@ -21,6 +21,7 @@ class PrecedenceClaimMessage:
     source_conflict_graph_timestamp: float
     source_regulatory_assessment_timestamp: float
     source_observation_age_seconds: Optional[float] = None
+    negotiation_eligible_ambiguity: bool = False
 
     def to_dict(self):
         return asdict(self)

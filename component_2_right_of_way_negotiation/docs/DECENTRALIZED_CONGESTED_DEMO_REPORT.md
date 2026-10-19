@@ -4,7 +4,7 @@ Evidence classification: **QUALITATIVE_PRESENTATION_ONLY**.
 
 ## Initial audit
 
-`panel_demo/runner.py` previously stored one `slots[approach]` vehicle and
+`runtime_simulation/runner.py` previously stored one `slots[approach]` vehicle and
 required every slot to be empty before admitting the next wave. A slot was
 released only on arrival at the end of its route, preventing visible followers
 on the same approach. `ConflictZoneExecutionPlanner.plan()` received the
@@ -18,7 +18,7 @@ controllers; the graph remains negotiation/audit evidence.
 
 ## Scope and information boundary
 
-The new execution mode is used by **all `run_panel_demo.py` scenarios**, including
+The new execution mode is used by **all `run_runtime_simulation.py` scenarios**, including
 the congested scenario and showcase launches. Historical training, selected
 research-demo episodes, and frozen physical evidence-replay paths retain their
 original behavior for reproducibility. The original held-out and selection
@@ -67,7 +67,7 @@ No 16-participant MAPPO validation claim is made.
 
 ## Measured headless run
 
-The saved run is `results/panel_demo/congested_ego_local_verification/latest_panel_demo.json`.
+The saved run is `results/runtime_simulation/congested_ego_local_verification/latest_runtime_simulation.json`.
 It uses the predeclared presentation schedule, not validation/held-out demand.
 
 | Measurement | Observed value |
@@ -131,17 +131,17 @@ Paths in the first table are relative to `component_2_right_of_way_negotiation/`
 | `negotiation_execution/ego_controller.py` | New immutable ego contexts, pair commitments/state messages, ego-owned permissions and native speed constraints. |
 | `negotiation_execution/__init__.py` | Export the new ego-execution API. |
 | `negotiation_execution/replay.py` | Optional queue-head-only reasoning views; preserve full perception and the historical default pipeline. |
-| `panel_demo/queue_heads.py` | New physical frontline selection and incoming depth accounting. |
-| `panel_demo/schedule.py` | Scheduled demand times and explicit support for repeated legal movements in dense demand. |
-| `panel_demo/scenarios.py` | Scenario admission mode, headway, and recommended duration. |
-| `panel_demo/scenario_catalog.json` | Predeclare the 16-vehicle congested schedule without hard-coded outcomes. |
-| `panel_demo/runner.py` | Independent admission, bounded queue-head actors, pair delivery, ego execution, real departure/traffic metrics, failure/incomplete reporting, policy hashing. |
-| `panel_demo/browser_state.py` | Clear current participants/permissions on complete discharge while retaining event history. |
-| `panel_demo/reporting.py` | Persist expanded traffic/execution metrics in qualitative summaries. |
-| `panel_demo/visualization.py` | Wider SUMO camera only for independent dense traffic. |
-| `run_panel_demo.py` | Scenario-specific duration/admission mode and separate output-directory option. |
+| `runtime_simulation/queue_heads.py` | New physical frontline selection and incoming depth accounting. |
+| `runtime_simulation/schedule.py` | Scheduled demand times and explicit support for repeated legal movements in dense demand. |
+| `runtime_simulation/scenarios.py` | Scenario admission mode, headway, and recommended duration. |
+| `runtime_simulation/scenario_catalog.json` | Predeclare the 16-vehicle congested schedule without hard-coded outcomes. |
+| `runtime_simulation/runner.py` | Independent admission, bounded queue-head actors, pair delivery, ego execution, real departure/traffic metrics, failure/incomplete reporting, policy hashing. |
+| `runtime_simulation/browser_state.py` | Clear current participants/permissions on complete discharge while retaining event history. |
+| `runtime_simulation/reporting.py` | Persist expanded traffic/execution metrics in qualitative summaries. |
+| `runtime_simulation/visualization.py` | Wider SUMO camera only for independent dense traffic. |
+| `run_runtime_simulation.py` | Scenario-specific duration/admission mode and separate output-directory option. |
 | `tests/test_ego_execution_and_dense_traffic.py` | New unit and guarded real-SUMO acceptance tests. |
-| `tests/test_panel_demo.py` | Update existing architecture assertions for local execution; retain legacy runtime safety checks. |
+| `tests/test_runtime_simulation.py` | Update existing architecture assertions for local execution; retain legacy runtime safety checks. |
 | `README.md` | Correct root-relative path and document the new scenario, execution scope, and commands. |
 | `docs/DECENTRALIZED_CONGESTED_DEMO_REPORT.md` | This audit, measured report, file inventory, and run instructions. |
 
@@ -158,8 +158,8 @@ Paths below are relative to the repository root.
 No original model-selection, held-out, or trained-model files are outputs.
 The final verification directory contains:
 
-- `latest_panel_demo.json`: full measured qualitative result.
-- `latest_panel_demo_summary.md`: metric summary.
+- `latest_runtime_simulation.json`: full measured qualitative result.
+- `latest_runtime_simulation_summary.md`: metric summary.
 - `presentation_runs/latest_presentation_run.json`: latest qualitative history.
 - `presentation_runs/run_20261005T161504_498435Z.json`: first saved verification summary.
 - `presentation_runs/run_20261005T162245_486707Z.json`: final tested-code verification summary.
@@ -167,12 +167,12 @@ The final verification directory contains:
 Additional generated files:
 
 - `results/congested_ego_local_verification.log`: saved final stdout.
-- `results/panel_demo/runtime/live_state.json`: normal showcase display snapshot.
+- `results/runtime_simulation/runtime/live_state.json`: normal showcase display snapshot.
 - `results/congested_development_run.log`: development-run output.
-- `results/panel_demo/decentralized_congested_check/latest_panel_demo.json`.
-- `results/panel_demo/decentralized_congested_check/latest_panel_demo_summary.md`.
-- `results/panel_demo/decentralized_congested_check/presentation_runs/latest_presentation_run.json`.
-- `results/panel_demo/decentralized_congested_check/presentation_runs/run_20261005T155920_021037Z.json`.
+- `results/runtime_simulation/decentralized_congested_check/latest_runtime_simulation.json`.
+- `results/runtime_simulation/decentralized_congested_check/latest_runtime_simulation_summary.md`.
+- `results/runtime_simulation/decentralized_congested_check/presentation_runs/latest_presentation_run.json`.
+- `results/runtime_simulation/decentralized_congested_check/presentation_runs/run_20261005T155920_021037Z.json`.
 
 Pytest also updates its normal cache and writes isolated temporary test results.
 Development-run metrics are not substituted for the final verification result.
@@ -185,14 +185,14 @@ Congested SUMO GUI:
 
 ```powershell
 cd "C:\Users\Iresha Nethmini\Documents\R26-DS-017\component_2_right_of_way_negotiation"
-& "C:\R26-DS-017\venv\Scripts\python.exe" -B run_panel_demo.py --scenario congested_four_approach --gui --gui-delay-ms 10
+& "C:\R26-DS-017\venv\Scripts\python.exe" -B run_runtime_simulation.py --scenario congested_four_approach --gui --gui-delay-ms 10
 ```
 
 Standalone headless web-live simulation (publishes showcase state):
 
 ```powershell
 cd "C:\Users\Iresha Nethmini\Documents\R26-DS-017\component_2_right_of_way_negotiation"
-& "C:\R26-DS-017\venv\Scripts\python.exe" -B run_panel_demo.py --scenario congested_four_approach --web-live --presentation-delay-ms 10
+& "C:\R26-DS-017\venv\Scripts\python.exe" -B run_runtime_simulation.py --scenario congested_four_approach --web-live --presentation-delay-ms 10
 ```
 
 Showcase:
