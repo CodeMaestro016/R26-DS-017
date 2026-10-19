@@ -1,0 +1,34 @@
+Loaded TensorFlow-free intention models with CPUExecutionProvider.
+============================================================
+FINAL LIVE PANEL DEMONSTRATION
+Multi-Agent Right-of-Way Negotiation
+============================================================
+Mode: QUALITATIVE_PRESENTATION_ONLY
+Selected policy: E5
+Policy source: selected_policy.pt
+Decentralized actors: ENABLED
+Centralized critic: DISABLED
+Training: DISABLED
+Held-out evaluation: NOT USED
+GUI: BLUE approaching; YELLOW negotiating; GREEN ready; RED blocked
+============================================================
+Starting SUMO with 0.04 s steps...
+SUMO started successfully.
+VEHICLE_ADMITTED PANEL_AV_N_01 N_IN_0_LEFT
+VEHICLE_ADMITTED PANEL_AV_E_01 E_IN_0_LEFT
+TRAFFIC_RULE_ORDER_ALREADY_RESOLVED
+------------------------------------------------------------
+TIME: 15.76 s   EVENT #1
+Active participants: ('PANEL_AV_E_01', 'PANEL_AV_N_01')
+Status: REGULATORY_ORDER_RESOLVED
+Original precedence: (('PANEL_AV_E_01', 'PANEL_AV_N_01'),)
+MAPPO_INVOCATION = NOT_REQUIRED
+READY: ('PANEL_AV_N_01',)
+BLOCKED: ('PANEL_AV_E_01',)
+Completed: 0/2
+------------------------------------------------------------
+PLAN_INVALIDATED ACTIVE_PARTICIPANT_SET_CHANGED,RELEVANT_PRECEDENCE_GRAPH_CHANGED,CONFLICT_ZONE_CLEARED
+RENEGOTIATION_REQUIRED
+VEHICLE_COMPLETED PANEL_AV_N_01
+VEHICLE_COMPLETED PANEL_AV_E_01
+Simulation finished at 48.80 s after 1220 steps.

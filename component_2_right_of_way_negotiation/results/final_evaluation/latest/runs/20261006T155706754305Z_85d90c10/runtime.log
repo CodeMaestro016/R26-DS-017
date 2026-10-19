@@ -1,0 +1,83 @@
+Loaded TensorFlow-free intention models with CPUExecutionProvider.
+============================================================
+FINAL LIVE PANEL DEMONSTRATION
+Multi-Agent Right-of-Way Negotiation
+============================================================
+Mode: QUALITATIVE_PRESENTATION_ONLY
+Selected policy: E5
+Policy source: selected_policy.pt
+Decentralized actors: ENABLED
+Centralized critic: DISABLED
+Training: DISABLED
+Held-out evaluation: NOT USED
+GUI: BLUE approaching; YELLOW negotiating; GREEN ready; RED blocked
+============================================================
+Starting SUMO with 0.04 s steps...
+SUMO started successfully.
+VEHICLE_ADMITTED PANEL_AV_N_01 N_IN_0_STRAIGHT
+VEHICLE_ADMITTED PANEL_AV_E_01 E_IN_0_STRAIGHT
+VEHICLE_ADMITTED PANEL_AV_S_01 S_IN_0_RIGHT
+VEHICLE_ADMITTED PANEL_AV_W_01 W_IN_0_LEFT
+------------------------------------------------------------
+TIME: 15.76 s   EVENT #1
+Active participants: ('PANEL_AV_E_01', 'PANEL_AV_N_01', 'PANEL_AV_S_01', 'PANEL_AV_W_01')
+Status: NEGOTIATION_REQUIRED_REGULATORY_CYCLE
+Original precedence: (('PANEL_AV_E_01', 'PANEL_AV_N_01'), ('PANEL_AV_N_01', 'PANEL_AV_W_01'), ('PANEL_AV_S_01', 'PANEL_AV_E_01'), ('PANEL_AV_S_01', 'PANEL_AV_N_01'), ('PANEL_AV_W_01', 'PANEL_AV_E_01'), ('PANEL_AV_W_01', 'PANEL_AV_S_01'))
+MAPPO_INVOCATION = AUTHORIZED
+PROPOSER: ((('PANEL_AV_E_01', 'PANEL_AV_N_01'), 'RELINQUISH_CLAIM'), (('PANEL_AV_N_01', 'PANEL_AV_W_01'), 'RELINQUISH_CLAIM'), (('PANEL_AV_S_01', 'PANEL_AV_E_01'), 'KEEP_CLAIM'), (('PANEL_AV_S_01', 'PANEL_AV_N_01'), 'KEEP_CLAIM'), (('PANEL_AV_W_01', 'PANEL_AV_E_01'), 'KEEP_CLAIM'), (('PANEL_AV_W_01', 'PANEL_AV_S_01'), 'KEEP_CLAIM'))
+RESPONDER: (((15.76, 'PANEL_AV_E_01', 'PANEL_AV_N_01', 'PANEL_AV_N_01', 'PANEL_AV_E_01'), 'ACCEPT_RELINQUISHMENT'), ((15.76, 'PANEL_AV_N_01', 'PANEL_AV_W_01', 'PANEL_AV_W_01', 'PANEL_AV_N_01'), 'ACCEPT_RELINQUISHMENT'))
+Effective graph: (('PANEL_AV_S_01', 'PANEL_AV_E_01'), ('PANEL_AV_S_01', 'PANEL_AV_N_01'), ('PANEL_AV_W_01', 'PANEL_AV_E_01'), ('PANEL_AV_W_01', 'PANEL_AV_S_01'))
+SEMANTIC_SELECTION_RULE = DETERMINISTIC_MASKED_ARGMAX_OF_SELECTED_E5_PRESENTATION_ONLY
+POLICY_FACTOR {'decision_role': 'PROPOSER', 'ego_id': 'PANEL_AV_N_01', 'claim_identity': ('PANEL_AV_E_01', 'PANEL_AV_N_01'), 'proposal_id': None, 'action_names': ('KEEP_CLAIM', 'RELINQUISH_CLAIM'), 'hard_action_mask': (True, True), 'masked_probabilities': (0.0, 1.0), 'selected_action': 'RELINQUISH_CLAIM', 'selected_action_index': 1, 'selection_rule': 'DETERMINISTIC_MASKED_ARGMAX_OF_SELECTED_E5_PRESENTATION_ONLY'}
+POLICY_FACTOR {'decision_role': 'PROPOSER', 'ego_id': 'PANEL_AV_W_01', 'claim_identity': ('PANEL_AV_N_01', 'PANEL_AV_W_01'), 'proposal_id': None, 'action_names': ('KEEP_CLAIM', 'RELINQUISH_CLAIM'), 'hard_action_mask': (True, True), 'masked_probabilities': (0.0, 1.0), 'selected_action': 'RELINQUISH_CLAIM', 'selected_action_index': 1, 'selection_rule': 'DETERMINISTIC_MASKED_ARGMAX_OF_SELECTED_E5_PRESENTATION_ONLY'}
+POLICY_FACTOR {'decision_role': 'PROPOSER', 'ego_id': 'PANEL_AV_E_01', 'claim_identity': ('PANEL_AV_S_01', 'PANEL_AV_E_01'), 'proposal_id': None, 'action_names': ('KEEP_CLAIM', 'RELINQUISH_CLAIM'), 'hard_action_mask': (True, True), 'masked_probabilities': (1.0, 0.0), 'selected_action': 'KEEP_CLAIM', 'selected_action_index': 0, 'selection_rule': 'DETERMINISTIC_MASKED_ARGMAX_OF_SELECTED_E5_PRESENTATION_ONLY'}
+POLICY_FACTOR {'decision_role': 'PROPOSER', 'ego_id': 'PANEL_AV_N_01', 'claim_identity': ('PANEL_AV_S_01', 'PANEL_AV_N_01'), 'proposal_id': None, 'action_names': ('KEEP_CLAIM', 'RELINQUISH_CLAIM'), 'hard_action_mask': (True, True), 'masked_probabilities': (1.0, 0.0), 'selected_action': 'KEEP_CLAIM', 'selected_action_index': 0, 'selection_rule': 'DETERMINISTIC_MASKED_ARGMAX_OF_SELECTED_E5_PRESENTATION_ONLY'}
+POLICY_FACTOR {'decision_role': 'PROPOSER', 'ego_id': 'PANEL_AV_E_01', 'claim_identity': ('PANEL_AV_W_01', 'PANEL_AV_E_01'), 'proposal_id': None, 'action_names': ('KEEP_CLAIM', 'RELINQUISH_CLAIM'), 'hard_action_mask': (True, True), 'masked_probabilities': (1.0, 0.0), 'selected_action': 'KEEP_CLAIM', 'selected_action_index': 0, 'selection_rule': 'DETERMINISTIC_MASKED_ARGMAX_OF_SELECTED_E5_PRESENTATION_ONLY'}
+POLICY_FACTOR {'decision_role': 'PROPOSER', 'ego_id': 'PANEL_AV_S_01', 'claim_identity': ('PANEL_AV_W_01', 'PANEL_AV_S_01'), 'proposal_id': None, 'action_names': ('KEEP_CLAIM', 'RELINQUISH_CLAIM'), 'hard_action_mask': (True, True), 'masked_probabilities': (1.0, 0.0), 'selected_action': 'KEEP_CLAIM', 'selected_action_index': 0, 'selection_rule': 'DETERMINISTIC_MASKED_ARGMAX_OF_SELECTED_E5_PRESENTATION_ONLY'}
+POLICY_FACTOR {'decision_role': 'RESPONDER', 'ego_id': 'PANEL_AV_E_01', 'claim_identity': ('PANEL_AV_E_01', 'PANEL_AV_N_01'), 'proposal_id': (15.76, 'PANEL_AV_E_01', 'PANEL_AV_N_01', 'PANEL_AV_N_01', 'PANEL_AV_E_01'), 'action_names': ('ACCEPT_RELINQUISHMENT', 'REJECT_RELINQUISHMENT'), 'hard_action_mask': (True, True), 'masked_probabilities': (1.0, 0.0), 'selected_action': 'ACCEPT_RELINQUISHMENT', 'selected_action_index': 0, 'selection_rule': 'DETERMINISTIC_MASKED_ARGMAX_OF_SELECTED_E5_PRESENTATION_ONLY'}
+POLICY_FACTOR {'decision_role': 'RESPONDER', 'ego_id': 'PANEL_AV_N_01', 'claim_identity': ('PANEL_AV_N_01', 'PANEL_AV_W_01'), 'proposal_id': (15.76, 'PANEL_AV_N_01', 'PANEL_AV_W_01', 'PANEL_AV_W_01', 'PANEL_AV_N_01'), 'action_names': ('ACCEPT_RELINQUISHMENT', 'REJECT_RELINQUISHMENT'), 'hard_action_mask': (True, True), 'masked_probabilities': (1.0, 0.0), 'selected_action': 'ACCEPT_RELINQUISHMENT', 'selected_action_index': 0, 'selection_rule': 'DETERMINISTIC_MASKED_ARGMAX_OF_SELECTED_E5_PRESENTATION_ONLY'}
+READY: ('PANEL_AV_E_01', 'PANEL_AV_N_01', 'PANEL_AV_S_01')
+BLOCKED: ('PANEL_AV_W_01',)
+Completed: 0/4
+------------------------------------------------------------
+PLAN_INVALIDATED ACTIVE_PARTICIPANT_SET_CHANGED,RELEVANT_PRECEDENCE_GRAPH_CHANGED
+RENEGOTIATION_REQUIRED
+------------------------------------------------------------
+TIME: 23.20 s   EVENT #2
+Active participants: ('PANEL_AV_E_01', 'PANEL_AV_N_01', 'PANEL_AV_W_01')
+Status: NEGOTIATION_REQUIRED_REGULATORY_CYCLE
+Original precedence: (('PANEL_AV_E_01', 'PANEL_AV_N_01'), ('PANEL_AV_N_01', 'PANEL_AV_W_01'), ('PANEL_AV_W_01', 'PANEL_AV_E_01'))
+MAPPO_INVOCATION = AUTHORIZED
+PROPOSER: ((('PANEL_AV_E_01', 'PANEL_AV_N_01'), 'RELINQUISH_CLAIM'), (('PANEL_AV_N_01', 'PANEL_AV_W_01'), 'RELINQUISH_CLAIM'), (('PANEL_AV_W_01', 'PANEL_AV_E_01'), 'KEEP_CLAIM'))
+RESPONDER: (((23.2, 'PANEL_AV_E_01', 'PANEL_AV_N_01', 'PANEL_AV_N_01', 'PANEL_AV_E_01'), 'ACCEPT_RELINQUISHMENT'), ((23.2, 'PANEL_AV_N_01', 'PANEL_AV_W_01', 'PANEL_AV_W_01', 'PANEL_AV_N_01'), 'ACCEPT_RELINQUISHMENT'))
+Effective graph: (('PANEL_AV_W_01', 'PANEL_AV_E_01'),)
+SEMANTIC_SELECTION_RULE = DETERMINISTIC_MASKED_ARGMAX_OF_SELECTED_E5_PRESENTATION_ONLY
+POLICY_FACTOR {'decision_role': 'PROPOSER', 'ego_id': 'PANEL_AV_N_01', 'claim_identity': ('PANEL_AV_E_01', 'PANEL_AV_N_01'), 'proposal_id': None, 'action_names': ('KEEP_CLAIM', 'RELINQUISH_CLAIM'), 'hard_action_mask': (True, True), 'masked_probabilities': (0.0, 1.0), 'selected_action': 'RELINQUISH_CLAIM', 'selected_action_index': 1, 'selection_rule': 'DETERMINISTIC_MASKED_ARGMAX_OF_SELECTED_E5_PRESENTATION_ONLY'}
+POLICY_FACTOR {'decision_role': 'PROPOSER', 'ego_id': 'PANEL_AV_W_01', 'claim_identity': ('PANEL_AV_N_01', 'PANEL_AV_W_01'), 'proposal_id': None, 'action_names': ('KEEP_CLAIM', 'RELINQUISH_CLAIM'), 'hard_action_mask': (True, True), 'masked_probabilities': (0.0, 1.0), 'selected_action': 'RELINQUISH_CLAIM', 'selected_action_index': 1, 'selection_rule': 'DETERMINISTIC_MASKED_ARGMAX_OF_SELECTED_E5_PRESENTATION_ONLY'}
+POLICY_FACTOR {'decision_role': 'PROPOSER', 'ego_id': 'PANEL_AV_E_01', 'claim_identity': ('PANEL_AV_W_01', 'PANEL_AV_E_01'), 'proposal_id': None, 'action_names': ('KEEP_CLAIM', 'RELINQUISH_CLAIM'), 'hard_action_mask': (True, True), 'masked_probabilities': (1.0, 0.0), 'selected_action': 'KEEP_CLAIM', 'selected_action_index': 0, 'selection_rule': 'DETERMINISTIC_MASKED_ARGMAX_OF_SELECTED_E5_PRESENTATION_ONLY'}
+POLICY_FACTOR {'decision_role': 'RESPONDER', 'ego_id': 'PANEL_AV_E_01', 'claim_identity': ('PANEL_AV_E_01', 'PANEL_AV_N_01'), 'proposal_id': (23.2, 'PANEL_AV_E_01', 'PANEL_AV_N_01', 'PANEL_AV_N_01', 'PANEL_AV_E_01'), 'action_names': ('ACCEPT_RELINQUISHMENT', 'REJECT_RELINQUISHMENT'), 'hard_action_mask': (True, True), 'masked_probabilities': (1.0, 0.0), 'selected_action': 'ACCEPT_RELINQUISHMENT', 'selected_action_index': 0, 'selection_rule': 'DETERMINISTIC_MASKED_ARGMAX_OF_SELECTED_E5_PRESENTATION_ONLY'}
+POLICY_FACTOR {'decision_role': 'RESPONDER', 'ego_id': 'PANEL_AV_N_01', 'claim_identity': ('PANEL_AV_N_01', 'PANEL_AV_W_01'), 'proposal_id': (23.2, 'PANEL_AV_N_01', 'PANEL_AV_W_01', 'PANEL_AV_W_01', 'PANEL_AV_N_01'), 'action_names': ('ACCEPT_RELINQUISHMENT', 'REJECT_RELINQUISHMENT'), 'hard_action_mask': (True, True), 'masked_probabilities': (1.0, 0.0), 'selected_action': 'ACCEPT_RELINQUISHMENT', 'selected_action_index': 0, 'selection_rule': 'DETERMINISTIC_MASKED_ARGMAX_OF_SELECTED_E5_PRESENTATION_ONLY'}
+READY: ('PANEL_AV_E_01', 'PANEL_AV_N_01')
+BLOCKED: ('PANEL_AV_W_01',)
+Completed: 0/4
+------------------------------------------------------------
+PLAN_INVALIDATED ACTIVE_PARTICIPANT_SET_CHANGED,RELEVANT_PRECEDENCE_GRAPH_CHANGED,CONFLICT_ZONE_CLEARED
+RENEGOTIATION_REQUIRED
+TRAFFIC_RULE_ORDER_ALREADY_RESOLVED
+------------------------------------------------------------
+TIME: 28.08 s   EVENT #3
+Active participants: ('PANEL_AV_E_01', 'PANEL_AV_W_01')
+Status: REGULATORY_ORDER_RESOLVED
+Original precedence: (('PANEL_AV_W_01', 'PANEL_AV_E_01'),)
+MAPPO_INVOCATION = NOT_REQUIRED
+READY: ('PANEL_AV_E_01', 'PANEL_AV_W_01')
+BLOCKED: ()
+Completed: 0/4
+------------------------------------------------------------
+PLAN_INVALIDATED ACTIVE_PARTICIPANT_SET_CHANGED,RELEVANT_PRECEDENCE_GRAPH_CHANGED,CONFLICT_ZONE_CLEARED
+RENEGOTIATION_REQUIRED
+VEHICLE_COMPLETED PANEL_AV_S_01
+VEHICLE_COMPLETED PANEL_AV_N_01
+VEHICLE_COMPLETED PANEL_AV_E_01
+VEHICLE_COMPLETED PANEL_AV_W_01
+Simulation finished at 53.44 s after 1336 steps.
