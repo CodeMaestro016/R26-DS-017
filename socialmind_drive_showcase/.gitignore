@@ -1,0 +1,11 @@
+# Local generated files only; application source and assets are tracked.
+.venv/
+venv/
+__pycache__/
+**/__pycache__/
+.pytest_cache/
+*.py[cod]
+*.log
+.env
+.env.*
+!.env.example
