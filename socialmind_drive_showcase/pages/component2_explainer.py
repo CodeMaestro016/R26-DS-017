@@ -280,7 +280,7 @@ def _live_results():
     with ui.row().classes("gap-3 mb-6"):
         ui.button("Refresh Latest Results", icon="refresh", on_click=results_panel.refresh).props("outline no-caps")
         ui.button("Open Panel Results Folder", icon="folder_open",
-                  on_click=lambda: _open_folder(COMPONENT2_ROOT / "results" / "panel_demo")).props("flat no-caps")
+                  on_click=lambda: _open_folder(COMPONENT2_ROOT / "results" / "runtime_simulation")).props("flat no-caps")
         ui.button("Open Technical Project Folder", icon="source",
                   on_click=lambda: _open_folder(COMPONENT2_ROOT)).props("flat no-caps")
     results_panel()

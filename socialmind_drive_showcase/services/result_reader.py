@@ -6,8 +6,12 @@ from pathlib import Path
 
 def read_panel_results(path):
     target = Path(path)
+    if not target.is_file() and "runtime_simulation" in target.parts:
+        old = Path(str(target).replace("runtime_simulation", "panel_demo"))
+        if old.is_file():
+            target = old
     if not target.is_file():
-        return {"available": False, "message": "No panel-demo result is available yet."}
+        return {"available": False, "message": "No runtime simulation result is available yet."}
     try:
         payload = json.loads(target.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as error:
@@ -32,4 +36,3 @@ def short_vehicle_id(value):
 
 def format_edge(edge):
     return " → ".join(short_vehicle_id(item) for item in edge)
-

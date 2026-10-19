@@ -1,4 +1,5 @@
 from nicegui import ui
+from socialmind_drive_showcase.services.client_lifecycle import client_refreshable, page_timer
 
 from socialmind_drive_showcase.config import (
     COMPONENT2,
@@ -254,7 +255,7 @@ def _component2_page(component):
 
             _launcher_status()
 
-            ui.timer(
+            page_timer(
                 0.75,
                 _refresh_runtime_status,
             )
@@ -421,7 +422,7 @@ def _component2_page(component):
 
             section_heading(
                 "LATEST LIVE RESULTS",
-                "Qualitative panel demonstration evidence",
+                "Runtime Simulation evidence",
             )
 
             with ui.row().classes(
@@ -442,7 +443,7 @@ def _component2_page(component):
                     on_click=lambda: _open_folder(
                         COMPONENT2_ROOT
                         / "results"
-                        / "panel_demo"
+                        / "runtime_simulation"
                     ),
                 ).props(
                     "flat no-caps"
@@ -458,6 +459,9 @@ def _component2_page(component):
                     "flat no-caps"
                 )
 
+            ui.link("Quantitative Evaluation", "/component/right-of-way/evaluation").classes("font-bold mt-6")
+            from socialmind_drive_showcase.pages.component2_targeted_validation import targeted_validation_section
+            targeted_validation_section()
             results_panel()
 
 
@@ -497,7 +501,7 @@ def _semantic_card(
         )
 
 
-@ui.refreshable
+@client_refreshable
 def _launcher_status():
     colors = {
         "READY": "text-blue-7",

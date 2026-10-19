@@ -1,4 +1,57 @@
-__pycache__/
-*.py[cod]
-.pytest_cache/
 
+# R26-DS-017 Research Project
+# Track only four selected folders
+
+/*
+
+!/.gitignore
+!/component_1/
+!/component_2_right_of_way_negotiation/
+!/component_3/
+!/socialmind_drive_showcase/
+
+# Python caches
+**/__pycache__/
+**/.pytest_cache/
+**/.mypy_cache/
+**/.ruff_cache/
+**/.ipynb_checkpoints/
+**/*.pyc
+**/*.pyo
+
+# Virtual environments
+**/.venv/
+**/venv/
+**/node_modules/
+
+# Logs and temporary files
+**/*.log
+**/Thumbs.db
+**/.DS_Store
+
+# Environment secrets
+**/.env
+**/.env.*
+!**/.env.example
+
+# IDE files
+**/.vscode/
+**/.idea/
+
+# Exclude large generated simulation results
+/component_2_right_of_way_negotiation/results/*
+
+# Keep selected MAPPO model and evaluation evidence
+!/component_2_right_of_way_negotiation/results/final_mappo_selection_v2/
+
+
+# Ignore generated Component 2 results
+/component_2_right_of_way_negotiation/results/*
+
+# Keep selected trained MAPPO model and evidence
+!/component_2_right_of_way_negotiation/results/final_mappo_selection_v2/
+
+# Keep latest final evaluation reports and graphs
+!/component_2_right_of_way_negotiation/results/final_evaluation/
+/component_2_right_of_way_negotiation/results/final_evaluation/*
+!/component_2_right_of_way_negotiation/results/final_evaluation/latest/

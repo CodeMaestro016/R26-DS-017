@@ -10,11 +10,13 @@ import time
 import xml.etree.ElementTree as ET
 
 from nicegui import ui
+from socialmind_drive_showcase.services.client_lifecycle import client_refreshable, page_timer, ClientLocalState
 
 from socialmind_drive_showcase.config import (
     COMPONENT2_LIVE_STATE_PATH, COMPONENT2_ROOT)
-from socialmind_drive_showcase.services.live_state_reader import read_live_state
-from socialmind_drive_showcase.services.scenario_reader import read_scenario_catalog
+from socialmind_drive_showcase.services.live_state_reader import (
+    read_live_state, runtime_status_label, discharge_label)
+from socialmind_drive_showcase.services.scenario_reader import read_scenario_catalog, read_final_demonstrations
 from socialmind_drive_showcase.ui.theme import apply_theme
 from socialmind_drive_showcase.pages.component_detail import LAUNCHER
 from socialmind_drive_showcase.pages.component2_inspector import (
@@ -27,14 +29,15 @@ CAMERA_JUNCTION_RADIUS_MULTIPLIER = 3.2
 CAMERA_ZOOM_MIN = 0.55
 CAMERA_ZOOM_MAX = 1.80
 CAMERA_ZOOM_STEP = 0.20
-CAMERA_ZOOM = {"factor": 1.0}
+CAMERA_ZOOM = ClientLocalState(factor=1.0)
 NEGOTIATION_VISUAL_HOLD_SECONDS = 1.75
 SCENARIO_CATALOG = read_scenario_catalog()
 SCENARIO_BY_ID = {item["scenario_id"]: item for item in SCENARIO_CATALOG}
-VIVA_SCENARIO_IDS = ("yield_negotiation_demo", "rule_resolved_two", "four_way_simultaneous",
-                     "regulatory_cycle", "mixed_manoeuvres", "congested_four_approach")
-VIVA_SCENARIOS = tuple(SCENARIO_BY_ID[key] for key in VIVA_SCENARIO_IDS)
+VIVA_SCENARIOS = read_final_demonstrations()
+VIVA_SCENARIO_IDS = tuple(item['scenario_id'] for item in VIVA_SCENARIOS)
+SELECTABLE_SCENARIOS = VIVA_SCENARIOS
 VIVA_LABELS = {
+    "default_panel": "Default Rolling Traffic Presentation",
     "congested_four_approach": "5. Congested Four-Approach Queues (16 vehicles)",
     "yield_negotiation_demo": "MAIN DEMO — YIELD + NEGOTIATION",
     "rule_resolved_two": "1. Rule-Resolved Conflict",
@@ -42,16 +45,22 @@ VIVA_LABELS = {
     "regulatory_cycle": "3. Regulatory Cycle",
     "mixed_manoeuvres": "4. Mixed Manoeuvres"}
 VIVA_PURPOSES = {
+    "default_panel": "Existing rolling traffic across all 12 legal movements. Qualitative presentation only.",
     "congested_four_approach": "16 active traffic vehicles with up to four queue-head negotiators; ego-local execution. Qualitative presentation only.",
     "yield_negotiation_demo": "Rules resolve a simple yield first; a second wave then requires real MAPPO negotiation.",
     "rule_resolved_two": "Rules resolve this two-vehicle conflict without MAPPO.",
     "four_way_simultaneous": "Four AVs arrive together in a multi-relationship stress case.",
     "regulatory_cycle": "An unresolved regulatory cycle requires real semantic negotiation.",
     "mixed_manoeuvres": "Left, straight and right movements trigger conflict re-evaluation."}
-DEFAULT_SCENARIO_ID = "yield_negotiation_demo"
-SELECTED_SCENARIO = {"id": DEFAULT_SCENARIO_ID}
-SELECTED_VEHICLE = {"id": None}  # display-only API compatibility
-DISPLAY_FROZEN = {"value": False}  # technical inspection only
+VIVA_LABELS.update({item['scenario_id']:item['final_label'] for item in VIVA_SCENARIOS})
+VIVA_PURPOSES.update({item['scenario_id']:item['demonstrates'] for item in VIVA_SCENARIOS})
+FINAL_DEMONSTRATION_BY_ID = {item['scenario_id']:item for item in VIVA_SCENARIOS}
+DEFAULT_SCENARIO_ID = "rule_resolved_two"
+SELECTED_SCENARIO = ClientLocalState(id=DEFAULT_SCENARIO_ID)
+SELECTED_VEHICLE = ClientLocalState(id=None)
+DISPLAY_FROZEN = ClientLocalState(value=False)
+COMPARISON_OPEN = ClientLocalState(value=False)
+REPLAY_STATE = ClientLocalState(mode='default',active=False,index=None,started=None,origin=0.)
 
 
 class NegotiationVisualHold:
@@ -62,25 +71,36 @@ class NegotiationVisualHold:
         self._event_identity = None
         self._participant_ids = frozenset()
         self._expires_at = 0.0
+        self._run_identity = None
 
     def apply(self, payload, *, now=None):
         current_time = time.monotonic() if now is None else float(now)
-        if payload.get("mappo_invocation") == "AUTHORIZED":
+        run_identity = (payload.get('run_id'), payload.get('scenario_id'))
+        if run_identity != self._run_identity:
+            self._run_identity = run_identity
+            self._event_identity = None
+            self._participant_ids = frozenset()
+            self._expires_at = 0.0
+        if payload.get("last_mappo_event") or payload.get("mappo_invocation") == "AUTHORIZED":
             event = payload.get("last_mappo_event") or {}
-            identity = (payload.get("scenario_id"),
+            identity = (payload.get("run_id"), payload.get("scenario_id"),
                         event.get("timestamp", payload.get("simulation_time")),
-                        tuple(payload.get("participants", ())))
+                        tuple(event.get("participants", payload.get("participants", ()))))
             if identity != self._event_identity:
                 self._event_identity = identity
-                self._participant_ids = frozenset(payload.get("participants", ()))
+                self._participant_ids = frozenset(event.get("participants", payload.get("participants", ())))
                 self._expires_at = current_time + self.duration_seconds
         active = bool(self._participant_ids and current_time < self._expires_at)
         result = dict(payload)
+        result['vehicles'] = tuple({k:value for k,value in v.items()
+            if k not in {'recent_mappo_event','recent_mappo_timestamp'}}
+            for v in payload.get('vehicles', ()))
         result["negotiation_visual_hold"] = active
         if not active:
             return result
         result["vehicles"] = tuple(
-            dict(vehicle, display_state="NEGOTIATING")
+            dict(vehicle, recent_mappo_event=True,
+                 recent_mappo_timestamp=self._event_identity[2])
             if vehicle.get("id") in self._participant_ids else dict(vehicle)
             for vehicle in payload.get("vehicles", ()))
         return result
@@ -95,6 +115,17 @@ def apply_live_display_state(state):
     if state.get("available") and state.get("payload") is not None:
         result["payload"] = NEGOTIATION_HOLD.apply(state["payload"])
     return result
+
+
+def idle_display_state(scenario_id=DEFAULT_SCENARIO_ID):
+    """Explicit UI idle frame; never reuse a previous scientific runtime."""
+    scenario_id=scenario_id if scenario_id in SCENARIO_BY_ID else DEFAULT_SCENARIO_ID
+    return apply_live_display_state(dict(available=True,stale=False,message='',payload=dict(
+        schema='SHOWCASE_IDLE_PRESENTATION_V1',display_only=True,run_id=None,running=False,
+        simulation_time=0.0,status='NO SCENARIO RUNNING',scenario_id=scenario_id,vehicles=(),
+        completed=0,scheduled=SCENARIO_BY_ID[scenario_id]['vehicle_count'],participants=(),
+        ready=(),blocked=(),effective_graph=(),events=(),last_mappo_event=None,
+        run_metrics={},run_negotiation_summary={},mappo_invocation='NOT_REQUIRED')))
 
 
 @dataclass(frozen=True)
@@ -216,15 +247,22 @@ def render_sumo_style_svg(payload, *, width=1100, height=700,
         full_id = html.escape(str(vehicle["id"]))
         label = html.escape(short_vehicle_label(vehicle["id"]))
         label_x, label_y = x + body_width / 2.0 + 4.0, y - 4.0
+        acknowledgement = (
+            f'<rect class="mappo-decision-outline" x="{-body_length/2-3:.2f}" '
+            f'y="{-body_width/2-3:.2f}" width="{body_length+6:.2f}" '
+            f'height="{body_width+6:.2f}" rx="4" fill="none" stroke="#ffd21f" stroke-width="3">'
+            f'<title>MAPPO decision received at {vehicle.get("recent_mappo_timestamp")}s</title></rect>'
+            if vehicle.get('recent_mappo_event') else '')
         vehicles.append(
             f'<g class="sumo-car" data-vehicle-id="{full_id}" '
-            f'onclick="window.selectComponent2Vehicle && '
+            f'onclick="window.selectComponent2Vehicle &amp;&amp; '
             f'window.selectComponent2Vehicle(\'{full_id}\')" '
             f'transform="translate({x:.2f} {y:.2f}) '
             f'rotate({rotation:.2f})"><title>{full_id}</title>'
             f'<rect x="{-body_length / 2:.2f}" y="{-body_width / 2:.2f}" '
             f'width="{body_length:.2f}" height="{body_width:.2f}" rx="2" '
             f'fill="{color}" stroke="#ffffff" stroke-width="1"/>'
+            + acknowledgement +
             f'<path d="M{body_length * .18:.2f},{-body_width * .35:.2f} '
             f'L{body_length * .38:.2f},0 L{body_length * .18:.2f},'
             f'{body_width * .35:.2f} Z" fill="#d9f2ff" opacity=".9"/>'
@@ -237,9 +275,23 @@ def render_sumo_style_svg(payload, *, width=1100, height=700,
             f'<rect x="{label_x - 2:.2f}" y="{label_y - 9:.2f}" '
             f'width="{len(label) * 6 + 4}" height="11" rx="2"/>'
             f'<text x="{label_x:.2f}" y="{label_y:.2f}">{label}</text></g>')
-    return (f'<svg class="sumo-live-canvas" viewBox="0 0 {width} {height}" '
+    frame_fields = ('id', 'display_state', 'permission_label', 'entry_permission',
+                    'movement','collision_involved',
+                    'negotiation', 'speed_mps', 'motion_state', 'local_intention_predictions',
+                    'display_stage', 'recent_mappo_event', 'recent_mappo_timestamp',
+                    'intersection_rear_cleared', 'presentation_visible')
+    frame = {'simulation_time': payload.get('simulation_time'), 'run_id': payload.get('run_id'),
+             'replay_mode':payload.get('replay_mode',False),
+             'browser_owned_frame':payload.get('browser_owned_frame',False),
+             'replay_events':payload.get('replay_events',[]),
+             'scenario_id':payload.get('scenario_id'),
+             'vehicles': [{k: v[k] for k in frame_fields if k in v}
+                          for v in payload.get('vehicles', ())]}
+    return (f'<svg class="sumo-live-canvas" data-zoom="{zoom}" '
+            f'data-scenario="{html.escape(str(payload.get("scenario_id", "")))}" viewBox="0 0 {width} {height}" '
             'preserveAspectRatio="xMidYMid meet" '
             'role="img" aria-label="Live top-down SUMO intersection">'
+            '<metadata class="c2-synchronized-frame">' + html.escape(json.dumps(frame)) + '</metadata>'
             '<rect width="100%" height="100%" fill="#57964c"/>'
             '<g class="sumo-road-boundaries">' + boundaries + '</g>'
             '<g class="sumo-road-asphalt">' + asphalt + '</g>'
@@ -280,44 +332,43 @@ def _camera_controls():
         ui.label(f'{CAMERA_ZOOM["factor"]:.1f}×').classes("camera-zoom-value")
 
 
-@ui.refreshable
+@client_refreshable
 def live_view_panel():
-    state = apply_live_display_state(read_live_state(COMPONENT2_LIVE_STATE_PATH))
+    if REPLAY_STATE['mode']=='replay' and REPLAY_STATE['index'] is not None:
+        _main_canvas_replay_panel()
+        return
+    state = (idle_display_state(SELECTED_SCENARIO['id']) if LAUNCHER.status=='READY' or REPLAY_STATE['mode']=='prepared' else
+        apply_live_display_state(read_live_state(COMPONENT2_LIVE_STATE_PATH,
+            started_after=LAUNCHER.started_at)))
     if not state["available"] and LAUNCHER.status != "READY":
         with ui.column().classes("live-view-empty items-center justify-center"):
             ui.icon("traffic", size="64px")
             ui.label(state["message"]).classes("text-xl")
+            ui.label(LAUNCHER.status).classes("live-view-status")
+            if LAUNCHER.error:
+                ui.label(LAUNCHER.error).classes("text-red-5")
         return
     payload = dict(state.get("payload", {}))
-    if LAUNCHER.status == "READY":
-        payload.update({"running": False, "simulation_time": 0.0,
-                        "status": "NO SCENARIO RUNNING", "vehicles": (),
-                        "scenario_id": SELECTED_SCENARIO["id"],
-                        "completed": 0,
-                        "scheduled": SCENARIO_BY_ID[
-                            SELECTED_SCENARIO["id"]]["vehicle_count"],
-                        "participants": (), "ready": (), "blocked": (),
-                        "effective_graph": (), "events": (),
-                        "mappo_invocation": "NOT REQUIRED"})
+    if REPLAY_STATE['mode']=='prepared':payload['browser_owned_frame']=True
     run_summary = payload.get("run_negotiation_summary", {})
     scenario = SCENARIO_BY_ID.get(payload.get("scenario_id"), {})
     with ui.row().classes("viva-live-header w-full items-center justify-between"):
         ui.label(f'{scenario.get("display_name", "LIVE SIMULATION")} · '
                  f'{payload.get("simulation_time", 0):.1f} s').classes(
                      "live-view-time")
-        ui.label("RUNNING" if payload.get("running") else
-                 "IDLE" if LAUNCHER.status == "READY" else
-                 "FINISHED").classes("live-view-status")
+        ui.label(runtime_status_label(LAUNCHER.status, state)).classes("live-view-status")
     with ui.column().classes("live-canvas-column w-full grow min-w-0"):
         metrics = payload.get("run_metrics", {}) if LAUNCHER.status != "READY" else {}
         with ui.row().classes("gap-3 flex-wrap"):
-            ui.label(f'Active vehicles: {metrics.get("current_active_vehicle_count", 0)}')
-            ui.label(f'Moving vehicles: {metrics.get("current_moving_vehicle_count", 0)}')
+            ui.label(f'Active vehicles: {metrics.get("current_active_vehicle_count", "N/A")}')
+            ui.label(f'Intersection display: {len(payload.get("vehicles", ()))}')
+            ui.label(f'Moving vehicles: {metrics.get("current_moving_vehicle_count", "N/A")}')
             depths = metrics.get("per_approach_queue_depth", {})
-            ui.label("Queue depth: " + " / ".join(f'{a}: {depths.get(a, 0)}' for a in "NESW"))
-            ui.label(f'Current negotiation participants: {len(payload.get("participants", ()))}')
-            ui.label(f'Max simultaneous active vehicles: {metrics.get("maximum_simultaneous_active_vehicles", 0)}')
-            ui.label(f'Collisions: {metrics.get("collisions", 0)}')
+            ui.label("Queue depth: " + " / ".join(f'{a}: {depths.get(a, "N/A")}' for a in "NESW"))
+            participant_count = len(payload["participants"]) if "participants" in payload else "N/A"
+            ui.label(f'Current negotiation participants: {participant_count}')
+            ui.label(f'Max simultaneous active vehicles: {metrics.get("maximum_simultaneous_active_vehicles", "N/A")}')
+            ui.label(f'Collisions: {metrics.get("collisions", "N/A")}')
             ui.label("Execution: Ego-local decentralized" if metrics.get(
                 "decentralized_execution") else "Execution: awaiting runtime evidence")
         _camera_controls()
@@ -325,13 +376,14 @@ def live_view_panel():
             "sumo-canvas-host w-full grow min-h-0")
     with ui.row().classes("live-view-legend w-full justify-center gap-6"):
         for color, label in (("blue", "Approaching"),
-                             ("yellow", "Negotiating"),
+                             ("yellow", "Negotiating (inference pending)"),
                              ("green", "Ready / Go"),
-                             ("red", "Blocked / Wait")):
+                             ("red", "Entry held (may approach stop)")):
             ui.label(f"● {label}").classes(f"text-{color}-5")
+        ui.label('Yellow outline: MAPPO decision received (timestamped, temporary)').classes('text-yellow-5')
     _current_event_banner(payload)
     if run_summary.get("mappo_negotiation_observed"):
-        ui.label("✓ MAPPO NEGOTIATION OBSERVED").classes("mappo-observed-badge")
+        ui.label("✓ MAPPO NEGOTIATION OBSERVED IN THIS RUN").classes("mappo-observed-badge")
         ui.button("Show Negotiation Result", on_click=lambda:
                   _show_negotiation_dialog(payload.get("last_mappo_event"))).props(
                       "flat dense no-caps")
@@ -341,23 +393,56 @@ def live_view_panel():
         ui.label(state["message"]).classes("text-amber-4")
 
 
+def _main_canvas_replay_panel():
+    from socialmind_drive_showcase.services.main_canvas_replay import payload as replay_payload,LABEL
+    payload=replay_payload(REPLAY_STATE)
+    ui.label(LABEL).classes('text-amber-4 font-bold main-replay-label')
+    ui.label(f"Recorded time {payload['simulation_time']:.2f} s · Spawned {payload['spawned']}/{payload['scheduled']} · Completed {payload['completed']} before cutoff · MAPPO: DISABLED · Collisions: {payload['collision_count']}").classes('live-view-time')
+    ui.label('Coordination and specified protective interventions omitted in the isolated recording. This is not a trained MAPPO failure.').classes('text-xs')
+    ui.label(payload['status']).classes('live-view-status')
+    event_text='Recorded SUMO trajectories · fixed standard camera · waiting for the recorded event'
+    if payload['collisions']:
+        event=payload['replay_events'][0]
+        event_text=f"ACTUAL SUMO COLLISION DETECTED · {event['collider']} / {event['victim']} · SUMO {event['sumo_event_time']:.2f} s · snapshot {event['traci_detection_time']:.2f} s · count {payload['collision_count']}"
+    ui.label(event_text).classes('current-event-banner main-replay-event'+(' main-replay-collision' if payload['collisions'] else ''))
+    geometry=authoritative_road_geometry();cx,cy=geometry['center']
+    extent=geometry['camera_half_extent_m']
+    svg=render_sumo_style_svg(payload,zoom_factor=1.0)
+    for vehicle in payload['vehicles']:
+        if vehicle['collision_involved']:
+            svg=svg.replace(f'class="sumo-car" data-vehicle-id="{vehicle["id"]}"',f'class="sumo-car collision-involved" data-vehicle-id="{vehicle["id"]}"')
+    transform=build_world_transform(1100,700,(cx-extent,cy-extent,cx+extent,cy+extent))
+    for event in payload['collisions']:
+        x,y=transform.point(*event['position'])
+        svg=svg.replace('</svg>',f'<circle class="recorded-collision-marker" cx="{x}" cy="{y}" r="18" stroke="#ff4b4b" stroke-width="2" fill="none"/></svg>')
+    ui.html(svg,sanitize=False).classes('sumo-canvas-host main-replay-canvas w-full grow min-h-0')
+
+
 def _current_event_banner(payload):
     status = payload.get("status", "NO SCENARIO RUNNING")
     invocation = payload.get("mappo_invocation", "NOT_REQUIRED")
-    if payload.get("negotiation_visual_hold"):
-        title, message = "MAPPO NEGOTIATING", "REAL MAPPO EVENT · VISUAL HIGHLIGHT"
+    progress = payload.get("traffic_progress", {})
+    if progress.get("status") == "PERSISTENT_BLOCKAGE":
+        title = "PERSISTENT TRAFFIC BLOCKAGE"
+        message = (f'{progress.get("blocked_seconds", 0):.1f}s — '
+                   f'{progress.get("reason", "UNRESOLVED").replace("_", " ")}')
+    elif payload.get("negotiation_visual_hold"):
+        title, message = "RECENT MAPPO DECISION", "RECORDED EVENT — CURRENT PERMISSIONS UNCHANGED"
+        event_time = (payload.get("last_mappo_event") or {}).get("timestamp")
+        if event_time is not None:
+            message += f" · decision received at {event_time:.2f} s"
     elif invocation == "AUTHORIZED":
-        title, message = "NEGOTIATION COMPLETE", "PLANNER READY / BLOCKED"
+        title, message = "NEGOTIATION COMPLETE", "EGO-LOCAL EXECUTION — READY / BLOCKED"
     elif status == "REGULATORY_ORDER_RESOLVED":
         edge = next(iter(payload.get("original_graph", ())), None)
         message = (f'{short_vehicle_label(edge[0])} YIELDS TO '
                    f'{short_vehicle_label(edge[1])}' if edge else
                    "REAL PRECEDENCE ORDER RESOLVED")
         title = "TRAFFIC RULE APPLIED"
-    elif payload.get("ready") or payload.get("blocked"):
-        title, message = "PLANNER READY / BLOCKED", "CURRENT EXECUTION PERMISSION"
     elif invocation == "BLOCKED":
-        title, message = "WAITING FOR LOCAL CONTEXT", "MAPPO NOT YET AUTHORIZED"
+        title, message = "MAPPO BLOCKED", status.replace("_", " ")
+    elif payload.get("ready") or payload.get("blocked"):
+        title, message = "EGO-LOCAL EXECUTION — READY / BLOCKED", "CURRENT EXECUTION PERMISSION"
     else:
         title, message = status.replace("_", " "), "MAPPO NOT REQUIRED"
     with ui.row().classes("current-event-banner w-full items-center justify-between"):
@@ -389,17 +474,19 @@ def _simple_final_result(payload, scenario):
     metrics = payload.get("run_metrics", {})
     summary = payload.get("run_negotiation_summary", {})
     with ui.card().classes("simple-final-result"):
-        ui.label("SCENARIO COMPLETE").classes("text-xl font-bold")
+        ui.label(discharge_label(payload)).classes("text-xl font-bold")
         ui.label(scenario.get("display_name", payload.get("scenario_id")))
         ui.label(f'Vehicles: {payload.get("completed", 0)} / '
                  f'{payload.get("scheduled", 0)} completed')
         ui.label("MAPPO used: " + ("YES" if summary.get(
             "mappo_negotiation_observed") else "NO"))
         ui.label(f'Negotiation events: {summary.get("mappo_authorized_events", 0)}')
+        ui.label(f'Direct MAPPO execution outcomes: {metrics.get("mappo_outcomes_accepted", 0)} · '
+                 f'Safety fallback epochs: {metrics.get("fallback_activations", 0)}')
         ui.label(f'Collisions: {metrics.get("collisions", 0)}')
         ui.label(f'Blocked-zone violations: {metrics.get("blocked_zone_violations", 0)}')
         if summary.get("mappo_negotiation_observed"):
-            ui.label("Main result: Cycle detected → MAPPO negotiation → ego-local execution").classes(
+            ui.label("MAPPO negotiation observed; completion and safety are reported separately.").classes(
                 "final-main-result")
             ui.button("View Negotiation Details", on_click=lambda:
                       _show_negotiation_dialog(payload.get("last_mappo_event"))).props(
@@ -414,7 +501,7 @@ def component2_live_view_page():
     ui.add_body_html(stable_inspector_script())
     with ui.column().classes("dedicated-live-view w-full min-h-screen"):
         with ui.row().classes("live-view-header w-full items-center justify-between"):
-            ui.label("SOCIALMIND DRIVE — LIVE SUMO SIMULATION").classes("text-xl font-bold")
+            ui.label("SOCIALMIND DRIVE — LIVE SUMO SIMULATION").classes("text-xl font-bold main-simulation-title")
             with ui.row().classes("items-center gap-2"):
                 ui.button("Technical Details", icon="data_object",
                           on_click=_show_technical_details).props(
@@ -427,8 +514,7 @@ def component2_live_view_page():
                 live_view_panel()
             ui.html(stable_inspector_html(), sanitize=False).classes(
                 "stable-inspector-host")
-        ui.timer(0.15, live_view_panel.refresh)
-        ui.timer(0.5, _scenario_sidebar.refresh)
+        page_timer(0.15, live_view_panel.refresh)
 
 
 def _show_technical_details():
@@ -452,23 +538,79 @@ def _refresh_live_unless_frozen():
 
 
 def _select_scenario(event):
+    from socialmind_drive_showcase.services.main_canvas_replay import stop
+    stop(REPLAY_STATE)
     SELECTED_SCENARIO["id"] = event.value
     _scenario_details.refresh()
 
 
-@ui.refreshable
+@client_refreshable
 def _scenario_details():
     scenario = SCENARIO_BY_ID[SELECTED_SCENARIO["id"]]
     with ui.row().classes("gap-2"):
         ui.label(scenario.get("verified_tag", "STRESS CASE")).classes(
             "scenario-tag verified-scenario-tag")
-    ui.label(VIVA_PURPOSES[scenario["scenario_id"]]).classes(
+    ui.label('Protected live execution and a separately recorded uncoordinated collision replay use the same six-vehicle demand. The secondary rules-only baseline retains safety.' if scenario['scenario_id']=='final_coordination_failure' else VIVA_PURPOSES[scenario["scenario_id"]]).classes(
         "scenario-description")
+    final=FINAL_DEMONSTRATION_BY_ID.get(scenario['scenario_id'],{})
+    ui.label(f"{scenario.get('vehicle_count')} vehicles · MAPPO: {final.get('mappo_expectation', 'Conditional')}").classes('scenario-description')
+    ui.label(final.get('demo_kind','QUALITATIVE PRESENTATION')).classes('scenario-description')
+    if scenario['scenario_id']=='final_coordination_failure':
+        ui.label('Run Scenario plays the offline uncoordinated failure in the main canvas. No live unsafe simulator is launched.').classes('scenario-description')
+        ui.button('Protected six-vehicle comparison',on_click=_run_protected_scenario).props('outline no-caps').classes('w-full whitespace-normal')
+        ui.button('Restart replay',on_click=_start_main_replay).props('outline no-caps').classes('w-full')
+        comparison_path=COMPONENT2_ROOT/'results/final_demonstrations/v1/comparison.json'
+        if comparison_path.is_file():
+            with ui.expansion('Recorded comparison',
+                    value=COMPARISON_OPEN['value'],
+                    on_value_change=lambda e:COMPARISON_OPEN.__setitem__('value',e.value)).classes('w-full min-w-0'):
+                comparison=json.loads(comparison_path.read_text(encoding='utf-8'))
+                for note in ('QUALITATIVE ONLY', 'Identical demand; safety enabled in A and B.', 'Run Scenario always uses the protected primary.'):
+                    ui.label(note).classes('scenario-description w-full whitespace-normal break-words')
+                for row in comparison['modes']:
+                    title='A. Protected primary' if row['mode']=='PROPOSED_MAPPO_RULES_SAFETY' else 'B. Rules-only baseline'
+                    for line in (title, f"{row['status']} · {row['completed']}/{row['scheduled']} trips",
+                            f"MAPPO: {row['mappo_calls']} · collisions: {row['collisions']}",
+                            f"Zone violations: {row['blocked_zone_violations']}",
+                            f"Mean wait: {row['mean_wait_seconds']:.2f} s",
+                            f"Throughput: {row['throughput']:.2f}/min"):
+                        ui.label(line).classes('scenario-description w-full whitespace-normal break-words')
+                from socialmind_drive_showcase.services.counterfactual_reader import load_evidence
+                try:
+                    offline=load_evidence()
+                    ui.label('C. Isolated uncoordinated counterfactual').classes('scenario-description w-full break-words')
+                    ui.label(f"OFFLINE ONLY · actual SUMO collisions: {offline['collision_count']}").classes('scenario-description w-full break-words')
+                    ui.label('Default Run Scenario plays C in the main canvas. The protected comparison action launches A.').classes('scenario-description')
+                except (OSError,ValueError,StopIteration):
+                    ui.label('Offline counterfactual evidence unavailable; no outcome assumed.').classes('scenario-description')
+        else:
+            ui.label('Comparison evidence has not been recorded yet. No failure outcome is assumed.').classes('scenario-description')
 
 
 def _run_selected_scenario():
+    if SELECTED_SCENARIO['id']=='final_coordination_failure':
+        _start_main_replay()
+    else:
+        _run_protected_scenario()
+
+
+def _start_main_replay():
+    if LAUNCHER.running:
+        ui.notify('Stop the protected simulation before replay.',type='warning');return
+    from socialmind_drive_showcase.services.main_canvas_replay import start
+    try:start(REPLAY_STATE)
+    except (OSError,ValueError,StopIteration) as error:
+        ui.notify(str(error),type='warning')
+
+
+def _run_protected_scenario():
+    from socialmind_drive_showcase.services.main_canvas_replay import stop
+    stop(REPLAY_STATE)
+    REPLAY_STATE['mode']='protected'
     scenario_id = SELECTED_SCENARIO["id"]
     if LAUNCHER.launch(("--scenario", scenario_id)):
+        global NEGOTIATION_HOLD
+        NEGOTIATION_HOLD = NegotiationVisualHold()
         ui.notify(f"Launching {SCENARIO_BY_ID[scenario_id]['display_name']}",
                   type="positive")
     else:
@@ -477,6 +619,10 @@ def _run_selected_scenario():
 
 
 def _stop_current_scenario():
+    if REPLAY_STATE['mode']=='replay':
+        from socialmind_drive_showcase.services.main_canvas_replay import stop
+        stop(REPLAY_STATE)
+        return
     if LAUNCHER.request_stop():
         ui.notify("STOP REQUESTED — waiting for graceful SUMO cleanup",
                   type="warning")
@@ -484,28 +630,46 @@ def _stop_current_scenario():
         ui.notify("No running Component 2 scenario to stop.", type="warning")
 
 
-@ui.refreshable
+@client_refreshable
 def _scenario_sidebar():
     with ui.column().classes("scenario-sidebar"):
         ui.label("DEMO SCENARIOS").classes("scenario-sidebar-title")
-        ui.radio({item["scenario_id"]: VIVA_LABELS[item["scenario_id"]]
-                  for item in VIVA_SCENARIOS},
+        selector=ui.radio({item["scenario_id"]: VIVA_LABELS[item["scenario_id"]]
+                  for item in SELECTABLE_SCENARIOS},
                  value=SELECTED_SCENARIO["id"],
                  on_change=_select_scenario).props(
                      "dense color=cyan" + (" disable" if LAUNCHER.running else ""))
         ui.separator().classes("my-2")
         _scenario_details()
-        ui.button("Run Scenario", icon="play_arrow",
+        run_button=ui.button("Run Scenario", icon="play_arrow",
                   on_click=_run_selected_scenario).props(
                       "unelevated no-caps" + (" disable" if LAUNCHER.running else "")).classes("btn-primary w-full")
-        ui.button("Stop", icon="stop",
+        stop_button=ui.button("Stop", icon="stop",
                   on_click=_stop_current_scenario).props(
                       "outline no-caps color=negative" +
                       (" disable" if not LAUNCHER.running or
                        LAUNCHER.status == "STOPPING" else "")).classes("w-full")
-        ui.label("STOPPING SCENARIO..." if LAUNCHER.status == "STOPPING" else
+        status_label=ui.label("STOPPING SCENARIO..." if LAUNCHER.status == "STOPPING" else
+                 "FAILED — see launch error" if LAUNCHER.status == "FAILED" else
                  "SIMULATION CURRENTLY RUNNING" if LAUNCHER.running else
                  "IDLE — press RUN to start").classes("scenario-run-state")
+        error_label=ui.label(LAUNCHER.error or '').classes('text-red-5')
+        last_state=None
+        def update_controls():
+            nonlocal last_state
+            state=(LAUNCHER.status,LAUNCHER.running,LAUNCHER.error,REPLAY_STATE['mode'],REPLAY_STATE['active'])
+            if state==last_state:return
+            last_state=state
+            selector.set_enabled(not LAUNCHER.running)
+            run_button.set_enabled(not LAUNCHER.running and not REPLAY_STATE['active'])
+            stop_button.set_enabled(REPLAY_STATE['mode']=='replay' or (LAUNCHER.running and LAUNCHER.status!='STOPPING'))
+            status_label.set_text(('OFFLINE REPLAY PLAYING' if REPLAY_STATE['active'] else 'OFFLINE REPLAY PAUSED') if REPLAY_STATE['mode']=='replay' else 'STOPPING SCENARIO...' if LAUNCHER.status=='STOPPING' else
+                'FAILED — see launch error' if LAUNCHER.status=='FAILED' else
+                'SIMULATION CURRENTLY RUNNING' if LAUNCHER.running else 'IDLE — press RUN to start')
+            error_label.set_text(LAUNCHER.error or '')
+            error_label.set_visibility(bool(LAUNCHER.error))
+        update_controls()
+        page_timer(.5,update_controls)
 
 
 def select_vehicle(vehicle_id):
@@ -535,7 +699,7 @@ def _vehicle_inspector(payload):
         selected = next((vehicle for vehicle in vehicles
                          if vehicle["id"] == SELECTED_VEHICLE["id"]), None)
         if selected is None:
-            ui.label("No active vehicles").classes("inspector-empty")
+            ui.label("No vehicles currently in the intersection area.").classes("inspector-empty")
             return
         ui.separator()
         ui.label(short_vehicle_label(selected["id"])).classes("selected-vehicle-name")
@@ -574,7 +738,7 @@ def _vehicle_inspector(payload):
             for item in factors) or ("NOT REQUIRED" if payload.get(
                 "mappo_invocation") == "NOT_REQUIRED" else
                 "WAITING FOR COMPLETE LOCAL CONTEXT"))
-        _pipeline_row("PLANNER", selected.get("planner", {}).get(
+        _pipeline_row("EGO-LOCAL EXECUTION", selected.get("planner", {}).get(
             "state", "NOT AVAILABLE"))
         control = selected.get("control", {})
         _pipeline_row("DETERMINISTIC CONTROL",
@@ -630,7 +794,7 @@ def _negotiation_event_cards(events):
             ui.label("Planner BLOCKED: " + _action_text(event.get("blocked", ())))
 
 
-@ui.refreshable
+@client_refreshable
 def _run_summary_panel():
     runs = read_presentation_runs(COMPONENT2_PRESENTATION_RUNS_PATH, limit=1)
     if not runs:
@@ -671,7 +835,7 @@ def _run_summary_panel():
                                    "AUTHORIZED"))
 
 
-@ui.refreshable
+@client_refreshable
 def _run_history_panel():
     ui.label("RUN HISTORY").classes("text-xl font-bold")
     ui.label("QUALITATIVE PRESENTATION RUNS ONLY")

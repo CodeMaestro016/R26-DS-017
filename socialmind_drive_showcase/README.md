@@ -9,9 +9,15 @@ The showcase presents four independently developed research components under one
 
 ## Independence and scientific boundary
 
-This folder does not import or reuse the repository's old `debug_dashboard.py`, `debug_dashboard.html`, `sumo_debug_overlay.py`, or other debug UI. It consumes Component 2's existing qualitative result JSON and launches the existing `run_panel_demo.py`; it does not reproduce or modify scientific logic.
+This folder does not import or reuse the repository's old `debug_dashboard.py`, `debug_dashboard.html`, `sumo_debug_overlay.py`, or other debug UI. It consumes Component 2's existing qualitative result JSON and launches the existing `run_runtime_simulation.py`; it does not reproduce or modify scientific logic.
 
 ## Install and run
+
+The current Component 2 live execution uses the separately versioned mandatory-aware
+fallback and native local stop/release correction. The original dense scenario
+completed 16/16 in the new diagnostic run. See the
+[implementation and verification report](../component_2_right_of_way_negotiation/docs/FINAL_LIVE_CORRECTION_REPORT.md).
+Earlier frozen scientific results remain historical evidence for their recorded protocols.
 
 From the repository root:
 
@@ -37,10 +43,10 @@ For automated or headless checks, `--server-only` starts the same localhost serv
 The button invokes this predefined command asynchronously from `component_2_right_of_way_negotiation/`:
 
 ```powershell
-python run_panel_demo.py --web-live --presentation-delay-ms 10
+python run_runtime_simulation.py --web-live --presentation-delay-ms 10
 ```
 
-Only one instance can be launched at a time. No browser input is accepted as a command or path. Results are refreshed from `results/panel_demo/latest_panel_demo.json`.
+Only one instance can be launched at a time. No browser input is accepted as a command or path. Results are refreshed from `results/runtime_simulation/latest_runtime_simulation.json`.
 
 Component 2 metrics are clearly classified as **QUALITATIVE PRESENTATION ONLY**. They are not validation, held-out evaluation, model-selection evidence, or replacement quantitative research evidence.
 
@@ -85,3 +91,13 @@ socialmind_drive_showcase/
   assets/      optional local images, logos and icons
   tests/       independent showcase boundary tests
 ```
+# Separate quantitative evaluation
+
+Component 2's read-only **Quantitative Evaluation** page is available at
+`http://127.0.0.1:8088/component/right-of-way/evaluation` and linked from its
+detail page. It reads `results/post_training_evaluation/latest/aggregate.json` and
+generated plots without launching, editing or recomputing scientific results.
+Smoke reports remain labelled `SMOKE_NOT_FINAL`. The live demo retains its
+qualitative disclaimer. See
+[`POST_TRAINING_EVALUATION_GUIDE.md`](../component_2_right_of_way_negotiation/docs/POST_TRAINING_EVALUATION_GUIDE.md)
+for backend commands, reports and replay.

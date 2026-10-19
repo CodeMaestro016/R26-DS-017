@@ -1347,7 +1347,7 @@ body {
 
 
 /* COMPONENT 2 LATEST SELECTIVE MERGE */
-.dedicated-live-view { width:100vw; max-width:none; height:100vh; height:100dvh; overflow:hidden; background:#16202a; color:#eef5f8; padding:6px 8px 8px; gap:5px; }
+.dedicated-live-view { width:100%; max-width:100%; height:100vh; height:100dvh; overflow:hidden; background:#16202a; color:#eef5f8; padding:6px 8px 8px; gap:5px; }
 .live-view-header { min-height:42px; border-bottom:1px solid #42505b; padding-bottom:5px; }
 .live-view-empty { min-height:70vh; color:#cdd9df; }
 .live-view-time,.live-view-mappo,.live-view-status { font-weight:800; letter-spacing:.08em; }
@@ -1359,12 +1359,33 @@ body {
 .sumo-car-label rect { fill:rgba(12,20,26,.72); }
 .sumo-car-label text { fill:#fff; font:600 8px system-ui,sans-serif; }
 .live-view-legend,.live-view-details { min-height:24px; background:#222e37; padding:3px 10px; border-radius:6px; font-size:11px; }
-.camera-controls { position:absolute; z-index:5; top:7px; right:7px; min-height:30px; gap:3px; background:rgba(20,34,44,.92); border:1px solid #58707d; border-radius:7px; padding:2px 5px; }
+.camera-controls { position:static; align-self:flex-end; min-height:30px; gap:3px; background:rgba(20,34,44,.92); border:1px solid #58707d; border-radius:7px; padding:2px 5px; }
 .camera-controls .q-btn { min-height:25px; padding:2px 7px; font-size:11px; }
 .camera-zoom-value { min-width:42px; text-align:center; color:#70e5f5; font-weight:850; }
 .live-view-workspace { display:grid!important; grid-template-columns:205px minmax(0,1fr) 250px; width:100%; min-width:0; min-height:0; flex:1 1 auto; gap:8px; }
 .scenario-sidebar { width:205px; min-width:0; max-width:205px; height:100%; background:#202c36; border:1px solid #40515e; border-radius:9px; padding:8px; gap:5px; overflow-y:auto; }
 .scenario-sidebar-title { color:#65d9ec; font-size:.74rem; font-weight:850; letter-spacing:.12em; }
+.live-view-workspace { grid-template-rows:minmax(0,1fr); }
+.scenario-sidebar { min-height:0; overflow-x:hidden; overscroll-behavior:contain; overflow-anchor:none; scrollbar-gutter:stable; touch-action:pan-y; }
+.scenario-sidebar > * { flex-shrink:0; }
+.scenario-sidebar::-webkit-scrollbar { width:12px; }
+.scenario-sidebar::-webkit-scrollbar-track { background:#202c36; }
+.scenario-sidebar::-webkit-scrollbar-thumb { background:#58707d; border-radius:6px; border:2px solid #202c36; }
+.counterfactual-dialog { width:min(1100px,95vw); max-width:min(1100px,95vw)!important; max-height:92dvh; overflow-y:auto; background:#172b36!important; color:white; overscroll-behavior:contain; }
+.counterfactual-canvas { width:100%; height:100%; }
+.offline-replay-player button { border:1px solid #e9b949; border-radius:4px; padding:5px; margin:3px; }
+.counterfactual-dialog { display:flex; flex-direction:column; gap:8px!important; }
+.offline-warning { font-size:15px; line-height:1.3; }
+.offline-toolbar { display:flex; align-items:center; flex-wrap:wrap; gap:4px; }
+.offline-cameras { display:grid; grid-template-columns:1fr 1.5fr; gap:10px; }
+.offline-overview-canvas,.offline-replay-canvas { height:clamp(220px,43vh,420px); }
+.offline-impact-status { font-weight:bold; color:#ffd166; min-height:24px; }
+.sumo-car.collision-involved>rect:first-of-type { stroke:#ff4b4b; stroke-width:3px; }
+.viva-vehicle-card.collision-involved { border:2px solid #ff4b4b; }
+.main-replay-canvas { flex:1 1 0!important; height:0!important; min-height:180px; }
+.main-replay-event { height:56px; min-height:56px; max-height:56px; flex-shrink:0; overflow:auto; }
+.offline-vehicle-list { font-size:11px; line-height:1.3; overflow-wrap:anywhere; }
+@media(max-width:700px) { .offline-cameras { grid-template-columns:1fr; } }
 .scenario-sidebar .q-radio { align-items:flex-start; margin:1px 0; }
 .scenario-sidebar .q-radio__label { font-size:.75rem; line-height:1.16; color:#e7f0f4; }
 .scenario-description { color:#b9cad3; font-size:.78rem; line-height:1.45; }
@@ -1409,10 +1430,12 @@ body {
 .negotiation-event-card { width:100%; background:#19313b; border:1px solid #34cde8; border-radius:8px; }
 .verified-scenario-tag { border:1px solid #4bcde3; }
 .viva-mode-badge { background:#168fba; color:white; border-radius:999px; padding:5px 10px; font-weight:850; }
-.viva-inspector { width:100%; min-width:0; max-width:250px; overflow:hidden; height:100%; padding:10px; }
+.viva-inspector { width:100%; min-width:0; min-height:0; max-width:250px; overflow-y:auto; overflow-x:hidden; overscroll-behavior:contain; height:100%; padding:10px; }
 .viva-pipeline { margin:6px 0; padding:6px; border-radius:6px; background:#132531; color:#70e5f5; font-size:9px; font-weight:800; line-height:1.25; }
 #c2-viva-cards { display:grid; gap:8px; }
 .viva-vehicle-card { border-left:4px solid #2684ff; background:#152630; border-radius:6px; padding:6px 7px; font-size:10px; line-height:1.3; }
+.mappo-decision-received { color:#ffd21f; }
+.viva-vehicle-card[aria-selected="true"] { outline:1px solid #ffffff; }
 .viva-vehicle-card header { display:flex; justify-content:space-between; font-size:13px; margin-bottom:4px; }
 .viva-vehicle-card.state-NEGOTIATING { border-color:#ffd21f; }.viva-vehicle-card.state-READY { border-color:#20c86b; }.viva-vehicle-card.state-BLOCKED { border-color:#ef3f45; }
 .current-event-banner { min-height:38px; background:#1d303b; border:1px solid #3c5664; border-radius:7px; padding:5px 10px; }

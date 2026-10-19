@@ -48,7 +48,7 @@ def test_all_four_components_exist_and_group_live_integrations_are_preserved():
 
 def test_component_two_command_resolves_to_existing_entry_point():
     command = config.COMPONENT2.launch_command
-    assert command == ("{python}", "run_panel_demo.py", "--web-live",
+    assert command == ("{python}", "run_runtime_simulation.py", "--web-live",
                        "--presentation-delay-ms", "10")
     assert (config.COMPONENT2.working_directory / command[1]).is_file()
 
@@ -64,7 +64,7 @@ def test_result_reader_loads_current_panel_result():
 
 def test_missing_and_invalid_results_have_friendly_empty_state(tmp_path):
     missing = read_panel_results(tmp_path / "missing.json")
-    assert missing["available"] is False and "No panel-demo result" in missing["message"]
+    assert missing["available"] is False and "No runtime simulation result" in missing["message"]
     bad = tmp_path / "bad.json"
     bad.write_text("not json", encoding="utf-8")
     assert read_panel_results(bad)["available"] is False
@@ -164,7 +164,7 @@ def test_browser_renderer_has_no_control_calls_or_fixed_vehicle_coordinates():
 
 
 def test_native_gui_remains_optional_not_default():
-    cli = (config.COMPONENT2_ROOT / "run_panel_demo.py").read_text(
+    cli = (config.COMPONENT2_ROOT / "run_runtime_simulation.py").read_text(
         encoding="utf-8")
     assert '"--gui"' in cli
     assert "--gui" not in config.COMPONENT2.launch_command
@@ -183,7 +183,7 @@ def test_sidebar_scenarios_are_unique_qualitative_and_not_held_out():
 
 def test_scenario_sidebar_launch_uses_existing_single_process_guard():
     from socialmind_drive_showcase.pages import component2_live_view
-    source = inspect.getsource(component2_live_view._run_selected_scenario)
+    source = inspect.getsource(component2_live_view._run_protected_scenario)
     assert "LAUNCHER.launch" in source
     assert '("--scenario", scenario_id)' in source
     launcher = ComponentLauncher(config.COMPONENT2)
@@ -293,14 +293,16 @@ def test_missing_portrait_contract_uses_initials_fallback():
 
 def test_existing_component_two_launch_contract_remains_unchanged():
     assert config.COMPONENT2.launch_command == (
-        "{python}", "run_panel_demo.py", "--web-live",
+        "{python}", "run_runtime_simulation.py", "--web-live",
         "--presentation-delay-ms", "10")
 
 
 def test_panel_layout_makes_center_dominant_and_camera_is_junction_focused():
     from socialmind_drive_showcase.pages import component2_live_view as live
     css = (config.SHOWCASE_ROOT / "ui" / "theme.py").read_text(encoding="utf-8")
-    assert "width:100vw; max-width:none; height:100vh; height:100dvh" in css
+    # The live root sits inside NiceGUI's padded content. Viewport width
+    # overflowed it by 16 px in actual Chromium; retain full content width.
+    assert "width:100%; max-width:100%; height:100vh; height:100dvh" in css
     assert "grid-template-columns:205px minmax(0,1fr) 250px" in css
     assert ".scenario-sidebar { width:205px; min-width:0; max-width:205px" in css
     assert ".stable-inspector-host { width:250px; min-width:0; max-width:250px" in css
@@ -334,7 +336,7 @@ def test_zoom_changes_display_transform_only_and_reset_is_exact():
                    ("traci", "simulationStep", "spawn", "admission"))
 
 
-def test_authorized_mappo_hold_is_yellow_then_restores_real_planner_state():
+def test_recent_mappo_event_never_replaces_real_permission_color():
     hold = NegotiationVisualHold(1.75)
     vehicle = {"id": "E01", "display_state": "BLOCKED",
                "planner": {"state": "BLOCKED"}}
@@ -343,7 +345,8 @@ def test_authorized_mappo_hold_is_yellow_then_restores_real_planner_state():
                   "last_mappo_event": {"timestamp": 10},
                   "vehicles": (vehicle,)}
     during = hold.apply(authorized, now=100.0)
-    assert during["vehicles"][0]["display_state"] == "NEGOTIATING"
+    assert during["vehicles"][0]["display_state"] == "BLOCKED"
+    assert during["vehicles"][0]["recent_mappo_event"] is True
     assert during["vehicles"][0]["planner"]["state"] == "BLOCKED"
     after = hold.apply(dict(authorized, mappo_invocation="NOT_REQUIRED"),
                        now=101.76)
@@ -360,6 +363,40 @@ def test_visual_hold_cannot_start_without_real_authorized_event():
     assert result["negotiation_visual_hold"] is False
 
 
+def test_completed_event_outline_keeps_body_permission_and_expires():
+    import xml.etree.ElementTree as ET
+    hold=NegotiationVisualHold(1.75)
+    vehicle=dict(id='E01',front_bumper_x=300,front_bumper_y=300,
+        angle_degrees=90,length_m=5,width_m=2,display_state='READY')
+    payload=dict(run_id='one',scenario_id='regulatory_cycle',simulation_time=10,
+        mappo_invocation='NOT_REQUIRED',last_mappo_event=dict(timestamp=10,participants=['E01']),
+        vehicles=[vehicle,dict(vehicle,id='N01',display_state='APPROACHING')])
+    displayed=hold.apply(payload,now=100)
+    root=ET.fromstring(render_sumo_style_svg(displayed))
+    cars=[g for g in root.iter() if g.attrib.get('class')=='sumo-car']
+    assert cars[0][1].attrib['fill']=='#20c86b'
+    outlines=[node for node in root.iter() if node.attrib.get('class')=='mappo-decision-outline']
+    assert len(outlines)==1 and 'MAPPO decision received at 10s' in ''.join(outlines[0].itertext())
+    assert displayed['vehicles'][1]['display_state']=='APPROACHING'
+    expired=hold.apply(displayed,now=102)
+    assert all('recent_mappo_event' not in v for v in expired['vehicles'])
+    assert 'mappo-decision-outline' not in render_sumo_style_svg(expired)
+
+
+def test_completed_acknowledgment_cannot_leak_into_a_new_run():
+    hold=NegotiationVisualHold(1.75)
+    first=dict(run_id='old',scenario_id='regulatory_cycle',simulation_time=23.24,
+        mappo_invocation='AUTHORIZED',participants=['E01'],
+        last_mappo_event=dict(timestamp=23.24,participants=['E01']),
+        vehicles=[dict(id='E01',display_state='BLOCKED')])
+    assert hold.apply(first,now=100)['negotiation_visual_hold']
+    new=dict(first,run_id='new',simulation_time=0,mappo_invocation='NOT_REQUIRED',last_mappo_event=None)
+    result=hold.apply(new,now=100.1)
+    assert not result['negotiation_visual_hold']
+    assert 'recent_mappo_event' not in result['vehicles'][0]
+    assert result['vehicles'][0]['display_state']=='BLOCKED'
+
+
 @pytest.mark.parametrize("state,color", (
     ("APPROACHING", "#2684ff"), ("NEGOTIATING", "#ffd21f"),
     ("READY", "#20c86b"), ("BLOCKED", "#ef3f45")))
@@ -369,6 +406,44 @@ def test_renderer_uses_exact_current_display_state_color(state, color):
                               "length_m": 4.8, "width_m": 1.8,
                               "display_state": state}]}
     assert color in render_sumo_style_svg(payload)
+
+
+def test_api_svg_carries_same_frame_permission_and_motion(monkeypatch):
+    import xml.etree.ElementTree as ET
+    from socialmind_drive_showcase import app as site
+    monkeypatch.setattr(site.LAUNCHER,'status','RUNNING')
+    vehicle=dict(id='E01',front_bumper_x=320,front_bumper_y=301.6,
+        angle_degrees=270,length_m=5,width_m=1.8,display_state='BLOCKED',
+        speed_mps=3.5,motion_state='MOVING',permission_label='ENTRY HELD / APPROACHING STOP',
+        entry_permission=dict(authorized=False,timestamp=25),
+        negotiation=dict(status='DECISION_EXPIRED',last_event_timestamp=23.24))
+    payload=dict(run_id='current-run',simulation_time=25,vehicles=[vehicle],
+        mappo_invocation='NOT_REQUIRED')
+    monkeypatch.setattr(site,'read_live_state',lambda *a,**kw:dict(available=True,stale=False,payload=payload))
+    result=site.component2_live_state_api()
+    svg=ET.fromstring(result['rendered_svg'])
+    metadata=next(e for e in svg if e.attrib.get('class')=='c2-synchronized-frame')
+    frame=json.loads(metadata.text)
+    assert frame['simulation_time']==result['payload']['simulation_time']==25
+    assert frame['run_id']=='current-run'
+    rendered=frame['vehicles'][0]
+    assert rendered['entry_permission']==vehicle['entry_permission']
+    assert rendered['display_state']=='BLOCKED' and rendered['motion_state']=='MOVING'
+    assert rendered['negotiation']['last_event_timestamp']==23.24
+    assert '#ef3f45' in result['rendered_svg']
+
+
+def test_idle_api_never_reads_or_displays_the_previous_run(monkeypatch):
+    from socialmind_drive_showcase import app as site
+    monkeypatch.setattr(site.LAUNCHER,'status','READY')
+    def forbidden(*a,**kw):raise AssertionError('IDLE must not read a previous runtime frame')
+    monkeypatch.setattr(site,'read_live_state',forbidden)
+    state=site.component2_live_state_api(scenario='congested_four_approach')
+    assert state['payload']['schema']=='SHOWCASE_IDLE_PRESENTATION_V1'
+    assert state['payload']['run_id'] is None and not state['payload']['vehicles']
+    assert state['payload']['scenario_id']=='congested_four_approach'
+    assert state['payload']['run_negotiation_summary']=={}
+    assert not state['payload']['negotiation_visual_hold']
 
 
 def test_component_page_only_opens_view_and_never_starts_sumo():
@@ -396,7 +471,7 @@ def test_vehicle_inspector_separates_mappo_planner_control_and_real_motion():
     from socialmind_drive_showcase.pages import component2_live_view as live
     source = inspect.getsource(live._vehicle_inspector)
     assert '"MAPPO SEMANTIC"' in source
-    assert '"PLANNER"' in source
+    assert '"EGO-LOCAL EXECUTION"' in source
     assert '"DETERMINISTIC CONTROL"' in source
     assert '"ACCELERATION"' in source and '"SUMO"' in source
     assert "MAPPO speed" not in source and "MAPPO acceleration" not in source
@@ -445,7 +520,8 @@ def test_road_and_cards_share_the_server_display_state_model():
     hold = live.NEGOTIATION_HOLD
     hold._event_identity = None
     displayed = live.apply_live_display_state(state)
-    assert displayed["payload"]["vehicles"][0]["display_state"] == "NEGOTIATING"
+    assert displayed["payload"]["vehicles"][0]["display_state"] == "READY"
+    assert displayed["payload"]["vehicles"][0]["recent_mappo_event"] is True
     assert displayed["payload"]["vehicles"][0]["planner"]["state"] == "READY"
 
 
@@ -485,7 +561,7 @@ def test_current_mappo_and_persistent_run_history_are_separate():
     from socialmind_drive_showcase.pages import component2_live_view as live
     source = (config.SHOWCASE_ROOT / "pages" /
               "component2_live_view.py").read_text(encoding="utf-8")
-    assert "MAPPO NEGOTIATING" in source
+    assert "RECENT MAPPO DECISION" in source
     assert "mappo_negotiation_observed" in source
     cards = inspect.getsource(live._negotiation_event_cards)
     for field in ("original_graph", "proposer_actions", "responder_actions",
@@ -510,13 +586,15 @@ def test_verified_scenario_tags_match_current_real_pipeline_audit():
     assert scenarios["multiple_left_turns"]["verified_tag"] == "LIVENESS"
 
 
-def test_default_main_demo_is_combined_and_page_has_no_history_tab():
+def test_final_menu_has_exactly_five_scenarios_and_preserves_research_catalogue():
     from socialmind_drive_showcase.pages import component2_live_view as live
     assert live.VIVA_SCENARIO_IDS == (
-        "yield_negotiation_demo", "rule_resolved_two", "four_way_simultaneous",
-        "regulatory_cycle", "mixed_manoeuvres", "congested_four_approach")
-    assert len(live.VIVA_SCENARIOS) == 6
-    assert live.DEFAULT_SCENARIO_ID == "yield_negotiation_demo"
+        "rule_resolved_two", "final_four_agent_stress", "mixed_manoeuvres",
+        "congested_four_approach", "final_coordination_failure")
+    assert len(live.VIVA_SCENARIOS) == len(live.SELECTABLE_SCENARIOS) == 5
+    assert live.DEFAULT_SCENARIO_ID == "rule_resolved_two"
+    assert all(key in live.SCENARIO_BY_ID for key in ('default_panel','yield_negotiation_demo','regulatory_cycle','four_way_simultaneous'))
+    assert [v['vehicle_count'] for v in live.VIVA_SCENARIOS]==[2,4,4,16,6]
     page_source = inspect.getsource(live.component2_live_view_page)
     assert "RUN HISTORY" not in page_source and "ui.tabs" not in page_source
     assert "live_view_panel()" in page_source
@@ -627,7 +705,7 @@ def test_component_two_explainer_preserves_scientific_boundaries():
     assert "A → B means A YIELDS TO B" in source
     assert "NO NUMERIC PRIORITY SCORE IS USED" in source
     assert "MAPPO decides semantic claims; the planner decides permission" in source
-    assert "latest_panel_demo" not in inspect.getsource(load_research_evidence)
+    assert "latest_runtime_simulation" not in inspect.getsource(load_research_evidence)
 
 
 def test_component_two_detail_orders_explainer_after_system_overview():

@@ -1,4 +1,5 @@
 from nicegui import ui
+from socialmind_drive_showcase.services.client_lifecycle import client_refreshable
 
 from socialmind_drive_showcase.config import COMPONENT2
 from socialmind_drive_showcase.services.result_reader import (format_edge,
@@ -30,7 +31,7 @@ def presentation_run_status(payload):
     }
 
 
-@ui.refreshable
+@client_refreshable
 def results_panel():
     result = read_panel_results(COMPONENT2.result_path)
     if not result["available"]:

@@ -22,7 +22,7 @@ COMPONENT2_ROOT = (
 COMPONENT2_LIVE_STATE_PATH = (
     COMPONENT2_ROOT
     / "results"
-    / "panel_demo"
+    / "runtime_simulation"
     / "runtime"
     / "live_state.json"
 )
@@ -30,7 +30,7 @@ COMPONENT2_LIVE_STATE_PATH = (
 COMPONENT2_PRESENTATION_RUNS_PATH = (
     COMPONENT2_ROOT
     / "results"
-    / "panel_demo"
+    / "runtime_simulation"
     / "presentation_runs"
 )
 
@@ -177,7 +177,7 @@ COMPONENTS = (
         # Keep the ORIGINAL Component 2 live-demo command.
         (
             "{python}",
-            "run_panel_demo.py",
+            "run_runtime_simulation.py",
             "--web-live",
             "--presentation-delay-ms",
             "10",
@@ -188,8 +188,8 @@ COMPONENTS = (
         (
             COMPONENT2_ROOT
             / "results"
-            / "panel_demo"
-            / "latest_panel_demo.json"
+            / "runtime_simulation"
+            / "latest_runtime_simulation.json"
         ),
     ),
 
