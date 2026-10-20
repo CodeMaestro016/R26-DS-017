@@ -1,0 +1,7 @@
+GT / predicted,Waiting,Hesitant,Committed,Distracted,Aggressive,Jaywalk
+Waiting,127,9,0,4,0,0
+Hesitant,55,72,2,11,0,19
+Committed,44,11,37,0,0,63
+Distracted,3,24,2,0,0,43
+Aggressive,42,21,25,0,0,1
+Jaywalk,0,41,7,0,0,4
