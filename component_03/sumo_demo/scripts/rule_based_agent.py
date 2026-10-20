@@ -161,11 +161,11 @@ def load_ensemble(model_dir=None):
 
     lstm_path   = os.path.join(model_dir, 'lstm_mental_state_best.keras')
     gru_path    = os.path.join(model_dir, 'gru_mental_state_best.keras')
-    scaler_path = os.path.join(model_dir, 'scaler.joblib')
+    scaler_path = os.path.join(model_dir, 'scaler.pkl')
 
     for path, name in [
-        (lstm_path,   'lstm_mental_state_best.h5'),
-        (gru_path,    'gru_mental_state_best.h5'),
+        (lstm_path,   'lstm_mental_state_best.keras'),
+        (gru_path,    'gru_mental_state_best.keras'),
         (scaler_path, 'scaler.pkl'),
     ]:
         if not os.path.exists(path):
@@ -209,9 +209,8 @@ def predict_mental_state(sequence_36_raw):
     lstm_probs = _lstm_model.predict(seq_in, verbose=0)[0]
     gru_probs  = _gru_model.predict(seq_in, verbose=0)[0]
 
-    # Equal-weight average ensemble.
-    # Sources: Dietterich (2000); Lakshminarayanan et al. (NeurIPS 2017)
-    probs        = (lstm_probs + gru_probs) / 2.0
+    ## Weighted Soft Voting Ensemble: LSTM 40% + GRU 60%
+    probs = (0.40 * lstm_probs) + (0.60 * gru_probs)
     mental_state = int(np.argmax(probs))
     confidence   = float(probs[mental_state])
 
@@ -232,7 +231,8 @@ def predict_from_scaled_sequence(sequence_scaled):
     lstm_probs = _lstm_model.predict(seq_in, verbose=0)[0]
     gru_probs  = _gru_model.predict(seq_in, verbose=0)[0]
 
-    probs        = (lstm_probs + gru_probs) / 2.0
+    # Weighted Soft Voting Ensemble: LSTM 40% + GRU 60%
+    probs = (0.40 * lstm_probs) + (0.60 * gru_probs)
     mental_state = int(np.argmax(probs))
     confidence   = float(probs[mental_state])
 

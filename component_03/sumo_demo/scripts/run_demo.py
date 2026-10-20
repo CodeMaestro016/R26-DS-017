@@ -95,7 +95,7 @@ from rule_based_agent import (
 SUMO_CFG     = os.path.join(SUMO_DEMO_DIR, 'config', 'simulation.sumocfg')
 X_TEST_FILE  = os.path.join(SUMO_DEMO_DIR, 'data', 'X_test.npy')
 Y_TEST_FILE  = os.path.join(SUMO_DEMO_DIR, 'data', 'y_test.npy')
-SCALER_FILE  = os.path.join(SUMO_DEMO_DIR, 'models', 'scaler.joblib')
+SCALER_FILE  = os.path.join(SUMO_DEMO_DIR, 'models', 'scaler.pkl')
 LSTM_FILE    = os.path.join(SUMO_DEMO_DIR, 'models', 'lstm_mental_state_best.keras')
 GRU_FILE     = os.path.join(SUMO_DEMO_DIR, 'models', 'gru_mental_state_best.keras')
 AV_ID        = 'av_0'

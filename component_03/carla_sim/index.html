@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pedestrian-Intent Live Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;850&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a1420;
+    --panel:#10202f;
+    --panel-border:#1c2e3f;
+    --line:#1c2e3f;
+    --cyan:#3fb8d6;
+    --cyan-dim:#9fc4d2;
+    --blue:#5c8fd6;
+    --ink:#e6ecf1;
+    --muted:#7c8fa0;
+    --amber:#d3a15a;
+    --red:#d6685f;
+    --green:#5cb894;
+    --mono: 'JetBrains Mono', ui-monospace, 'SF Mono', 'Cascadia Code', Consolas, monospace;
+    --sans: 'Inter', -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  }
+
+  *{ box-sizing:border-box; }
+  html,body{ height:100%; }
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--sans);
+    -webkit-font-smoothing:antialiased;
+  }
+  a{ color:inherit; }
+  button{ font-family:inherit; }
+  ::selection{ background:var(--cyan); color:#04101a; }
+
+  :focus-visible{
+    outline:2px solid var(--cyan);
+    outline-offset:2px;
+  }
+
+  .eyebrow{
+    font-family:var(--sans);
+    font-size:11px;
+    font-weight:600;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--muted);
+  }
+
+  /* ---------- header ---------- */
+  header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:16px 26px;
+    border-bottom:1px solid var(--line);
+    background:#0b1a28;
+  }
+  header .brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .brand-mark{
+    width:34px; height:34px; border-radius:8px;
+    display:grid; place-items:center; flex:none;
+    background:#132738;
+    border:1px solid var(--panel-border);
+  }
+  .brand-mark svg{ width:18px; height:18px; }
+  header .brand-copy{ display:flex; flex-direction:column; gap:2px; }
+  header h1{
+    margin:0;
+    font-size:14.5px;
+    font-weight:700;
+    letter-spacing:.01em;
+    color:#fff;
+  }
+  header .subtitle{
+    font-family:var(--mono);
+    font-size:11.5px;
+    color:var(--muted);
+  }
+  .conn{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-family:var(--mono);
+    font-size:12px;
+    color:var(--muted);
+    background:var(--panel);
+    border:1px solid var(--panel-border);
+    padding:6px 12px;
+    border-radius:7px;
+  }
+  .dot{
+    width:7px; height:7px; border-radius:50%;
+    background:var(--red);
+  }
+  .dot.up{ background:var(--green); }
+
+  /* ---------- layout ---------- */
+  main{
+    display:grid;
+    grid-template-columns: 320px 1fr;
+    gap:0;
+    min-height:calc(100% - 68px);
+  }
+  @media (max-width: 860px){
+    main{ grid-template-columns: 1fr; }
+  }
+
+  /* ---------- scenario list ---------- */
+  .scenario-panel{
+    border-right:1px solid var(--line);
+    padding:24px 22px;
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+    overflow-y:auto;
+  }
+  .scenario-panel h2{ margin:0; color:#fff; font-weight:650; font-size:14.5px; }
+  .scenario-panel .panel-heading{ margin-bottom:2px; }
+  .scenario-panel .panel-heading .eyebrow{ margin-bottom:4px; display:block; }
+  #cardList{
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+  }
+
+  .card{
+    background:var(--panel);
+    border:1px solid var(--panel-border);
+    border-radius:10px;
+    padding:18px 18px 16px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    transition:border-color .15s ease;
+    box-shadow:0 1px 0 rgba(0,0,0,.2), 0 4px 12px rgba(0,0,0,.18);
+  }
+  .card:hover{ border-color:#2a4257; }
+  .card.active{
+    border-color:var(--cyan);
+  }
+  .card-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .card-title{
+    font-size:14.5px;
+    font-weight:650;
+    color:#fff;
+  }
+  .card-desc{
+    font-size:12.5px;
+    line-height:1.6;
+    color:var(--muted);
+  }
+  .card button{
+    align-self:flex-start;
+    background:transparent;
+    color:var(--cyan-dim);
+    border:1px solid var(--panel-border);
+    border-radius:6px;
+    padding:8px 14px;
+    margin-top:4px;
+    font-size:12.5px;
+    font-weight:550;
+    cursor:pointer;
+    transition:.15s ease;
+  }
+  .card button:hover:not(:disabled){ border-color:var(--cyan); color:var(--cyan); }
+  .card button:disabled{ opacity:.35; cursor:default; }
+  .card button.stop{
+    color:var(--red);
+  }
+  .card button.stop:hover{ border-color:var(--red); }
+
+  .running-badge{
+    font-family:var(--mono);
+    font-size:10.5px;
+    color:var(--cyan);
+  }
+
+  /* ---------- right side ---------- */
+  .stage{
+    display:flex;
+    flex-direction:column;
+    padding:24px;
+    gap:16px;
+    min-width:0;
+  }
+
+  .error-banner{
+    display:none;
+    background:rgba(214,104,95,.08);
+    border:1px solid rgba(214,104,95,.4);
+    color:var(--red);
+    border-radius:8px;
+    padding:11px 16px;
+    font-family:var(--mono);
+    font-size:12.5px;
+  }
+  .error-banner.show{ display:block; }
+
+  .viewport{
+    position:relative;
+    width:100%;
+    aspect-ratio:16/9;
+    background:#050c14;
+    border-radius:10px;
+    overflow:hidden;
+    border:1px solid var(--line);
+  }
+  .viewport img{
+    width:100%; height:100%;
+    object-fit:cover;
+    display:block;
+  }
+  .no-signal{
+    position:absolute; inset:0;
+    display:flex; align-items:center; justify-content:center;
+    flex-direction:column;
+    gap:6px;
+    color:var(--muted);
+    font-family:var(--mono);
+    background:#050c14;
+  }
+  .no-signal .big{
+    font-size:12.5px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--muted);
+  }
+
+  .hud-readout{
+    position:absolute;
+    top:12px; left:12px;
+    display:flex;
+    gap:8px;
+    pointer-events:none;
+  }
+  .hud-chip{
+    background:rgba(6,14,22,.82);
+    border:1px solid var(--panel-border);
+    border-radius:7px;
+    padding:6px 11px;
+    font-family:var(--mono);
+  }
+  .hud-chip .label{
+    font-size:9px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--muted);
+  }
+  .hud-chip .value{
+    font-size:14px;
+    font-weight:600;
+    color:#fff;
+  }
+  .hud-chip.pred .value{ color:var(--cyan); }
+
+  .confidence-wrap{
+    position:absolute;
+    bottom:0; left:0; right:0;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:9px 12px;
+    background:rgba(6,14,22,.82);
+    border-top:1px solid var(--panel-border);
+  }
+  .confidence-label{
+    font-family:var(--mono);
+    font-size:10px;
+    color:var(--muted);
+    letter-spacing:.04em;
+    flex:none;
+  }
+  .confidence-bar{
+    flex:1;
+    height:5px;
+    background:rgba(255,255,255,.08);
+    border-radius:3px;
+    overflow:hidden;
+  }
+  .confidence-fill{
+    height:100%;
+    width:0%;
+    background:var(--cyan);
+    transition:width .2s linear;
+  }
+
+  /* ---------- decision row ---------- */
+  .decision-row{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:10px;
+  }
+  @media (max-width:600px){ .decision-row{ grid-template-columns:repeat(2,1fr); } }
+  .stat{
+    background:var(--panel);
+    border:1px solid var(--panel-border);
+    border-radius:10px;
+    padding:13px 15px;
+  }
+  .stat .label{
+    font-family:var(--sans);
+    font-size:10px;
+    font-weight:600;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    color:var(--muted);
+    margin-bottom:6px;
+  }
+  .stat .value{
+    font-family:var(--mono);
+    font-size:15.5px;
+    font-weight:600;
+    color:#fff;
+  }
+  .stat .value.action-MAINTAIN{ color:var(--green); }
+  .stat .value.action-SLOW_DOWN{ color:var(--amber); }
+  .stat .value.action-STOP{ color:var(--red); }
+
+  .progress{
+    height:4px;
+    background:var(--panel-border);
+    border-radius:2px;
+    overflow:hidden;
+  }
+  .progress > div{
+    height:100%;
+    background:var(--cyan);
+    width:0%;
+    transition:width .2s linear;
+  }
+
+  .message-line{
+    font-family:var(--mono);
+    font-size:12.5px;
+    color:var(--muted);
+  }
+
+  /* ---------- event log ---------- */
+  .log-panel{
+    background:var(--panel);
+    border:1px solid var(--panel-border);
+    border-radius:10px;
+    padding:15px 17px;
+    flex:1;
+    min-height:120px;
+    overflow-y:auto;
+    font-family:var(--mono);
+    font-size:12px;
+  }
+  .log-panel h3{
+    margin:0 0 10px 0;
+    font-family:var(--sans);
+    font-size:10px;
+    font-weight:600;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--muted);
+  }
+  .log-line{
+    display:flex;
+    gap:10px;
+    padding:4px 0;
+    border-bottom:1px solid rgba(255,255,255,.04);
+    color:var(--ink);
+  }
+  .log-line .t{ color:var(--muted); flex-shrink:0; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="brand-mark">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="12" cy="5" r="2" stroke="#3fb8d6" stroke-width="1.4"/>
+        <path d="M12 8.4c-1.4 0-2.6 1-2.9 2.3L8 15.8h1.9l.9-3.8.8 1.1V18h1.8v-4.6l-.8-1.9.5-2 1.4 2.3h2.1l-2.1-3.5a2.3 2.3 0 0 0-1.9-1H12Z" fill="#3fb8d6"/>
+      </svg>
+    </div>
+    <div class="brand-copy">
+      <h1>Pedestrian-Intent</h1>
+      <span class="subtitle">Live Demo · CARLA</span>
+    </div>
+  </div>
+  <div class="conn">
+    <span class="dot" id="connDot"></span>
+    <span id="connText">connecting…</span>
+  </div>
+</header>
+
+<main>
+  <section class="scenario-panel">
+    <div class="panel-heading">
+      <span class="eyebrow">Scenario suite</span>
+      <h2>Choose a behavior to run</h2>
+    </div>
+    <div id="cardList"></div>
+  </section>
+
+  <section class="stage">
+    <div class="error-banner" id="errorBanner"></div>
+
+    <div class="viewport" id="viewport">
+      <div class="no-signal" id="noSignal">
+        <div class="big">No signal</div>
+        <div>Select a scenario to begin</div>
+      </div>
+      <img id="videoImg" style="display:none;" alt="Live ego-camera feed">
+
+      <div class="hud-readout" id="hudReadout" style="display:none;">
+        <div class="hud-chip pred">
+          <div class="label">Predicted</div>
+          <div class="value" id="predValue">—</div>
+        </div>
+      </div>
+
+      <div class="confidence-wrap" id="confWrap" style="display:none;">
+        <span class="confidence-label">CONF</span>
+        <div class="confidence-bar"><div class="confidence-fill" id="confBar"></div></div>
+        <span class="confidence-label" id="confPct">0%</span>
+      </div>
+    </div>
+
+    <div class="decision-row">
+      <div class="stat">
+        <div class="label">Action</div>
+        <div class="value" id="actionValue">—</div>
+      </div>
+      <div class="stat">
+        <div class="label">Time to collision</div>
+        <div class="value" id="ttcValue">—</div>
+      </div>
+      <div class="stat">
+        <div class="label">Distance</div>
+        <div class="value" id="distValue">—</div>
+      </div>
+      <div class="stat">
+        <div class="label">Elapsed</div>
+        <div class="value" id="elapsedValue">—</div>
+      </div>
+    </div>
+
+    <div class="progress"><div id="progressBar"></div></div>
+    <div class="message-line" id="messageLine">Waiting to start.</div>
+
+    <div class="log-panel" id="logPanel">
+      <h3>Event log</h3>
+      <div id="logList"></div>
+    </div>
+  </section>
+</main>
+
+<script>
+const state = {
+  scenarios: [],
+  activeScenarioId: null,
+  streamHost: 'localhost',
+  streamPort: 8093,
+  backendUp: false,
+};
+
+function el(id){ return document.getElementById(id); }
+
+// ---------------------------------------------------------------------
+// Bootstrapping: config + scenario list
+// ---------------------------------------------------------------------
+async function loadConfig(){
+  const r = await fetch('/api/config');
+  const cfg = await r.json();
+  state.streamHost = cfg.stream_host;
+  state.streamPort = cfg.stream_port;
+}
+
+async function loadScenarios(){
+  const r = await fetch('/api/scenarios');
+  const data = await r.json();
+  state.scenarios = data.scenarios || [];
+  renderCards();
+}
+
+function renderCards(){
+  const list = el('cardList');
+  list.innerHTML = '';
+  state.scenarios.forEach((s, idx) => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.id = 'card-' + s.id;
+
+    const isActive = state.activeScenarioId === s.id;
+    if (isActive) card.classList.add('active');
+    const label = `Scenario ${idx + 1}`;
+
+    card.innerHTML = `
+      <div class="card-top">
+        <span class="eyebrow">${String(idx + 1).padStart(2, '0')} · Scenario</span>
+        ${isActive ? '<span class="running-badge">● Running</span>' : ''}
+      </div>
+      <div class="card-title">${label}</div>
+      <div class="card-desc">${s.description}</div>
+      <button data-id="${s.id}" class="${isActive ? 'stop' : ''}">
+        ${isActive ? 'Stop' : 'Run scenario'}
+      </button>
+    `;
+    list.appendChild(card);
+  });
+
+  list.querySelectorAll('button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.getAttribute('data-id');
+      if (state.activeScenarioId === id){
+        stopScenario();
+      } else {
+        runScenario(id);
+      }
+    });
+  });
+}
+
+// ---------------------------------------------------------------------
+// Launch / stop
+// ---------------------------------------------------------------------
+async function runScenario(id){
+  hideError();
+  setButtonsDisabled(true);
+  try {
+    const r = await fetch('/api/launch', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({scenario_id:id}),
+    });
+    const data = await r.json();
+    if (!data.ok){
+      showError(data.error || 'Could not launch scenario.');
+      setButtonsDisabled(false);
+      return;
+    }
+    state.activeScenarioId = id;
+    showVideo();
+    renderCards();
+  } catch(e){
+    showError('Could not reach the launcher backend: ' + e);
+    setButtonsDisabled(false);
+  }
+}
+
+async function stopScenario(){
+  hideError();
+  setButtonsDisabled(true);
+  el('messageLine').textContent = 'Stopping scenario…';
+  try {
+    await fetch('/api/stop', {method:'POST'});
+  } catch(e){
+    showError('Could not reach the launcher backend: ' + e);
+  }
+  await waitUntilStopped();
+  resetToIdle();
+}
+
+// Polls the backend until the previous process has actually torn down,
+// so a new scenario can't be launched into a launcher that's still busy
+// (which is what used to force a full page refresh to recover from).
+async function waitUntilStopped(maxTries = 20, delayMs = 400){
+  for (let i = 0; i < maxTries; i++){
+    try {
+      const r = await fetch('/api/status');
+      const s = await r.json();
+      if (!s.demo_running) return true;
+    } catch(e){
+      // launcher unreachable -- keep trying rather than getting stuck
+    }
+    await new Promise(res => setTimeout(res, delayMs));
+  }
+  return false;
+}
+
+function resetToIdle(){
+  state.activeScenarioId = null;
+  hideVideo();
+  el('messageLine').textContent = 'Waiting to start.';
+  renderCards();
+}
+
+function setButtonsDisabled(disabled){
+  document.querySelectorAll('.card button').forEach(b => {
+    if (!b.classList.contains('stop')) b.disabled = disabled;
+  });
+}
+
+function showError(msg){
+  const banner = el('errorBanner');
+  banner.textContent = msg;
+  banner.classList.add('show');
+}
+function hideError(){
+  el('errorBanner').classList.remove('show');
+}
+
+// ---------------------------------------------------------------------
+// Video viewport
+// ---------------------------------------------------------------------
+function showVideo(){
+  el('noSignal').style.display = 'none';
+  const img = el('videoImg');
+  img.style.display = 'block';
+  img.src = `http://${state.streamHost}:${state.streamPort}/stream.mjpg`;
+  img.onerror = () => {
+    // Feed not up yet (services still starting) -- retry shortly.
+    setTimeout(() => {
+      if (el('videoImg').style.display === 'block'){
+        img.src = `http://${state.streamHost}:${state.streamPort}/stream.mjpg?_=${Date.now()}`;
+      }
+    }, 1500);
+  };
+  el('hudReadout').style.display = 'flex';
+  el('confWrap').style.display = 'flex';
+}
+
+function hideVideo(){
+  el('noSignal').style.display = 'flex';
+  const img = el('videoImg');
+  img.onerror = null;  // stop the retry loop before clearing src
+  img.src = '';
+  img.style.display = 'none';
+  el('hudReadout').style.display = 'none';
+  el('confWrap').style.display = 'none';
+}
+
+// ---------------------------------------------------------------------
+// Polling: backend status (same-origin) + live scenario state (stream host)
+// ---------------------------------------------------------------------
+async function pollBackendStatus(){
+  try {
+    const r = await fetch('/api/status');
+    const s = await r.json();
+    setConn(true);
+    if (!s.demo_running && state.activeScenarioId){
+      // process ended (finished or crashed) -- unlock the buttons and
+      // stop retrying the now-dead stream port instead of hammering it
+      resetToIdle();
+    }
+    if (s.last_launch_error){
+      showError(s.last_launch_error);
+    }
+  } catch(e){
+    setConn(false);
+  }
+}
+
+function setConn(up){
+  state.backendUp = up;
+  el('connDot').classList.toggle('up', up);
+  el('connText').textContent = up ? 'launcher connected' : 'launcher unreachable';
+}
+
+async function pollScenarioState(){
+  if (!state.activeScenarioId){ return; }
+  try {
+    const r = await fetch(`http://${state.streamHost}:${state.streamPort}/state`);
+    const d = await r.json();
+    applyState(d);
+  } catch(e){
+    // stream host not reachable yet -- fine, keep retrying
+  }
+}
+
+function fmt(v, digits, suffix){
+  if (v === null || v === undefined) return '—';
+  return v.toFixed(digits) + (suffix || '');
+}
+
+function applyState(d){
+  el('messageLine').textContent = d.message || '';
+
+  if (d.predicted_label){
+    el('predValue').textContent = d.predicted_label;
+  } else {
+    el('predValue').textContent = '—';
+  }
+
+  // confidence bar (single fill, matches the progress bar style)
+  const conf = d.confidence || 0;
+  el('confBar').style.width = Math.round(conf * 100) + '%';
+  el('confPct').textContent = Math.round(conf * 100) + '%';
+
+  const actionEl = el('actionValue');
+  actionEl.textContent = d.action || '—';
+  actionEl.className = 'value' + (d.action ? ' action-' + d.action : '');
+
+  el('ttcValue').textContent = d.ttc_s != null ? fmt(d.ttc_s, 1, 's') : '—';
+  el('distValue').textContent = d.distance_m != null ? fmt(d.distance_m, 1, 'm') : '—';
+  el('elapsedValue').textContent = fmt(d.elapsed_s, 1, 's');
+
+  const pct = d.duration_s ? Math.min(100, (d.elapsed_s / d.duration_s) * 100) : 0;
+  el('progressBar').style.width = pct + '%';
+
+  // event log, newest first
+  if (d.log){
+    const list = el('logList');
+    list.innerHTML = '';
+    [...d.log].reverse().forEach(entry => {
+      const line = document.createElement('div');
+      line.className = 'log-line';
+      const t = new Date(entry.t * 1000);
+      const ts = t.toTimeString().slice(0,8);
+      line.innerHTML = `<span class="t">${ts}</span><span>${entry.message}</span>`;
+      list.appendChild(line);
+    });
+  }
+
+  if (d.finished && state.activeScenarioId){
+    resetToIdle();
+  }
+}
+
+// ---------------------------------------------------------------------
+// Init
+// ---------------------------------------------------------------------
+(async function init(){
+  await loadConfig();
+  await loadScenarios();
+  pollBackendStatus();
+  setInterval(pollBackendStatus, 2000);
+  setInterval(pollScenarioState, 400);
+})();
+</script>
+
+</body>
+</html>
