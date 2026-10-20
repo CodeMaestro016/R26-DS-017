@@ -1,0 +1,17 @@
+{
+  "version": "ISOLATED_UNCOORDINATED_COUNTERFACTUAL_V1",
+  "classification": "OFFLINE_UNSAFE_COUNTERFACTUAL_NOT_PROPOSED_SYSTEM",
+  "scenario_id": "final_coordination_failure",
+  "seed": 42,
+  "step_seconds": 0.04,
+  "budget_seconds": 220,
+  "speed_mode": 38,
+  "desired_speed": "min(actual_vehicle_max_speed, actual_lane_allowed_speed)",
+  "excluded": ["MAPPO", "traffic-rule execution", "ego entry authorization", "safety shield", "explicit junction entry stops", "SUMO safe-following-speed enforcement", "SUMO junction priority enforcement"],
+  "retained": ["original routes and demand", "original vehicle type and dimensions", "original acceleration and deceleration limits", "original road network", "native safe insertion", "speed-limit enforcement", "SUMO collision detection"],
+  "collision_check_junctions": true,
+  "collision_mingap_factor": 0,
+  "collision_action": "warn",
+  "termination": "first simulator-detected physical collision, all trips complete, or budget",
+  "notes": "Physical-body collision detection (zero minimum-gap expansion), not a modified vehicle footprint. No crash-response dynamics or trajectories beyond the first collision are claimed. The protected runner has no unsafe-mode option."
+}
