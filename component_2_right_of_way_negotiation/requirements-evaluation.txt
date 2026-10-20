@@ -1,0 +1,2 @@
+# Install alongside requirements.txt and requirements-training.txt.
+matplotlib>=3.9,<4
