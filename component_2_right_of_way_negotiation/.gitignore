@@ -1,0 +1,41 @@
+
+# Ignore Markdown files
+*.md
+
+# Ignore ZIP files
+*.zip
+
+# Ignore image files
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.webp
+*.svg
+*.bmp
+*.tiff
+*.ico
+
+# Python temporary files
+__pycache__/
+*.pyc
+*.pyo
+
+# Virtual environments
+.venv/
+venv/
+
+# Environment variables
+.env
+.env.*
+
+# IDE files
+.vscode/
+.idea/
+
+# Keep main README
+!README.md
+
+
+# Ignore entire results folder
+component_2_right_of_way_negotiation/results/

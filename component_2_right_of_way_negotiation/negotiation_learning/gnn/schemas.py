@@ -1,0 +1,14 @@
+"""Architecture choices requiring later controlled experiments."""
+
+# Set ARCHITECTURE_HYPERPARAMETER_REGISTRY to a dictionary containing hidden_dim, num_message_passing_layers,
+# activation.
+ARCHITECTURE_HYPERPARAMETER_REGISTRY = {
+    "hidden_dim": "REQUIRES_VALIDATION_EXPERIMENT",
+    "num_message_passing_layers": "REQUIRES_VALIDATION_EXPERIMENT",
+    "activation": "REQUIRES_VALIDATION_EXPERIMENT",
+}
+
+# Set ACTIVATION_VALIDATION_STATUS to the text 'ARCHITECTURE_COMPONENT_PENDING_HYPERPARAMETER_EVALUATION'.
+ACTIVATION_VALIDATION_STATUS = (
+    "ARCHITECTURE_COMPONENT_PENDING_HYPERPARAMETER_EVALUATION"
+)
