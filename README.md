@@ -2,6 +2,8 @@
 
 **Agentic AI for Robust and Socially-Aware Autonomous Driving**
 
+![SOCIALMIND DRIVE research showcase home page](./socialmind_drive_showcase/assets/images/showcase_preview.png)
+
 This repository brings together four independently developed research components. They explore pedestrian intent, right-of-way negotiation, social reasoning, and collaborative learning for autonomous vehicles. The components are not one connected end-to-end pipeline; each has its own code, dependencies, data, and runtime requirements.
 
 ## Research components

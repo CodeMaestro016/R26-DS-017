@@ -10,6 +10,13 @@
 !/component_3/
 !/socialmind_drive_showcase/
 
+# Keep the single screenshot embedded by the repository README.
+!/assets/
+/assets/*
+!/assets/images/
+/assets/images/*
+!/assets/images/showcase_preview.png
+
 # Python caches
 **/__pycache__/
 **/.pytest_cache/
