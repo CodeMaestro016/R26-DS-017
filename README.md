@@ -1,132 +1,105 @@
-# Adaptive Intent Prediction in Occluded Urban Scenarios
+# SOCIALMIND DRIVE
 
-Research implementation for predicting pedestrian crossing intent in urban
-scenes when pedestrians are partially or temporarily occluded. The project
-combines visual tracking, motion and spatial features, occlusion estimation,
-Bayesian reliability modelling, deep intent prediction, uncertainty
-estimation, and decision explanations.
+**Agentic AI for Robust and Socially-Aware Autonomous Driving**
 
-## Repository
+This repository brings together four independently developed research components. They explore pedestrian intent, right-of-way negotiation, social reasoning, and collaborative learning for autonomous vehicles. The components are not one connected end-to-end pipeline; each has its own code, dependencies, data, and runtime requirements.
 
-- Repository: `CodeMaestro016/R26-DS-017`
-- Active development branch: `IT22245960/piyumal_updated`
-- Recommended Python version: **3.11.x**
+## Research components
 
-## Project layout
+| # | Component | Directory | What it explores |
+|---|---|---|---|
+| 1 | Adaptive Intent Prediction in Occluded Urban Scenarios | [`Adaptive_Intent_Prediction/`](./Adaptive_Intent_Prediction/) | Predicting pedestrian crossing intent from visual, motion, and spatial cues when observations are occluded or incomplete. The pipeline includes tracking, feature extraction, Bayesian reliability, deep fusion/transformer models, calibration, and explanations. |
+| 2 | Multi-Agent Negotiation for Right-of-Way in Complex Intersections | [`component_2_right_of_way_negotiation/`](./component_2_right_of_way_negotiation/) | Decentralized vehicle negotiation in SUMO, combining local perception, traffic rules, conflict reasoning, graph models, and MAPPO semantic actions. See its [README](./component_2_right_of_way_negotiation/README.md) for current implementation and evidence notes. |
+| 3 | Proactive Social Compliance Modeling using Agentic Theory of Mind | [`component_3/`](./component_3/) | CARLA pedestrian scenarios and reasoning about road-user behavior. The demo code extracts pose and motion features, predicts six behavior states (Waiting, Hesitant, Committed, Distracted, Aggressive, Jaywalk), and uses a rule-based driving agent. |
+| 4 | Collective Learning Between Autonomous Vehicles using Agentic Knowledge Sharing | [`component_4/`](./component_4/) | CARLA traffic-sign perception with per-vehicle model pipelines. Vehicles can decide whether to share learned sign embeddings; a global verification/broadcast service supports checking and distributing knowledge. |
 
-All implementation files are under [`Adaptive_Intent_Prediction/`](./Adaptive_Intent_Prediction/).
+## Repository layout
 
-| Directory | Purpose |
-| --- | --- |
-| [`configs/`](./Adaptive_Intent_Prediction/configs/) | Dataset and occlusion configuration |
-| [`models/`](./Adaptive_Intent_Prediction/models/) | Intent prediction and occlusion-estimation models |
-| [`utils/`](./Adaptive_Intent_Prediction/utils/) | Feature extraction, tracking, mapping, inference, and explanation utilities |
-| [`scripts/phase1/`](./Adaptive_Intent_Prediction/scripts/phase1/) | Dataset preparation and sequence creation |
-| [`scripts/phase2/`](./Adaptive_Intent_Prediction/scripts/phase2/) | Occlusion generation and validation |
-| [`scripts/phase3/`](./Adaptive_Intent_Prediction/scripts/phase3/) | Visual, motion, spatial, and sequence feature extraction |
-| [`scripts/phase4/`](./Adaptive_Intent_Prediction/scripts/phase4/) | Bayesian feature generation and network training |
-| [`scripts/phase5/`](./Adaptive_Intent_Prediction/scripts/phase5/) | Gated-fusion and transformer model training/evaluation |
-| [`scripts/phase6/`](./Adaptive_Intent_Prediction/scripts/phase6/) | Calibration and uncertainty evaluation |
-| [`scripts/phase7/`](./Adaptive_Intent_Prediction/scripts/phase7/) | Learned agent policy preparation and evaluation |
-| [`scripts/phase8/`](./Adaptive_Intent_Prediction/scripts/phase8/) | Agent decision explanations |
-| [`scripts/phase9/`](./Adaptive_Intent_Prediction/scripts/phase9/) | PIE/YOLO pedestrian detection and runtime pipeline |
-| [`scripts/demo/`](./Adaptive_Intent_Prediction/scripts/demo/) | Runtime and held-out demonstration scripts |
-| [`notebooks/`](./Adaptive_Intent_Prediction/notebooks/) | Research experiments |
-
-## Setup
-
-From the repository root, enter the project directory:
-
-```powershell
-cd Adaptive_Intent_Prediction
+```text
+Adaptive_Intent_Prediction/          Component 1: pedestrian intent research
+component_2_right_of_way_negotiation/ Component 2: SUMO right-of-way negotiation
+component_3/                         Component 3: CARLA social-compliance demo
+component_4/                         Component 4: CARLA and knowledge-sharing code
+socialmind_drive_showcase/           Local NiceGUI showcase for the four components
 ```
 
-Create and activate a Python 3.11 virtual environment. On Windows:
+The showcase is a presentation layer. Its live Component 2 view launches the existing Component 2 runtime; it does not combine the four research implementations. Components 1 and 4 have showcase pages, and Component 3 has standalone CARLA demo code.
+
+## Run the showcase
+
+From the repository root, on Windows PowerShell:
 
 ```powershell
 py -3.11 -m venv .venv
 .\.venv\Scripts\Activate.ps1
-python -m pip install --upgrade pip
+python -m pip install -r socialmind_drive_showcase\requirements.txt
+python socialmind_drive_showcase\app.py
 ```
 
-Install PyTorch first. Use the command that matches the target machine:
+This opens the local desktop showcase. To run its localhost server without the desktop window:
 
 ```powershell
-# NVIDIA GPU
-python -m pip install torch==2.12.1 torchvision==0.27.1 `
-  --index-url https://download.pytorch.org/whl/cu130
-
-# CPU only
-python -m pip install torch==2.12.1 torchvision==0.27.1 `
-  --index-url https://download.pytorch.org/whl/cpu
+python socialmind_drive_showcase\app.py --server-only
 ```
 
-Install the remaining dependencies:
+Then open `http://127.0.0.1:8088` in a browser. See the [showcase README](./socialmind_drive_showcase/README.md) for page details and Component 2 live-view behavior.
+
+## Component-specific setup
+
+The showcase environment is only for the showcase. Research components have separate dependencies and external requirements; use a separate virtual environment for each component where dependency versions differ.
+
+### Component 1
+
+Use Python 3.11 and follow the setup in [`Adaptive_Intent_Prediction/requirements.txt`](./Adaptive_Intent_Prediction/requirements.txt). Install the matching CPU or CUDA PyTorch build before the remaining requirements. The main script groups are:
+
+| Scripts | Role |
+|---|---|
+| `scripts/phase1/` | Dataset preparation and sequence creation |
+| `scripts/phase2/` | Occlusion generation and validation |
+| `scripts/phase3/` | Visual, motion, spatial, and sequence feature extraction |
+| `scripts/phase4/` | Bayesian features and network training |
+| `scripts/phase5/` | Gated-fusion and transformer training/evaluation |
+| `scripts/phase6/` | Calibration and uncertainty evaluation |
+| `scripts/phase7/` | Learned agent policy preparation and evaluation |
+| `scripts/phase8/` | Decision explanations |
+| `scripts/phase9/` | PIE/YOLO detection and runtime pipeline |
+
+Run phase scripts from inside `Adaptive_Intent_Prediction`, for example:
 
 ```powershell
-python -m pip install -r requirements.txt
-```
-
-CARLA is intentionally not pinned in `requirements.txt`. Install the CARLA
-Python client separately and make sure its version matches the CARLA
-simulator installed on the target machine.
-
-## Data and model files
-
-Datasets, generated outputs, local virtual environments, pretrained weights,
-and generated archives are intentionally excluded from Git using the root
-[`.gitignore`](./.gitignore). This keeps the repository lightweight and avoids
-committing machine-specific or large research artifacts.
-
-Before running data-dependent scripts, place the required local files in the
-expected directories under:
-
-- [`datasets/`](./Adaptive_Intent_Prediction/datasets/) - raw and processed data
-- [`inputs/`](./Adaptive_Intent_Prediction/inputs/) - demo and runtime inputs
-- [`outputs/`](./Adaptive_Intent_Prediction/outputs/) - generated results
-
-These directories are local-only and are not supplied by this repository.
-Pretrained model weights such as YOLO `.pt` files must also be downloaded or
-generated locally.
-
-## Running scripts
-
-Run commands from inside `Adaptive_Intent_Prediction` so that the project
-relative paths used by the scripts resolve correctly. For example:
-
-```powershell
+cd Adaptive_Intent_Prediction
 python scripts\phase1\parse_annotations.py
-python scripts\phase2\generate_occlusions.py
-python scripts\phase4\train_bayesian_network.py
-python scripts\phase5\train_transformers.py
-python scripts\phase6\calibrate_temperature.py
-python scripts\phase8\explain_agent_decisions.py
 ```
 
-Many scripts have configurable paths and parameters. Check a script's
-`--help` output before running it when command-line options are available:
+Data and pretrained weights are local prerequisites and are not included in Git. CARLA is installed separately, with a Python client version matching the simulator. For the external-video demo, check its options with `python scripts\phase9\run_external_video_demo.py --help` and provide the required video and model assets.
+
+### Component 2
+
+Install its Python requirements and install SUMO separately. From the repository root, launch the selected-policy demonstration with:
 
 ```powershell
-python scripts\phase9\run_external_video_demo.py --help
-python scripts\demo\generate_pie_heldout_demo.py --help
+cd component_2_right_of_way_negotiation
+python run_selected_mappo_demo.py --gui
 ```
 
-The `test_*.py` files are executable validation scripts for individual
-pipeline components. Run the relevant phase tests after preparing that
-phase's required local data and model artifacts.
+The live showcase scenario is a qualitative presentation runtime; its metrics do not replace the component's validation or evaluation results. Follow the [Component 2 README](./component_2_right_of_way_negotiation/README.md) for SUMO setup, other entry points, and current research-status notes.
 
-## Reproducibility notes
+### Component 3
 
-1. Use Python 3.11.x and install the pinned versions in
-   [`requirements.txt`](./Adaptive_Intent_Prediction/requirements.txt).
-2. Install the correct CPU or CUDA PyTorch build before installing the
-   remaining dependencies.
-3. Keep datasets, generated outputs, and model weights outside Git.
-4. Record the dataset version, model checkpoint, hardware, and script
-   arguments when reporting experimental results.
+The standalone demo is under `component_3/carla_sim/`. It requires a compatible CARLA simulator, Python client, model files, and supporting vision/ML packages. From that directory, the web launcher entry point is:
 
-## License and data
+```powershell
+python web_launcher.py
+```
 
-This repository contains research implementation code. Dataset and pretrained
-model usage must follow the original licenses and terms of the respective
-data/model providers.
+Its child-process configuration currently points to the Linux interpreter `/workspace/carla_venv/bin/python3`. Update that setting for the target machine before launching scenarios. This component does not currently have a dedicated requirements file.
+
+### Component 4
+
+The vehicle knowledge-sharing service is under `component_4/component_4/` (`ml_service.py`); the CARLA client is under `component_4/carla_app/`. The service requirements are in [`component_4/component_4/requirements.txt`](./component_4/component_4/requirements.txt). A compatible CARLA installation and local model/database assets are also needed. The checked-in `component_4/component_4/main_demo.py` is empty, so there is no complete one-command orchestrator documented here. The service entry point is `ml_service.py`; it starts a local API and expects its model assets to be configured.
+
+## Data, models, and reproducibility
+
+Datasets, simulator installations, pretrained model weights, and generated results may be excluded from Git or stored in component-specific locations. Check the relevant component's configuration and documentation before running an experiment. Do not treat showcase output as quantitative research evidence unless the corresponding component evaluation protocol says it is.
+
+Use each component's own documentation for its evaluation commands, assumptions, and limitations. Component 2's README includes detailed evidence-status notes; Components 3 and 4 currently have no standalone README, and their external simulator/model setup must be configured locally.
